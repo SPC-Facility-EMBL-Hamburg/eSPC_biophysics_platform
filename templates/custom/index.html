@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="vf-no-js" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <script>
+  // Detect if JS is on and swap vf-no-js for vf-js on the html element
+  (function(H){H.className=H.className.replace(/\bvf-no-js\b/,'vf-js')})(document.documentElement);
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1">
+  <title>SPC Webserver</title>
+  <link rel="shortcut icon" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/favicon-16x16.png">
+  <link rel="manifest" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/site.webmanifest">
+  <link rel="mask-icon" href=
+  "https://assets.emblstatic.net/vf/v2.5.0/assets/embl-favicon/assets/safari-pinned-tab.svg"
+  color="#ffffff">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+  <!-- Content descriptors -->
+  <meta name="embl:who" content="EMBL Hamburg SPC">
+  <!-- the people, groups and teams involved -->
+  <meta name="embl:where" content="EMBL Hamburg">
+  <!-- at which EMBL sites the content applies -->
+  <meta name="embl:what" content="EMBL SPC Webserver for data analysis">
+  <!-- the activities covered -->
+  <meta name="embl:active" content="what">
+  <!-- which of the who/what/where is active -->
+  <!-- Content role -->
+  <meta name="embl:utility" content="content is task and work based">
+  <!-- if content is task and work based or if is meant to inspire -->
+  <meta name="embl:reach" content="content is externally (public)">
+  <!-- if content is externally (public) or internally focused (those that work at EMBL) -->
+  <!-- Page information -->
+  <meta name="embl:maintainer" content="EMBL SPC">
+  <!-- the contact person or group responsible for the page -->
+  <meta name="embl:last-review" content="2024-01-29">
+  <!-- the last time the page was reviewed or updated -->
+  <meta name="embl:review-cycle" content="365">
+  <!-- how long in days before the page should be checked -->
+  <meta name="embl:expiry" content="null">
+  <!-- if there is a fixed point in time when the page is no longer relevant -->
+  <link rel="stylesheet" media="all" href="https://assets.emblstatic.net/vf/v2.4.5/css/styles.css">
+</head>
+
+<body class="vf-body vf-stack"><script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+
+
+  <!-- embl global header -->
+  <link rel="import" href="https://www.embl.org/api/v1/pattern.html?filter-content-type=article&filter-id=574&pattern=node-body&source=contenthub" data-target="self" data-embl-js-content-hub-loader>
+
+  <nav class="vf-breadcrumbs" aria-label="Breadcrumb">
+    <ul class="vf-breadcrumbs__list | vf-list vf-list--inline">
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl.org/services-facilities/" class="vf-breadcrumbs__link">Services</a>
+      </li>
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl-hamburg.de/services/spc/index.html" class="vf-breadcrumbs__link">Sample Preparation and Characterisation</a>
+      </li>
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl-hamburg.de/services/spc/Services-and-resources/index.html" class="vf-breadcrumbs__link">SPC Services</a>
+      </li>
+      <li class="vf-breadcrumbs__item" aria-current="location">
+        eSPC Data Analysis Platform
+      </li>
+    </ul>
+    <span class="vf-breadcrumbs__heading">Related:</span>
+    <ul class="vf-breadcrumbs__list vf-breadcrumbs__list--related | vf-list vf-list--inline">
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl.org/sites/hamburg/" class="vf-breadcrumbs__link">EMBL Hamburg</a>
+      </li>
+    </ul>
+  </nav>
+  <section class="vf-intro">
+    <div>
+      <!-- empty -->
+    </div>
+    <div class="vf-stack">
+
+    <h1 class="vf-intro__heading vf-intro__heading-">eSPC, an Online Data Analysis Platform for Molecular Biophysics </h1>  
+
+<!-- Add the following line to add the header with a blue badge with "beta" on it -->   
+<!--  <h1 class="vf-intro__heading vf-intro__heading--has-tag">eSPC, an Online Data Analysis Platform for Molecular Biophysics  
+  <a href="JavaScript:Void(0);" class="vf-badge vf-badge--primary vf-badge--phases">beta</a>  </h1> -->   
+
+      <p class="vf-lede">  The eSPC platform provides easy to use software for the understanding of biophysical experiments.</p>
+      <!-- <p class="vf-intro__text">Extra text.</p> -->
+    </div>
+  </section>
+              
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Differential Scanning Fluorimetry</h2>
+      
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL1.jpg" alt="FoldAffinity" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--400">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+foldAffinity" th:target="_blank">FoldAffinity</a></h3>
+            <p class="vf-card__text">Estimating binding affinities by isothermal analysis. Analyse protein-ligand titration curves, fit fluorescence curves, calculate KDs.</p>
+          </div>
+        </article>
+            
+        <article class="vf-card vf-card--primary vf-card--striped">
+        <img src="/assets/img/EMBL2.jpg" alt="MoltenProt" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--400">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+moltenprot" th:target="_blank">MoltenProt</a></h3>
+            <p class="vf-card__text">Assessing protein stability under different conditions. Calculate Tm, Tonset, DH.</p>
+          </div>
+        </article>
+
+
+      </div>
+    </div>
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">MicroScale Thermophoresis</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL3.jpg" alt="ThermoAffinity" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+thermoAffinity" th:target="_blank">ThermoAffinity</a></h3>
+            <p class="vf-card__text">Estimating binding affinities by thermophoresis shift or initial fluorescence analysis.</p>
+          </div>
+        </article>
+            
+
+      </div>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </div>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Mass Photometry</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL4.jpg" alt="PhotoMol" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+photoMol" th:target="_blank">PhotoMol</a></h3>
+            <p class="vf-card__text">Estimating molecular masses in a sample.</p>
+          </div>
+        </article>
+            
+      </div>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </div>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Dynamic Light Scattering</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL5.jpg" alt="Raynals" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+raynals" th:target="_blank">Raynals</a></h3>
+            <p class="vf-card__text">Estimating sample homogeneity and hydrodynamic radius.</p>
+          </div>
+        </article>
+            
+      </div>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </div>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Circular Dichroism</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL6.jpg" alt="ChiraKit" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+chirakit" th:target="_blank">ChiraKit (Beta version)</a></h3>
+            <p class="vf-card__text">Analysing biomolecules conformation. 
+            Perform spectra decomposition, estimate unfolding parameters, or calculate secondary structure content</p>
+          </div>
+        </article>
+            
+      </div>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </div>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="howToCite">How to cite</h2>
+    </div>
+        <div class="vf-content">
+          <h4>FoldAffinity, MoltenProt & ThermoAffinity</h4>
+
+      <p class="vf-intro__text">Burastero, O., Niebling, S., Defelipe, L. A., Günther, C., Struve, A., & Garcia Alai, M. M. (2021).       <a href="https://journals.iucr.org/d/issues/2021/10/00/qt5002/index.html" class="vf-summary__link">eSPC: an online data-analysis platform for molecular biophysics</a>. Acta Crystallographica Section D: Structural Biology, 77(10).</p>
+
+      <h4>FoldAffinity</h4>
+
+      <p class="vf-intro__text">Niebling, S., Burastero, O., Bürgi, J., Günther, C., Defelipe, L. A., Sander, S., ... & García-Alai, M. (2021). <a href="https://www.nature.com/articles/s41598-021-88985-z" class="vf-summary__link"> FoldAffinity: binding affinities from nDSF experiments</a>. Scientific reports, 11(1), 1-17.</p>
+
+      <p class="vf-intro__text">Bai, N., Roder, H., Dickson, A., & Karanicolas, J. (2019).<a href="https://europepmc.org/article/PMC/6389909" class="vf-summary__link"> Isothermal analysis of ThermoFluor data can readily provide quantitative binding affinities</a>. Scientific reports, 9(1), 1-15.</p>
+
+      <h4>MoltenProt</h4>
+
+      <p class="vf-intro__text">Kotov, V., Mlynek, G., Vesper, O., Pletzer, M., Wald, J., Teixeira‐Duarte, C. M., ... & Marlovits, T. C. (2021). <a href="https://europepmc.org/article/MED/33140490" class="vf-summary__link"> In‐depth Interrogation of Protein Thermal Unfolding Data with MoltenProt</a>. Protein Science, 30(1), 201-217.</p>
+
+      <h4>PhotoMol</h4>
+
+      <p class="vf-intro__text">Niebling, S., Veith, K., Vollmer, B., Lizarrondo, J., Burastero, O., Schiller, J., ... & García-Alai, M. (2022). <a href="https://www.frontiersin.org/articles/10.3389/fmolb.2022.882288/full" class="vf-summary__link"> Biophysical Screening Pipeline for Cryo-EM Grid Preparation of Membrane Proteins</a>. Frontiers in Molecular Biosciences, 535.</p>
+
+      <h4>Raynals</h4>
+
+      <p class="vf-intro__text">Burastero, O., Draper-Barr, G., Raynal, B., Chevreuil, M., England, P. & Garcia Alai, M. (2023). <a href="https://journals.iucr.org/d/issues/2023/08/00/vo5014/index.html" class="vf-summary__link"> Raynals, an online tool for the analysis of dynamic light scattering</a>. Acta Crystallographica Section D: Structural Biology, 79(8).</p>
+
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Documentation</h2>
+      
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/FoldAffinityUserDocumentation.pdf" class="vf-summary__link">
+                FoldAffinity</a>
+            </h3>
+
+          </article>
+            
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/MoltenProtUserDocumentation.pdf" class="vf-summary__link">
+                MoltenProt</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/ThermoAffinityUserDocumentation.pdf" class="vf-summary__link">
+                ThermoAffinity</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/PhotoMolUserDocumentation.pdf" class="vf-summary__link">
+                PhotoMol</a>
+            </h3>
+
+          </article>
+
+          </article>
+            
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/RaynalsUserDocumentation.pdf" class="vf-summary__link">
+                Raynals</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/ChiraKitUserDocumentation.pdf" class="vf-summary__link">
+                ChiraKit</a>
+            </h3>
+
+          </article>
+
+      </div>
+    </div>
+  </section>
+  
+<section class="embl-grid">
+    <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="https://www.embl-hamburg.de/services/spc/index.html" id="abot">About <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a>
+      <p class="vf-section-header__text">eSPC, a tool for analysing protein biophysics</p>
+    </div>
+    <div class="">
+      <article class="vf-summary">
+        <h4 class="vf-text vf-text-heading--5">Related organisations</h4>
+        <p class="vf-summary__text">
+          <a class="vf-link" href="https://www.cssb-hamburg.de">CSSB</a>, 
+          <a class="vf-link" href="https://www.desy.de/index_eng.html">DESY</a>, 
+          <a class="vf-link" href="https://www.xfel.eu">European XFEL</a>
+        </p>
+      </article>
+ 
+      <article class="vf-summary">
+         <h4 class="vf-text vf-text-heading--5">Social Media</h4>
+        <p class="vf-summary__text">
+          <a class="vf-link" href="https://twitter.com/SPC_EMBL_HH">SPC Twitter @SPC_EMBL_HH</a>
+        </p>
+      </article>
+
+      <article class="vf-summary">
+        <h4 class="vf-text vf-text-heading--5">Contact</h4>
+        <p class="vf-summary__text">
+          EMBL (c/o DESY), Notkestrasse 85, Build. 25a, 22607 Hamburg, Germany
+          <br/>
+          Tel: +49 40 89 902-110 or 111
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- embl global footer -->
+  <link rel="import" href="https://www.embl.org/api/v1/pattern.html?filter-content-type=article&filter-id=569&pattern=node-body&source=contenthub" data-target="self" data-embl-js-content-hub-loader>
+
+  <!-- IE11 polyfill JS -->
+  <script nomodule crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default"></script>
+  <script src="https://assets.emblstatic.net/vf/v2.4.5/scripts/scripts.js"></script>
+</body>
+</html>

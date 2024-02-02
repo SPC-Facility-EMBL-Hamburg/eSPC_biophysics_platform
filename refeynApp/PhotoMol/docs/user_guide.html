@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" class="vf-no-js" >
+<head>
+  <script>
+  // Detect if JS is on and swap vf-no-js for vf-js on the html element
+  (function(H){H.className=H.className.replace(/\bvf-no-js\b/,'vf-js')})(document.documentElement);
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1">
+  <link rel="stylesheet" media="all" href="https://assets.emblstatic.net/vf/v2.4.5/css/styles.css">
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+    
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  
+</head>
+
+<body class="vf-body vf-stack"><script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+
+
+<section class="vf-intro" id="an-id-for-anchor">
+
+  <div class="vf-stack">
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('inputFile')">Input file <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="inputFile" style="display:none">
+  
+    <p class="vf-intro__text">PhotoMol accepts as input a '.h5' (Hierarchical Data Format) file <a href="demo.h5" download>(demo.h5)</a>. This file should have one 1D dataset called 'masses_kDa' and can be exported using the software Refeyn DiscoverMP. In the DiscoverMP version < 2.5, the file eventsFitted.h5 is saved in the folder when saving the results. In version 2.5 the events can be exported individually selecting a custom file name. For calibration, only a dataset called 'contrasts' is needed.</p>
+
+<p class="vf-intro__text"> Additionally, a  <a href="eventsFound.csv" download>(csv)</a> (comma-separated values) file with headers can be loaded. The column 'masses_kDa' and 'contrasts' are respectively required for the mass distribution data analysis and calibration.</p>
+   
+</div>
+
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('models')">Model <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+   
+<div id="models" style="display:none"> 
+
+    <p class="vf-intro__text">Firstly, we build a histogram based on the observed masses, the bin width and the window range. Secondly, we fit a multi-gaussian function to the histogram based on a user-defined number of truncated Gaussians:
+</p>
+
+$$
+\large{ 
+    counts = baseline + \sum\limits_{i = 1}^n {g_i (mass)} 
+   }
+$$
+
+    <p class="vf-intro__text">where \( n \) is the number of one-side (of lower tail) truncated Gaussians \( g_i() \), and 
+    baseline is defined by the user. The parameter 'Minimum observed mass' (kDa) can be used to set the limit for the truncated gaussians. We recommend to use 30 kDa, but this value depends on the instrument.</p>
+
+    <p class="vf-intro__text">For quality check purposes, unbinding events (negative masses) can also be fitted by changing the range of analysis. Peaks that have a similar number of counts in both the binding and unbinding regions are indicative of artifacts.
+</p>
+
+    <p class="vf-intro__text">The fitted means and standard deviations are shown in the 'Fitted parameters and counts' Table using as column names
+    'Position / kDa' and 'Sigma / kDa', respectively. The number of counts (and percentage from total) under each fitted gaussian is also presented.
+    </p>
+
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('Calibration')">Calibration <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="Calibration" style="display:none">
+  
+    <p class="vf-intro__text">If the '.h5' (Hierarchical Data Format) file only contains information about the ratiometric contrasts, it is still possible to convert them to masses by a) loading a '.h5' file with known masses (3 different species at least), or using parameters from a previous calibration.
+In both cases, the calibration experiment should have been done with the same buffer, at the same temperature, and using the same instrument parameters (i.e., the field of view)
+ 
+</p>
+
+    <p class="vf-intro__text">a) Load the calibration file in the 'Calibration' panel, write the known masses in the 'Known masses' 
+input box, and fill the 'Initial guesses' input box. Check the fitting in the 'Masses versus Contrast' plot, and the parameters in the 
+'Calibration parameters Table. In this case, the data is fitted using non-truncated gaussians. </p>
+
+    <p class="vf-intro__text">b) Use previously known parameters obtained by fitting the function of a line to the
+    	mass versus contrast curve, i.e., contrast = f(mass) = mass*slope + intercept.
+    </p>   
+
+
+</div>
+
+
+</section>
+
+  <!-- IE11 polyfill JS -->
+  <script nomodule crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default"></script>
+  <script src="https://assets.emblstatic.net/vf/v2.4.5/scripts/scripts.js"></script>
+  
+  <!-- Hide div element onclick JS -->
+  <script>
+    function myFunction(divID) {
+      var x = document.getElementById(divID);
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+  
+
+</body>
+</html>

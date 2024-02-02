@@ -1,0 +1,59 @@
+proxy:
+  title: SPC apps
+  logo-url: http://www.openanalytics.eu/sites/www.openanalytics.eu/themes/oa/logo.png
+  template-path: /opt/shinyproxy/templates/custom
+  favicon-path:  /opt/shinyproxy/templates/custom/favicon.png
+  landing-page: /
+  heartbeat-rate: 10000
+  heartbeat-timeout: 60000
+  port: 8080
+  authentication: none
+  hide-navbar: true
+  usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats
+
+# Docker configuration
+  docker:
+    # cert-path: /home/none
+    url: http://localhost:2375
+    port-range-start: 20000
+
+  specs:
+    - id: moltenprot
+      display-name: MoltenProt
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/moltenprot')"]
+      container-image: spc_apps_docker_container
+
+    - id: foldAffinity
+      display-name: FoldAffinity
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/foldAffinity')"]
+      container-image: spc_apps_docker_container
+
+    - id: thermoAffinity
+      display-name: ThermoAffinity
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/thermoAffinity')"]
+      container-image: thermo_affinity
+
+    - id: photoMol
+      display-name: PhotoMol
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/PhotoMol')"]
+      container-image: photo_mol
+
+    - id: raynals
+      display-name: Raynals
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/Raynals')"]
+      container-image: raynals
+
+    - id: chirakit
+      display-name: ChiraKit
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/ChiraKit')"]
+      container-image: chirakit
+
+logging:
+  file:
+    /tmp/shinyproxy.log
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 250MB
+      max-request-size: 250MB
