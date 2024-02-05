@@ -97,6 +97,7 @@ circularDichroismApp
    |   |   |-- cdUnitsConverter.py  # Helpers functions to convert between CD units. E.g. milidegrees to delta epsilon
    |   |   |-- fitting_helpers.py   # Helpers functions to apply PCA/SVD, fit the unfolding datasets, fit the custom datasets
    |   |   |-- get_dssp_summary.py  # Run the DSSP algorithm given a certain protein input file. 
+   |   |   |-- spectra_comparison_helpers.py # To calculate the Normalised Squared Euclidean Distance  
    |   |   |-- helpers.py           # General helper functions
    |   |   |-- loadCDfilesHelpers.py # Helper functions to parse the CD data (in different formats)
    |   |   |-- read_references_to_matrices.py # Helper functions to load custom reference datasets for the sec. str. calculation
@@ -116,6 +117,7 @@ circularDichroismApp
    |   |   |   |-- helpers_plotting.R                 # helper functions for plotting the data
    |   |   |   |-- helpers_unfolding.R                # helper functions to process the unfoldin and 'custom' data
    |   |   |   |-- plotFunctions.R                    # collection of plotting functions
+   |   |   |   |-- plotFunctionsSpectraComparison.R   # collection of plotting functions (spectra comparison module)
    |   |   |-- docs                                   
    |   |   |   |-- about.html                         # HTML text for the About section
    |   |   |   |-- tutorial.html                      # HTML text for the Tutorial section (not used for now!!!!)
@@ -138,6 +140,8 @@ circularDichroismApp
    |   |   |   |-- 2c_ui_fit_secondary_structure_box.R      # To calculate the sec. str. with default or user provided reference sets
    |   |   |   |-- 2d_ui_custom_model_builder.R             # To fit the custom curves
    |   |   |   |-- 2d_ui_load_custom_data.R                 # To load the custom data
+   |   |   |   |-- 2e_ui_load_spectra_comparison_data.R     # To load the comparison data
+   |   |   |   |-- 2e_ui_spectra_comparison_workflow.R      # To compare spectra with categorical labels
    |   |   |   |-- busy_indicator.R                         # Function to show the user a nice ...loading... image
    |   |   |   |-- logo.R                                   # Configuration for the app logo
    |   |   |   |-- theme.R                                  # Theme of the app
@@ -146,6 +150,7 @@ circularDichroismApp
    |   |   |   |-- ui_export_cd_spectra_custom_fit.R        # To export the 'custom' data
    |   |   |   |-- ui_export_cd_spectra_sec_str_fit.R       # To export the sec. str. data
    |   |   |   |-- ui_export_cd_spectra_thermal_fit.R       # To export the thermal unfolding data
+   |   |   |   |-- ui_export_cd_spectra_comparison.R        # To export the comparison data
    |   |   |   |-- ui_export_logbook.R                      # To export a text file in order to reproduce the analysis
    |   |   |-- www                                          # files available to the shiny app 
 ```
