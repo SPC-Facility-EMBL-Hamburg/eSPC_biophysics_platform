@@ -35,7 +35,7 @@ To run the app locally you need to
 3) Install the required R packages (it may take a long time):
 
 ``` R 
-Rscript install_r_packages.R
+Rscript ./appFiles/install_r_packages.R
 ```
 
 4) Install conda/miniconda:
