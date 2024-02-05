@@ -12,7 +12,7 @@ The eSPC webserver is currently hosted through ShinyProxy, with each tool contai
 ```
 sudo bash updateDocker.bash
 ``` 
-
+ 
 ## To install individual tools (for developers)
 
 Follow the README.md document:
@@ -54,6 +54,7 @@ systemctl start docker
 ```
 sudo bash updateDocker.bash
 ```
+
 9) To test the correct installation run shinyproxy
 ```
 java -jar shinyproxy-x.y.z.jar

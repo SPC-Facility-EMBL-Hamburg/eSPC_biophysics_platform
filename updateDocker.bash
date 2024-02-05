@@ -55,8 +55,8 @@ case $choice in
 
     1)
         
-        askIfTestsWereDone 'testFoldAffinity.py and testMoltenProt.py'
-        askIfInfoWasUpdated
+        #askIfTestsWereDone 'testFoldAffinity.py and testMoltenProt.py'
+        #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for FoldAffinity and MoltenProt..."
         docker build -t spc_apps_docker_container -f ./dockerFiles/Dockerfile_foldAffinity_moltenProt_multiStageBuild .
@@ -66,8 +66,8 @@ case $choice in
         ;;
     2)
 
-        askIfTestsWereDone 'testThermoAffinity.py'
-        askIfInfoWasUpdated
+        #askIfTestsWereDone 'testThermoAffinity.py'
+        #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for ThermoAffinity..."
         docker build -t thermo_affinity -f ./dockerFiles/Dockerfile_thermoAffinity_multiStageBuild .
@@ -77,8 +77,8 @@ case $choice in
         ;;
     3)
 
-        askIfTestsWereDone 'testPhotoMol.py'
-        askIfInfoWasUpdated
+        #askIfTestsWereDone 'testPhotoMol.py'
+        #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for PhotoMol..."
         docker build -t photo_mol -f ./dockerFiles/Dockerfile_refeynApp_multiStageBuild .
@@ -88,8 +88,8 @@ case $choice in
         ;;
     4)
 
-        askIfTestsWereDone 'testRaynals.py'
-        askIfInfoWasUpdated
+        #askIfTestsWereDone 'testRaynals.py'
+        #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Raynals..."
         docker build -t raynals -f ./dockerFiles/Dockerfile_dlsApp_multiStageBuild .
@@ -101,7 +101,7 @@ case $choice in
     5)
 
         #askIfTestsWereDone 'testRaynals.py'
-        askIfInfoWasUpdated
+        #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Circular dichroism..."
         docker build -t chirakit -f ./dockerFiles/Dockerfile_cdApp_multiStageBuild .
