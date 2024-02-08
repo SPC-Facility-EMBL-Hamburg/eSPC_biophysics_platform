@@ -244,29 +244,6 @@ def read_jasco_single_MetaData(file):
     # Return the extracted metadata dictionary
     return metadata    
 
-def file_is_plain_csv(file):
-
-    """
-    Return True if the file has only two columns (e.g., wavelength and CD signal)
-    """
-
-    with open(file,encoding='latin-1') as f:
-
-        ls = f.read().splitlines()
-
-        # Skip line with comments
-        ls = [l for l in ls if l.startswith('#')]
-
-        split_by_space     = [l.split()    for l in ls]
-        split_by_comma     = [l.split(',') for l in ls]
-        split_by_semicolon = [l.split(';') for l in ls]
-
-        split_by_space     = [are_all_strings_numeric(lst) and len(lst) == 2 for lst in split_by_space]
-        split_by_comma     = [are_all_strings_numeric(lst) and len(lst) == 2 for lst in split_by_comma]
-        split_by_semicolon = [are_all_strings_numeric(lst) and len(lst) == 2 for lst in split_by_semicolon]
-
-        return all(split_by_space) or all(split_by_comma) or all(split_by_semicolon)
-
 def detectFileType(file):
     
     # Define a dictionary to map file extensions to their corresponding types
@@ -299,72 +276,50 @@ def detectFileType(file):
     if file_is_chirakit_txt_with_header(file):
         return "chirakit_txt_with_header"
 
-    if detect_custom_csv(file):
-        return 'custom_csv'
+    # If the file doesn't match any of the previous cases, open the file and read its lines
+    with open(file,encoding='latin-1') as f:
+        ls = f.read().splitlines()
+        # Iterate through each line and check if it contains both "Wavelength" and "Temperature"
+        for i,l in enumerate(ls):
 
-    if file_is_plain_csv(file):
-        return 'plain_csv'
+            if "Wavelength" in l and 'CircularDichroism' in ls[i-1]:
+                return "ChirascanFile"  # If both keywords are found, the file is of type 'ChirascanFileTemperatureRamp'
 
     # If none of the previous conditions are met, the file type is 'ChirascanFile'
-    return "ChirascanFile"
+    return "plain_csv"
 
-def detect_custom_csv(file):
-
-    '''
-    Detect if the file is a csv with one of the following two formats:
-
-        1) Three columns: wavelength, sample_name, CD signal
-
-        2) N columns + 1, where N is the number of samples: wavelength, sample 1, ..., sample N. 
-
-    '''
+def read_custom_csv(file):
 
     with open(file,encoding='latin-1') as f:
 
         ls = f.read().splitlines()[:80]
 
+        # find if the delimitr could be a comma or a semicolon
         split_str = find_delimiter_character(''.join(ls))
 
-        if split_str == ';':
+    # Try comma or semicolon delimiters.
+    df = pd.read_csv(file,comment="#",encoding='latin1',delimiter=split_str)
 
-            ls = [l.replace(',', '.') for l in ls]
+    # Check if all columns are numeric
+    all_numeric = all(df[col].dtype == np.number for col in df.columns)
 
-        for i,l in enumerate(ls):
-            
-            firstElement = l.split(split_str)[0].lower()
-            
-            # Find if the first element from the splitted line is the word wavelength
-            # or 'XYDATA' (to also load Jasco files)
-            if 'wave' in firstElement or 'wl' in firstElement or 'xyd' in firstElement:
+    # try changing the decimal to ','
+    if not all_numeric:
 
-                firstElementNextLine = ls[i+1].split(split_str)[0]
+        df = pd.read_csv(file,comment="#",encoding='latin1',delimiter=split_str,decimal=',')
 
-                # Find if all the characters from the next line (same column) are numeric
-                if is_float(firstElementNextLine):
-
-                    # Only numeric values between 10 and 600 could make sense
-                    return float(firstElementNextLine) > 10 and float(firstElementNextLine) < 600
-
-    return False
-
-def read_custom_csv(file):
-
-
-    try:
-
-        df = pd.read_csv(file,comment="#",encoding='latin1')
-
-    # Try instead using ';' as separator and ',' as decimal character
-    except:
-
-        df = pd.read_csv(file,comment="#",encoding='latin1',
-            sep=';',decimal=',')
-
-    # If we have only one column, change separator character to spaces
+    # If we have only one column, change separator delimiter to spaces
     if df.shape[1] == 1:
 
         df = pd.read_csv(file,comment="#",delimiter=r"\s+",encoding='latin1')
-        
+
+        all_numeric = all(df[col].dtype == np.number for col in df.columns)
+
+        # try changing the decimal to ','
+        if not all_numeric:
+
+            df = pd.read_csv(file,comment="#",encoding='latin1',delimiter=r"\s+",decimal=',')
+
     if df.shape[1] == 3:
 
         df_wide = df.pivot_table(index=df.columns[0], columns=df.columns[1], values=df.columns[2]).reset_index()
@@ -406,7 +361,6 @@ def read_custom_csv(file):
         wavelength   = np.array(df.iloc[:,0])
         spectra      = np.array(df.iloc[:,1:], dtype='float' )
         spectraNames = np.array(df.columns[1:],dtype='str')   
-
 
     signalHT    = np.empty_like(spectra)
     signalHT[:] = np.nan  # Fill the array with NaN values

@@ -21,7 +21,6 @@ updateProcessingTable <- function(
   session$sendCustomMessage('unbind-DT', 'proccesingInfo')
   output$proccesingInfo <- renderDTtable(df)
   
-  
 }
 
 updateCDFilesInfoTable <- function() {
@@ -947,9 +946,11 @@ observeEvent(input$legendInfo,{
   updateSelectInput(session,"mol2changeColor",NULL,
                     get_legend_from_rhandTable(input$legendInfo),input$mol2changeColor)
   
+
 })
 
 observeEvent(input$legendInfo$changes$changes, {
+  
   # Get the changes made to the table
   changes <- input$legendInfo$changes$changes[[1]]
   
@@ -973,6 +974,7 @@ observeEvent(input$legendInfo$changes$changes, {
     cdAnalyzer$experimentsModif[[names(id)[1]]]$spectraNames[id[1]] <- newSpectraName
     
   }
+  
 })
 
 observeEvent(input$colorForLegend,{
@@ -1053,6 +1055,8 @@ observeEvent(input$triggerProcessing,{
     ids                <- found_ids(internalIDs,c(id1s))
   }
   
+  # Find the experiment names that are required for the processing
+  selected_id <- names %in% (unique(names(ids)))  
 
   # End of -- 1st step Find the first and second spectrum IDs
 
@@ -1060,9 +1064,6 @@ observeEvent(input$triggerProcessing,{
   # In other words, the calculated spectra will not be available for further processing
   opertionIsInMolarUnits       <- grepl('molar', operationUnits, ignore.case = TRUE)
   opertionIsInMeanResidueUnits <- grepl('mean' , operationUnits, ignore.case = TRUE)
-  
-  possible_spectra <- legendDf$Internal.ID
-  selected_id      <- possible_spectra %in% c(spectra1,spectra2) 
   
   molWeights  <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight'  )))[selected_id]
   pathLengths <- (unlist(cdAnalyzer$getExperimentProperties('pathLength'       )))[selected_id]
@@ -1195,6 +1196,7 @@ observeEvent(input$triggerProcessing,{
     }
     
     all_equal <- all(sapply(wlToCheck[-1], function(vec) identical(wlToCheck[[1]], vec)))
+    
     # Abort processing if the wavelength vectors are not equal
     if (!all_equal) {
       
@@ -1215,9 +1217,6 @@ observeEvent(input$triggerProcessing,{
     
   # Change data_loaded to NULL to stop other reactives
   reactives$data_loaded <- NULL   
-    
-  # Obtain the current legends
-  legendDf <- getLegendDF(input$legendInfo)
   
   processingUnitsString <- clean_html_sup_tag(
     workingUnits2ProperLabel(operationUnits)
@@ -1299,7 +1298,7 @@ observeEvent(input$triggerProcessing,{
     signalNew  <- list()
     wlNew      <- list()
     htNew      <- list()
-    
+
     if (operation == 'Smooth') {
       
       windowLength <- as.numeric(spectra2) 
@@ -1356,24 +1355,43 @@ observeEvent(input$triggerProcessing,{
         signal1    <- signalSel[[i]]
         ht1        <- htSel[[i]]
         
-        interpolatedSignals <- interpolateVectors(wlSel1,signal1,wlSel2,signalSel2)
-        
-        if (operation == 'Subtract') {
-          signalNew[[i]] <- interpolatedSignals$y1 - interpolatedSignals$y2
+        if (input$allowLinearInterpolation) {
+         
+          interpolatedSignals <- interpolateVectors(wlSel1,signal1,wlSel2,signalSel2)
+          y1                  <- interpolatedSignals$y1
+          y2                  <- interpolatedSignals$y2
+          wlNew[[i]]          <- interpolatedSignals$x1
+          
+          if (all(is.na(ht1))) {
+            
+            htNew[[i]] <- rep(NA,length(interpolatedSignals$x1))
+            
+          } else {
+            
+            # We do not sum the HT signals!
+            # We return the HT signal of the 'left' selected experiment
+            # The HT signal data points are interpolated (if required)
+            # to match the wavelength of the new generated experiment
+            htNew[[i]]      <- approx(x = wlSel1, 
+                                      y = ht1, 
+                                      xout = interpolatedSignals$x1 , method = "linear")$y
+            
+          }
+          
         } else {
-          signalNew[[i]] <- interpolatedSignals$y1 + interpolatedSignals$y2
+          
+          y1                  <- signal1
+          y2                  <- signalSel2
+          wlNew[[i]]          <- wlSel1
+          htNew[[i]]          <- ht1
         }
         
-        # We do not sum the HT signals!
-        # We return the HT signal of the 'left' selected experiment
-        # The HT signal data points are interpolated (if required)
-        # to match the wavelength of the new generated experiment
-        htNew[[i]]      <- approx(x = wlSel1, 
-                                  y = ht1, 
-                                  xout = interpolatedSignals$x1 , method = "linear")$y
-        
-        wlNew[[i]]      <- interpolatedSignals$x1 
-        
+        if (operation == 'Subtract') {
+          signalNew[[i]] <- y1 - y2
+        } else {
+          signalNew[[i]] <- y1 + y2
+        }
+      
       }
     } 
     
@@ -1405,13 +1423,16 @@ observeEvent(input$triggerProcessing,{
         signalExperiment  <- matrix(signalNew[[correspondingIDs]],ncol = 1)
         htExperiment      <- matrix(htNew[[correspondingIDs]],ncol = 1)
         newSpectraNames   <- c(newExperimentName)
-        
       } else {
         signalExperiment  <- as.matrix(do.call(cbind,signalNew[correspondingIDs]))
         htExperiment      <- as.matrix(do.call(cbind,htNew[correspondingIDs]))
         selSpectraNames   <- cdAnalyzer$experimentsOri[[exp]]$spectraNames[id1s[correspondingIDs]]
         newSpectraNames   <- paste0(selSpectraNames,' ',newSpectraName)
       }
+     
+      # Assign the temperature from the spectrum/a #1
+      
+      expTemperature    <- unlist(temperatureSel[correspondingIDs])
       
       # 5th step (Case 2) - Create one new experiment per selected experiment
       metadata_list <- list(
@@ -1422,8 +1443,7 @@ observeEvent(input$triggerProcessing,{
       )
       
       # Assign the temperature from the spectrum/a #1
-      experimentTemperature  <- cdAnalyzer$experimentsOri[[exp]]$temperature
-      
+
       newExperimentNames <- c(newExperimentNames,newExperimentName)
       
       legendDf <- appendRowsToLegendDataFrame(legendDf,newSpectraNames)
@@ -1456,7 +1476,7 @@ observeEvent(input$triggerProcessing,{
       
       append_cd_experiment(newExperimentName,newSpectraNames,np_array(wlExperiment),
                            signalExperiment,operationUnits,metadata_list,
-                           experimentTemperature,htExperiment,isFake,operationUnits)
+                           expTemperature,htExperiment,isFake,operationUnits)
       
     }
     
@@ -1526,7 +1546,7 @@ observeEvent(input$triggerProcessing,{
   output$legendInfo           <- helperRenderRHandsontable(legendDf)
   
   updateProcessingTable(operation,operationUnits)
-    
+  
   # We need to use lapply instead of a for-loop to avoid R lazy evaluation!
   lapply(newExperimentNames, function (exp) {
     
@@ -1548,8 +1568,9 @@ observeEvent(input$triggerProcessing,{
     
   })
   
-  Sys.sleep(1)
+  Sys.sleep(2)
   reactives$data_loaded <- TRUE
+  
 })
 
 # To update which the selectInput options

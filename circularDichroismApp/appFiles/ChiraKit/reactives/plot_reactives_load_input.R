@@ -1,6 +1,7 @@
 observeEvent(input$wavelengthRange,{
   
   req(reactives$data_loaded)
+  
   reactives$data_loaded <- FALSE
   wlRange <- input$wavelengthRange
   cdAnalyzer$filterDataByWavelength(wlRange[1], wlRange[2])
@@ -52,6 +53,11 @@ output$htSpectra <- renderPlotly({
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
   
+  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  total_columns <- sum(sapply(df_list, length))
+  
+  req(length(legends) == total_columns)
+  
   fig <- plotCDexperimentsHT(cdAnalyzer,
                              input$plot_width,  input$plot_height,
                              input$plot_type,  input$plot_axis_size,
@@ -61,12 +67,17 @@ output$htSpectra <- renderPlotly({
 })
 
 output$cd_ht_spectra <- renderPlotly({
-  
+  return(NULL)
   req( reactives$data_loaded, input$legendInfo, length(cdAnalyzer$experimentNames)>0 )
   
   legends      <- get_legend_from_rhandTable(input$legendInfo)
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
+  
+  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  total_columns <- sum(sapply(df_list, length))
+  
+  req(length(legends) == total_columns)
   
   fig <- plot_cd_and_voltage(cdAnalyzer, input$workingUnits,
                              input$plot_width,  input$plot_height,
@@ -77,7 +88,7 @@ output$cd_ht_spectra <- renderPlotly({
 })
 
 output$cdSpectraMiliDeg <- renderPlotly({
-  
+  return(NULL)
   req(reactives$data_loaded)
   req(input$legendInfo)
   

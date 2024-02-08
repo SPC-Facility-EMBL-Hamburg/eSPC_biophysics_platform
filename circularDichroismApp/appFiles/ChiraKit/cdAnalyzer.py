@@ -167,7 +167,6 @@ class cd_experiment_general:
         "GenCDfile"     : readGenFileData,
         "DatFile"       : readDatFileData,
         "d0xFile"       : readD0xFileData,
-        "custom_csv"    : read_custom_csv,
         "plain_csv"     : read_custom_csv,
         "jasco_simple"  : read_jasco_single_sample_csv,
         "chirakit_txt_with_header"      : readChiraKitTxtData,
@@ -181,7 +180,6 @@ class cd_experiment_general:
         "GenCDfile"     : readGenFileMetaData,
         "DatFile"       : readDatFileMetaData,
         "d0xFile"       : readD0xFileMetaData,
-        "custom_csv"    : readChiraKitTxtMetaData,
         "plain_csv"     : readChiraKitTxtMetaData,
         "jasco_simple"  : read_jasco_single_MetaData,
         "chirakit_txt_with_header"      : readChiraKitTxtMetaData,
@@ -1800,6 +1798,7 @@ class cdAnalyzer:
             self.experimentsModif[expName].wavelength        = filter_vector_by_values(wl,minWL,maxWL)
 
         return None
+
 
 if False:
     
