@@ -105,16 +105,8 @@ class cd_experiment_general:
 
         self.units     = unitsBegin
 
-        nres = 1
-
-        # Treat the sample as a solution of aminoacids
-        if unitsBegin in ['meanResidueMolarEllipticity','meanResidueMolarExtinction']:
-
-            unitsBegin     = unitsBegin.replace("meanResidueM", "m")
-            nres           = self.numberOfResidues
-
         signalInAbsUnits = convert2absorbance(self.signalInput,
-            unitsBegin, self.concentration, self.pathLength, self.molecularWeight, nres)
+            unitsBegin, self.concentration, self.pathLength, self.molecularWeight, self.numberOfResidues)
 
         self.signalAbs = signalInAbsUnits
           
@@ -129,8 +121,6 @@ class cd_experiment_general:
 
         """
 
-        nres = 1
-
         self.desiredUnits      = unitsEND
 
         # Just copy the matrix in case the input and desired units are the same
@@ -141,14 +131,8 @@ class cd_experiment_general:
         # Otherwise, compute the signal using the desired CD units
         else:
 
-            # Treat the sample as a solution of aminoacids
-            if unitsEND in ['meanResidueMolarEllipticity','meanResidueMolarExtinction']:
-
-                unitsEND = unitsEND.replace("meanResidueM", "m")
-                nres       = self.numberOfResidues
-
             signalNew = absorbance2desiredUnits(self.signalAbs,
-                unitsEND, self.concentration, self.pathLength, self.molecularWeight, nres)
+                unitsEND, self.concentration, self.pathLength, self.molecularWeight, self.numberOfResidues)
 
             self.signalDesiredUnit = signalNew
 
@@ -200,7 +184,7 @@ class cd_experiment_general:
         else:
 
             self.wavelength, self.signalInput, self.spectraNames, self.signalHT = readDataFunctionDict[fileType](file)
-                                
+
             # If the file is of type d0x, load the temperature data directly from the file
             if fileType == 'd0xFile':
 
@@ -1798,7 +1782,6 @@ class cdAnalyzer:
             self.experimentsModif[expName].wavelength        = filter_vector_by_values(wl,minWL,maxWL)
 
         return None
-
 
 if False:
     

@@ -1,4 +1,4 @@
-
+import numpy as np
 """
 
 Based on https://www.chem.uci.edu/~dmitryf/manuals/Fundamentals/CD%20practical%20guide.pdf
@@ -63,8 +63,15 @@ def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWe
 
 	"""
 
-	if unitsBegin in ['molarExtinction','molarEllipticity']:
-		value = value / numberOfResidues  
+	if unitsBegin in ['meanResidueMolarExtinction','meanResidueMolarEllipticity']:
+
+		try: 
+			molecularWeight = molecularWeight / numberOfResidues  
+			unitsBegin      = unitsBegin.replace("meanResidueM", "m")
+
+		except:
+
+			return np.nan
 
 	if unitsBegin == "absorbance":
 		return value
@@ -73,10 +80,10 @@ def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWe
 		return np.nan
 
 	functions = {
-	'milliabsorbance'   : milliabsorbance2absorbance,
+	'milliabsorbance'  : milliabsorbance2absorbance,
 	'molarExtinction'  : molarExtinction2absorbance,
 	'degrees'          : degrees2absorbance,
-	'millidegrees'      : millidegrees2absorbance,
+	'millidegrees'     : millidegrees2absorbance,
 	'molarEllipticity' : molarEllipticity2absorbance
 	}
 
@@ -84,20 +91,27 @@ def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWe
 
 def absorbance2desiredUnits(value,unitsEnd,concentration=1,pathLength=1,molecularWeight=50,numberOfResidues=1):
 
+	if unitsEnd in ['meanResidueMolarExtinction','meanResidueMolarEllipticity']:
+
+		try: 
+			molecularWeight = molecularWeight / numberOfResidues  
+			unitsEnd        = unitsEnd.replace("meanResidueM", "m")
+
+		except:
+
+			return np.nan
+
 	if 0 in [concentration,pathLength,molecularWeight] and unitsEnd in ['molarExtinction','molarEllipticity']:
 		return np.nan
-
-	if unitsEnd in ['molarExtinction','molarEllipticity']:
-		value = value / numberOfResidues  
-
+ 
 	if unitsEnd == "absorbance":
 		return value
 
 	functions = {
-	'milliabsorbance'   : absorbance2milliabsorbance,
+	'milliabsorbance'  : absorbance2milliabsorbance,
 	'molarExtinction'  : absorbance2molarExtinction,
 	'degrees'          : absorbance2degrees,
-	'millidegrees'      : absorbance2millidegrees,
+	'millidegrees'     : absorbance2millidegrees,
 	'molarEllipticity' : absorbance2molarEllipticity
 	}
 

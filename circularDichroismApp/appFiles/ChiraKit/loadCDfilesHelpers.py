@@ -400,7 +400,7 @@ def readChiraKitTxtMetaData(file):
     metadata = {}
 
     # Open the file for reading
-    with open(file, encoding='latin-1') as f:
+    with open(file, encoding='utf-8') as f:
         # Read all lines and split them into a list of lines
         ls = f.read().splitlines()
         

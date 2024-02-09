@@ -67,7 +67,7 @@ output$htSpectra <- renderPlotly({
 })
 
 output$cd_ht_spectra <- renderPlotly({
-  return(NULL)
+  
   req( reactives$data_loaded, input$legendInfo, length(cdAnalyzer$experimentNames)>0 )
   
   legends      <- get_legend_from_rhandTable(input$legendInfo)
@@ -88,7 +88,7 @@ output$cd_ht_spectra <- renderPlotly({
 })
 
 output$cdSpectraMiliDeg <- renderPlotly({
-  return(NULL)
+  
   req(reactives$data_loaded)
   req(input$legendInfo)
   
