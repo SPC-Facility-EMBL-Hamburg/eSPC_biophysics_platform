@@ -459,7 +459,13 @@ observeEvent(input$submitExperimentalDetails,{
   })
   
   # Assign the mean of the sample scans temperature to the rest of the curves
-  newTemp        <- mean(unlist(temperatureSel))
+  temps          <- unlist(temperatureSel)
+  
+  if (all(is.null(temps))) {
+    newTemp <- NA
+  } else {
+    newTemp        <- mean(temps,na.rm = T)
+  }
   
   signalSelVectorized <- list()
   htSelVectorized     <- list()

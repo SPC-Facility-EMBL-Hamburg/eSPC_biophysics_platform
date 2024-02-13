@@ -3,26 +3,20 @@ import numpy  as np
 import re
 import os
 
+
+from pandas.api.types import is_numeric_dtype
+
 '''
 Dear dev, 
 
 here you'll find helper functions to load the spectra data and 
 the associated metadata from circular dichroism data files
 
-So far, we have six different data loading functions:
-
-    readCustomCSVData, readD0xFileData, readDatFileData, 
-    readPCCDBFileData, readGenFileData, readChirascanFileData    
-
 For each data loading function, the following values should be returned:
 
     wavelength (vector), spectra (matrix), spectra names (vector), 
     high tension voltage (matrix) 
  
-And we have also one special function to load temperature ramps:
-
-    readChirascanFileDataThermalRamp
-
 '''
 
 def file_ends_with_pattern(file_path):
@@ -301,7 +295,7 @@ def read_custom_csv(file):
     df = pd.read_csv(file,comment="#",encoding='latin1',delimiter=split_str)
 
     # Check if all columns are numeric
-    all_numeric = all(df[col].dtype == np.number for col in df.columns)
+    all_numeric = all(is_numeric_dtype(df[col]) for col in df.columns)
 
     # try changing the decimal to ','
     if not all_numeric:

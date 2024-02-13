@@ -97,6 +97,12 @@ getFileNameExtension <- function (fn) {
 
 remove_file_extension <- function(name) {
   
+  # Heuristic rule - if no '.' in the last 6 characters, return the same input
+  
+  last_six_characters <- substr(name, nchar(name) - 6, nchar(name))
+  
+  if ( !grepl('\\.',last_six_characters) ) return( name )
+  
   fileExtension <- getFileNameExtension(name)
   
   # Remove extension, if it does not end with .dx where x is a number

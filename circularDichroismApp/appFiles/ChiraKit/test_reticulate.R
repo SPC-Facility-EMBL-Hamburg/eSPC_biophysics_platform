@@ -16,42 +16,53 @@ source_python('./loadCDfilesHelpers.py')
 
 t1 = cd_experiment_general()
 t2 = cd_experiment_general()
-t3 = cd_experiment_general()
-t4 = cd_experiment_general()
-t5 = cd_experiment_general()
-t6 = cd_experiment_general()
 
-t1$load_data('/home/os/Downloads/R78907.d01','t')
-t2$load_data('/home/os/Downloads/R78907.d02','t')
-t3$load_data('/home/os/Downloads/R78907.d03','t')
-t4$load_data('/home/os/Downloads/R78906.d01','t')
-t5$load_data('/home/os/Downloads/R78906.d02','t')
-t6$load_data('/home/os/Downloads/R78906.d03','t')
+t1$load_data('/home/os/Downloads/1ITa_peptide.csv','t')
+t2$load_data('/home/os/Downloads/buffer_background.csv','t')
 
-t = cd_experiment_comparison()
+# List of signal dataframes 
+signalSel <- list(t1$signalInput)
+htSel     <- list(t1$signalHT)
 
-signal = do.call(
-  cbind,
-  list(t1$signalInput, t2$signalInput,t3$signalInput,
-       t4$signalInput,t5$signalInput,t6$signalInput)
-  )
+temperatureSel <- list(t1$temperature)
 
-t$signalDesiredUnit     = np_array(signal)
+# Assign the mean of the sample scans temperature to the rest of the curves
+temps          <- unlist(temperatureSel)
 
-t$labels     = np_array(c('c','c','c','s','s','s'))
-t$wavelength = t1$wavelength
+if (all(is.null(temps))) {
+  newTemp <- NA
+} else {
+  newTemp        <- mean(temps,na.rm = T)
+}
 
-t$summarise_signal_per_label()
-t$generate_comparison_labels()
-t$generate_difference_spectra()
-t$find_distances()
-t$workingUnits <- 'meanResidueMolarExtinction'
+signalSelVectorized <- list()
+htSelVectorized     <- list()
 
-source("server_files/helpers_plotting.R")
-source("server_files/plotFunctionsSpectraComparison.R")
+spectra_counter    <- 0
+experiment_counter <- 0
 
-plot_distances(t$comparison_labels,t$distances,'s')
+# Transform list of signal dataframes into a list of signal vectors
+for (signalDF in signalSel) {
+  
+  experiment_counter <- experiment_counter + 1
+  htDF               <- htSel[[experiment_counter]]
+  
+  print('here1')
+  
+  for (columnID in 1:ncol(signalDF)) {
+    spectra_counter                        <- spectra_counter + 1
+    signalSelVectorized[[spectra_counter]] <- signalDF[,columnID]
+    htSelVectorized[[spectra_counter]]     <- htDF[,columnID]
+  }
+  
+}
 
+wlSelVectorized <- list(seq(280,180,length.out = 200),
+                        seq(280,180,length.out = 200),
+                        seq(280,180,length.out = 200)
+)
 
+interpolatedAverage <- averageListOfVectors(wlSelVectorized,signalSelVectorized)
+signalNewSample     <- matrix(interpolatedAverage$average,ncol = 1)
 
 
