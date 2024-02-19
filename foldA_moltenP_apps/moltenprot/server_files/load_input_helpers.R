@@ -98,6 +98,8 @@ dsf_objects_from_xlsx_files <- function(xlsx_files) {
     if ("Data Export" %in% sheet_names) {
       eval(parse(text=var_name))$load_panta_xlsx(xlsx)
       # Remove scattering signal because this data is not present in Panta instruments
+    } else if ("Profiles_raw" %in% sheet_names) {
+      eval(parse(text=var_name))$load_tycho_xlsx(xlsx)
     } else {
       eval(parse(text=var_name))$load_nanoDSF_xlsx(xlsx)
     }
@@ -108,6 +110,22 @@ dsf_objects_from_xlsx_files <- function(xlsx_files) {
     dsf_objects <- c(dsf_objects,eval(parse(text=var_name)))
   }
   return(list('dsf_objects'=dsf_objects,'signal_keys'=signal_keys))
+}
+
+## Remove non matching data given a certain tolerance
+## Used to remove rows from a dataframe where the temperatue data is not present in another dataframe 
+
+## Requires:
+## - addVector: temperature vector
+## - refVector: reference temperature vector
+
+filter_non_matching_temperature <- function(addVector,refVector,tolerance=0.1) {
+  
+  idx <- sapply(addVector, function(x) {
+    return(min(abs(x - refVector)) <= tolerance)
+  })
+  
+  return(idx) # boolean vector
 }
 
 ## Merge DSF objects 
@@ -147,6 +165,11 @@ get_merged_signal_dsf <- function(dsf_objects,signal_type) {
       df2add               <- data.frame("temp"=dsf_objects[[i]]$temps,dsf_objects[[i]]$fluo)
       colnames2add         <- c(dsf_objects[[i]]$conditions_original)
       colnames(df2add)[-1] <- colnames2add
+      
+      # Remove non-matching data
+      idx    <- filter_non_matching_temperature(df2add$temp,ref_df$temp)
+      df2add <- df2add[idx,]
+      
       setDT(df2add)
       setkey(df2add, temp)
       #Merge datasets based on nearest temperature data

@@ -42,7 +42,6 @@ split_vec <- function(vector,chunck_n) {
 
 ## Make fluorescence dataframe for plotting. Needs the fluorescence matrix, concentrations and temperatures
 ## The columns matches the concentration vector and the rows matches the temperature vector
-
 make_df4plot <- function(fluo_matrix,conc_vector,temp_vector) {
   
   df           <- data.frame(fluo_matrix)

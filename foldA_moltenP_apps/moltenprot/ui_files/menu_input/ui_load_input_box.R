@@ -6,8 +6,8 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                     fileInput("FLf", NULL,accept = c(".xlsx",".zip",".xls",".txt",'.csv')),
                    tippy::tippy_this(elementId = "info_uu1-1",
                                      tooltip = "Check the User Guide to understand the format of the input files. 
-                   Hint: Multiple Prometheus and Panta spreadsheet files can be combined in zip an loaded
-                   together.",placement = "right"))),
+                   Hint: In the case of Prometheus, Panta, or Tycho spreadsheet files, you can combine them in a zip (.zip extension) 
+                   and load them together. The zip should have only one type of file.",placement = "right"))),
       
       # Little hack to use the withBusyIndicatorUI function (loading spinner)
       # This button is not visible in the UI
