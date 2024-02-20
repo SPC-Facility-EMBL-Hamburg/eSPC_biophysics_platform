@@ -29,7 +29,7 @@ function(input, output, session) {
   # Delete all the files inside the folder we have created during this Session. 
   session$onSessionEnded(function() {
     #  setwd("..")
-    system(paste0("rm -f ",users_dir,total_folders,"/*"))
+    system(paste0("rm -rf ",users_dir,total_folders,"/*"))
     #  stopApp()
   })
 }

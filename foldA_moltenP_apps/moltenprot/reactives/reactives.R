@@ -20,7 +20,7 @@ observeEvent(input$FLf,{
         system(paste0("rm -f *xlsx"))
         file.copy(input$FLf$datapath,"0.zip",overwrite=TRUE)
         unzip("0.zip")
-        xlsx_files <- list.files(".",pattern = "xlsx")
+        xlsx_files <- list.files(".",pattern = "xlsx",recursive=T)
         
         dsf_objects_from_xlsx_files <- dsf_objects_from_xlsx_files(xlsx_files)
         
