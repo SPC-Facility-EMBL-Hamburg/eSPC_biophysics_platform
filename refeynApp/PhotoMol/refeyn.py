@@ -20,30 +20,61 @@ class Refeyn:
         return None
     
     def load_data_h5(self,filename):
+
         self.fn           = filename
         self.massesLoaded = False
 
         data = h5py.File(self.fn, 'r')
-        contrasts       = np.array(data['contrasts']).squeeze()
-        self.contrasts  = contrasts[~np.isnan(contrasts)]
 
-        if 'masses_kDa' in data.keys():
+        data_keys = data.keys()
+
+        # only one dataset
+        if 'contrasts' in data_keys:
+
+            contrasts       = np.array(data['contrasts']).squeeze()
+            self.contrasts  = contrasts[~np.isnan(contrasts)]
+
+        if 'masses_kDa' in data_keys:
 
             masses_kDa      = np.array(data['masses_kDa']).squeeze()
-            self.masses_kDa = masses_kDa[~np.isnan(masses_kDa)]
+            self.masses_kDa = masses_kDa 
+            self.create_binding_events()
 
-            # Check we have some data
-            if len(self.masses_kDa) > 50:
+        else:
 
-                self.n_binding    = np.sum(self.masses_kDa >= 0)
-                self.n_unbinding  = np.sum(self.masses_kDa <  0)
+            if 'calibrated_values' in data_keys:
 
-                ## Find peaks for big masses
+                gradient        = np.array(data['calibration']['gradient'])
+                offset          = np.array(data['calibration']['offset'])
 
-                self.create_histo([0,max(self.masses_kDa)],bin_width=10)
-                self.findInitialPeaks()
+                self.masses_kDa   = compute_contrasts_to_mass(self.contrasts,gradient,offset)
+                self.create_binding_events()
 
-                self.massesLoaded = True
+        # Load merged data
+        if not self.massesLoaded and 'per_movie_events' in data_keys:
+
+            allMasses    = []
+            allContrasts = []
+
+            for movie in data['per_movie_events'].keys():
+
+                try: 
+
+                    pyObj     = data['per_movie_events'][movie]
+                    contrasts = np.array(pyObj['contrasts'])
+                    gradient  = np.array(pyObj['calibration']['gradient'])
+                    offset    = np.array(pyObj['calibration']['offset'])
+                    masses    = compute_contrasts_to_mass(contrasts,gradient,offset)
+                    allMasses.append(masses)
+                    allContrasts.append(contrasts)
+
+                except:
+
+                    pass
+            
+            self.masses_kDa = np.concatenate([arr for arr in allMasses])
+            self.contrasts  = np.concatenate([arr for arr in allContrasts])
+            self.create_binding_events() 
 
         return None
 
@@ -62,15 +93,36 @@ class Refeyn:
 
             try:
 
-                self.n_binding    = np.sum(self.masses_kDa >= 0)
-                self.n_unbinding  = np.sum(self.masses_kDa <  0)
-                self.create_histo([0,max(self.masses_kDa)],bin_width=10)
-                self.findInitialPeaks()
-                self.massesLoaded = True
+                self.create_binding_events()
 
             except:
                 
                 pass
+
+        return None
+
+    def create_binding_events(self):
+
+        self.masses_kDa   = self.masses_kDa[~np.isnan(self.masses_kDa)]
+        self.n_binding    = np.sum(self.masses_kDa >= 0)
+        self.n_unbinding  = np.sum(self.masses_kDa <  0)
+
+        self.create_histo([0,max(self.masses_kDa)],bin_width=10)
+        self.findInitialPeaks()
+        self.massesLoaded = True
+
+        return None
+
+    def contrastsToMass(self,slope,intercept):
+
+        try:
+
+            self.masses_kDa = compute_contrasts_to_mass(self.contrasts,slope,intercept)
+            self.create_binding_events()
+        
+        except:
+
+            pass
 
         return None
 
@@ -79,29 +131,6 @@ class Refeyn:
         pks_initial       = findPeaks(self.hist_counts,self.hist_mass)
         self.pks_initial  = [int(p) for p in pks_initial if p >= 0]             
 
-        return None
-
-    def contrastsToMass(self,slope,intercept):
-        '''
-        Function to convert masses from
-        contrasts using known calibration parameters 
-
-        Caution! slope and intercept are based on f(mass) = contrast !!!! 
-        In other words, contrast = slope*mass + intercept
-
-        '''
-        
-        interceptInverse = -intercept / slope 
-        slopeInverse     = 1 / slope          
-
-        self.masses_kDa   = np.polyval(np.array([slopeInverse,interceptInverse]), self.contrasts)
-        self.n_binding    = np.sum(self.masses_kDa >= 0)
-        self.n_unbinding  = np.sum(self.masses_kDa <  0)
-
-        self.create_histo([0,max(self.masses_kDa)],bin_width=10)
-        self.findInitialPeaks()
-        self.massesLoaded = True
-        
         return None
 
     def export_h5_dataset(self,filename):
@@ -173,11 +202,14 @@ class Refeyn:
         Fit gaussians to histogram
         guess: list with guessed centers, defines the number of gaussians to be used, 
         '''
-        # If no guess are taken, only fit one gaussian and use maximum in histogram as guess
+        # If no guess are taken, return None
+
+        self.fit_table    = pd.DataFrame()
 
         if len(guess_pos) == 0:
             return None
         else:
+
             # Get amplitude for each guess position
             guess_amp = []
             for pos in guess_pos:
@@ -200,60 +232,32 @@ class Refeyn:
         hist_counts = self.hist_counts * values_have_sense
         hist_mass   = self.hist_mass   
 
-        # Do fit
-        self.popt, self.pcov = curve_fit(func, hist_mass, hist_counts, p0=fit_guess, bounds=bounds)  #, method='dogbox', maxfev=1E5)
-        # Create fit and individual gaussians for plotting
-        # Finer grid
-        x = np.linspace(np.min(self.hist_mass), np.max(self.hist_mass), 800)
-        single_gauss = []
-        for i in range(0, len(self.popt), 3):
-            ctr = self.popt[i]
-            amp = self.popt[i+1]
-            wid = self.popt[i+2]
-            single_gauss.append(func(x, ctr, amp, wid))
-        
-        # Sum of all
-        fit_sum = func(x, *self.popt)
+        try: 
 
-        # Create one array for all
-        self.fit = np.column_stack((x, np.array(single_gauss).T, fit_sum))
-        # Errors
-        self.fit_error = np.sqrt(np.diag(self.pcov))
-        # Create fit table
-        self.create_fit_table()
+            # Do fit
+            self.popt, self.pcov = curve_fit(func, hist_mass, hist_counts, p0=fit_guess, bounds=bounds)  #, method='dogbox', maxfev=1E5)
+            # Create fit and individual gaussians for plotting
+            # Finer grid
+            x = np.linspace(np.min(self.hist_mass), np.max(self.hist_mass), 800)
+            single_gauss = []
+            for i in range(0, len(self.popt), 3):
+                ctr = self.popt[i]
+                amp = self.popt[i+1]
+                wid = self.popt[i+2]
+                single_gauss.append(func(x, ctr, amp, wid))
+            
+            # Sum of all
+            fit_sum = func(x, *self.popt)
+
+            # Create one array for all
+            self.fit = np.column_stack((x, np.array(single_gauss).T, fit_sum))
+            # Errors
+            self.fit_error = np.sqrt(np.diag(self.pcov))
+            # Create fit table
+            self.create_fit_table()
+
+        except:
+
+            pass
 
         return None
-
-if False: 
-    
-    refeyn = Refeyn()
-
-    #refeyn.load_data_h5("demoTestFile")
-
-    refeyn.load_data_h5("/home/osvaldo/Downloads/test.h5")
-
-    print(refeyn.pks_initial)
-
-    #massActual = refeyn.masses_kDa
-
-    #refeyn.contrastsToMass(-5.72173609e-05,4.73634440e-05)
-
-    #massNew    = refeyn.masses_kDa
-
-    #refeyn.create_histo(window=np.array([0,1000]),bin_width=4)
-
-    #refeyn.load_data("/home/osvaldo/Downloads/eventsFitted.h5")
-    #print(refeyn.hist_mass)
-    #print(refeyn.pks_initial)
-
-    #pks = findPeaks(refeyn.hist_counts,refeyn.hist_mass)
-    #print(pks)
-    #refeyn.fit_histo(guess_pos=np.array([66,148,480]),tol=20,max_std= 100) 
-
-    #print(refeyn.fit_table)
-
-    #data = h5py.File("/home/osvaldo/Downloads/eventsFitted.h5", 'r')
-    #print(data.keys())
-
-    #df = np.array(data['mass_model']).squeeze()
-    #print(df)

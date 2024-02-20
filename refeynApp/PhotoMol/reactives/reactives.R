@@ -3,23 +3,26 @@ reactives <- reactiveValues(data_loaded=FALSE,data_loadedCalibration=FALSE,
 
 updateInputBox <- function(){
   limits <- get_mass_limits(refeyn$hist_counts,refeyn$hist_mass) 
+  
   updateSliderInput(session,"window_range",NULL,min = limits$min, 
                     max = limits$max,value = c(0,limits$max),step = 1)
-  # Let's improve the initial guess for the peaks
-  updateTextInput(session, "starting_values", value = paste(refeyn$pks_initial,collapse=" "))
-  
+
   updateNumericInput(session,"leftLimitWindowRange",
-                     value = limits$min, min = -1e6, max = 0, step = 1)
+                     value = limits$min, min = -1e12, max = 0, step = 1)
   updateNumericInput(session,"rightLimitWindowRange",
-                     value = limits$max, min = 0, max = 1e6, step = 1)
+                     value = limits$max, min = 0, max = 1e12, step = 1)
   
-  if (max(refeyn$pks_initial) > 500) {
+  # Let's improve the initial guess for the peaks
+  if  (length(refeyn$pks_initial) > 0) {
+    updateTextInput(session, "starting_values", value = paste(refeyn$pks_initial,collapse=" "))
     
-    updateSliderInput(session,"upper_limit_std",NULL,min = 5, max = 200,value = 200)
-    updateSliderInput(session,"position_tolerance",NULL,min = 1, max = 200,value = 200)
-    
+    if (max(refeyn$pks_initial) > 500) {
+      
+      updateSliderInput(session,"upper_limit_std",NULL,min = 5, max = 200,value = 200)
+      updateSliderInput(session,"position_tolerance",NULL,min = 1, max = 200,value = 200)
+      
+    }
   }
-  
 }
 
 # Load example dataset
@@ -62,7 +65,6 @@ observeEvent(input$massPhotometryFile,{
                  from contrasts to masses.", type = "warning")
     }
     
-    
     Sys.sleep(1)
     
   })
@@ -96,7 +98,7 @@ modify_refeyn_data <- reactive({
     starting_values <- get_guess_positions(input$starting_values)
     
     req(all(abs(py_to_r(starting_values)) > input$min_observed_mass))
-
+    
     refeyn$fit_histo(guess_pos=starting_values,tol=input$position_tolerance,
                      max_std=input$upper_limit_std,
                      min_observed_mass=input$min_observed_mass,
@@ -174,6 +176,8 @@ output$counts_plot <- renderPlotly({
   req(refeyn$massesLoaded)
   req(input$legendInfo)
   
+  req(length(py_to_r(get_guess_positions(input$starting_values))) > 0)
+  
   legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
   colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))
   sels    <- isolate(get_sel_from_rhandTable(input$legendInfo))
@@ -189,7 +193,7 @@ output$counts_plot <- renderPlotly({
     plot <- addLabels2plotRefeynFit(plot,refeyn$fit_table[,1],refeyn$fit_table[,5],
                                     sels,input$plot_axis_size)
   }
-  
+
   return(plot)
  # defined in server_files/plot_functions.R
 }
@@ -200,6 +204,9 @@ output$fittedParams <- renderTable({
   if (is.null(modify_refeyn_data())) {return(NULL)}
   req(refeyn$massesLoaded)
   table <- refeyn$fit_table
+  
+  req(nrow(table) > 0)
+  
   return(table[,1:(ncol(table)-1)])
 },digits = 0)
 
@@ -209,6 +216,7 @@ output$counts_plotNormalized <- renderPlotly({
 
   req(refeyn$massesLoaded)
   req(input$legendInfo)
+  req(length(py_to_r(get_guess_positions(input$starting_values))) > 0)
   
   legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
   colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))

@@ -169,10 +169,10 @@ plotRefeynFit <- function(refeyn,baseline,plot_width, plot_height, plot_type, ax
   if (addMassesToLegend)   legends <- paste0(legends," : ",round(fitted_means))
   
   if (!contrasts) legends <- paste0(legends," kDa")
-
+  
   gaussianInd <- refeynFit[,-ncol(refeynFit)]
   colnames(gaussianInd) <- c("x",legends)
-    
+  
   gaussianInd <- reshape2::melt(gaussianInd,id.vars="x") %>% filter(value > baseline+0.05)
   gaussianInd$variable <- as.factor(gaussianInd$variable)
   
@@ -192,6 +192,8 @@ plotRefeynFit <- function(refeyn,baseline,plot_width, plot_height, plot_type, ax
     }
     
   }
+    
+  
   
   start <- refeyn$hist_window[1]
   end   <- refeyn$hist_window[2]

@@ -72,3 +72,20 @@ def r_squared(data, fit):
     ss_tot = np.sum(np.power(fit - mean_data, 2))
     ss_res = np.sum(np.power(data - fit, 2))
     return 1 - (ss_res/ss_tot)
+
+def compute_contrasts_to_mass(contrasts,slope,intercept):
+        '''
+        Function to convert masses from
+        contrasts using known calibration parameters 
+
+        Caution! slope and intercept are based on f(mass) = contrast !!!! 
+        In other words, contrast = slope*mass + intercept
+
+        '''
+
+        interceptInverse = -intercept / slope 
+        slopeInverse     = 1 / slope          
+
+        masses_kDa   = np.polyval(np.array([slopeInverse,interceptInverse]), contrasts)
+
+        return masses_kDa

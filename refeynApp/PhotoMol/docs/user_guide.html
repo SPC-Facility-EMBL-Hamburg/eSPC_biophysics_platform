@@ -41,7 +41,7 @@
     
 <div id="inputFile" style="display:none">
   
-    <p class="vf-intro__text">PhotoMol accepts as input a '.h5' (Hierarchical Data Format) file <a href="demo.h5" download>(demo.h5)</a>. This file should have one 1D dataset called 'masses_kDa' and can be exported using the software Refeyn DiscoverMP. In the DiscoverMP version < 2.5, the file eventsFitted.h5 is saved in the folder when saving the results. In version 2.5 the events can be exported individually selecting a custom file name. For calibration, only a dataset called 'contrasts' is needed.</p>
+    <p class="vf-intro__text">PhotoMol accepts as input a '.h5' (Hierarchical Data Format) file <a href="demo.h5" download>(demo.h5)</a>. This file should have one 1D dataset called 'masses_kDa' and can be exported using the software Refeyn DiscoverMP. In the DiscoverMP version < 2.5, the file eventsFitted.h5 is saved in the folder when saving the results. In version 2.5 the events can be exported individually selecting a custom file name. For calibration, only a dataset called 'contrasts' is needed. If the dataset named 'masses_kDa' is not present, but a dataset containing calibration parameters called 'calibration' exists, the contrasts will be converted to masses.</p>
 
 <p class="vf-intro__text"> Additionally, a  <a href="eventsFound.csv" download>(csv)</a> (comma-separated values) file with headers can be loaded. The column 'masses_kDa' and 'contrasts' are respectively required for the mass distribution data analysis and calibration.</p>
    

@@ -63,8 +63,13 @@ get_guess_positions <- function(guess_positions_list,factor=1) {
 
 get_mass_limits <- function(hist_counts,hist_mass) {
   
-  min <- as.integer(hist_mass[min(which(hist_counts >= 10))]-60)
-  max <- as.integer(hist_mass[max(which(hist_counts >= 10))]+100)
+  if (any(hist_counts >= 10)) {
+    min <- as.integer(hist_mass[min(which(hist_counts >= 10))]-60)
+    max <- as.integer(hist_mass[max(which(hist_counts >= 10))]+100)
+  } else {
+    min <- as.integer(min(hist_mass) - 20)
+    max <- as.integer(max(hist_mass) + 20)
+  }
   
   return(list("min"=roundUp(min,10),"max"=roundUp(max,10)))
   

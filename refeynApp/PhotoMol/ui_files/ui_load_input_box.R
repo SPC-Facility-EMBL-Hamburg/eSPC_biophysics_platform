@@ -51,7 +51,7 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
         column(8, p(HTML("<b>Starting values</b>"),
                     span(shiny::icon("info-circle"), id = "info_uu1-5"),
                     
-                    textInput("starting_values", label=NULL,value="50"),
+                    textInput("starting_values", label=NULL,value=""),
                     tippy::tippy_this(elementId = "info_uu1-5",
                                  tooltip = "Input one starting value for each truncated gaussian that you want to fit. 
                                  The starting values should be separated by spaces, 
