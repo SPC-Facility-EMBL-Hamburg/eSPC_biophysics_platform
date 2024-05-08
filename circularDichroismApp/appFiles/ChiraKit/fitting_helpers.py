@@ -366,8 +366,7 @@ def generate_initial_params_combinations(n_params,paramsSign,
         n_params_temp = 5
 
     combisLimit = combisLimitLst[n_params_temp-1]
-
-    combisLimit = combisLimit * ( 1.7** (len([x for x in paramsSign if x != 'unkown']) ) )
+    combisLimit = combisLimit * ( 1.7** (len([x for x in paramsSign if x != 'unknown']) ) )
 
     NlogNumbers = int(10**(np.log10(combisLimit) /  n_params) )
 

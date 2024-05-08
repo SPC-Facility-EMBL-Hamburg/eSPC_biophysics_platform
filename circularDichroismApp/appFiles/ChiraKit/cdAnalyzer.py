@@ -1,6 +1,7 @@
 import copy
 import sys
 import re
+import warnings
 
 from loadCDfilesHelpers  import *
 from cdUnitsConverter    import *
@@ -924,8 +925,8 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         # Set initial parameters
         p0          = np.concatenate(((1,np.median(self.chem_concentration)),self.bNs,self.bUs,self.kNs,self.kUs))
 
-        low_bound    =  np.array([0  , np.min(self.chem_concentration) + 1 ] + [x/20   if x>0 else 20*x  for x in p0[2:]])
-        high_bound   =  np.array([1e5, np.max(self.chem_concentration) - 1 ] + [20*x   if x>0 else x/20  for x in p0[2:]]) 
+        low_bound    =  np.array([0  , np.min(self.chem_concentration) + 1 ] + [x/100   if x>0 else 100*x  for x in p0[2:]])
+        high_bound   =  np.array([1e5, np.max(self.chem_concentration) - 1 ] + [100*x   if x>0 else x/100  for x in p0[2:]]) 
 
         listOfChemConcentration = [self.chem_concentration for _ in wavelengths]
         listOfSignals           = signal.tolist()
@@ -1142,8 +1143,8 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
         # Set initial parameters
         p0          = np.concatenate(((self.global_Tm,100),self.bNs,self.bUs,self.kNs,self.kUs))
 
-        low_bound    =  [min(self.temperature)+7,10 ] + [x/20   if x>0 else 20*x  for x in p0[2:]]
-        high_bound   =  [max(self.temperature)-6,250] + [20*x   if x>0 else x/20  for x in p0[2:]] 
+        low_bound    =  [min(self.temperature)+7,10 ] + [x/100   if x>0 else 100*x  for x in p0[2:]]
+        high_bound   =  [max(self.temperature)-6,250] + [100*x   if x>0 else x/100  for x in p0[2:]] 
 
         listOfTemperatures = [self.temperature for _ in wavelengths]
         listOfSignals      = signal.tolist()
@@ -1395,21 +1396,25 @@ class cd_experiment_custom_analysis(cd_experiment_fitting_model):
 
         predicted = []
 
-        for comb in combis:
+                # Suppress overflow warnings only for this block
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-            dComb = dCombInit.copy()
+            for comb in combis:
 
-            i = -1
+                dComb = dCombInit.copy()
 
-            for i, fit_param in enumerate(self.global_params_names):
+                i = -1
 
-                dComb[fit_param] = comb[i]
+                for i, fit_param in enumerate(self.global_params_names):
 
-            for ii, fit_param in enumerate(self.local_params_names):
+                    dComb[fit_param] = comb[i]
 
-                dComb[fit_param] = comb[i + ii + 1]
+                for ii, fit_param in enumerate(self.local_params_names):
 
-            predicted.append(eval(self.cleaned_text_function,dComb))
+                    dComb[fit_param] = comb[i + ii + 1]
+
+                predicted.append(eval(self.cleaned_text_function,dComb))
         
         all_wl_rss = []
         sel_combi  = []    
@@ -1786,74 +1791,93 @@ class cdAnalyzer:
 
 if False:
     
-    t1 = cd_experiment_general()
-    t2 = cd_experiment_general()
-    t3 = cd_experiment_general()
-    t4 = cd_experiment_general()
-    t5 = cd_experiment_general()
-    t6 = cd_experiment_general()
+    t1 = cd_experiment_custom_analysis()
+    t1.load_data('/home/os/Downloads/zero_new.csv','t') 
 
-    t1.load_data('/home/osvaldo/Downloads/R78907.d01','t') 
-    t2.load_data('/home/osvaldo/Downloads/R78907.d02','t')
-    t3.load_data('/home/osvaldo/Downloads/R78907.d03','t')
-    t4.load_data('/home/osvaldo/Downloads/R78907.d01','t')
-    t5.load_data('/home/osvaldo/Downloads/R78907.d02','t')
-    t6.load_data('/home/osvaldo/Downloads/R78907.d03','t')
+    t1.temperature = np.array([5.7, 10.3, 15,19.6,24.2,28.9,33.5,38.2,42.8,47.4,52.1,56.7,61.4,66,70.6,75.3,79.9,84.5])  + 273.15
 
-    fct = 10
-    noise1 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
-    noise2 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
-    noise3 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
-    noise4 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
-    noise5 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
-    noise6 = np.random.normal(0, np.std(t1.signalInput)/fct, t1.signalInput.shape) * 0
+    t1.first_measurement_dimension = t1.temperature 
+    t1.first_exp_param_name         = 'T'
 
-    cde = cd_experiment_comparison()
+    t1.signalDesiredUnit = t1.signalInput
+    t1.assign_useful_signal([183,193,203,213,223,233])
+    t1.generate_model_function('(bn+kOne*e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))+(bu)*e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))*e^(-deltaHGlobalBPos/(0.001987*T)*(1-T/TGlobalBPos)))/(1+e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))*e^(-deltaHGlobalBPos/(0.001987*T)*(1-T/TGlobalBPos)))')
 
-    cde.signalDesiredUnit     = np.hstack((
-        t1.signalInput , 
-        t2.signalInput ,
-        t3.signalInput ,
-        t4.signalInput * 2,
-        t5.signalInput * 2,
-        t6.signalInput * 2))
+    p0  = np.repeat([1],18)
+    lb  = np.repeat([-500],18)
+    hb  = np.repeat([500],18)
 
-    cde.labels     = np.array(['c','c','c','s','s','s'])
-    cde.wavelength = t1.wavelength
+    t1.p0         = np.concatenate((np.array([305,330,50,50]), p0), axis=0)
+    t1.low_bound  = np.concatenate((np.array([295,320,2,2]), lb), axis=0)
+    t1.high_bound = np.concatenate((np.array([320,380,100,100]), hb), axis=0)
 
-    cde.summarise_signal_per_label()
-    cde.generate_comparison_labels()
-    cde.generate_difference_spectra()
-    cde.find_distances()
+    t1.fit_signal()
 
-    print(cde.distance_matrix)
+    tm1 = t1.fit_params.iloc[0,1]
+    tm2 = t1.fit_params.iloc[0,2]
+    dh1 = t1.fit_params.iloc[0,3]
+    dh2 = t1.fit_params.iloc[0,4]
 
+    R = 1.987 / 1000 # kcal/mol
+
+    A = np.exp(-dh1*(1-t1.temperature/tm1)/(R*t1.temperature))
+    B = np.exp(-dh2*(1-t1.temperature/tm2)/(R*t1.temperature))
+
+    xN = 1 / (1+A+A*B)
+    xi = A / (1+A+A*B)
+    xD = A*B / (1+A+A*B)
+
+    rss = []
+
+    for t in np.arange(305,320):
+
+            t1.p0         = np.concatenate((np.array([t,330,20,20]), p0), axis=0)
+            t1.low_bound  = np.concatenate((np.array([t,320,1,1]), lb), axis=0)
+            t1.high_bound = np.concatenate((np.array([t,380,100,100]), hb), axis=0)
+
+            rss.append(np.sum(np.square(t1.signal_predicted - t1.signal_useful)))
+
+    print(t1.fit_params)
+    print(t1.fit_rel_errors)
+    
+
+    matrix = t1.signal_predicted
     import matplotlib.pyplot as plt
 
-    print(normalised_euclidean_distance(np.array([1,2,3]),np.array([3,5,10])))
+    num_columns = matrix.shape[0]
 
-    #t.decompose_spectra_pca()
-    #t.filter_basis_spectra(99.6)
-    #t.align_basis_spectra_and_coefficients()
-    #print(t.explained_variance)
-    #t.reconstruct_spectra()
+    # Plot each column of the matrix against the vector
+    for i in range(num_columns):
+        # Extract the i-th column from the matrix
+        column_data1 = matrix[i, :]
+        column_data2 = t1.signal_useful[i, :]
 
-    plt.scatter(cde.wavelength,cde.means[:,0])
-    plt.errorbar(cde.wavelength, cde.means[:,0], yerr=cde.sds[:,0], fmt='o')
-    plt.scatter(cde.wavelength,cde.means[:,1])
-    plt.errorbar(cde.wavelength, cde.means[:,1], yerr=cde.sds[:,1], fmt='o')
+        # Plot the column against the vector
+        plt.plot(t1.temperature, column_data1, label=f'Column {i+1}')
+        plt.scatter(t1.temperature, column_data2, label=f'Column {i+1}')
 
+    # Add labels and title
+    plt.xlabel('Vector')
+    plt.ylabel('Column Values')
+    plt.title('Plot of Each Column of a Matrix Against a Vector')
+
+    # Add a legend
+    plt.legend()
+
+    # Display the plot
     plt.show()
-    #plt.scatter(t.wavelength,t.basis_spectra[:,1])
 
-    #for i in range(6):
+    df = pd.DataFrame({'xN':xN,'xI':xi,'xD':xD,'T':t1.temperature})
 
-    #    plt.scatter(t.wavelength,t.fitted_spectra[:,i])
+        # Plot each column against the specified x column
+    ax = df.plot(x='T', y=['xN', 'xI', 'xD'], kind='line')
 
-    #plt.scatter(t.wavelength,t.means[:,0])
-    #
-    #plt.errorbar(t.wavelength, t.means[:,1], yerr=t.errors[:,1], fmt='o')
+    # Set labels and title
+    ax.set_xlabel('X Column')
+    ax.set_ylabel('Values')
 
-    #plt.scatter(t.wavelength,t.means[:,1])
-    #
+    # Add a legend to display the labels for the vertical lines
+    ax.legend()
 
+    # Show the plot
+    plt.show()
