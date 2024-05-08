@@ -32,6 +32,35 @@ plot_fluo_signal <- function(fluo_m,y_label, plot_width, plot_height, plot_type,
   return(fig ) 
 }
 
+#plot_spectra <- function(signal_data_dictionary,temp_data_dictionary,
+#                         min_temp,max_temp,conditions) {
+  
+  #dfs <- lapply(signal_data_dictionary, function(l) {
+    
+    #  })
+  
+#}
+
+# Plot the whole spectral data
+# Requires: a dataframe with columns named 'wl', 'value', 'temps' and 'name'
+
+# 'wl'    : wavelength in nanometers,       for the x-axis
+# 'value' : the measured fluorescence,      for the y-axis
+# 'temps' : temperature in degree Celsius,  for coloring
+# 'name'  : name of the condition,          for dividing the plot
+
+plot_whole_spectra <- function(df,font_size=18) {
+  
+  ggplot(df,aes(x=wl,y=value,color=temps,group=temps))+
+    geom_line()+
+    facet_wrap(~name)+
+    theme_classic(base_size = font_size)+
+    ylab('Fluorescence (AU)')+
+    xlab('Wavelength (nm)')+
+    scale_color_viridis_c(name='Temperature (°C)')
+  
+}
+
 # Plot maximum of derivative
 generate_max_der_plot <- function(tms,conditions,plot_width, plot_height, plot_type, 
                                   legend_text_size,axis_size){

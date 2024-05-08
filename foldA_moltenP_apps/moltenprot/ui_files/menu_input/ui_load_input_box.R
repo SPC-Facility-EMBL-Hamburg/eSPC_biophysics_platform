@@ -3,7 +3,8 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
       
       column(9, p(HTML("<b>1. nDSF or DSF file </b>"),
                    span(shiny::icon("info-circle"), id = "info_uu1-1"),
-                    fileInput("FLf", NULL,accept = c(".xlsx",".zip",".xls",".txt",'.csv')),
+                    fileInput("FLf", NULL,accept = c(".xlsx",".zip",".xls",".txt",'.csv',
+                                                     '.supr')),
                    tippy::tippy_this(elementId = "info_uu1-1",
                                      tooltip = "Check the User Guide to understand the format of the input files. 
                    Hint: In the case of Prometheus, Panta, or Tycho spreadsheet files, you can combine them in a zip (.zip extension) 
@@ -28,10 +29,10 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                   tippy::tippy_this(elementId = "info_uu1-7",
                                     tooltip = "Rearrange the conditions order by the original condition names 
                                             (Useful when analyzing many nDSF files with labels present in the Overview sheet)",placement = "right"))),
-      
+
       column(5, p(HTML("<b>Signal</b>"),
                   selectInput("which", NULL,c("Ratio"="Ratio","350nm" = "350nm",
-                                              "330nm" = "330nm","Scattering"="Scattering")))),
+                                                          "330nm" = "330nm","Scattering"="Scattering")))),
       
       column(6, p(HTML("<b>Normalization</b>"),
                   span(shiny::icon("info-circle"), id = "info_uu1-2"),
@@ -79,4 +80,16 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                     tooltip = "Change the Series column labels (from \'A\' to \'B\' for example) and display only the desired conditions",
                     placement = "right"))),
       
+      conditionalPanel(
+        'output.full_spectra',
+        
+        column(8, p(HTML('<p style="margin-bottom:0px;"><br></p>'),
+                    actionButton(
+                      inputId = "updateSpectralPlots",label = "Update the whole spectra plots",
+                      icon("arrow-right"),
+                      style="color: #fff; background-color: #337ab7; 
+               border-color: #2e6da4"))),
+        
+        )
+    
     ))

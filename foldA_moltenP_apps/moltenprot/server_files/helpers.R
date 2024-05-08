@@ -88,6 +88,23 @@ make_list_df4plot <- function(fluo_matrix,cond_vector,temp_vector,chunck_n) {
   
 }
 
+# Generate tabPanels 
+# create the names for the tabPanels that contain the spectral plots. Useful for the SUPR dsf data format
+generate_tab_panels <- function(nConditions) {
+  
+  maxPanels <- ceiling(nConditions / 20)
+  
+  tabPanelNames <- c()
+  
+  for (i in 0:(maxPanels-1)) {
+    
+    tabPanelName  <- paste0('Spectra',20*i+1,'-',20*(i+1))
+    tabPanelNames <- c(tabPanelNames, tabPanelName)
+  }
+    
+  return( tabPanelNames )
+}
+  
 # Generate a dataframe of conditions versus derivative maximum 
 generate_max_der_df <- function(tms,conditions) {
   df <- data.frame("condition"=conditions,"Tm"=tms)
@@ -148,6 +165,57 @@ avoid_positions_with_the_same_name_in_df <- function(fluo_m) {
     fluo_m$Condition <- as.character(fluo_m$Condition)
   }
   return(fluo_m)
+}
+
+## Create a dataframe with the whole spectral data
+# Arguments:
+# 'all_signals' : named list containing the fluorescence matrices, one list element per measured wavelength
+# 'all_temps'   : named list containing the temperature vectors,   one list element per measured wavelength
+# 'conditions'  : vector with the experimental conditions, filled by the user
+# 'min_temp'    : integer, to limit the temperature range
+# 'max_temp'    : integer, to limit the temperature range
+
+join_all_signals <- function(all_signals,all_temps,
+                             conditions,include_vector,
+                             min_temp,max_temp) {
+  
+  all_signals[["Ratio 350nm/330nm"]] <- NULL
+  all_temps[["Ratio 350nm/330nm"]]   <- NULL
+  
+  # Arbitrary steps for downsampling (faster plotting)
+  wl_step   <- ifelse(length(all_signals)    > 60,2,1)
+  temp_step <- ifelse(length(all_temps[[1]]) > 40,3,2)
+  
+  # Subsample wavelengths
+  all_dfs <- lapply(seq(1,length(all_signals),wl_step), function(i) {
+    
+    signal <- all_signals[[i]]
+    
+    # Subset the conditions if we have more than one
+    if (length(conditions) > 1)   signal <- signal[,include_vector]
+    
+    colnames(signal) <- conditions
+    temps  <- all_temps[[i]] - 273.15 # from Kelvin to Celsius
+    wl     <- as.numeric(sub('nm','',names(all_signals)[[i]]))
+    
+    df <- data.frame(signal,temps)
+    
+    # Subsample temperature
+    df <- df[seq(1, nrow(df), by = temp_step), ]
+    
+    df <- df[df$temps >= min_temp,]
+    df <- df[df$temps <= max_temp,]
+    
+    df_long    <- pivot_longer(df, cols = -temps)
+    df_long$wl <- wl
+    
+    return(df_long)
+  })
+  
+  tog <- do.call(rbind, all_dfs)
+  
+  return( tog )
+  
 }
 
 ## Get params dataframe

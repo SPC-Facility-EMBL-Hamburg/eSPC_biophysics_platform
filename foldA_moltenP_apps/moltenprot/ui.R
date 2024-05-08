@@ -32,9 +32,11 @@ shinyUI(dashboardPage(title = "MoltenProt",
           
           source("ui_files/menu_input/ui_conditions_table_box.R", local = TRUE)$value,
     
-          tabBox(title = "", width = 10,id = "tabset1",
-            tabPanel("Signal",withSpinner(plotlyOutput("signal")))),
 
+          tabBox(title = "", width = 10,id = "tabset1",
+                  tabPanel("Signal",withSpinner(plotlyOutput("signal")))),
+          
+          
           source("ui_files/menu_input/ui_plot_options_box.R",       local = TRUE)$value,
           source("ui_files/menu_input/ui_derivative_plot_tabbox.R", local = TRUE)$value,
           source("ui_files/menu_input/ui_legend_tab_box.R",local = TRUE)$value

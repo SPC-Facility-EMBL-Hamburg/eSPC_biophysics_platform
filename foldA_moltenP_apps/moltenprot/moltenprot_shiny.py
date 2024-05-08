@@ -1,6 +1,8 @@
 #!/usr/bin/python3
+import json
+
 import pandas as pd
-import numpy as np
+import numpy  as np
 import numpy.polynomial.polynomial as poly
 
 from scipy.signal     import savgol_filter
@@ -466,6 +468,148 @@ class DSF_molten_prot_fit:
 
         return None
 
+    def load_supr_dsf(self,JSON_file):
+
+        self.init_dictionary_to_store_fluo_temp_data()
+
+        # Read JSON data from a file
+        with open(JSON_file, "r") as file:
+            json_data = file.read()
+
+        # Parse JSON data into a dictionary
+        data_dict     = json.loads(json_data)
+        data_dict_new = {}
+
+        samples   = data_dict['Samples']
+        
+        samples_name = [item["SampleName"] for item in data_dict['Samples']]
+        samples_well = [item["WellLocations"] for item in data_dict['Samples']]
+
+        samples_name_simple = []
+        samples_well_simple = []
+
+        for sn,sw in zip(samples_name,samples_well):
+
+            if ',' in sw:
+
+                sw = sw.split(',')
+                sn = [sn for _ in sw]
+
+            else:
+
+                sw = [sw]
+                sn = [sn]
+
+            samples_name_simple += sn
+            samples_well_simple += sw
+
+        name_df = pd.DataFrame({
+            'well': samples_well_simple,
+            'name': samples_name_simple})
+
+        scans   = [item["_scans"] for item in data_dict['Wells']]
+        n_scans = len(scans)
+
+        wavelengths   = data_dict['Wavelengths']
+        wavelengths   = np.round(wavelengths, decimals=1)
+        n_wavelengths = len(wavelengths)
+
+        temperatures = []
+        signals      = []
+
+        temperature_fixed = np.arange(5,110,0.5)
+
+        well = [item["PhysicalLocation"] for item in data_dict['Wells']]
+
+        # Create a categorical data type with the custom order
+        cat_type = pd.CategoricalDtype(categories=well, ordered=True)
+
+        # Convert the column to the categorical data type
+        name_df['well'] = name_df['well'].astype(cat_type)
+
+        # Sort the DataFrame based on the custom order
+        name_df = name_df.sort_values(by='well')
+
+        conditions = name_df['name'].values.astype(str)
+
+        self.conditions_original =  conditions
+        self.conditions          =  conditions
+
+        for i in range(n_scans):
+
+            temperatures.append([item['Temperature'] for item in scans[i]])
+            signals.append([item['Signal']           for item in scans[i]])
+
+        temperatures = np.array(temperatures).T
+        temperatures = np.round(temperatures, decimals=1)
+
+        signals = np.array(signals)
+
+        # Iterate over the wavelengths
+        
+        named_wls = [str(wl) + 'nm' for wl in wavelengths]
+
+        for i in range(n_wavelengths):
+
+            signals_temp  = signals[:,:,i].T
+            signal_interp = []
+
+            # Iterate over the columns of the arrays
+            for ii in range(n_scans):
+
+                x = temperatures[:, ii]
+                y = signals_temp[:, ii]
+
+                sorted_indices = np.argsort(x)
+                x = x[sorted_indices]
+                y = y[sorted_indices]
+
+                y_interpolated = np.interp(temperature_fixed, x, y,left=np.nan,right=np.nan)
+
+                # Linear interpolation every 0.5 degrees
+                signal_interp.append(y_interpolated)
+
+            fluo = np.array(signal_interp).T
+            
+            non_nas  = np.logical_not(np.isnan(fluo).any(axis=1))
+
+            wl = named_wls[i]
+            self.signal_data_dictionary[wl]   = fluo[non_nas,:]
+            self.temp_data_dictionary[wl]     = temperature_fixed[non_nas] + 273.15 # To kelvin 
+
+        # Add the ratio signal
+        try:
+            
+            signal_name = 'Ratio 350nm/330nm'
+
+            diff_350 = np.abs(wavelengths - 350)
+            diff_330 = np.abs(wavelengths - 330)
+
+            # Check if we have wavelengthd data between 349 - 351 nm and between 329 - 331 nm.
+            if np.min(diff_350) < 1 and np.min(diff_330) < 1:
+
+                idx350 = np.argmin(diff_350)
+                idx330 = np.argmin(diff_330)
+
+
+                f350   =  self.signal_data_dictionary[named_wls[idx350]]
+                f330   =  self.signal_data_dictionary[named_wls[idx330]]
+
+                fRatio = f350 / f330
+
+                self.signal_data_dictionary[signal_name] = fRatio
+                self.temp_data_dictionary[signal_name]   = self.temp_data_dictionary[named_wls[idx350]]
+
+                named_wls = [signal_name] + named_wls
+
+        except:
+
+            pass
+
+        self.signals = np.array([named_wls])
+
+        return None
+
     def set_signal(self,which):
 
         """
@@ -565,7 +709,9 @@ class DSF_molten_prot_fit:
         self.fluo = np.apply_along_axis(median_filter_from_fluo_and_temp_vectors,0,
             self.fluo,self.temps,n_degree_window)
 
-    def estimate_fluo_derivates(self,temp_window_length):
+        return None
+
+    def estimate_fluo_derivates(self,temp_window_length=8):
 
         """
         Compute the 1st and 2nd derivative of self.fluo using the Savitzky-Golay-Filter
@@ -576,6 +722,15 @@ class DSF_molten_prot_fit:
         Result - we assign self.derivative, self.derivative2 and self.tms_from_deriv
 
         """
+
+        # No derivative if we don't have enough temperature data
+        if ( (np.max(self.temps) - np.min(self.temps)) < 16):  
+
+            self.tms_from_deriv = None
+            self.derivative     = None
+            self.derivative2    = None
+
+            return None
 
         odd_n_data_points_window_len         = np.ceil(temp_window_length / self.dt) // 2 * 2 + 1
         odd_n_data_points_window_len_2nd_der = np.ceil((temp_window_length+5) / self.dt) // 2 * 2 + 1
@@ -912,6 +1067,94 @@ class DSF_molten_prot_fit:
        
         return None
 
+    # NOT FINISHED!!!!
+    def EquilibriumFourStateDimer(self,t1min,t1max,t2min,t2max,t3min,t3max,fit_algorithm="trf"):
+
+        """
+
+        In this model, the protein is assumed to be in either the native homodimeric state (N2), a non-native dimeric state (I2), 
+        a non-native monomeric state (I), or an unfolded monomeric state (U). Reference: https://pubs.acs.org/doi/10.1021/bi0110387
+        
+        Input
+
+        t1min and t1max are the max and min accepted values for the parameter T1. (N2 ⇆ I2)
+        t2min and t2max are the max and min accepted values for the parameter T2. (I2 ⇆ I)
+        t3min and t3max are the max and min accepted values for the parameter T3. (2I ⇆ 2U)
+
+        Result - we perform the fitting and assign the values to 
+
+        self.model_name,            self.params_name,               self.fitted_conditions_indexes  
+        self.params_all,            self.errors_abs_all,            self.errors_percentage_all      
+        self.fluo_predictions_all,  self.std_error_estimate_all,    self.parameters_far_from_bounds 
+
+        """
+
+        params_name = ['kN', 'bN', 'kU', 'bU', 'kI2','kI', 'dHm1', 'T1', 'dHm2', 'T2','dHm3', 'T3']
+
+        self.initialize_model("EquilibriumFourStateDimer",params_name)
+
+        def model(T, kN, bN, kU, bU, kI2,kI, dHm1, T1, dHm2, T2,dHm3, T3):
+
+
+            dg1 = dHm1*(1/T - 1/T1)
+            dg2 = dHm2*(1/T - 1/T2)
+            dg3 = dHm3*(1/T - 1/T3)
+
+            K1 = np.exp(-dg1/R_gas_constant*T)
+            K2 = np.exp(-dg2/R_gas_constant*T)
+            K3 = np.exp(-dg3/R_gas_constant*T)
+
+            K123 = K1*K2*K3
+
+            fraction_u = -K123*(1+K3) + np.sqrt((K123**2)*((1+K3)**2)+8*Pt*(1+K1)*(K123*K3) / 4*Pt*(1+K1))
+
+            fraction_i  = fraction_u           / K3
+            fraction_i2 = (fraction_i**2)*Pt*2 / K2
+            fraction_n2 = fraction_i2          / K1
+
+            signal_u    = (kU  * T + bU) * fraction_u
+            signal_i    = (kI  * T)      * fraction_i
+            signal_i2   = (kI2 * T)      * fraction_i2
+            signal_n2   = (kN  * T + bN) * fraction_n2
+
+            return signal_u + signal_i + signal_i2 + signal_n2
+
+        init_dH = 60000
+        init_KI = 10
+
+        low_bounds        = []
+        high_bounds       = []
+        initial_estimates = []
+
+        temp1_init = (t1min + t1max) / 2
+        temp2_init = (t2min + t2max) / 2
+        temp3_init = (t3min + t3max) / 2
+
+        for index in range(self.fluo.shape[1]):
+
+            p0 = (self.kNs[index], self.bNs[index], self.kUs[index], self.bUs[index],init_KI, init_dH, temp1_init, init_dH, temp2_init)
+
+            low_bound     =  [0.3*x if x>0 else 1.7*x for x in p0[:-5]] 
+            low_bound    +=  [0,0,t1min,0,t2min]
+
+            high_bound    = [1.7*x if x>0 else 0.3*x for x in p0[:-5]]  
+            high_bound   += [100,3140098,t1max,3140098,t2max] 
+
+            initial_estimates.append(p0)
+            low_bounds.append(low_bound)
+            high_bounds.append(high_bound)
+
+        self.fit_model_and_fill_params_and_errors(model,initial_estimates,low_bounds,high_bounds,fit_algorithm)
+
+        dHm1_all,      Tm1_all     = [p[5] for p in self.params_all],     [p[6] for p in self.params_all]
+        dHms1_sd_all,  Tm1_sd_all  = [p[5] for p in self.errors_abs_all], [p[6] for p in self.errors_abs_all]
+        dHm2_all,      Tm2_all     = [p[7] for p in self.params_all],     [p[8] for p in self.params_all]
+
+        self.T_onset      = get_EquilibriumTwoState_model_Tons(dHm1_all,Tm1_all,dHms1_sd_all,Tm1_sd_all)
+        self.dG_comb_std  = get_EquilibriumThreeState_model_dG_comb_std(dHm1_all,Tm1_all,dHm2_all,Tm2_all)
+       
+        return None
+
     def EmpiricalTwoState(self,fit_algorithm="trf",onset_threshold=0.01):
 
         """
@@ -1198,14 +1441,6 @@ if False:
 if False:
 
     t = DSF_molten_prot_fit()
-    t.load_tycho_xlsx('/home/os/Downloads/2024-01-02_1124CET_T6-039.xlsx')
-    t.set_signal('Ratio')
-
-    t.fluo  = filter_fluo_by_temp(t.fluo,t.temps,20+273,90+273)
-    t.temps = filter_temp_by_temp(t.temps,20+273,90+273)
-
-
-    #t.estimate_fluo_derivates(8)
-
-    #print(t.tms_from_deriv)
-    print(t.fluo.shape)
+    t.load_supr_dsf('/home/os/Downloads/minimal_example_json.supr')
+    t.set_signal('310nm')
+    t.estimate_fluo_derivates()

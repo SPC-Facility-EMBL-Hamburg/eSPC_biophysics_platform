@@ -1,10 +1,90 @@
-reactives <- reactiveValues(data_loaded=FALSE,report_was_created=FALSE,
-                            global_max_conditions          = 384,
-                            global_n_rows_conditions_table = 96)
+reactives <- reactiveValues(
+  data_loaded                    = FALSE, # To control the display of plots/tables
+  report_was_created             = FALSE, # To activate the download report button
+  global_max_conditions          = 384,   # To determine the load input table number of columns. 
+  global_n_rows_conditions_table = 96,    # Number of rows for the load input table
+  include_vector                 = NULL,  # To know which conditions to plot         (for the SUPR DSF data)
+  full_spectra                   = FALSE, # Full spectra instead of fixed wavelength (for the SUPR DSF data)
+  spectra_panel_names            = NULL
+  )
+
+output$data_loaded             <- reactive({
+  return(reactives$data_loaded)})
+
+output$report_was_created             <- reactive({
+  return(reactives$report_was_created)})
+
+output$full_spectra             <- reactive({
+  return(reactives$full_spectra)})
+
+outputOptions(output, "data_loaded"       , suspendWhenHidden = FALSE)
+outputOptions(output, "report_was_created", suspendWhenHidden = FALSE)
+outputOptions(output, "full_spectra"      , suspendWhenHidden = FALSE)
+
+renderSpectralPlots <- function() {
+  
+  # Delete all previous Tabs
+  if (!is.null(reactives$spectra_panel_names)) {
+    for (tabPanelTargetName in reactives$spectra_panel_names) {
+      removeTab(inputId = "tabset1", 
+                target = tabPanelTargetName)
+    }
+  }
+  
+  nConditions   <- length(dsf$conditions) 
+  
+  # Return NULL if no conditions are selected
+  if (nConditions == 0) return(NULL)
+  
+  tabPanelNames <- generate_tab_panels(nConditions)
+  
+  # Create new Tabs
+  lapply(tabPanelNames, function(sp){
+    
+    appendTab(inputId = "tabset1",
+              tabPanel(sp,plotOutput(sp))
+    )
+    return(NULL)
+  })
+  
+  reactives$spectra_panel_names <- tabPanelNames
+  
+  all_signals <- dsf$signal_data_dictionary
+  all_temps   <- dsf$temp_data_dictionary
+  
+  tog <- join_all_signals(all_signals,all_temps,
+                          c(dsf$conditions),reactives$include_vector,
+                          input$sg_range[1],input$sg_range[2])
+  
+  maxPanels     <- length(tabPanelNames)
+  
+  lapply(0:(maxPanels-1), function (i) {
+    
+    tabPanelName <- tabPanelNames[i+1]
+    
+    tog2      <- tog[tog$name %in% unique(tog$name)[(20*i+1):(20*(i+1))],]
+    tog2$name <- factor(tog2$name,levels=unique(tog2$name))
+    fig       <- plot_whole_spectra(tog2)
+    
+    output[[tabPanelName]] <- renderPlot(fig)
+    
+    return(NULL)
+  })
+  
+  return(NULL)
+}
+
+observeEvent(input$updateSpectralPlots,{
+  
+  renderSpectralPlots()
+  
+})
 
 observeEvent(input$FLf,{
 
   reactives$data_loaded             <- FALSE
+  reactives$full_spectra            <- FALSE
+  
   output$table1 <- output$table2 <- output$table3 <- output$table4 <- NULL
   
   withBusyIndicatorServer("Go",{
@@ -70,6 +150,19 @@ observeEvent(input$FLf,{
         
       }
       
+      if (fileExtension == "supr") {
+        # Copy txt file to the current folder
+        file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
+        dsf$load_supr_dsf(newFileName)
+        
+        reactives$full_spectra   <- TRUE
+        reactives$include_vector <- rep(T,length(dsf$conditions))
+        
+        Sys.sleep(0.5)
+        #renderSpectralPlots()
+        
+      }
+      
       if (fileExtension == "xlsx" | fileExtension == "xls") {
         
         # Copy xlsx file to the current folder
@@ -116,15 +209,6 @@ observeEvent(input$FLf,{
       
     }})
 },priority = 10)
-
-output$data_loaded             <- reactive({
-  return(reactives$data_loaded)})
-
-output$report_was_created             <- reactive({
-  return(reactives$report_was_created)})
-
-outputOptions(output, "data_loaded", suspendWhenHidden = FALSE)
-outputOptions(output, "report_was_created", suspendWhenHidden = FALSE)
 
 observe({
   
@@ -178,6 +262,7 @@ observeEvent(input$sort_conditions,{
 modify_fluo_temp_cond <- reactive({
   
   nconditions <- length(dsf$conditions_original)
+  
   condition_include_list <- get_include_vector(input$table1,input$table2,input$table3,input$table4,
                                                nconditions,reactives$global_n_rows_conditions_table,
                                                reactives$global_max_conditions)
@@ -189,11 +274,11 @@ modify_fluo_temp_cond <- reactive({
   dsf$set_signal(input$which)
   
   # Get signal window range
-  sg_range_min_celsius <- input$sg_range[1]+273.15
-  sg_range_max_celsius <- input$sg_range[2]+273.15
+  sg_range_min_kelvin <- input$sg_range[1] + 273.15
+  sg_range_max_kelvin <- input$sg_range[2] + 273.15
   
-  left_bound    <-   max(sg_range_min_celsius,min(dsf$temps))
-  right_bound   <-   min(sg_range_max_celsius,max(dsf$temps))
+  left_bound    <-   max( sg_range_min_kelvin,min(dsf$temps) )
+  right_bound   <-   min( sg_range_max_kelvin,max(dsf$temps) )
   
   # ... Modify in place the python class fluorescence signal according to the selected signal window range ...
   dsf$fluo  <- filter_fluo_by_temp(dsf$fluo,dsf$temps,left_bound,right_bound)
@@ -203,8 +288,13 @@ modify_fluo_temp_cond <- reactive({
     include_vector         <- include_vector & (series_vector == input$selected_cond_series)
   }
   
+  reactives$include_vector <- include_vector
+
   # ... use only the conditions selected by the user ...
   dsf$conditions         <- conditions_vector[include_vector]
+  
+  # Return NULL if no conditions are selected
+  if (all(!include_vector))   return(NULL)
   
   dsf$select_signal_columns(c(include_vector))
   
@@ -214,7 +304,7 @@ modify_fluo_temp_cond <- reactive({
   dsf$fluo <- normalize_fluo_matrix_by_option(input$normalization_type,dsf$fluo,dsf$temps)
   
   dsf$estimate_fluo_derivates(input$SG_window2)
-
+  
   return(condition_include_list$conditions_vector)
   
 })
@@ -241,11 +331,13 @@ output$signal <- renderPlotly({
 }
 )
 
+
 # Render 1st derivative plot
 output$signal_der1 <- renderPlotly({
   
   req(input$table1)
   req(reactives$data_loaded)
+  req(dsf$derivative)
   
   if (length(dsf$conditions) > reactives$global_max_conditions - reactives$global_n_rows_conditions_table*1) {req(input$table4)}
   
@@ -269,6 +361,7 @@ output$signal_der2 <- renderPlotly({
   #req(fluo_signal_loaded())
   req(input$table1)
   req(reactives$data_loaded)
+  req(dsf$derivative2)
   
   modify_fluo_temp_cond()
   
@@ -291,6 +384,7 @@ output$tm_derivative <- renderPlotly({
   #req(fluo_signal_loaded())
   req(input$table1)
   req(reactives$data_loaded)
+  req(dsf$tms_from_deriv)
   
   modify_fluo_temp_cond()
   
