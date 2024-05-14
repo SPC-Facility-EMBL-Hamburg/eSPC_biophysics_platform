@@ -256,7 +256,7 @@ output$fittedChemicalCurves <- renderPlotly({
   return(fig)
 })
 
-output$residualsChemicalCurves <- renderPlotly({
+output$residualsChemicalCurves <- renderPlot({
   
   req(reactives$chemical_data_was_fitted)
   
@@ -268,8 +268,7 @@ output$residualsChemicalCurves <- renderPlotly({
   
   fig <- plot_residuals(
     tog,
-    input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem,
+    input$plot_axis_size_chem,
     svd_or_pca_based=FALSE,xlab="[Denaturant agent] (M)")
   
   return(fig)
@@ -552,7 +551,7 @@ output$chemFittedSVDCoefficients <- renderPlotly({
   
 })
 
-output$chemResidualsSVDCoefficients <- renderPlotly({
+output$chemResidualsSVDCoefficients <- renderPlot({
   
   req(reactives$chemical_data_was_fitted_svd_or_pca)
   
@@ -564,8 +563,7 @@ output$chemResidualsSVDCoefficients <- renderPlotly({
   
   fig <- plot_residuals(
     tog,
-    input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem,
+    input$plot_axis_size_chem,
     svd_or_pca_based=TRUE,xlab="[Denaturant agent] (M)")
   
   return(fig)

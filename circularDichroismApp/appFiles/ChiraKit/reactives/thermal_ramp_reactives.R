@@ -233,7 +233,7 @@ output$fittedMeltingCurves <- renderPlotly({
   
 })
 
-output$residualsMeltingCurves <- renderPlotly({
+output$residualsMeltingCurves <- renderPlot({
   
   req(reactives$melting_data_was_fitted)
   
@@ -245,8 +245,7 @@ output$residualsMeltingCurves <- renderPlotly({
     
   fig <- plot_residuals(
     tog,
-    input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt)
+    input$plot_axis_size_melt)
                         
   return(fig)
   
@@ -517,7 +516,7 @@ output$fittedSVDCoefficients <- renderPlotly({
   
 })
 
-output$residualsSVDCoefficients <- renderPlotly({
+output$residualsSVDCoefficients <- renderPlot({
   
   req(reactives$melting_data_was_fitted_svd_or_pca)
   
@@ -529,8 +528,7 @@ output$residualsSVDCoefficients <- renderPlotly({
   
   fig <- plot_residuals(
     tog,
-    input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt,
+    input$plot_axis_size_melt,
     svd_or_pca_based=TRUE)
   
   return(fig)

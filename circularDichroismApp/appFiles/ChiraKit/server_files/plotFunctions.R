@@ -569,9 +569,9 @@ plot_unfolding_exp_spectra <- function(
 # Requires a dataframe called 'res_df' with the following columns:
 # 'wavelength', 'legend', 'residuals' and 'temperature'
 plot_residuals <- function(res_df,
-                           plot_width=12, plot_height=8, 
-                           plot_type='svg', axis_size=12,
-                           svd_or_pca_based=FALSE,xlab="Temperature (ºC)",
+                           axis_size=12,
+                           svd_or_pca_based=FALSE,
+                           xlab="Temperature (ºC)",
                            use_log_axis=FALSE) {
   
   pre_str  <- ifelse(svd_or_pca_based,'k: ','WL: ')
@@ -586,8 +586,8 @@ plot_residuals <- function(res_df,
   res_df <- add_measurement_factor_column(res_df)
   
   p <- ggplot(res_df,aes(x=measurement_factor,y=residuals))+
-    geom_point(size=1.2)+
-    theme_bw(base_size = axis_size-2)+
+    geom_point(size=2)+
+    theme_bw(base_size = axis_size)+
     xlab(xlab)+
     ylab("Residuals")+
     theme(panel.grid = element_blank(),
@@ -601,12 +601,7 @@ plot_residuals <- function(res_df,
   p2 <- p + facet_wrap(~ condition,
                        ncol = 4,nrow = 4)
   
-  fig <- ggplotly(p2)
-  
-  fig <- configFig(fig,paste0("residuals_",strsplit(as.character(Sys.time())," ")[[1]][1]),
-                   plot_type,plot_width,plot_height)
-  
-  return(fig)
+  return(p2)
 }
 
 plot_basis_spectra <- function(basis_spectra_df,plot_width=12, 

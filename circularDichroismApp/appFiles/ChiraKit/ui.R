@@ -98,7 +98,7 @@ shinyUI(dashboardPage(
                    tabBox(title = "", width = 12,id = "tabBoxcdSpectra1",
                           tabPanel("Melting curves",                      plotlyOutput("meltingCurves")),
                           tabPanel("Fitted melting curves",               plotlyOutput("fittedMeltingCurves")),
-                          tabPanel("Residuals",               plotlyOutput("residualsMeltingCurves")),
+                          tabPanel("Residuals",                           plotOutput("residualsMeltingCurves")),
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_melting")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_melting")),
                           )
@@ -127,7 +127,7 @@ shinyUI(dashboardPage(
                           tabPanel("Explained variance",     plotlyOutput("explainedVariance")),
                           tabPanel("Coefficients",           plotlyOutput("svdCoefficients")),
                           tabPanel("Fitted coefficients",    plotlyOutput("fittedSVDCoefficients")),
-                          tabPanel("Residuals",              plotlyOutput("residualsSVDCoefficients")),
+                          tabPanel("Residuals",              plotOutput("residualsSVDCoefficients")),
                           
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_meltingSVD")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_meltingSVD"))
@@ -160,7 +160,7 @@ shinyUI(dashboardPage(
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemical")),
                                 tabPanel("Relative errors (%)",tableOutput("fittedErrors_chemical")),
                                 tabPanel("Fitted curves",plotlyOutput("fittedChemicalCurves")),
-                                tabPanel("Residuals",    plotlyOutput("residualsChemicalCurves"))
+                                tabPanel("Residuals",    plotOutput("residualsChemicalCurves"))
                                 
                                 )),
                        
@@ -185,7 +185,7 @@ shinyUI(dashboardPage(
                                 tabPanel("Explained variance",    plotlyOutput("chemExplainedVariance")),
                                 tabPanel("Coefficients",          plotlyOutput("chemSVDCoefficients")),
                                 tabPanel("Fitted coefficients",   plotlyOutput("chemFittedSVDCoefficients")),
-                                tabPanel("Residuals",             plotlyOutput("chemResidualsSVDCoefficients")),
+                                tabPanel("Residuals",             plotOutput("chemResidualsSVDCoefficients")),
                                 
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemicalSVD")),
                                 tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_chemicalSVD"))
@@ -244,7 +244,7 @@ shinyUI(dashboardPage(
                           tabPanel("Fitted parameters",tableOutput("fittedParams_custom")),
                           tabPanel("Relative errors (%)",tableOutput("fittedErrors_custom")),
                           tabPanel("Fitted curves",plotlyOutput("fittedCustomCurves")),
-                          tabPanel("Residuals",plotlyOutput("residualsCustomCurves"))
+                          tabPanel("Residuals",plotOutput("residualsCustomCurves"))
                           
                    )),
                  
@@ -270,7 +270,7 @@ shinyUI(dashboardPage(
                           tabPanel("Coefficients",          plotlyOutput("customSVDCoefficients")),
                           tabPanel("Initial parameter estimates",rHandsontableOutput("initialParamsValuesSVD")),
                           tabPanel("Fitted coefficients",   plotlyOutput("customFittedSVDCoefficients")),
-                          tabPanel("Residuals",   plotlyOutput("customResidualsSVDCoefficients")),
+                          tabPanel("Residuals",   plotOutput("customResidualsSVDCoefficients")),
                           tabPanel("Fitted parameters",tableOutput("fittedParams_customSVD")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_customSVD"))
                    ))             

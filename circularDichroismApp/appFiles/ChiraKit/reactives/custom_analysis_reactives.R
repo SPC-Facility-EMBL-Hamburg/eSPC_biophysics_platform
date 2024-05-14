@@ -473,7 +473,7 @@ output$fittedCustomCurves <- renderPlotly({
   return(fig)
 })
 
-output$residualsCustomCurves <- renderPlotly({
+output$residualsCustomCurves <- renderPlot({
   
   req(reactives$custom_data_was_fitted)
   
@@ -488,8 +488,7 @@ output$residualsCustomCurves <- renderPlotly({
   
   fig <- plot_residuals(
     tog,
-    input$plot_width_custom, input$plot_height_custom, 
-    input$plot_type_custom, input$plot_axis_size_custom,
+    input$plot_axis_size_custom,
     svd_or_pca_based=FALSE, xlab=cdAnalyzer$experimentsCustom[[1]]$first_exp_param_name,
     input$use_log_axis_custom)
   
@@ -784,7 +783,7 @@ output$customFittedSVDCoefficients <- renderPlotly({
   
 })
 
-output$customResidualsSVDCoefficients <- renderPlotly({
+output$customResidualsSVDCoefficients <- renderPlot({
   
   req(reactives$custom_data_was_fitted_svd_or_pca)
   
@@ -799,8 +798,7 @@ output$customResidualsSVDCoefficients <- renderPlotly({
   
   fig <- plot_residuals(
     tog,
-    input$plot_width_custom, input$plot_height_custom, 
-    input$plot_type_custom, input$plot_axis_size_custom,
+    input$plot_axis_size_custom,
     svd_or_pca_based=TRUE, xlab=cdAnalyzer$experimentsCustom[[1]]$first_exp_param_name,
     input$use_log_axis_custom)
   

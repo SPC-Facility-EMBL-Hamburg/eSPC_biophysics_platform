@@ -925,8 +925,8 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         # Set initial parameters
         p0          = np.concatenate(((1,np.median(self.chem_concentration)),self.bNs,self.bUs,self.kNs,self.kUs))
 
-        low_bound    =  np.array([0  , np.min(self.chem_concentration) + 1 ] + [x/100   if x>0 else 100*x  for x in p0[2:]])
-        high_bound   =  np.array([1e5, np.max(self.chem_concentration) - 1 ] + [100*x   if x>0 else x/100  for x in p0[2:]]) 
+        low_bound    =  np.array([0  , np.min(self.chem_concentration) + 1 ] + [x/100-10   if x>0 else 100*x-10  for x in p0[2:]])
+        high_bound   =  np.array([1e5, np.max(self.chem_concentration) - 1 ] + [100*x+10   if x>0 else x/100+10  for x in p0[2:]]) 
 
         listOfChemConcentration = [self.chem_concentration for _ in wavelengths]
         listOfSignals           = signal.tolist()
@@ -949,6 +949,37 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
 
         global_fit_params, cov = fit_chemical_unfolding(listOfChemConcentration,listOfSignals,self.temperature,
             p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+
+        diffMin = (global_fit_params - low_bound)[2:]
+        diffMax = (high_bound        - global_fit_params)[2:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+2] = low_bound[i+2] - 500
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+2] = high_bound[i+2] + 500
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_chemical_unfolding(listOfChemConcentration,listOfSignals,self.temperature,
+                p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
 
         errors                 = np.sqrt(np.diag(cov))
 
@@ -1143,8 +1174,8 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
         # Set initial parameters
         p0          = np.concatenate(((self.global_Tm,100),self.bNs,self.bUs,self.kNs,self.kUs))
 
-        low_bound    =  [min(self.temperature)+7,10 ] + [x/100   if x>0 else 100*x  for x in p0[2:]]
-        high_bound   =  [max(self.temperature)-6,250] + [100*x   if x>0 else x/100  for x in p0[2:]] 
+        low_bound    =  [min(self.temperature)+7,10 ] + [x/100-10 if x>0 else 100*x-10  for x in p0[2:]]
+        high_bound   =  [max(self.temperature)-6,250] + [100*x+10 if x>0 else x/100+10  for x in p0[2:]] 
 
         listOfTemperatures = [self.temperature for _ in wavelengths]
         listOfSignals      = signal.tolist()
@@ -1167,6 +1198,37 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
 
         global_fit_params, cov = fit_thermal_unfolding(listOfTemperatures,listOfSignals,p0,
             low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+
+        diffMin = (global_fit_params - low_bound)[2:]
+        diffMax = (high_bound        - global_fit_params)[2:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+2] = low_bound[i+2] - 500
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+2] = high_bound[i+2] + 500
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_thermal_unfolding(listOfTemperatures,listOfSignals,p0,
+                low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
 
         errors                 = np.sqrt(np.diag(cov))
 
