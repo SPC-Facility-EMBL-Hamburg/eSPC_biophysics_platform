@@ -142,6 +142,9 @@ observeEvent(list(input$selected_wavelength_chemical_unfolding,input$analysis_mo
   if (input$analysis_model_chemical == 'fixedWL') {
     append_record_to_logbook(paste0("Setting the 'Selected wavelength(s)' to: ",
                                     input$selected_wavelength_chemical_unfolding))
+    
+    reactives$spectra_decomposition_method_chemical <- 'None'
+    
   }
   
   reactives$data_loaded <- FALSE
@@ -251,6 +254,26 @@ output$fittedChemicalCurves <- renderPlotly({
     input$plot_type_chem, input$plot_axis_size_chem)
   
   return(fig)
+})
+
+output$residualsChemicalCurves <- renderPlotly({
+  
+  req(reactives$chemical_data_was_fitted)
+  
+  df      <- generate_chemical_unfolding_df(cdAnalyzer)
+  dfFit   <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='signal_predicted')
+  
+  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend')) 
+  tog$residuals <- tog$value.y - tog$value.x
+  
+  fig <- plot_residuals(
+    tog,
+    input$plot_width_chem, input$plot_height_chem, 
+    input$plot_type_chem, input$plot_axis_size_chem,
+    svd_or_pca_based=FALSE,xlab="[Denaturant agent] (M)")
+  
+  return(fig)
+  
 })
 
 ## Start of SVD/PCA decomposition reactives
@@ -439,6 +462,8 @@ output$chemFittedSpectra <- renderPlotly({
   return(fig)
 })
 
+
+
 output$chemExplainedVariance <- renderPlotly({
   
   req(reactives$spectra_was_decomposed_chemical)
@@ -465,7 +490,6 @@ output$chemSVDCoefficients <- renderPlotly({
   
   return(fig)
   
-
 })
 
 observeEvent(input$btn_fit_chemical_data_svd,{
@@ -523,6 +547,26 @@ output$chemFittedSVDCoefficients <- renderPlotly({
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
     reactives$fitted_coefficients_method_chemical)
+  
+  return(fig)
+  
+})
+
+output$chemResidualsSVDCoefficients <- renderPlotly({
+  
+  req(reactives$chemical_data_was_fitted_svd_or_pca)
+  
+  df      <- generate_chemical_unfolding_df(cdAnalyzer)
+  dfFit   <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='signal_predicted')
+  
+  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend')) 
+  tog$residuals <- tog$value.y - tog$value.x
+  
+  fig <- plot_residuals(
+    tog,
+    input$plot_width_chem, input$plot_height_chem, 
+    input$plot_type_chem, input$plot_axis_size_chem,
+    svd_or_pca_based=TRUE,xlab="[Denaturant agent] (M)")
   
   return(fig)
   

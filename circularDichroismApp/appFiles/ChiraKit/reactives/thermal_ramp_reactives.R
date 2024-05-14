@@ -125,6 +125,9 @@ observeEvent(list(input$selected_wavelength_thermal_unfolding,input$analysis_mod
   if (input$analysis_model_thermal == 'fixedWL') {
     append_record_to_logbook(paste0("Setting the 'Selected wavelength(s)' to: ",
                                     input$selected_wavelength_thermal_unfolding))
+    
+    reactives$spectra_decomposition_method_thermal <- 'None'
+    
   }
 
   reactives$data_loaded <- FALSE
@@ -226,6 +229,25 @@ output$fittedMeltingCurves <- renderPlotly({
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt)
   
+  return(fig)
+  
+})
+
+output$residualsMeltingCurves <- renderPlotly({
+  
+  req(reactives$melting_data_was_fitted)
+  
+  df      <- generate_thermal_ramp_df(cdAnalyzer)
+  dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
+  
+  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend')) 
+  tog$residuals <- tog$value.y - tog$value.x
+    
+  fig <- plot_residuals(
+    tog,
+    input$plot_width_melt, input$plot_height_melt, 
+    input$plot_type_melt, input$plot_axis_size_melt)
+                        
   return(fig)
   
 })
@@ -490,6 +512,26 @@ output$fittedSVDCoefficients <- renderPlotly({
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$spectra_decomposition_method_thermal)
+  
+  return(fig)
+  
+})
+
+output$residualsSVDCoefficients <- renderPlotly({
+  
+  req(reactives$melting_data_was_fitted_svd_or_pca)
+  
+  df      <- generate_thermal_ramp_df(cdAnalyzer)
+  dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
+
+  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend')) 
+  tog$residuals <- tog$value.y - tog$value.x
+  
+  fig <- plot_residuals(
+    tog,
+    input$plot_width_melt, input$plot_height_melt, 
+    input$plot_type_melt, input$plot_axis_size_melt,
+    svd_or_pca_based=TRUE)
   
   return(fig)
   

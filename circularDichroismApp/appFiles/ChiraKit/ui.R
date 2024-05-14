@@ -90,13 +90,15 @@ shinyUI(dashboardPage(
                    #Custom CSS to increase plots height
                    tags$head(tags$style("
                    #meltingCurves{height:600px !important;}
-                   #fittedMeltingCurves{height:600px !important;}"
+                   #fittedMeltingCurves{height:600px !important;}
+                   #residualsMeltingCurves{height:600px !important;}"
                                         )),
                    
                    # TabBox to plot the thermal unfolding curves and the fitted parameters
                    tabBox(title = "", width = 12,id = "tabBoxcdSpectra1",
                           tabPanel("Melting curves",                      plotlyOutput("meltingCurves")),
                           tabPanel("Fitted melting curves",               plotlyOutput("fittedMeltingCurves")),
+                          tabPanel("Residuals",               plotlyOutput("residualsMeltingCurves")),
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_melting")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_melting")),
                           )
@@ -112,7 +114,9 @@ shinyUI(dashboardPage(
                    #fittedSpectra{height:600px !important;}
                    #explainedVariance{height:600px !important;}
                    #svdCoefficients{height:600px !important;}
-                   #fittedSVDCoefficients{height:600px !important;}"
+                   #fittedSVDCoefficients{height:600px !important;}
+                   #residualsSVDCoefficients{height:600px !important;}"
+                                        
                                         )),
                    
                    tabBox(title = "", width = 12,id = "tabBoxcdSpectra2",
@@ -123,6 +127,7 @@ shinyUI(dashboardPage(
                           tabPanel("Explained variance",     plotlyOutput("explainedVariance")),
                           tabPanel("Coefficients",           plotlyOutput("svdCoefficients")),
                           tabPanel("Fitted coefficients",    plotlyOutput("fittedSVDCoefficients")),
+                          tabPanel("Residuals",              plotlyOutput("residualsSVDCoefficients")),
                           
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_meltingSVD")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_meltingSVD"))
@@ -146,14 +151,17 @@ shinyUI(dashboardPage(
                          #Custom CSS
                          tags$head(tags$style("
                          #chemicalCurves{height:600px !important;}
-                         #fittedChemicalCurves{height:600px !important;}"
+                         #fittedChemicalCurves{height:600px !important;}
+                         #residualsChemicalCurves{height:600px !important;}"
                                               )),
                          
                          tabBox(title = "", width = 12,id = "tabBoxcdSpectraChem",
                                 tabPanel("Chemical unfolding curves",plotlyOutput("chemicalCurves")),
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemical")),
                                 tabPanel("Relative errors (%)",tableOutput("fittedErrors_chemical")),
-                                tabPanel("Fitted curves",plotlyOutput("fittedChemicalCurves"))
+                                tabPanel("Fitted curves",plotlyOutput("fittedChemicalCurves")),
+                                tabPanel("Residuals",    plotlyOutput("residualsChemicalCurves"))
+                                
                                 )),
                        
                        conditionalPanel(
@@ -166,7 +174,8 @@ shinyUI(dashboardPage(
                          #chemFittedSpectra{height:600px !important;}
                          #chemExplainedVariance{height:600px !important;}
                          #chemSVDCoefficients{height:600px !important;}
-                         #chemFittedSVDCoefficients{height:600px !important;}"
+                         #chemFittedSVDCoefficients{height:600px !important;}
+                         #chemResidualsSVDCoefficients{height:600px !important;}"
                                               )),
                          
                          tabBox(title = "", width = 12,id = "tabBoxcdSpectraChem",
@@ -176,6 +185,7 @@ shinyUI(dashboardPage(
                                 tabPanel("Explained variance",    plotlyOutput("chemExplainedVariance")),
                                 tabPanel("Coefficients",          plotlyOutput("chemSVDCoefficients")),
                                 tabPanel("Fitted coefficients",   plotlyOutput("chemFittedSVDCoefficients")),
+                                tabPanel("Residuals",             plotlyOutput("chemResidualsSVDCoefficients")),
                                 
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemicalSVD")),
                                 tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_chemicalSVD"))
@@ -224,7 +234,8 @@ shinyUI(dashboardPage(
                    #Custom CSS
                    tags$head(tags$style("
                          #customCurves{height:600px !important;}
-                         #fittedCustomCurves{height:600px !important;}"
+                         #fittedCustomCurves{height:600px !important;}
+                         #residualsCustomCurves{height:600px !important;}"
                    )),
                    
                    tabBox(title = "", width = 12,id = "tabBoxcdSpectraCustom",
@@ -232,7 +243,9 @@ shinyUI(dashboardPage(
                           tabPanel("Initial parameter estimates",rHandsontableOutput("initialParamsValues")),
                           tabPanel("Fitted parameters",tableOutput("fittedParams_custom")),
                           tabPanel("Relative errors (%)",tableOutput("fittedErrors_custom")),
-                          tabPanel("Fitted curves",plotlyOutput("fittedCustomCurves"))
+                          tabPanel("Fitted curves",plotlyOutput("fittedCustomCurves")),
+                          tabPanel("Residuals",plotlyOutput("residualsCustomCurves"))
+                          
                    )),
                  
                  conditionalPanel(
@@ -245,7 +258,8 @@ shinyUI(dashboardPage(
                          #customFittedSpectra{height:600px !important;}
                          #customExplainedVariance{height:600px !important;}
                          #customSVDCoefficients{height:600px !important;}
-                         #customFittedSVDCoefficients{height:600px !important;}"
+                         #customFittedSVDCoefficients{height:600px !important;}
+                         #customResidualsSVDCoefficients{height:600px !important;}"
                    )),
                    
                    tabBox(title = "", width = 12,id = "tabBoxcdSpectraCustom",
@@ -256,6 +270,7 @@ shinyUI(dashboardPage(
                           tabPanel("Coefficients",          plotlyOutput("customSVDCoefficients")),
                           tabPanel("Initial parameter estimates",rHandsontableOutput("initialParamsValuesSVD")),
                           tabPanel("Fitted coefficients",   plotlyOutput("customFittedSVDCoefficients")),
+                          tabPanel("Residuals",   plotlyOutput("customResidualsSVDCoefficients")),
                           tabPanel("Fitted parameters",tableOutput("fittedParams_customSVD")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_customSVD"))
                    ))             
