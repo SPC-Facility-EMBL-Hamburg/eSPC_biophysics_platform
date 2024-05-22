@@ -89,10 +89,10 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
   maxWL <- max(sapply(wlsAll, max)) + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL))
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
   y <- list(title = workingUnits2ProperLabel(workingUnits),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size))
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
    
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-3)))
@@ -154,10 +154,10 @@ plotCDexperimentsHT <- function(cdAnalyzer,
   maxWL <- max(sapply(wlsAll, max)) + 5
 
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL))
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
   y <- list(title = 'High Tension (HT) Voltage',
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size))
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-3)))
@@ -244,10 +244,10 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
   maxWL <- max(sapply(wlsAll, max)) + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL))
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
   y <- list(title = workingUnits2ProperLabel(workingUnits),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size))
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(xaxis = x, yaxis = y,font="Roboto",showlegend=TRUE,
                         legend = list(x = 1.05, y = 1,font = list(size = axis_size-3)),
@@ -262,13 +262,14 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
 }
 
 # Requires a dataframe with 4 columns:
-#   'wavelength' / 'k', 'value' (CD signal), 'temperature / chem_con', 'legend'
+#   'wavelength' / 'k', 'temperature / chem_con', 'value' (CD signal), 'legend'
 
 # Returns the plot of the dataframe
 # We plot the temperature versus signal, one subplot per legend, 
 # and as many lines as wavelengths 
 
-plot_unfolding_exp <- function(unfolding_exp_data,plot_width=12,plot_height=8,
+plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
+                               plot_width=12,plot_height=8,
                                plot_type='svg', axis_size=12,
                                spectra_decomposition_method='fixedWL',useLogAxis=F) {
   
@@ -278,9 +279,9 @@ plot_unfolding_exp <- function(unfolding_exp_data,plot_width=12,plot_height=8,
   xaxisLabel <- get_x_axis_label(unfolding_exp_data)
   
   xaxis <- list(title = xaxisLabel,titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size))
+                tickfont = list(size = axis_size),showgrid = F)
   
-  yAxisTitle <- "CD signal"
+  yAxisTitle <- workingUnits2ProperLabel(workingUnits)
   svd_or_pca_based <- spectra_decomposition_method %in% c('PCA','SVD')
   
   if (svd_or_pca_based) {
@@ -288,7 +289,7 @@ plot_unfolding_exp <- function(unfolding_exp_data,plot_width=12,plot_height=8,
   }
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size))
+                tickfont = list(size = axis_size),showgrid = F)
   
   plot_list   <- list()
   
@@ -358,6 +359,7 @@ plot_unfolding_exp <- function(unfolding_exp_data,plot_width=12,plot_height=8,
 
 plot_unfolding_fitting <- function(
     unfolding_exp_data, unfolding_fitted_data,
+    workingUnits,
     plot_width=12, plot_height=8,
     plot_type='svg', axis_size=12,
     fitted_coefficients_method='fixedWL',useLogAxis=F) {
@@ -368,7 +370,7 @@ plot_unfolding_fitting <- function(
   xaxisLabel <- get_x_axis_label(unfolding_exp_data)
   
   xaxis <- list(title = xaxisLabel,titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size))
+                tickfont = list(size = axis_size),showgrid = F)
   
   if (useLogAxis) {
     
@@ -377,7 +379,7 @@ plot_unfolding_fitting <- function(
     
   } 
   
-  yAxisTitle <- "CD signal"
+  yAxisTitle       <- workingUnits2ProperLabel(workingUnits)
   svd_or_pca_based <- fitted_coefficients_method %in% c('PCA','SVD')
     
   if (svd_or_pca_based) {
@@ -385,7 +387,7 @@ plot_unfolding_fitting <- function(
   }
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size))
+                tickfont = list(size = axis_size),showgrid = F)
   
   plot_list   <- list()
   
@@ -461,20 +463,27 @@ plot_unfolding_fitting <- function(
 # We plot the wavelength versus signal, coloured by temperature, one subplot per legend, 
 
 plot_unfolding_exp_spectra <- function(
-    unfolding_exp_data, plot_width=12, 
+    unfolding_exp_data, workingUnits,
+    plot_width=12, 
     plot_height=8, plot_type='svg', axis_size=12,
-    unfolding_fitted_data = NULL) {
+    unfolding_fitted_data = NULL,
+    plot_mode='markers') {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
   
   weHaveFittedData <- !is.null(unfolding_fitted_data)
   
-  xaxis <- list(title = "Wavelength",titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size))
+  minWL <- min(unfolding_exp_data$wavelength) - 5
+  maxWL <- max(unfolding_exp_data$wavelength) + 5
   
-  yaxis <- list(title = "CD signal",titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size))
+  xaxis <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
+                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+  
+  yAxisTitle <- workingUnits2ProperLabel(workingUnits)
+  
+  yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
+                tickfont = list(size = axis_size),showgrid = F)
   
   plot_list   <- list()
   
@@ -525,7 +534,7 @@ plot_unfolding_exp_spectra <- function(
         y = subset_df$value,
         color = I(unique(subset_df$color)),
         type = "scatter",
-        mode = "markers",
+        mode = plot_mode,
         name = name,
         showlegend = T
       )
@@ -534,15 +543,30 @@ plot_unfolding_exp_spectra <- function(
         subset_df_fit <- df_temp_fit[df_temp$measurement_factor == group_value, ]
         subset_df_fit <- subset_df_fit %>% arrange(wavelength)
         
-        fig <- add_trace(
-          fig,
-          x = subset_df_fit$wavelength,
-          y = subset_df_fit$value,
-          type = "scatter",
-          mode = "lines",
-          line=list(color='black'),
-          showlegend = FALSE
-        )
+        # Let's plot one line per replicate
+        id_df <- subset_df_fit %>%
+          group_by(wavelength) %>%
+          mutate(duplicate_id = row_number())
+        
+        subset_df_fit <- inner_join(subset_df_fit,id_df,)
+        
+        for (id in unique(subset_df_fit$duplicate_id)) {
+          
+          subset_df_fit2 <- subset_df_fit[subset_df_fit$duplicate_id == id,]
+          
+          fig <- add_trace(
+            fig,
+            x = subset_df_fit2$wavelength,
+            y = subset_df_fit2$value,
+            type = "scatter",
+            mode = "lines",
+            line=list(color='black'),
+            showlegend = FALSE
+          )
+          
+        }
+        
+
         
       }
     }
@@ -598,23 +622,27 @@ plot_residuals <- function(res_df,
     p <- p + scale_x_log10()
   }
   
+  req_rows <- ceiling(length(unique(res_df$condition))/4)
+  
   p2 <- p + facet_wrap(~ condition,
-                       ncol = 4,nrow = 4)
+                       ncol = 4,nrow = req_rows)
   
   return(p2)
 }
 
-plot_basis_spectra <- function(basis_spectra_df,plot_width=12, 
+plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12, 
                                plot_height=8, plot_type='svg', axis_size=12) {
   
   minWL <- min(basis_spectra_df$wavelength) - 5
   maxWL <- max(basis_spectra_df$wavelength) + 5
   
-  xaxis <- list(title = "Wavelength",titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),range = c(minWL, maxWL))
+  xaxis <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
+                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
-  yaxis <- list(title = "CD signal",titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size))
+  yAxisTitle <- workingUnits2ProperLabel(workingUnits)
+  
+  yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
+                tickfont = list(size = axis_size),showgrid = F)
   
   plot_list   <- list()
   
@@ -664,12 +692,12 @@ plot_explained_variance <- function(df,plot_width=12,plot_height=8,
                                     plot_type='svg',axis_size=12) {
   
   xaxis <- list(title = 'k',titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size))
+                tickfont = list(size = axis_size),showgrid = F)
   
   yaxis <- list(title = 'Cumulative explained variance (%)',
                 titlefont = list(size = axis_size),
                 tickfont = list(size = axis_size),
-                range = c(0, 102))
+                range = c(0, 102),showgrid = F)
   
   plot_list   <- list()
   
@@ -755,10 +783,10 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
   maxWL <- max_wl_ref + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL))
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
   y <- list(title = workingUnits2ProperLabel('meanResidueMolarExtinction'),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size))
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-3)))
@@ -769,6 +797,76 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
   return(fig)
 }
 
+# Requires 
+#  - unfolding_exp_data: a df with
+#    four columns: 'temperature / chem_conc', 'variable',value', 'legend'
+#  - the x-axis label
+
+# Returns the plot of the dataframe
+# We plot the value versus temperature (or chemical agent concentration), 
+# coloured by variable, one subplot per legend, 
+
+plot_unfolding_fractions <- function(unfolding_fractions,
+                               plot_width=12,plot_height=8,
+                               plot_type='svg', axis_size=12,
+                               xAxisLabel='Set') {
+  
+  # Return null if there is no data
+  if (is.null(unfolding_fractions)) return(NULL)
+  
+  minX  <- min(unfolding_fractions[,1])
+  maxX  <- max(unfolding_fractions[,1])
+  delta <- maxX - minX
+    
+  xaxis <- list(title = xAxisLabel,titlefont = list(size = axis_size), 
+                tickfont = list(size = axis_size),showgrid = F,
+                range = c(minX-delta*0.1, maxX+delta*0.1))
+  
+  yaxis <- list(title = 'Fraction',titlefont = list(size = axis_size),
+                tickfont = list(size = axis_size),showgrid = F)
+  
+  plot_list   <- list()
+  
+  tot_cond    <- length(unique(unfolding_fractions$legend))
+  
+  i <- 0
+  for (leg in unique(unfolding_fractions$legend)) {
+    
+    fig <- plot_ly()
+    
+    i   <- i + 1
+    
+    df_temp <- unfolding_fractions[unfolding_fractions$legend == leg,]
+    
+    unique_groups <- unique(df_temp$variable)
+    
+    for (group_value in unique_groups) {
+      
+      subset_df <- df_temp[df_temp$variable == group_value, ]
+      
+      fig <- add_trace(
+        fig,
+        x = subset_df[,1],
+        y = subset_df$value,
+        type = "scatter",
+        mode = "lines",
+        name = group_value
+      )
+    }
+    
+    fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
+    
+    plot_list[[i]] <- fig
+    
+  }
+  
+  fig <- plot_list_to_fig(
+    paste0('unfolding_fractions_',Sys.Date()),plot_list,
+    unique(unfolding_fractions$legend),
+    axis_size,plot_type,plot_width,plot_height)
+  
+  return( fig )
+}
 
 
 

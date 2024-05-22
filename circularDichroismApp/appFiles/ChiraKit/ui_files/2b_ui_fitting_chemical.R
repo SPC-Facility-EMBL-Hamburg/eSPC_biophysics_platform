@@ -139,6 +139,20 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
     
     fluidRow(
       
+      column(3,p(
+        HTML("<b>Unfolding model</b>"),
+        span(shiny::icon("info-circle"), id = "info_uu_unfolding_model_chem"),
+        selectInput('chemical_unfolding_model',NULL,
+                    choices = c('Reversible two-state'     = 'twoState',
+                                'Reversible three-state'   = 'threeState')),
+        tippy::tippy_this(
+          elementId = "info_uu_unfolding_model_chem",
+          tooltip = "Apply an unfolding model where the protein unfolds in one step (reversible two-state), or 
+          an unfolding model where where the proteins unfolds via an intermediate (reversible three-state).",
+          placement = "right")
+        
+      )),
+      
       conditionalPanel(
         "input.analysis_model_chemical != 'fixedWL'",
         
@@ -189,13 +203,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
           between the CD signal (or PCA/SVD coefficients) and the denaturant concentration for the
           unfolded state.",placement = "right")
         )),
-      
-      column(3,p(
-        HTML("<b>Show plot export options</b>"),
-        checkboxInput("showPlotExportOptionsChemical",NULL,FALSE)
-        
-      )),
-      
+    
       # Little hack to use the withBusyIndicatorUI function (loading spinner)
       column(1, p(
         HTML("<b><br></b>"),
@@ -203,7 +211,54 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
           shinyjs::hidden(actionButton("fitChemicalHidden","",class = "btn-primary")))
       ))
       
-      ),
+    ),
+    
+    conditionalPanel(
+      "input.chemical_unfolding_model == 'threeState'",
+  
+      fluidRow(
+        
+        column(3, p(HTML("<b>D50 Initial value (F <-> I)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uuD50v1_init"),
+                    numericInput('D50v1_init',NULL, 0,min = 0, max = 10),
+                    tippy::tippy_this(
+                      elementId = "info_uuD50v1_init",
+                      tooltip = "Initial value for the parameter D50.
+                      If non-zero, the parameter is constrained
+                      within [initial_guess - 1.75, initial_guess + 1.75].
+                      If zero, the parameter is constrained between [minD + 0.5, maxD - 2],
+                      where minD, and maxD are respectively the minimum and maximum 
+                      denaturant agent concentration. 
+                      Note: Ensure the fitted parameter is not too close to the boundaries 
+                      after fitting.",
+                      placement = "right"))),
+        
+        column(3, p(HTML("<b>D50 Initial value (I <-> U)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uuD50v2_init"),
+                    numericInput('D50v2_init',NULL, 0,min = 0, max = 10),
+                    tippy::tippy_this(
+                      elementId = "info_uuD50v2_init",
+                      tooltip = "Initial value for theparameter D50.
+                      If non-zero, the parameter is constrained
+                      within [initial_guess - 1.75, initial_guess + 1.75].
+                      If zero, the parameter is constrained between [minD + 0.5, maxD - 0.5],
+                      where minD, and maxD are respectively the minimum and maximum 
+                      denaturant agent concentration. 
+                      Note: Ensure the fitted parameter is not too close to the boundaries 
+                      after fitting.",
+                      placement = "right")))
+      
+    )),
+    
+    fluidRow(
+      
+      column(3,p(
+        HTML("<b>Show plot export options</b>"),
+        checkboxInput("showPlotExportOptionsChemical",NULL,FALSE)
+        
+      ))
+      
+    ),
     
     conditionalPanel(
       'input.showPlotExportOptionsChemical',
@@ -228,9 +283,20 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
                                       placement = "right"))),                     
         
         column(3, p(HTML("<b>Text size</b>"),
-                    numericInput('plot_axis_size_chem',NULL, 16,min = 4, max = 40)))
-      )
+                    numericInput('plot_axis_size_chem',NULL, 16,min = 4, max = 40)))),
+      
+      conditionalPanel(
+        
+        "input.analysis_model_chemical != 'fixedWL'",
+        
+        fluidRow(
+          
+          column(4, p(HTML("<b>Plot style (melting spectra)</b>"),
+                      selectInput("plot_style_chem", NULL,
+                                  c("markers",
+                                    "lines"
+                                  ))))
+        ))
     )
-    
 )
 

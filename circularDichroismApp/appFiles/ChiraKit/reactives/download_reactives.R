@@ -615,7 +615,14 @@ output$download_estimated_sec_str <-   downloadHandler(
           
           sec_str_df      <- as.data.frame(secondary_structure_content_lst[i])
           sec_str_df$name <- spectraNames[i]
-          sec_str_dfs     <- append(sec_str_dfs,list(sec_str_df))
+                                
+          method <- gsub('Component_','',colnames(sec_str_df)[1])
+      
+          colnames(sec_str_df)[1] <- "Component"
+          
+          sec_str_df$method       <- method
+          
+          sec_str_dfs             <- append(sec_str_dfs,list(sec_str_df))
         }
       }
     }

@@ -325,19 +325,18 @@ $$
 
 </div>  
   
-  <br>
+<br>
   
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModels')"
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsGeneral')"
  style="padding-left: 20px;">
-  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
-<div id="fittingModels" style="display:none">  
+<div id="fittingModelsGeneral" style="display:none">  
   
 <br>
-<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied 
-by certain factors. 
+<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied by certain factors. 
 </p>
   
  $$
@@ -348,9 +347,21 @@ $$
   
 <p class="vf-intro__text"> where \( n \) corresponds to the total number of 
 species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
-</p>
+</p>  
+</div>  
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsTwoState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsTwoState" style="display:none">  
   
-  <p class="vf-intro__text">For example, for a two-state unfolding model, the total signal is given by,
+<br>
+
+  <p class="vf-intro__text">For a two-state unfolding model, the total signal is given by,
 </p>
   
 $$
@@ -402,7 +413,99 @@ $$
 <p class="vf-intro__text"> For simplicity, \( \Delta Cp \) is assumed to be zero, which does not affect significantly the estimation of the parameters  \( \Delta H \)  and \( Tm \).
 </p> 
  
-</div> 
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsThreeState" style="display:none">  
+  
+<br>
+
+<p class="vf-intro__text">For a three-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF + [I]*factorI
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \), \( [F] \) and \( [I] \) are respectively the concentration of the unfolded, folded and intermediate species; and  \( factorU \), \( factorF \)
+and \( factorI \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = [I] / [F]
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = [U] / [I]
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \):
+</p>
+  
+$$
+\large{ 
+    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{1/2} = \Delta H_{1/2} (1 - \frac{T}{T_{1/2}}) - \Delta C_{p1/2} (T_{1/2} - T + T \ln(\frac{T}{T_{1/2}}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant,  \( \Delta H \) is the enthalpy,
+\( T_{1/2} \) is the temperature where \( \Delta G_{1/2} \) equals zero and \( \Delta C_{p1/2} \) is the heat capacity change (for simplicity, assumed to be zero). Last, the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = f_u (k_U \cdot T + b_U) + f_n (k_N \cdot T + b_N) + f_i (b_I)
+   }
+$$
+
+
+$$
+\large{ 
+f_n = \frac{1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+</p>
+
+
+</div>
+
+
 </div>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('chemicalUnfoldingAnalysis')">Chemical unfolding<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
@@ -433,17 +536,16 @@ $$
 
 </div>  
   
-  <br>
+    <br>
 
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemical')"
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalGeneral')"
  style="padding-left: 20px;">
-  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
-<div id="fittingModelsChemical" style="display:none">  
-  
-<br>
+<div id="fittingModelsChemicalGeneral" style="display:none"> 
+
 <p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied 
 by certain factors. 
 </p>
@@ -457,8 +559,22 @@ $$
 <p class="vf-intro__text"> where \( n \) corresponds to the total number of 
 species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
 </p>
+
+</div>  
   
-  <p class="vf-intro__text">For example, for a two-state unfolding model, the total signal is given by,
+  <br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemical')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemical" style="display:none">  
+  
+<br>
+
+  <p class="vf-intro__text">For a two-state unfolding model, the total signal is given by,
 </p>
   
 $$
@@ -514,6 +630,99 @@ $$
 </p>
 
 </div> 
+
+  <br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalThreeState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemicalThreeState" style="display:none">  
+  
+<br>
+
+  <p class="vf-intro__text">For a three-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF + [I]*factorI
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded, folded 
+and intermediate species; and  \( factorU \), \( factorF \)
+and \( factorI \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = [I] / [F]
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = [U] / [I]
+   }
+$$   
+
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \), assuming a linear dependence of stability on the denaturant concentration:
+</p>
+  
+$$
+\large{ 
+    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{1/2} = M_{1/2} * (D50_{1/2} - D)
+   }
+$$   
+  
+<p class="vf-intro__text">
+where \( D \) is the denaturant concentration in molar, \( D50_{1/2} \) is the denaturant concentration where \( \Delta G_{1/2}  \) equals zero,  and \( M_{1/2} \) the slope \( \frac{\partial \Delta G_{1/2}(D)}{\partial D} \).
+</p>  
+  
+<p class="vf-intro__text">  Last, the CD signal contribution may show a linear dependence on the denaturant concentration, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = f_u (k_U \cdot D + b_U) + f_n (k_N \cdot D + b_N) + f_i (b_I)
+   }
+$$
+
+$$
+\large{ 
+f_n = \frac{1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+</p>
+
+</div>
+
 </div>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('spectra_decomposition')">Spectra decomposition<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">

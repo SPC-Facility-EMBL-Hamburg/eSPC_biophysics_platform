@@ -6,6 +6,7 @@ from scipy.optimize  import curve_fit
 from scipy.signal    import savgol_filter
 from scipy.stats     import t
 from scipy.linalg    import svd
+from scipy.integrate import solve_ivp
 
 # R gas constant in kcal/(kelvin mol)
 R_gas  = 1.987 / 1000 
@@ -17,6 +18,7 @@ def temperature_to_kelvin(T):
         T = T + 273.15
 
     return(T)
+
 
 # not used in the app
 def compute_bootstrap_regression_slope(x_data,y_data,num_bootstrap_samples=60):
@@ -124,33 +126,34 @@ def estimate_useful_wavelength_based_on_amplitude(wavelength,signal,measurement_
 
 def chemical_unfolding_with_linear_dependence_one_curve(D,T,D50,M,folded_ellipticity,m1,unfolded_ellipticity,m2):
 
-    T = temperature_to_kelvin(T)
+    '''
+    Compute the signal for a system with one reversible equilibrium (LEM model). Chemical unfolding
+
+    F <-> U ; K1 = [U] / [F] 
+
+    Input:
+
+        Parameter name              Detail                                      Units
+        - 'T'                       temperature                                 in kelvin
+        - 'D'                       concentration of the denaturant agent       in molar    
+        - 'M'                       dependence of the DG1 on D                  in kcal/mol/M
+        - 'D50'                     concentration of D where DG  equals zero    in molar
+        - 'folded_ellipticity'      baseline for the folded state               depends on the measurement units
+        - 'm1'                      slope for the folded state                  depends on the measurement units
+        - 'unfolded_ellipticity'    baseline for the unfolded state             depends on the measurement units
+        - 'm2'                      slope for the unfolded state                depends on the measurement units
+    '''
 
     dG = M * (D50 - D)
 
     Keq                 = np.exp(-dG / (R_gas * T))  
-    unfolded_fraction   =   Keq / (Keq + 1)
-    folded_fraction     =  1 - unfolded_fraction
+    folded_fraction     =   1 / (Keq + 1)
+    unfolded_fraction   =  1 - folded_fraction
 
     # Here m1 and m2 are the slopes of the linear pretransition and post-transition changes, respectively. 
     Y = folded_fraction * ( folded_ellipticity + m1*D) + unfolded_fraction * ( unfolded_ellipticity + m2*D ) 
 
     return Y
-
-def chemical_unfolding_one_curve(D,T,D50,M,folded_ellipticity,unfolded_ellipticity):
-    # Remove the linear dependence on the denaturant agent concentration
-
-    return chemical_unfolding_with_linear_dependence_one_curve(D,T,D50,M,folded_ellipticity,0,unfolded_ellipticity,0)
-
-def chemical_unfolding_one_curve_slope_native(D,T,D50,M,folded_ellipticity,m1,unfolded_ellipticity):
-    # Remove the linear dependence of the unfolded state on the denaturant agent concentration
-
-    return chemical_unfolding_with_linear_dependence_one_curve(D,T,D50,M,folded_ellipticity,m1,unfolded_ellipticity,0)
-
-def chemical_unfolding_one_curve_slope_unfolded(D,T,D50,M,folded_ellipticity,unfolded_ellipticity,m2):
-    # Remove the linear dependence of the folded state on the denaturant agent concentration
-
-    return chemical_unfolding_with_linear_dependence_one_curve(D,T,D50,M,folded_ellipticity,0,unfolded_ellipticity,m2)
 
 def fit_chemical_unfolding(listOfChemConcentration,listOfSignals,temperature,initialParameters,
     lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded):
@@ -176,6 +179,8 @@ def fit_chemical_unfolding(listOfChemConcentration,listOfSignals,temperature,ini
     except:
         allSignal       = listOfSignals
     
+    temperature = temperature_to_kelvin(temperature)
+
     def chemical_unfolding(dummyVariable,*args):
 
         '''
@@ -207,6 +212,7 @@ def fit_chemical_unfolding(listOfChemConcentration,listOfSignals,temperature,ini
         interceptsFolded    = args[2:(2+totalDataSets)]
         interceptsUnfolded  = args[(2+totalDataSets):(2+totalDataSets*2)]
 
+        kN, kU = 0, 0
         if fitSlopeNative:
 
             slopesFolded   = args[(2+totalDataSets*2):(2+totalDataSets*3)]
@@ -215,28 +221,21 @@ def fit_chemical_unfolding(listOfChemConcentration,listOfSignals,temperature,ini
 
             slopesUnfolded = args[(len(args)-totalDataSets):]
 
+
         signal = []
 
         for i,D in enumerate(listOfChemConcentration):
 
             bN, bU = interceptsFolded[i],   interceptsUnfolded[i]
 
-            if fitSlopeNative and fitSlopeUnfolded:
-
-                Y = chemical_unfolding_with_linear_dependence_one_curve(D,temperature,D50,M,bN,slopesFolded[i],bU,slopesUnfolded[i])
+            if fitSlopeNative:
+                kN = slopesFolded[i]
             
-            if fitSlopeNative and not fitSlopeUnfolded:
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
 
-                Y = chemical_unfolding_one_curve_slope_native(D,temperature,D50,M,bN,slopesFolded[i],bU)
-
-            if not fitSlopeNative and  fitSlopeUnfolded:
-
-                Y = chemical_unfolding_one_curve_slope_unfolded(D,temperature,D50,M,bN,bU,slopesUnfolded[i])
-
-            if not fitSlopeNative and not fitSlopeUnfolded:
-
-                Y = chemical_unfolding_one_curve(D,temperature,D50,M,bN,bU)
-
+            Y = chemical_unfolding_with_linear_dependence_one_curve(D,temperature,D50,M,bN,kN,bU,kU)
+            
             signal.append(Y)
 
         return np.array(signal).flatten()
@@ -246,9 +245,268 @@ def fit_chemical_unfolding(listOfChemConcentration,listOfSignals,temperature,ini
 
     return global_fit_params, cov
 
-    return None
+def chemical_unfolding_with_linear_dependence_one_curve_three_species(D,T,D50v1,M1,D50v2,M2,bN,kN,bU,kU,bI):
 
-def thermal_unfolding_one_curve(T,Tm,dh,bN,kN,bU,kU,Cp):
+    """
+    Three states reversible unfolding
+    N <-> I <-> U
+
+    We assume a heat capacity of unfolding equal to zero.
+
+    """
+
+    dG1 = M1 * (D50v1 - D)
+    dG2 = M2 * (D50v2 - D)
+
+    A = np.exp(-dG1/(R_gas*T))
+    B = np.exp(-dG2/(R_gas*T))
+
+    den = (1+A+A*B)
+
+    xN = 1   /  den 
+    xI = A   /  den
+    xU = A*B /  den
+        
+    Y = xN * (kN * D + bN) + xI * bI + xU*(kU * D + bU) 
+    
+    return Y
+
+def fit_chemical_unfolding_three_species(listOfChemConcentration,listOfSignals,temperature,initialParameters,
+    lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded):
+
+    '''
+    Fit the chemical unfolding profile of many curves at the same time
+    Useful function to do global fitting of local and global parameters
+
+    Requires:
+
+        - The 'listOfChemConcentration' (one per dataset)
+        - The 'listOfSignals'           (one per dataset)
+
+    Returns:
+
+        The fitting of the chemical unfolding curves based on the parameters D50, m, folded_ellipticity and unfolded_ellipticity
+    '''
+
+    # We need 1D arrays for numpy
+
+    try:
+        allSignal       = np.concatenate(listOfSignals)
+    except:
+        allSignal       = listOfSignals
+    
+    temperature = temperature_to_kelvin(temperature)
+
+    def chemical_unfolding(dummyVariable,*args):
+
+        '''
+        Calculate the chemical unfolding profile of many curves at the same time
+
+        Requires:
+
+            - The 'listOfChemConcentration' containing each of them a single dataset
+
+        The other arguments have to be in the following order:
+
+            - Global m 
+            - Global D50 
+            - Single intercepts, folded
+            - Single slopes, folded
+            - Single intercepts, unfolded
+            - Single slopes, unfolded
+
+        Returns:
+
+            The melting curves based on the parameters m, D50,
+                slopes and intercept of the folded and unfolded states
+        '''
+ 
+        totalDataSets = len(listOfChemConcentration)
+        M1             = args[0] # M for the first transition
+        D50v1          = args[1] # Concentration at which the concentration of the native state equals the concentration of the intermediate state
+        M2             = args[2] # M for the second transition
+        D50v2          = args[3] # Concentration at which the concentration of the intermediate state equals the concentration of the unfolded state
+
+        interceptsFolded       = args[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfolded     = args[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermediate = args[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        # The second transition should happen at higher temperatures ... 
+        if D50v2 < (D50v1):
+
+            return np.array(allSignal*1e5)
+
+        kN, kU = 0, 0
+        if fitSlopeNative:
+
+            slopesFolded   = args[(4+totalDataSets*3):(4+totalDataSets*4)]
+
+        if fitSlopeUnfolded:
+
+            slopesUnfolded = args[(len(args)-totalDataSets):]
+
+        signal = []
+
+        for i,D in enumerate(listOfChemConcentration):
+
+            bN, bU, bI = interceptsFolded[i], interceptsUnfolded[i], interceptsIntermediate[i]
+
+            if fitSlopeNative:
+                kN = slopesFolded[i]
+            
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
+
+            Y = chemical_unfolding_with_linear_dependence_one_curve_three_species(D,temperature,D50v1,M1,D50v2,M2,bN,kN,bU,kU,bI)
+            
+            signal.append(Y)
+
+        return np.array(signal).flatten()
+
+    global_fit_params, cov = curve_fit(chemical_unfolding,1,allSignal,
+        p0=initialParameters,bounds=(lowBounds, highBounds),method='trf')
+
+    return global_fit_params, cov
+
+def arrhenius(T, Tf, Ea):
+    """
+    Arrhenius equiation: defines dependence of reaction rate constant k on temperature
+    In this version of the equation we use Tf (a temperature of k=1)
+    to get rid of instead of pre-exponential constant A
+
+    T, Tf, must be given in Kelvin, Ea in kcal units
+
+    """
+    return np.exp(-Ea / R_gas * (1 / T - 1 / Tf))
+
+# this function is work in progress!
+def fit_1rev_2irrev_unfolding(listOfTemperatures,listOfSignals,initialParameters,
+    lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded,scan_rate):
+
+    """
+        K     k
+    N  <-> I -> D.  Reversible step followed by irreversible step
+
+    where N, I, and D are the native, unfolded intermediate, and final (irreversibly denatured) states of the protein
+
+    """
+
+    try:
+        allSignal       = np.concatenate(listOfSignals)
+    except:
+        allSignal       = listOfSignals
+
+    def ode(T, xf, dh,t1,Tf, Ea):
+        
+        """
+        ordinary differential equation for fraction native versus temperature
+        dxf/dT = -1/v*k(T)*K(T)/(K(T) + 1)*(1 - xf)
+
+        Here we call 'xf' to the final (irreversibly denaturated) state. Nomeclature from Jose M. Sanchez-Ruiz 1992
+
+        Tf is the temperature at which k = 1/min
+
+        """
+    
+        k = arrhenius(T, Tf, Ea)
+        K = np.exp(- dh / R_gas * (1/T - 1/t1))
+        
+        return k*K*(1 - xf)/(scan_rate_v*(K + 1))
+
+    def signal(T, dh,t1,Tf, Ea,bF,bN,bU):
+
+        """
+        Nomeclature from Jose M. Sanchez-Ruiz 1992
+        The variable
+            'xf' refers to the final (irreversibly denaturated) state
+            'xn' refers to the folded  state
+            'xu' refers to the unfolded state
+        """
+
+        ivp_result = solve_ivp(ode,t_span=[min(T), max(T)],t_eval=T,y0=[0],args=(dh,t1,Tf,Ea),method="BDF")
+
+        xf = ivp_result.y[0, :]
+        Ks = np.exp(- dh / R_gas * (1/T - 1/t1))
+
+        xn = (1 - xf) / (1 + Ks)
+        xu = 1 - xf - xn
+
+        signal = xf*bF + xn*bN +xu*bU
+
+        return signal
+
+    def thermal_unfolding(dummyVariable,*args):
+
+        '''
+        Calculate the thermal unfolding profile of many curves at the same time
+
+        Requires:
+
+            - The 'listOfTemperatures' containing each of them a single dataset
+
+        The other arguments have to be in the following order:
+
+            - Global melting temperature    
+            - Global enthalpy of unfolding 
+            - Global activation energy 
+            - Global enthalpy of unfolding 
+
+            - Single intercepts, folded
+            - Single intercepts, unfolded
+            - Single slopes, folded
+            - Single slopes, unfolded
+
+        Returns:
+
+            The melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+                slopes and intercept of the folded and unfolded states
+
+        '''
+
+        totalDataSets = len(listOfTemperatures)
+        T1            = args[0] # Temperature of melting, first transition     ([N] = [I]) DG1 = 0
+        DH1           = args[1] # Enthalpy of unfolding, first transition      ([N] = [I])
+        Tf            = args[2] # Temperature of melting, second transition    ([I] -> [U]) DG2 = 0
+        Ea            = args[3] # Energy of activation, second transition
+
+        # The second transition should happen at higher temperatures ... 
+        if Tf < T1:
+
+            return allSignal*1e5
+
+        interceptsFolded       = args[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfolded     = args[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermediate = args[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        kN, kU = 0, 0
+        if fitSlopeNative:
+
+            slopesFolded   = args[(4+totalDataSets*3):(4+totalDataSets*4)]
+
+        if fitSlopeUnfolded:
+
+            slopesUnfolded = args[(len(args)-totalDataSets):]
+
+        signal = []
+
+        for i,T in enumerate(listOfTemperatures):
+
+            bN, bU, bI = interceptsFolded[i],   interceptsUnfolded[i], interceptsIntermediate[i]
+            
+            if fitSlopeNative:
+                kN = slopesFolded[i]
+            
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
+
+            Y = signal(T, DH1,T1,Tf, Ea,bU,bN,bI) # Arguments are in the right order. Check the change in notation.
+
+            signal.append(Y)
+
+        return np.array(signal).flatten()
+
+
+def two_state_thermal_unfolding_one_curve(T,Tm,dh,bN,kN,bU,kU,Cp):
 
     T  = temperature_to_kelvin(T)
     Tm = temperature_to_kelvin(Tm)
@@ -300,8 +558,8 @@ def fit_thermal_unfolding(listOfTemperatures,listOfSignals,initialParameters,
             - Global melting temperature    
             - Global enthalpy of unfolding 
             - Single intercepts, folded
-            - Single slopes, folded
             - Single intercepts, unfolded
+            - Single slopes, folded
             - Single slopes, unfolded
 
         Returns:
@@ -342,7 +600,136 @@ def fit_thermal_unfolding(listOfTemperatures,listOfSignals,initialParameters,
             if fitSlopeUnfolded:
                 kU = slopesUnfolded[i]
 
-            Y = thermal_unfolding_one_curve(T,Tm,dh,bN,kN,bU,kU,Cp)
+            Y = two_state_thermal_unfolding_one_curve(T,Tm,dh,bN,kN,bU,kU,Cp)
+            signal.append(Y)
+
+        return np.array(signal).flatten()
+
+    global_fit_params, cov = curve_fit(thermal_unfolding,1,allSignal,
+        p0=initialParameters,bounds=(lowBounds, highBounds))
+
+    return global_fit_params, cov
+
+def thermal_unfolding_one_curve_three_species(T,T1,DH1,T2,DH2,bN,kN,bU,kU,bI):
+
+    """
+    Three states reversible unfolding
+    N <-> I <-> U
+
+    We assume a heat capacity of unfolding equal to zero.
+
+    """
+
+    T  = temperature_to_kelvin(T)
+    T1 = temperature_to_kelvin(T1)
+    T2 = temperature_to_kelvin(T2)
+
+    A = np.exp(-DH1*(1-T/T1)/(R_gas*T))
+    B = np.exp(-DH2*(1-T/T2)/(R_gas*T))
+
+    den = (1+A+A*B)
+
+    xN = 1   /  den 
+    xI = A   /  den
+    xU = A*B /  den
+        
+    Y = xN * (kN * T + bN) + xI * bI + xU*(kU * T + bU) 
+    
+    return Y
+
+def fit_thermal_unfolding_three_species(listOfTemperatures,listOfSignals,initialParameters,
+    lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded):
+
+    '''
+    Fit the thermal unfolding profile of many curves at the same time
+    Useful function to do global fitting of local and global parameters
+
+    We use a three species model with two reversible equilibria:  N <-> I <-> U
+
+    Requires:
+
+        - The 'listOfTemperatures' (one per dataset)
+        - The 'listOfSignals'      (one per dataset)
+
+    Returns:
+
+        The fitting of the melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+            slopes and intercept of the folded and unfolded states
+
+    '''
+
+    # We need 1D arrays for numpy
+    try:
+        allSignal       = np.concatenate(listOfSignals)
+    except:
+        allSignal       = listOfSignals
+    
+    def thermal_unfolding(dummyVariable,*args):
+
+        '''
+        Calculate the thermal unfolding profile of many curves at the same time
+
+        Requires:
+
+            - The 'listOfTemperatures' containing each of them a single dataset
+
+        The other arguments have to be in the following order:
+
+            - Global melting temperature   for the first transition   
+            - Global enthalpy of unfolding for the first transition
+            - Global melting temperature   for the second transition   
+            - Global enthalpy of unfolding for the second transition
+            - Single intercepts, folded
+            - Single intercepts, unfolded
+            - Single intercepts, intermediate
+
+            - Single slopes,     folded
+            - Single slopes,     unfolded
+
+        Returns:
+
+            The melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+                slopes and intercept of the folded, intermediate and unfolded states
+
+        '''
+
+        totalDataSets = len(listOfTemperatures)
+        T1            = args[0] # Temperature of melting, first transition     ([N] = [I]) DG1 = 0
+        DH1           = args[1] # Enthalpy of unfolding, first transition      ([N] = [I])
+        T2            = args[2] # Temperature of melting, second transition    ([I] = [U]) DG2 = 0
+        DH2           = args[3] # Enthalpy of unfolding, second transition     ([I] = [U])
+
+        # The second transition should happen at higher temperatures ... 
+        if T2 < T1:
+
+            return allSignal*1e5
+
+        interceptsFolded       = args[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfolded     = args[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermediate = args[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        kN, kU = 0, 0
+        if fitSlopeNative:
+
+            slopesFolded   = args[(4+totalDataSets*3):(4+totalDataSets*4)]
+
+        if fitSlopeUnfolded:
+
+            slopesUnfolded = args[(len(args)-totalDataSets):]
+
+        signal = []
+
+        for i,T in enumerate(listOfTemperatures):
+
+            bN, bU, bI = interceptsFolded[i], interceptsUnfolded[i], interceptsIntermediate[i]
+            
+            if fitSlopeNative:
+                kN = slopesFolded[i]
+            
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
+
+            Y = thermal_unfolding_one_curve_three_species(T,T1,DH1,T2,DH2,bN,kN,bU,kU,bI)
             signal.append(Y)
 
         return np.array(signal).flatten()
@@ -703,3 +1090,120 @@ def apply_pca(X):
     coefficients = np.array(a_is)
 
     return cum_sum_eigenvalues, principal_components, coefficients
+
+def two_state_rev_unfolding_fractions(T,DHm,Tm):
+
+    T  = temperature_to_kelvin(T)
+    Tm = temperature_to_kelvin(Tm)
+    
+    DG = DHm * (1 - T / Tm)
+    
+    Ku = np.exp(-DG / (R_gas * T))
+    
+    xU = Ku / (1 + Ku)
+    xN = 1 / (1 + Ku)
+
+    return {'Native':xN, 'Unfolded':xU}
+
+def three_state_rev_unfolding_fractions(T,DH1,DH2,T1,T2):
+
+    '''
+    Compute the folded, intermediate and unfolded fraction for a system with
+    two reversible equilibria, thermal unfolding
+
+    F <-> I <-> U
+    
+    K1 = [I] / [F] 
+    K2 = [U] / [I] 
+
+    Input:
+
+        Parameter name  Detail                                      Units
+        - 'T'           temperature                                 in celsius or kelvin
+        - 'DH1'         enthalpy of DG1                             in kcal/mol    
+        - 'T1'          temperature where  DG1 equals zero          in celsius or kelvin
+        - 'DH2'         enthalpy of DG2                             in kcal/mol    
+        - 'T2'          temperature where  DG2 equals zero          in celsius or kelvin
+    '''
+
+    T  = temperature_to_kelvin(T)
+    T1 = temperature_to_kelvin(T1)
+    T2 = temperature_to_kelvin(T2)
+
+    A = np.exp(-DH1*(1-T/T1)/(R_gas*T))
+    B = np.exp(-DH2*(1-T/T2)/(R_gas*T))
+
+    den = (1+A+A*B)
+
+    xN = 1   /  den 
+    xI = A   /  den
+    xU = A*B /  den
+
+    return {'Native':xN, 'Intermediate':xI, 'Unfolded':xU}
+
+def chem_two_state_rev_unfolding_fractions(T,D,M,D50):
+
+    '''
+    Compute the folded and unfolded fraction for a system with
+    one reversible equilibrium (LEM model)
+
+    F <-> U
+    
+    K1 = [U] / [F] 
+
+    Input:
+
+        Parameter name  Detail                                      Units
+        - 'T'           temperature                                 in celsius or kelvin
+        - 'D'           concentration of the denaturant agent       in molar    
+        - 'M'           dependence of the DG1 on D                  in kcal/mol/M
+        - 'D50'        concentration of D where DG1 equals zero    in molar
+    '''
+
+    T = temperature_to_kelvin(T)
+
+    dG = M * (D50 - D)
+
+    Keq    =  np.exp(-dG / (R_gas * T))  
+    xU     =  Keq / (Keq + 1)
+    xN     =  1 - xU
+
+    return {'Native':xN, 'Unfolded':xU}
+
+def chem_three_state_rev_unfolding_fractions(T,D,M1,D50v1,M2,D50v2):
+
+    '''
+    Compute the folded, intermediate and unfolded fraction for a system with
+    two reversible equilibria, chemical unfolding (LEM model)
+
+    F <-> I <-> U
+    
+    K1 = [I] / [F] 
+    K2 = [U] / [I] 
+
+    Input:
+
+        Parameter name  Detail                                      Units
+        - 'T'           temperature                                 in celsius or kelvin
+        - 'D'           concentration of the denaturant agent       in molar    
+        - 'M1'          dependence of the DG1 on D                  in kcal/mol/M
+        - 'D50v1'       concentration of D where DG1 equals zero    in molar
+        - 'M2'          dependence of the DG2 on D                  in kcal/mol/M
+        - 'D50v2'       concentration of D where DG2 equals zero    in molar
+    '''
+
+    T  = temperature_to_kelvin(T)
+
+    dG1 = M1 * (D50v1 - D)
+    dG2 = M2 * (D50v2 - D)
+
+    A = np.exp(-dG1/(R_gas*T))
+    B = np.exp(-dG2/(R_gas*T))
+
+    den = (1+A+A*B)
+
+    xN = 1   /  den 
+    xI = A   /  den
+    xU = A*B /  den
+
+    return {'Native':xN, 'Intermediate':xI, 'Unfolded':xU}

@@ -101,7 +101,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
            fitted.",placement = "right")
          
          ))
-      
+       
       ),
       
       conditionalPanel(
@@ -133,12 +133,26 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         separators. For example, valid input formats include: '220 224', 
         '220-224', and '220-224 228'.",
         placement = "right")
-      ))
+      )),
     
     )),
     
     fluidRow(
     
+      column(3,p(
+        HTML("<b>Unfolding model</b>"),
+        span(shiny::icon("info-circle"), id = "info_uu_unfolding_model"),
+        selectInput('thermal_unfolding_model',NULL,
+                    choices = c('Reversible two-state'     = 'twoState',
+                                'Reversible three-state'   = 'threeState')),
+        tippy::tippy_this(
+          elementId = "info_uu_unfolding_model",
+          tooltip = "Apply an unfolding model where the protein unfolds in one step (reversible two-state), or 
+          an unfolding model where where the proteins unfolds via an intermediate (reversible three-state).",
+          placement = "right")
+        
+      )),
+      
       conditionalPanel(
         "input.analysis_model_thermal != 'fixedWL'",
         
@@ -150,7 +164,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
             elementId = "info_uuThermalFitting-fit_SVD_coeff",
             tooltip = "Fit the CD melting curves.",placement = "right")
           
-        ))
+        )),
         
         ),
       
@@ -191,12 +205,6 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
     
     )),
     
-    column(3,p(
-      HTML("<b>Show plot export options</b>"),
-      checkboxInput("showPlotExportOptionsMelting",NULL,FALSE)
-      
-    )),
-    
     # Little hack to use the withBusyIndicatorUI function (loading spinner)
     column(1,p(
       HTML("<b><br></b>"),
@@ -204,6 +212,51 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         shinyjs::hidden(actionButton("fitThermalHidden","",class = "btn-primary")))
     ))
   ),
+  
+  conditionalPanel(
+    "input.thermal_unfolding_model == 'threeState'",
+    
+    fluidRow(
+      
+      column(3, p(HTML("<b>T1 Initial value (F <-> I)</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uuT1_init"),
+                  numericInput('T1_init',NULL, 0,min = 0, max = 10),
+                  tippy::tippy_this(
+                    elementId = "info_uuT1_init",
+                    tooltip = "Initial value for the parameter T1. 
+                      If zero, the parameter is constrained
+                      within [minT + 4, maxT-7], where minT and maxT are 
+                      respectively the minimum and maximum temperatures.
+                      If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15],
+                      Note: Ensure the fitted parameter is not too close to the boundaries 
+                      after fitting.",
+                    placement = "right"))),
+      
+      column(3, p(HTML("<b>T2 Initial value (I <-> U)</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uuT2_init"),
+                  numericInput('T2_init',NULL, 0,min = 0, max = 10),
+                  tippy::tippy_this(
+                    elementId = "info_uuT2_init",
+                    tooltip = "Initial value for the parameter T2. 
+                      If zero, the parameter is constrained
+                      within [minT + 4, maxT], where minT and maxT are 
+                      respectively the minimum and maximum temperatures.
+                      If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15],
+                      Note: Ensure the fitted parameter is not too close to the boundaries 
+                      after fitting.",
+                    placement = "right")))
+      
+    )),
+  
+  fluidRow(
+    
+    column(3,p(
+      HTML("<b>Show plot export options</b>"),
+      checkboxInput("showPlotExportOptionsMelting",NULL,FALSE)
+      
+    ))
+    
+    ),
   
   conditionalPanel(
     'input.showPlotExportOptionsMelting',
@@ -228,9 +281,20 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
                                     placement = "right"))),                     
       
       column(3, p(HTML("<b>Text size</b>"),
-                  numericInput('plot_axis_size_melt',NULL, 16,min = 4, max = 40)))
-    )
+                  numericInput('plot_axis_size_melt',NULL, 16,min = 4, max = 40)))),
+    
+    conditionalPanel(
+      
+      "input.analysis_model_thermal != 'fixedWL'",
+      
+    fluidRow(
+      
+      column(4, p(HTML("<b>Plot style (melting spectra)</b>"),
+                  selectInput("plot_style_melt", NULL,
+                              c("markers",
+                                "lines"
+                                ))))
+    ))
   )
-  
 )
 

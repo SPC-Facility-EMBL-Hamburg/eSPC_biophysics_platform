@@ -27,7 +27,11 @@ from SelconsFunction                 import *
 Classes for the analysis of circular dichorism data
 Code written by Osvaldo Burastero 
 
-If you use this script please cite:
+If you use this script please use a reference similar to the following:
+
+    
+Osvaldo Burastero, Nykola C. Jones, Søren Vrønning Hoffmann, & Maria M. Garcia-Alai (2024). 
+ChiraKit (Version 1.0). Manuscript in preparation. https://spc.embl-hamburg.de/app/chirakit
 
 No warranty whatsoever
 If you have questions please contact me:
@@ -37,7 +41,7 @@ If you have questions please contact me:
  
 # Matrix of secondary structure components (six components)
 F1  = np.loadtxt("./secondary_structure_estimation_files/AU-F128_T-Nov22.txt",          dtype='f',   delimiter='\t') 
-# Matrix of known CD spectra     
+# Matrix of known (reference) CD spectra     
 A1  = np.loadtxt("./secondary_structure_estimation_files/AU-A128_PCDDB-Nov22.txt",      dtype='f',   delimiter='\t')
 
 # F1 and A1 contain the AU-SP175 and AU-SMP180 reference datasets
@@ -91,7 +95,7 @@ class cd_experiment_general:
 
         self.isGenerated        = False # Boolean to help exporting only the generated data
         
-        # List of dfs containing the secondary structure content, one df per CD spectrum
+        # List of dataframes containing the secondary structure content, one df per CD spectrum
         self.secondary_structure_content = None
 
         return None
@@ -950,7 +954,7 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         global_fit_params, cov = fit_chemical_unfolding(listOfChemConcentration,listOfSignals,self.temperature,
             p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
 
-        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+        ## Try to re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
 
         diffMin = (global_fit_params - low_bound)[2:]
         diffMax = (high_bound        - global_fit_params)[2:]
@@ -1067,6 +1071,221 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         self.fit_params            = df_fit_params
         self.fit_rel_errors        = df_fit_errors
 
+        self.fractions  = chem_two_state_rev_unfolding_fractions(self.temperature,self.chem_concentration,M,D50)
+
+        return None
+
+    def fit_signal_three_state(self,fitSlopeNative=True,fitSlopeUnfolded=True,D50v1_init=0,D50v2_init=0): 
+
+        wavelengths = self.wavelength_useful
+        signal      = self.signal_useful
+
+        # Initial parameters have to be in order: 
+            # Global M, Global D50
+            # Single intercepts folded, Single intercepts unfolded
+            # Single slopes folded    , Single slopes unfolded
+
+        listOfChemConcentration = [self.chem_concentration for _ in wavelengths]
+        listOfSignals           = signal.tolist()
+        totalDataSets           = len(listOfChemConcentration)
+
+        bIs   = (self.bNs + self.kUs) * 0.5
+
+        minC  = np.min(self.chem_concentration)
+        maxC  = np.max(self.chem_concentration)
+        medC  = np.median(self.chem_concentration)
+
+        # Set initial parameters
+        p0          = np.concatenate(((0.25,minC+1,0.25,maxC-1),self.bNs,self.bUs,bIs,self.kNs,self.kUs))
+
+        low_bound    =  np.array([0.2  , minC + 0.5,0.2  , minC + 0.5 ] + [x/100-100   if x>0 else 100*x-100  for x in p0[4:]])
+        high_bound   =  np.array([20, maxC - 2,20, maxC - 0.5 ]         + [100*x+100   if x>0 else x/100+100  for x in p0[4:]]) 
+
+        # If required, change the initial guess and fitting limits
+        if D50v1_init != 0:
+
+            p0[1], low_bound[1], high_bound[1] = D50v1_init, D50v1_init - 1.75, D50v1_init + 1.75
+
+        if D50v2_init != 0:
+
+            p0[3], low_bound[3], high_bound[3] = D50v2_init, D50v2_init - 1.75, D50v2_init + 1.75
+
+        if not fitSlopeUnfolded:
+
+            p0, low_bound, high_bound = p0[:-totalDataSets], low_bound[:-totalDataSets], high_bound[:-totalDataSets]
+
+        if not fitSlopeNative:
+
+            l1 = (4+totalDataSets*3)
+            l2 = (4+totalDataSets*4)
+
+            indices_to_delete = [x for x in range(l1,l2)]
+
+            p0           = np.delete(p0, indices_to_delete) 
+            low_bound    = np.delete(low_bound, indices_to_delete) 
+            high_bound   = np.delete(high_bound, indices_to_delete)
+
+        global_fit_params, cov = fit_chemical_unfolding_three_species(listOfChemConcentration,listOfSignals,self.temperature,
+            p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Try to re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+
+        diffMin = (global_fit_params - low_bound)[4:]
+        diffMax = (high_bound        - global_fit_params)[4:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+4] = low_bound[i+4] - 1e3
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+4] = high_bound[i+4] + 1e3
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_chemical_unfolding_three_species(listOfChemConcentration,listOfSignals,self.temperature,
+                p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+            ## Try a second re fit the slopes and/or baselines if the fitted parameters are still close to the boundaries
+
+            diffMin = (global_fit_params - low_bound)[4:]
+            diffMax = (high_bound        - global_fit_params)[4:]
+
+            cond1 = np.any(diffMin < 10)
+            cond2 = np.any(diffMax < 10)
+
+            if cond1:
+
+                for i,value in enumerate(diffMin):
+
+                    if value < 10:
+
+                        low_bound[i+4] = low_bound[i+4] - 1e5
+
+            if cond2:
+
+                for i,value in enumerate(diffMax):
+
+                    if value < 10:
+
+                        high_bound[i+4] = high_bound[i+4] + 1e5
+
+            if cond1 or cond2:
+
+                p0 = global_fit_params
+
+                global_fit_params, cov = fit_chemical_unfolding_three_species(listOfChemConcentration,listOfSignals,self.temperature,
+                    p0,low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        errors                 = np.sqrt(np.diag(cov))
+
+        M1             = global_fit_params[0] # M
+        D50v1          = global_fit_params[1] # Concentration at which the sample is 50 % unfolded
+
+        M2             = global_fit_params[2] # M
+        D50v2          = global_fit_params[3] # Concentration at which the sample is 50 % unfolded
+
+        interceptsFolded       = global_fit_params[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfolded     = global_fit_params[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermediate = global_fit_params[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        slopesFolded   = global_fit_params[(4+totalDataSets*3):(4+totalDataSets*4)] if fitSlopeNative   else np.full(len(interceptsFolded), 0)
+        slopesUnfolded = global_fit_params[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), 0)
+
+        M1_error            = errors[0] # m parameter
+        d50v1_error         = errors[1] # concentration of denaturant at which the sample is 50 % unfolded
+
+        M2_error            = errors[2] # m parameter
+        d50v2_error         = errors[3] # concentration of denaturant at which the sample is 50 % unfolded
+
+        interceptsFoldedError    = errors[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfoldedError  = errors[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermError    = errors[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        slopesFoldedError   = errors[(4+totalDataSets*3):(4+totalDataSets*4)] if fitSlopeNative   else np.full(len(interceptsFolded), np.nan)
+        slopesUnfoldedError = errors[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), np.nan)
+
+        predicted = []
+
+        # To be filled in this order 
+        fit_params = []
+        fit_errors = []
+
+        # Fill the parameters dataframe
+        i = 0
+
+        for bN, kN, bU, kU, bI in zip(interceptsFolded,slopesFolded,interceptsUnfolded,slopesUnfolded,interceptsIntermediate):
+
+            Y = chemical_unfolding_with_linear_dependence_one_curve_three_species(self.chem_concentration,self.temperature,D50v1,M1,D50v2,M2,bN,kN,bU,kU,bI)
+
+            predicted.append(Y)
+
+            fit_params.append([kN,bN,kU,bU,bI,D50v1,M1,D50v2,M2, str(wavelengths[i]) + ' Dataset ' + self.name])
+
+            i +=1
+
+        # Fill the errors dataframe
+        i = 0
+
+        for bNe, kNe, bUe, kUe, bIe in zip(interceptsFoldedError,slopesFoldedError,interceptsFoldedError,slopesUnfoldedError,interceptsIntermError):
+
+            fit_errors.append([kNe,bNe,kUe,bUe,bIe,d50v1_error,M1_error,d50v2_error,M2_error, str(wavelengths[i]) + ' Dataset ' + self.name])
+
+            i +=1
+
+        fit_params = np.array(fit_params)
+        fit_errors = np.array(fit_errors)
+
+        # Column names
+        column_names = ['kN', 'bN', 'kU', 'bU','bI', 'D50_step1', 'M1','D50_step2', 'M2', 'Condition']
+
+        # Convert the NumPy array to a Pandas DataFrame with column names
+        df_fit_params = pd.DataFrame(fit_params, columns=column_names)
+        df_fit_errors = pd.DataFrame(fit_errors, columns=column_names)
+
+        # Remove non necessary columns
+        if not fitSlopeNative:
+
+            df_fit_params = df_fit_params.drop('kN', axis=1)
+            df_fit_errors = df_fit_errors.drop('kN', axis=1)
+            column_names.remove('kN')
+
+        if not fitSlopeUnfolded:
+
+            df_fit_params = df_fit_params.drop('kU', axis=1)
+            df_fit_errors = df_fit_errors.drop('kU', axis=1)
+            column_names.remove('kU')
+
+        # Convert to numeric (all columns except 'Condition')
+        df_fit_params[ column_names[:-1] ] = df_fit_params[ column_names[:-1] ].apply(pd.to_numeric)
+        df_fit_errors[ column_names[:-1] ] = df_fit_errors[ column_names[:-1] ].apply(pd.to_numeric)
+
+        # Compute relative errors (in percentage)
+        for col in column_names[:-1]:
+
+            df_fit_errors[col] = ( df_fit_errors[col]  / df_fit_params[col] * 100 ).abs()
+
+        predicted = np.array(predicted)
+        
+        self.signal_predicted      = np.array(predicted)
+        self.fit_params            = df_fit_params
+        self.fit_rel_errors        = df_fit_errors
+
+        self.fractions  = chem_three_state_rev_unfolding_fractions(self.temperature,self.chem_concentration,M1,D50v1,M2,D50v2)
+
         return None
 
 class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
@@ -1158,6 +1377,186 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
         self.temperature_even_sequence = temperature_even_sequence
 
         self.global_Tm = np.mean(self.tms_from_deriv)
+
+        return None
+
+    def fit_signal_three_state(self,fitSlopeNative=False,fitSlopeUnfolded=False,T1_init=0,T2_init=0): 
+
+        wavelengths = self.wavelength_useful
+        signal      = self.signal_useful
+    
+        # Initial parameters have to be in order: 
+            # Global melting temperature 1, Global enthalpy of unfolding 1, 
+            # Global melting temperature 2, Global enthalpy of unfolding 2, 
+            # Single intercepts folded, Single slopes folded, 
+            # Single intercepts unfolded, Single slopes unfolded
+
+        # Set initial parameters
+
+        listOfTemperatures = [self.temperature for _ in wavelengths]
+        listOfSignals      = signal.tolist()
+        totalDataSets      = len(listOfTemperatures)
+
+        bIs   = (self.bNs + self.kUs) * 0.5
+
+        minT  = np.min(self.temperature)
+        maxT  = np.max(self.temperature)
+        meanT = np.median(self.temperature)
+
+        p0           = np.concatenate( ( ( minT+10,10,maxT-20,10),self.bNs,self.bUs,bIs,self.kNs,self.kUs))
+
+        low_bound    =  [minT+4,1,minT+4,1 ]     + [x/100-100 if x>0 else 100*x-100  for x in p0[4:]]
+        high_bound   =  [maxT-7,250,maxT,250]    + [100*x+100 if x>0 else x/100+100  for x in p0[4:]] 
+
+        if T1_init != 0:
+
+            p0[0], low_bound[0], high_bound[0] = T1_init, T1_init - 15, T1_init + 15
+
+        if T2_init != 0:
+
+            p0[2], low_bound[2], high_bound[2] = T2_init, T2_init - 15, T2_init + 15
+
+        if not fitSlopeUnfolded:
+
+            p0, low_bound, high_bound = p0[:-totalDataSets], low_bound[:-totalDataSets], high_bound[:-totalDataSets]
+
+        if not fitSlopeNative:
+
+            l1 = (4+totalDataSets*3)
+            l2 = (4+totalDataSets*4)
+
+            indices_to_delete = [x for x in range(l1,l2)]
+
+            p0           = np.delete(p0, indices_to_delete) 
+            low_bound    = np.delete(low_bound, indices_to_delete) 
+            high_bound   = np.delete(high_bound, indices_to_delete)
+
+        global_fit_params, cov = fit_thermal_unfolding_three_species(listOfTemperatures,listOfSignals,p0,
+            low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+
+        diffMin = (global_fit_params - low_bound)[4:]
+        diffMax = (high_bound        - global_fit_params)[4:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+4] = low_bound[i+4] - 500
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+4] = high_bound[i+4] + 500
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_thermal_unfolding_three_species(listOfTemperatures,listOfSignals,p0,
+                low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        errors                 = np.sqrt(np.diag(cov))
+
+        T1            = global_fit_params[0] # Temperature of melting
+        DH1           = global_fit_params[1] # Enthalpy of unfolding
+
+        T2            = global_fit_params[2] # Temperature of melting
+        DH2           = global_fit_params[3] # Enthalpy of unfolding
+
+        interceptsFolded       = global_fit_params[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfolded     = global_fit_params[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermediate = global_fit_params[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        slopesFolded   = global_fit_params[(4+totalDataSets*3):(4+totalDataSets*4)] if fitSlopeNative   else np.full(len(interceptsFolded), 0)
+        slopesUnfolded = global_fit_params[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), 0)
+
+        T1_error            = errors[0] # Temperature of melting
+        DH1_error           = errors[1] # Enthalpy of unfolding
+
+        T2_error            = errors[2] # Temperature of melting
+        DH2_error           = errors[3] # Enthalpy of unfolding
+
+        interceptsFoldedError    = errors[(4+totalDataSets*0):(4+totalDataSets*1)]
+        interceptsUnfoldedError  = errors[(4+totalDataSets*1):(4+totalDataSets*2)]
+        interceptsIntermError    = errors[(4+totalDataSets*2):(4+totalDataSets*3)]
+
+        slopesFoldedError   = errors[(4+totalDataSets*3):(4+totalDataSets*4)] if fitSlopeNative   else np.full(len(interceptsFolded), np.nan)
+        slopesUnfoldedError = errors[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), np.nan)
+
+        predicted = []
+
+        # To be filled in this order - kN bN kU bU dHm Tm Condition
+        fit_params = []
+        fit_errors = []
+
+        # Fill the parameters dataframe
+        i = 0
+
+        for bN, kN, bU, kU, bI in zip(interceptsFolded,slopesFolded,interceptsUnfolded,slopesUnfolded,interceptsIntermediate):
+
+            Y = thermal_unfolding_one_curve_three_species(self.temperature,T1,DH1,T2,DH2,bN,kN,bU,kU,bI)
+            predicted.append(Y)
+
+            fit_params.append([kN,bN,kU,bU,bI,DH1,T1,DH2,T2, str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        # Fill the errors dataframe
+        i = 0
+
+        for bNe, kNe, bUe, kUe, bIe in zip(interceptsFoldedError,slopesFoldedError,interceptsUnfoldedError,slopesUnfoldedError,interceptsIntermError):
+
+            fit_errors.append([kNe,bNe,kUe,bUe,bIe,DH1_error,T1_error,DH2_error,T2_error, str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        fit_params = np.array(fit_params)
+        fit_errors = np.array(fit_errors)
+
+        # Column names
+        column_names = ['kN', 'bN', 'kU', 'bU','bI','DH1', 'T1','DH2', 'T2', 'Condition']
+
+        # Convert the NumPy array to a Pandas DataFrame with column names
+        df_fit_params = pd.DataFrame(fit_params, columns=column_names)
+        df_fit_errors = pd.DataFrame(fit_errors, columns=column_names)
+
+        # Remove non necessary columns
+        if not fitSlopeNative:
+
+            df_fit_params = df_fit_params.drop('kN', axis=1)
+            df_fit_errors = df_fit_errors.drop('kN', axis=1)
+            column_names.remove('kN')
+
+        if not fitSlopeUnfolded:
+
+            df_fit_params = df_fit_params.drop('kU', axis=1)
+            df_fit_errors = df_fit_errors.drop('kU', axis=1)
+            column_names.remove('kU')
+
+        # Convert to numeric (all columns except 'Condition')
+        df_fit_params[ column_names[:-1] ] = df_fit_params[ column_names[:-1] ].apply(pd.to_numeric)
+        df_fit_errors[ column_names[:-1] ] = df_fit_errors[ column_names[:-1] ].apply(pd.to_numeric)
+
+        # Compute relative errors (in percentage)
+        for col in column_names[:-1]:
+
+            df_fit_errors[col] = ( df_fit_errors[col]  / df_fit_params[col] * 100 ).abs()
+
+        self.signal_predicted      = np.array(predicted)
+        self.fit_params            = df_fit_params
+        self.fit_rel_errors        = df_fit_errors
+
+        self.fractions             = three_state_rev_unfolding_fractions(self.temperature,DH1,DH2,T1,T2)
 
         return None
 
@@ -1261,7 +1660,7 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
 
         for bN, kN, bU, kU in zip(interceptsFolded,slopesFolded,interceptsUnfolded,slopesUnfolded):
 
-            Y = thermal_unfolding_one_curve(self.temperature,Tm,dh,bN,kN,bU,kU,0)
+            Y = two_state_thermal_unfolding_one_curve(self.temperature,Tm,dh,bN,kN,bU,kU,0)
             predicted.append(Y)
 
             fit_params.append([kN,bN,kU,bU,dh,Tm, str(wavelengths[i]) + ' ' + self.name])
@@ -1312,6 +1711,8 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
         self.signal_predicted      = np.array(predicted)
         self.fit_params            = df_fit_params
         self.fit_rel_errors        = df_fit_errors
+
+        self.fractions             = two_state_rev_unfolding_fractions(self.temperature,dh,Tm)
 
         return None
 
@@ -1536,9 +1937,10 @@ class cd_experiment_custom_analysis(cd_experiment_fitting_model):
         """
 
         # Reset the fitting params and the predicted signal
-        self.fit_params       = None
-        self.fit_rel_errors   = None
-        self.signal_predicted = None
+        self.fit_params         = None
+        self.fit_rel_errors     = None
+        self.signal_predicted   = None
+        self.boundaries_updated = False
 
         if self.p0 is None:
 
@@ -1559,6 +1961,40 @@ class cd_experiment_custom_analysis(cd_experiment_fitting_model):
             all_fitted_params, cov = curve_fit(self.model_function,1,signal.flatten(),
                 p0 = self.p0,
                 bounds=(tuple(self.low_bound), tuple(self.high_bound)))
+
+            # Try to re-fit if the values are close to the boundaries +/- 500
+
+            diffMin = (all_fitted_params - self.low_bound)
+            diffMax = (self.high_bound   - all_fitted_params)
+
+            cond1 = np.any(diffMin < 1)
+            cond2 = np.any(diffMax < 1)
+
+            if cond1:
+
+                for i,value in enumerate(diffMin):
+
+                    if value < 1:
+
+                        self.low_bound[i] = self.low_bound[i] - 500
+
+            if cond2:
+
+                for i,value in enumerate(diffMax):
+
+                    if value < 1:
+
+                        self.high_bound[i] = self.high_bound[i] + 500
+
+            if cond1 or cond2:
+
+                self.boundaries_updated = True
+
+                self.p0 = all_fitted_params
+
+                all_fitted_params, cov = curve_fit(self.model_function,1,signal.flatten(),
+                    p0 = self.p0,
+                    bounds=(tuple(self.low_bound), tuple(self.high_bound)))
 
             self.all_fitted_params = all_fitted_params
             errors                 = np.sqrt(np.diag(cov))
@@ -1850,6 +2286,20 @@ class cdAnalyzer:
 
         return None
 
+
+if False:
+    
+    t1 = cd_experiment_thermal_ramp()
+    t1.load_data('/home/os/Downloads/zero_new.csv','t')
+    t1.signalDesiredUnit = t1.signalInput
+    t1.assign_useful_signal([195,222,200])
+    t1.estimate_signal_derivates()
+    t1.estimate_baselines_parameters(t1.temperature)
+
+    #t1.fit_signal_three_state(True,True)
+    #t1.fit_signal_three_state(True,False)
+    t1.fit_signal_three_state(False,True)
+    t1.fit_signal_three_state(False,False)
 
 if False:
     

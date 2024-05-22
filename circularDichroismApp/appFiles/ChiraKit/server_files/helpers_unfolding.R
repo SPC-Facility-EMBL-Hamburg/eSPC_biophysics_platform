@@ -501,3 +501,39 @@ reassign_unfolding_df_colnames <- function(df,method = 'fixedWL') {
   return(df)
 }
 
+generate_fractions_df <- function(cdAnalyzer,type='Thermal') {
+  
+  res       <- get_py_class_and_exp_names(cdAnalyzer,type)
+  exps      <- res$exps
+  py_object <- res$py_object
+  
+  dfs <- list()
+  
+  i <- 0
+  for (exp in exps) {
+    
+    i                      <- i + 1
+    fractions              <- py_object[[exp]]$fractions
+    df                     <- data.frame(fractions)
+    
+    if (type == 'Thermal')  {
+      mment_factor <- py_object[[exp]]$temperature
+      colname     <- 'temperature'
+    } else {
+      mment_factor <- py_object[[exp]]$chem_concentration
+      colname     <- 'chem_conc'
+    } 
+    
+    df[,colname]      <- mment_factor
+    df                <- reshape2::melt(df,id = c(colname))
+    df[,'legend']     <- exp 
+    dfs[[i]]          <- df
+  }
+  
+  df <- do.call(rbind, dfs)
+  
+  return(df)
+  
+}
+
+

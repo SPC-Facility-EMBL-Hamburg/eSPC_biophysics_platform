@@ -1,3 +1,23 @@
+# Fit a certain chemical experiment using the unfolding model selected by the user
+fitChemicalExperiment <- function(exp) {
+  
+  chem_conc <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
+  cdAnalyzer$experimentsChemical[[exp]]$estimate_baselines_parameters(chem_conc,2)
+  
+  if (input$chemical_unfolding_model == 'twoState') {
+    cdAnalyzer$experimentsChemical[[exp]]$fit_signal(
+      input$fitSlopeNative_chemical,input$fitSlopeUnfolded_chemical)
+  } 
+  
+  if (input$chemical_unfolding_model == 'threeState') {
+    cdAnalyzer$experimentsChemical[[exp]]$fit_signal_three_state(
+      input$fitSlopeNative_chemical,input$fitSlopeUnfolded_chemical,
+      input$D50v1_init,input$D50v2_init)
+  }
+  
+  return(NULL)
+}
+
 # Create the Table to fill with the concentration of the chemical denaturation agent
 observeEvent(list(input$legendInfo,input$workingUnits),{
   
@@ -9,7 +29,7 @@ observeEvent(list(input$legendInfo,input$workingUnits),{
   
   # Initialize the dataframe with the CD curves and the denaturant agent concentration
   df           <- data.frame(id,0,'A',0)
-  colnames(df) <- c('CD_curve','[Denaturant agent] (M)','Dataset_name','Temperature')
+  colnames(df) <- c('CD_curve','[Denaturant agent] (M)','Dataset_name','Temperature (°C or K)')
   
   # Remove non-selected CD curves
   df <- df[legendDf$Show,]
@@ -42,6 +62,9 @@ observeEvent(input$btn_create_chemical_dataset,{
   # Retrieve which CD experiments should be used to build a new dataset for chemical denaturation
   df_ids2find        <- hot_to_r(input$chemical_denaturation_conc)
  
+  # Replace column name
+  colnames(df_ids2find)[4] <- 'Temperature'
+  
   # Remove CD curves with denaturant concentration equal to zero
   df_ids2find        <- df_ids2find[df_ids2find[,2] > 0,]
   groups             <- unique(df_ids2find$Dataset_name)
@@ -98,6 +121,7 @@ observeEvent(input$btn_create_chemical_dataset,{
   
   cdAnalyzer$experimentNamesChemical <- groups
   
+  reactives$chemicalWorkingUnits   <- input$workingUnits
   reactives$chemicalDatasetCreated <- TRUE
   
 })
@@ -172,6 +196,7 @@ output$chemicalCurves <- renderPlotly({
   
   fig <- plot_unfolding_exp(
     df,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem)
   
@@ -192,12 +217,8 @@ observeEvent(input$btn_fit_chemical_data,{
     
     for (exp in chemical_exps) {
       
-      chem_conc <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
-      cdAnalyzer$experimentsChemical[[exp]]$estimate_baselines_parameters(chem_conc,3)
-
-      cdAnalyzer$experimentsChemical[[exp]]$fit_signal(input$fitSlopeNative_chemical,
-                                                       input$fitSlopeUnfolded_chemical)
-                                                       
+      fitChemicalExperiment(exp)
+                                              
     }
     
     Sys.sleep(0.5)
@@ -250,10 +271,27 @@ output$fittedChemicalCurves <- renderPlotly({
   dfFit <- generate_chemical_unfolding_df(cdAnalyzer,'signal_predicted')
   fig   <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem)
   
   return(fig)
+})
+
+output$fractions_chemical <- renderPlotly({
+  
+  req(reactives$chemical_data_was_fitted)
+  
+  fractions_df <- generate_fractions_df(cdAnalyzer,'Chemical')
+  
+  fig <- plot_unfolding_fractions(
+    fractions_df,
+    input$plot_width_chem, input$plot_height_chem, 
+    input$plot_type_chem, input$plot_axis_size_chem,
+    'Denaturant agent concentration (M)')
+  
+  return(fig)
+  
 })
 
 output$residualsChemicalCurves <- renderPlot({
@@ -263,7 +301,7 @@ output$residualsChemicalCurves <- renderPlot({
   df      <- generate_chemical_unfolding_df(cdAnalyzer)
   dfFit   <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='signal_predicted')
   
-  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend')) 
+  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend'),relationship = "many-to-many") 
   tog$residuals <- tog$value.y - tog$value.x
   
   fig <- plot_residuals(
@@ -284,8 +322,10 @@ output$chemUnfoldingSpectra <- renderPlotly({
   df  <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='signalDesiredUnit')
   fig <- plot_unfolding_exp_spectra(
     df,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem)
+    input$plot_type_chem, input$plot_axis_size_chem,
+    plot_mode=input$plot_style_chem)
   
   return(fig)
   
@@ -439,6 +479,7 @@ output$chemBasisSpectra <- renderPlotly({
   df  <- get_basis_spectra_df(cdAnalyzer,'Chemical')
   fig <- plot_basis_spectra(
     df,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem)
   
@@ -454,6 +495,7 @@ output$chemFittedSpectra <- renderPlotly({
   dfFit  <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='fitted_spectra')
   fig    <- plot_unfolding_exp_spectra(
     df,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
     dfFit)
@@ -483,6 +525,7 @@ output$chemSVDCoefficients <- renderPlotly({
   
   fig <- plot_unfolding_exp(
     df,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
     reactives$spectra_decomposition_method_chemical)
@@ -505,12 +548,8 @@ observeEvent(input$btn_fit_chemical_data_svd,{
     for (exp in chemical_exps) {
       
       cdAnalyzer$experimentsChemical[[exp]]$assign_useful_signal_svd(input$selectedK_chemical)
+      fitChemicalExperiment(exp)
       
-      chem_conc <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
-      cdAnalyzer$experimentsChemical[[exp]]$estimate_baselines_parameters(chem_conc,3)
-      
-      cdAnalyzer$experimentsChemical[[exp]]$fit_signal(input$fitSlopeNative_chemical,
-                                                       input$fitSlopeUnfolded_chemical)
     }
     
     Sys.sleep(0.5)
@@ -543,6 +582,7 @@ output$chemFittedSVDCoefficients <- renderPlotly({
   dfFit <- generate_chemical_unfolding_df(cdAnalyzer,'signal_predicted')
   fig   <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
     reactives$fitted_coefficients_method_chemical)
@@ -558,7 +598,7 @@ output$chemResidualsSVDCoefficients <- renderPlot({
   df      <- generate_chemical_unfolding_df(cdAnalyzer)
   dfFit   <- generate_chemical_unfolding_df(cdAnalyzer,signal_type='signal_predicted')
   
-  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend')) 
+  tog           <- inner_join(df,dfFit,by=c('wavelength','chem_conc','legend'),relationship = "many-to-many") 
   tog$residuals <- tog$value.y - tog$value.x
   
   fig <- plot_residuals(

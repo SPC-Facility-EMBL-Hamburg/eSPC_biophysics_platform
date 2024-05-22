@@ -140,6 +140,7 @@ observeEvent(input$btn_create_custom_dataset,{
   
   cdAnalyzer$experimentNamesCustom <- groups
   
+  reactives$customWorkingUnits   <- input$workingUnits
   reactives$customDatasetCreated <- TRUE
   
 })
@@ -214,6 +215,7 @@ output$customCurves <- renderPlotly({
   df <- generate_custom_df(cdAnalyzer)
   
   plot_unfolding_exp(df,
+                     reactives$customWorkingUnits,
                      input$plot_width_custom, input$plot_height_custom, 
                      input$plot_type_custom, input$plot_axis_size_custom,
                      'fixedWL',input$use_log_axis_custom)
@@ -241,6 +243,60 @@ observeEvent(input$btn_get_initial_params,{
   
 })
   
+renderInitialParamsTable <- function() {
+  
+  output$initialParamsValuesSVD <- NULL
+  output$initialParamsValues    <- NULL
+  
+  custom_exps <- cdAnalyzer$experimentNamesCustom
+  nExps       <- length(custom_exps)
+  
+  p0s        <- c()
+  p0s_names  <- c()
+  lowBounds  <- c()
+  highBounds <- c()
+  
+  c1 <- input$analysis_model_custom != 'fixedWL'
+
+  if (c1) req(reactives$spectra_was_decomposed_custom)
+  
+  for (exp in custom_exps) {
+    
+    p0s        <- c(p0s,unlist(cdAnalyzer$experimentsCustom[[exp]]$p0))
+    
+    lowBounds  <- c(lowBounds,unlist(cdAnalyzer$experimentsCustom[[exp]]$low_bound))
+    highBounds <- c(highBounds,unlist(cdAnalyzer$experimentsCustom[[exp]]$high_bound))
+    
+    p0s_names_to_add <- c(
+      unlist(cdAnalyzer$experimentsCustom[[exp]]$global_params_names),
+      unlist(cdAnalyzer$experimentsCustom[[exp]]$local_params_names_extended)
+    )
+    
+    if (nExps > 1) {
+      p0s_names_to_add <- paste0(exp,' ',p0s_names_to_add)
+    }
+    
+    p0s_names <- c(p0s_names,p0s_names_to_add)
+    
+  }
+  
+  df_p0  <- data.frame('parameter'   = p0s_names, 'initial_value' = p0s,
+                       'lower_limit' = lowBounds,  'high_limit'    = highBounds)
+  
+  rtable <- rhandsontable(df_p0,rowHeaders=NULL) %>% 
+    hot_col('parameter',     readOnly=TRUE) %>% 
+    hot_col(c('initial_value','lower_limit','high_limit')) %>% 
+    hot_table(stretchH='all')
+  
+  if (c1) {
+    output$initialParamsValuesSVD <- renderRHandsontable({rtable})
+  } else {
+    output$initialParamsValues <- renderRHandsontable({rtable})
+  }
+  
+  return(NULL)
+}
+
 observeEvent(input$submitLogSearchLimits,{
   
   removeModal()
@@ -251,11 +307,6 @@ observeEvent(input$submitLogSearchLimits,{
     nExps       <- length(custom_exps)
     
     if (nExps == 0) return(NULL)
-    
-    p0s        <- c()
-    p0s_names  <- c()
-    lowBounds  <- c()
-    highBounds <- c()
     
     c1 <- input$analysis_model_custom != 'fixedWL'
 
@@ -272,37 +323,9 @@ observeEvent(input$submitLogSearchLimits,{
       cdAnalyzer$experimentsCustom[[exp]]$get_initial_values(input$leftLimitLogSearch,
                                                              input$rightLimitLogSearch)
       
-      p0s        <- c(p0s,unlist(cdAnalyzer$experimentsCustom[[exp]]$p0))
-      
-      lowBounds  <- c(lowBounds,unlist(cdAnalyzer$experimentsCustom[[exp]]$low_bound))
-      highBounds <- c(highBounds,unlist(cdAnalyzer$experimentsCustom[[exp]]$high_bound))
-      
-      p0s_names_to_add <- c(
-        unlist(cdAnalyzer$experimentsCustom[[exp]]$global_params_names),
-        unlist(cdAnalyzer$experimentsCustom[[exp]]$local_params_names_extended)
-        )
-      
-      if (nExps > 1) {
-        p0s_names_to_add <- paste0(exp,' ',p0s_names_to_add)
-      }
-      
-      p0s_names <- c(p0s_names,p0s_names_to_add)
-      
     }
-  
-    df_p0  <- data.frame('parameter'   = p0s_names, 'initial_value' = p0s,
-                         'lower_limit' = lowBounds,  'high_limit'    = highBounds)
-    
-    rtable <- rhandsontable(df_p0,rowHeaders=NULL) %>% 
-      hot_col('parameter',     readOnly=TRUE) %>% 
-      hot_col(c('initial_value','lower_limit','high_limit')) %>% 
-      hot_table(stretchH='all')
-    
-    if (c1) {
-      output$initialParamsValuesSVD <- renderRHandsontable({rtable})
-    } else {
-      output$initialParamsValues <- renderRHandsontable({rtable})
-    }
+
+    renderInitialParamsTable()
     
     Sys.sleep(0.5)
 
@@ -388,12 +411,12 @@ observeEvent(input$initialParamsValuesSVD$changes$changes, {
 observeEvent(input$btn_fit_custom_data,{
   
   req(reactives$customDatasetCreated)
+  custom_exps <- cdAnalyzer$experimentNamesCustom
   
   withBusyIndicatorServer("fitCustomHidden",{
     
     reactives$custom_data_was_fitted <- FALSE
-    custom_exps <- cdAnalyzer$experimentNamesCustom
-    
+
     if (length(custom_exps) == 0) return(NULL)
     
     for (exp in custom_exps) {
@@ -434,6 +457,18 @@ observeEvent(input$btn_fit_custom_data,{
     # Set SVD / PCA fit to FALSE
     reactives$custom_data_was_fitted_svd_or_pca <- FALSE
     
+    boundaries_updated <- sapply(custom_exps,function(exp) cdAnalyzer$experimentsCustom[[exp]]$boundaries_updated)
+    boundaries_updated <- any(boundaries_updated)
+    
+    if (boundaries_updated) {
+      renderInitialParamsTable()
+      shinyalert(text = paste("<b>One or more of the fitted parameters was close to the fitting boundaries. 
+                              Consequently, the 'initial parameter estimates' Table was automatically updated, 
+                              and the data was fitted again.</b>"),
+                 type = "info",closeOnEsc = T,closeOnClickOutside = T,
+                 html=T)
+    }
+      
   })
   
   
@@ -466,6 +501,7 @@ output$fittedCustomCurves <- renderPlotly({
 
   fig   <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
     input$plot_type_custom, input$plot_axis_size_custom,
     'fixedWL',input$use_log_axis_custom)
@@ -506,8 +542,10 @@ output$customSpectra <- renderPlotly({
   
   fig <- plot_unfolding_exp_spectra(
     df,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
-    input$plot_type_custom,  input$plot_axis_size_custom)
+    input$plot_type_custom,  input$plot_axis_size_custom,
+    plot_mode=input$plot_style_custom)
   
   return(fig)
   
@@ -661,6 +699,7 @@ output$customBasisSpectra <- renderPlotly({
   df  <- get_basis_spectra_df(cdAnalyzer,'Custom')
   fig <- plot_basis_spectra(
     df,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
     input$plot_type_custom, input$plot_axis_size_custom)
   
@@ -676,6 +715,7 @@ output$customFittedSpectra <- renderPlotly({
   dfFit  <- generate_custom_df(cdAnalyzer,signal_type='fitted_spectra')
   fig    <- plot_unfolding_exp_spectra(
     df,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
     input$plot_type_custom, input$plot_axis_size_custom,
     dfFit)
@@ -703,6 +743,7 @@ output$customSVDCoefficients <- renderPlotly({
   
   fig <- plot_unfolding_exp(
     df,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
     input$plot_type_custom, input$plot_axis_size_custom,
     reactives$spectra_decomposition_method_custom,
@@ -715,12 +756,12 @@ output$customSVDCoefficients <- renderPlotly({
 observeEvent(input$btn_fit_custom_data_svd,{
   
   req(reactives$spectra_was_decomposed_custom)
+  exps <- cdAnalyzer$experimentNamesCustom
   
   withBusyIndicatorServer("fitCustomHidden",{
     
     reactives$custom_data_was_fitted_svd_or_pca <- FALSE
-    exps <- cdAnalyzer$experimentNamesCustom
-    
+
     if (length(exps) == 0) return(NULL)
     
     for (exp in exps) {
@@ -760,6 +801,19 @@ observeEvent(input$btn_fit_custom_data_svd,{
     
     # Set fixed wavelength fit to FALSE
     reactives$custom_data_was_fitted    <- FALSE
+    
+    boundaries_updated <- sapply(custom_exps,function(exp) cdAnalyzer$experimentsCustom[[exp]]$boundaries_updated)
+    boundaries_updated <- any(boundaries_updated)
+    
+    if (boundaries_updated) {
+      renderInitialParamsTable()
+      shinyalert(text = paste("<b>One or more of the fitted parameters was close to the fitting boundaries. 
+                              Consequently, the 'initial parameter estimates' Table was automatically updated, 
+                              and the data was fitted again.</b>"),
+                 type = "info",closeOnEsc = T,closeOnClickOutside = T,
+                 html=T)
+    }
+    
     Sys.sleep(0.5)
     
   })
@@ -774,6 +828,7 @@ output$customFittedSVDCoefficients <- renderPlotly({
   dfFit <- generate_custom_df(cdAnalyzer,'signal_predicted')
   fig   <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$customWorkingUnits,
     input$plot_width_custom, input$plot_height_custom, 
     input$plot_type_custom, input$plot_axis_size_custom,
     reactives$fitted_coefficients_method_custom,

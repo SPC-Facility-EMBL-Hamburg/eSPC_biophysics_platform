@@ -91,7 +91,9 @@ shinyUI(dashboardPage(
                    tags$head(tags$style("
                    #meltingCurves{height:600px !important;}
                    #fittedMeltingCurves{height:600px !important;}
-                   #residualsMeltingCurves{height:600px !important;}"
+                   #residualsMeltingCurves{height:600px !important;}
+                   #fractions_melting{height:600px !important;}"
+                                        
                                         )),
                    
                    # TabBox to plot the thermal unfolding curves and the fitted parameters
@@ -101,6 +103,8 @@ shinyUI(dashboardPage(
                           tabPanel("Residuals",                           plotOutput("residualsMeltingCurves")),
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_melting")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_melting")),
+                          tabPanel("Fractions",                           plotlyOutput("fractions_melting"))
+                          
                           )
                    ),
                  
@@ -115,7 +119,8 @@ shinyUI(dashboardPage(
                    #explainedVariance{height:600px !important;}
                    #svdCoefficients{height:600px !important;}
                    #fittedSVDCoefficients{height:600px !important;}
-                   #residualsSVDCoefficients{height:600px !important;}"
+                   #residualsSVDCoefficients{height:600px !important;}
+                   #fractions_melting_svd{height:600px !important;}"
                                         
                                         )),
                    
@@ -128,6 +133,7 @@ shinyUI(dashboardPage(
                           tabPanel("Coefficients",           plotlyOutput("svdCoefficients")),
                           tabPanel("Fitted coefficients",    plotlyOutput("fittedSVDCoefficients")),
                           tabPanel("Residuals",              plotOutput("residualsSVDCoefficients")),
+                          tabPanel("Fractions",              plotlyOutput("fractions_melting_svd")),
                           
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_meltingSVD")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_meltingSVD"))
@@ -152,7 +158,9 @@ shinyUI(dashboardPage(
                          tags$head(tags$style("
                          #chemicalCurves{height:600px !important;}
                          #fittedChemicalCurves{height:600px !important;}
-                         #residualsChemicalCurves{height:600px !important;}"
+                         #residualsChemicalCurves{height:600px !important;}
+                         #fractions_chemical{height:600px !important;}"
+                                              
                                               )),
                          
                          tabBox(title = "", width = 12,id = "tabBoxcdSpectraChem",
@@ -160,7 +168,9 @@ shinyUI(dashboardPage(
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemical")),
                                 tabPanel("Relative errors (%)",tableOutput("fittedErrors_chemical")),
                                 tabPanel("Fitted curves",plotlyOutput("fittedChemicalCurves")),
-                                tabPanel("Residuals",    plotOutput("residualsChemicalCurves"))
+                                tabPanel("Residuals",    plotOutput("residualsChemicalCurves")),
+                                tabPanel("Fractions",    plotlyOutput("fractions_chemical"))
+                                
                                 
                                 )),
                        
@@ -175,17 +185,20 @@ shinyUI(dashboardPage(
                          #chemExplainedVariance{height:600px !important;}
                          #chemSVDCoefficients{height:600px !important;}
                          #chemFittedSVDCoefficients{height:600px !important;}
-                         #chemResidualsSVDCoefficients{height:600px !important;}"
+                         #chemResidualsSVDCoefficients{height:600px !important;}
+                         #fractions_SVDchemical{height:600px !important;}"
+                                              
                                               )),
                          
                          tabBox(title = "", width = 12,id = "tabBoxcdSpectraChem",
-                                tabPanel("Melting spectra",       plotlyOutput("chemUnfoldingSpectra")),
+                                tabPanel("Unfolding spectra",       plotlyOutput("chemUnfoldingSpectra")),
                                 tabPanel("Basis spectra",         plotlyOutput("chemBasisSpectra")),
                                 tabPanel("Reconstructed spectra", plotlyOutput("chemFittedSpectra")),
                                 tabPanel("Explained variance",    plotlyOutput("chemExplainedVariance")),
                                 tabPanel("Coefficients",          plotlyOutput("chemSVDCoefficients")),
                                 tabPanel("Fitted coefficients",   plotlyOutput("chemFittedSVDCoefficients")),
                                 tabPanel("Residuals",             plotOutput("chemResidualsSVDCoefficients")),
+                                tabPanel("Fractions",             plotlyOutput("fractions_SVDchemical")),
                                 
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemicalSVD")),
                                 tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_chemicalSVD"))

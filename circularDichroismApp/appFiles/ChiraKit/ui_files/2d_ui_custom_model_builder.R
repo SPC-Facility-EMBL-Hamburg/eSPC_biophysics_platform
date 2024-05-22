@@ -245,7 +245,19 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
       fluidRow(
         
         column(3, p(HTML("<b>Log scale for the x-axis</b>"),
-                    checkboxInput('use_log_axis_custom',NULL,F)))
+                    checkboxInput('use_log_axis_custom',NULL,F))),
+        
+        
+        conditionalPanel(
+          
+          "input.analysis_model_custom != 'fixedWL'",
+          
+          column(4, p(HTML("<b>Plot style (custom spectra)</b>"),
+                      selectInput("plot_style_custom", NULL,
+                                  c("markers",
+                                    "lines"
+                                  ))))
+        )
       )
     )
     

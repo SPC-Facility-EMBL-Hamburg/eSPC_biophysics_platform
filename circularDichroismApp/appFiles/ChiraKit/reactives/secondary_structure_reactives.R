@@ -112,7 +112,7 @@ observeEvent(input$runSecStrEstimation,{
       check <- cdAnalyzer$experimentsOri[[exp]]$init_and_check_secondary_str_method(input$lower_wl_secStr)
       
       if (!check) return(NULL)
-     
+      
       if (input$useDefaultReferenceSet) {
         cdAnalyzer$experimentsOri[[exp]]$set_secondary_structure_method_references_default()
       } else {

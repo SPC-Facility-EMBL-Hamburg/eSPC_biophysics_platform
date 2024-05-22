@@ -1,3 +1,23 @@
+# Fit a certain thermal experiment using the unfolding model selected by the user
+fitThermalExperiment <- function(exp) {
+  
+  cdAnalyzer$experimentsThermal[[exp]]$estimate_signal_derivates()
+  temperature <- cdAnalyzer$experimentsThermal[[exp]]$temperature
+  cdAnalyzer$experimentsThermal[[exp]]$estimate_baselines_parameters(temperature,12)
+  
+  if (input$thermal_unfolding_model == 'twoState') {
+    cdAnalyzer$experimentsThermal[[exp]]$fit_signal(input$fitSlopeNative,input$fitSlopeUnfolded)
+  } 
+  
+  if (input$thermal_unfolding_model == 'threeState') {
+    cdAnalyzer$experimentsThermal[[exp]]$fit_signal_three_state(
+      input$fitSlopeNative,input$fitSlopeUnfolded,
+      input$T1_init,input$T2_init)
+  }
+  
+  return(NULL)
+}
+
 # Create the Table to fill with the temperature data
 observeEvent(list(input$legendInfo,input$workingUnits),{
   
@@ -12,7 +32,7 @@ observeEvent(list(input$legendInfo,input$workingUnits),{
 
   # Initialize the dataframe with the CD curves and the temperature 
   df           <- data.frame(id,temperature,'A')
-  colnames(df) <- c('CD_curve','Temperature','Dataset_name')
+  colnames(df) <- c('CD_curve','Temperature (°C or K)','Dataset_name')
   
   # Remove non-selected CD curves
   df <- df[legendDf$Show,]
@@ -45,6 +65,10 @@ observeEvent(input$btn_create_thermal_dataset,{
   # Retrieve which CD experiments should be used to build
   # a new dataset for thermal denaturation
   df_ids2find        <- hot_to_r(input$thermal_denaturation_data)
+  
+  # Reassign the column name
+  colnames(df_ids2find)[2] <- 'Temperature'
+  
   groups             <- unique(df_ids2find$Dataset_name)
   
   append_record_to_logbook(c('Creating a thermal dataset with the following data',df_to_lines(df_ids2find)))
@@ -55,7 +79,12 @@ observeEvent(input$btn_create_thermal_dataset,{
     df_temp <- df_ids2find[df_ids2find$Dataset_name == group,]
     
     relevantSpectra      <- df_temp$CD_curve 
-    relevantTemperature  <- df_temp$Temperature
+    relevantTemperature  <- df_temp$Temperature 
+    
+    # To degree Celsius, required latter for plotting... 
+    if (max(relevantTemperature) > 250) {
+      relevantTemperature <- relevantTemperature - 273.15 
+    }
     
     merged <- get_signal_dfs_from_selected_spectra(relevantSpectra,cdAnalyzer)
     
@@ -80,6 +109,7 @@ observeEvent(input$btn_create_thermal_dataset,{
 
   cdAnalyzer$experimentNamesThermal <- groups
   
+  reactives$thermalWorkingUnits   <- input$workingUnits
   reactives$thermalDatasetCreated <- TRUE
   
 })
@@ -155,6 +185,7 @@ output$meltingCurves <- renderPlotly({
   thermal_ramp_df <- generate_thermal_ramp_df(cdAnalyzer)
   
   plot_unfolding_exp(thermal_ramp_df,
+                     reactives$thermalWorkingUnits,
                      input$plot_width_melt, input$plot_height_melt, 
                      input$plot_type_melt, input$plot_axis_size_melt)
   
@@ -173,10 +204,8 @@ observeEvent(input$btn_fit_melting_data,{
     
     for (exp in thermal_exps) {
       
-      cdAnalyzer$experimentsThermal[[exp]]$estimate_signal_derivates()
-      temperature <- cdAnalyzer$experimentsThermal[[exp]]$temperature
-      cdAnalyzer$experimentsThermal[[exp]]$estimate_baselines_parameters(temperature)
-      cdAnalyzer$experimentsThermal[[exp]]$fit_signal(input$fitSlopeNative,input$fitSlopeUnfolded)
+      fitThermalExperiment(exp)
+
     }
     
     Sys.sleep(0.5)
@@ -226,8 +255,25 @@ output$fittedMeltingCurves <- renderPlotly({
   dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
   fig     <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt)
+  
+  return(fig)
+  
+})
+
+output$fractions_melting <- renderPlotly({
+  
+  req(reactives$melting_data_was_fitted)
+  
+  fractions_df <- generate_fractions_df(cdAnalyzer)
+  
+  fig <- plot_unfolding_fractions(
+    fractions_df,
+    input$plot_width_melt, input$plot_height_melt, 
+    input$plot_type_melt, input$plot_axis_size_melt,
+    'Temperature (°C)')
   
   return(fig)
   
@@ -240,7 +286,7 @@ output$residualsMeltingCurves <- renderPlot({
   df      <- generate_thermal_ramp_df(cdAnalyzer)
   dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
   
-  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend')) 
+  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend'),relationship = "many-to-many") 
   tog$residuals <- tog$value.y - tog$value.x
     
   fig <- plot_residuals(
@@ -258,8 +304,10 @@ output$meltingSpectra <- renderPlotly({
   df  <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signalDesiredUnit')
   fig <- plot_unfolding_exp_spectra(
     df,
+    reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt)
+    input$plot_type_melt, input$plot_axis_size_melt,
+    plot_mode=input$plot_style_melt)
   
   return(fig)
 })
@@ -411,6 +459,7 @@ output$basisSpectra <- renderPlotly({
   df  <- get_basis_spectra_df(cdAnalyzer)
   fig <- plot_basis_spectra(
     df,
+    reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt)
   
@@ -425,6 +474,7 @@ output$fittedSpectra <- renderPlotly({
   dfFit  <- generate_thermal_ramp_df(cdAnalyzer,signal_type='fitted_spectra')
   fig    <- plot_unfolding_exp_spectra(
     df,
+    reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     dfFit)
@@ -450,7 +500,8 @@ output$svdCoefficients <- renderPlotly({
   req(reactives$spectra_was_decomposed)
   df  <- get_coefficients_df(cdAnalyzer)
   fig <- plot_unfolding_exp(
-    df, input$plot_width_melt, input$plot_height_melt, 
+    df, reactives$thermalWorkingUnits,
+    input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$spectra_decomposition_method_thermal)
   
@@ -471,10 +522,9 @@ observeEvent(input$btn_fit_melting_data_svd,{
     for (exp in thermal_exps) {
       
       cdAnalyzer$experimentsThermal[[exp]]$assign_useful_signal_svd(input$selectedK)
-      cdAnalyzer$experimentsThermal[[exp]]$estimate_signal_derivates()
-      temperature <- cdAnalyzer$experimentsThermal[[exp]]$temperature
-      cdAnalyzer$experimentsThermal[[exp]]$estimate_baselines_parameters(temperature)
-      cdAnalyzer$experimentsThermal[[exp]]$fit_signal(input$fitSlopeNative,input$fitSlopeUnfolded)
+      Sys.sleep(0.1)
+      fitThermalExperiment(exp)
+      
     }
     
     Sys.sleep(0.5) 
@@ -508,6 +558,7 @@ output$fittedSVDCoefficients <- renderPlotly({
   dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
   fig     <- plot_unfolding_fitting(
     df,dfFit,
+    reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$spectra_decomposition_method_thermal)
@@ -523,7 +574,7 @@ output$residualsSVDCoefficients <- renderPlot({
   df      <- generate_thermal_ramp_df(cdAnalyzer)
   dfFit   <- generate_thermal_ramp_df(cdAnalyzer,signal_type='signal_predicted')
 
-  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend')) 
+  tog           <- inner_join(df,dfFit,by=c('wavelength','temperature','legend'),relationship = "many-to-many") 
   tog$residuals <- tog$value.y - tog$value.x
   
   fig <- plot_residuals(
@@ -551,5 +602,21 @@ output$fittedErrors_meltingSVD <- renderTable({
   df <- get_fitted_params_unfolding(cdAnalyzer,errors=TRUE)
   
   return(df)
+  
+})
+
+output$fractions_melting_svd <- renderPlotly({
+  
+  req(reactives$melting_data_was_fitted_svd_or_pca)
+  
+  fractions_df <- generate_fractions_df(cdAnalyzer)
+  
+  fig <- plot_unfolding_fractions(
+    fractions_df,
+    input$plot_width_melt, input$plot_height_melt, 
+    input$plot_type_melt, input$plot_axis_size_melt,
+    'Temperature (°C)')
+  
+  return(fig)
   
 })

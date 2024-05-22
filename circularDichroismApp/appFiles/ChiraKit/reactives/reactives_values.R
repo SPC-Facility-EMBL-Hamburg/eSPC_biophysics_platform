@@ -4,10 +4,12 @@ reactives <- reactiveValues(
   logbook                                = list(),# record data manipulation steps
   data_loaded                            = NULL,  # show plots/tables
   showVoltageThreshold                   = FALSE, # show the HT filter
+  thermalWorkingUnits                    = NULL,  # To plot the y-axis with the correct units
   thermalDatasetCreated                  = FALSE, # allow thermal  analysis (thermal_ramp_reactives.R)
   melting_data_was_fitted                = FALSE, # show thermal   results  (thermal_ramp_reactives.R)
   melting_data_was_fitted_svd_or_pca     = FALSE, # show thermal   results  (thermal_ramp_reactives.R)
-  spectra_was_decomposed                 = FALSE, # show thermal   results  (thermal_ramp_reactives.R)
+  spectra_was_decomposed                 = FALSE, # show thermal   results  (thermal_ramp_reactives.R),
+  chemicalWorkingUnits                   = NULL,  # To plot the y-axis with the correct units
   chemicalDatasetCreated                 = FALSE, # allow chemical analysis (chemical_denaturation_reactives.R)
   chemical_data_was_fitted               = FALSE, # show chemical  results  (chemical_denaturation_reactives.R)
   chemical_data_was_fitted_svd_or_pca    = FALSE, # show chemical  results  (chemical_denaturation_reactives.R)
@@ -22,6 +24,7 @@ reactives <- reactiveValues(
   secStrRefMatrixC                       = NULL, # to use user reference sets, panel 'menu_sec_structure'
   secStrRefMatrixF                       = NULL, # to use user reference sets, panel 'menu_sec_structure'
   
+  customWorkingUnits                     = NULL,  # To plot the y-axis with the correct units
   customDatasetCreated                   = FALSE, # allow custom analysis
   custom_data_was_fitted                 = FALSE, # show  custom analysis results
   custom_data_was_fitted_svd_or_pca      = FALSE, # show  custom analysis results
