@@ -205,7 +205,7 @@ mst_objects_from_xlsx_files <- function(xlsx_files) {
 }
 
 ## Merge MST_fit objects 
-get_merged_signal_mst <- function(mst_objects) {
+get_merged_signal_mst <- function(mst_objects,mst_file_names) {
   
   for (mst_ob in mst_objects) {
     mst_ob$set_signal("Raw Fluorescence")
@@ -215,10 +215,12 @@ get_merged_signal_mst <- function(mst_objects) {
   ref_index <- which.min(sapply(mst_objects,function(x) length(x$times)))
   mst_ref   <- mst_objects[[ref_index]]
   
+  file_order <- c(mst_file_names[ref_index])
+  
   ref_df               <- data.frame("times"=mst_objects[[ref_index]]$times,mst_objects[[ref_index]]$signal)
   ref_df_colnames      <- c(mst_objects[[ref_index]]$concs)
   
-  protConcVec             <- mst_objects[[ref_index]]$protConc
+  protConcVec          <- mst_objects[[ref_index]]$protConc
 
   colnames(ref_df)[-1] <-  ref_df_colnames
   
@@ -240,6 +242,9 @@ get_merged_signal_mst <- function(mst_objects) {
       ref_df <- df2add[ref_df, roll="nearest"]
       all_conditions  <- c(colnames2add,all_conditions)
       protConcVec     <- c(mst_objects[[i]]$protConc,protConcVec)
+      
+      file_order <- c(file_order,mst_file_names[i])
+      
     }
   }
   
@@ -251,5 +256,5 @@ get_merged_signal_mst <- function(mst_objects) {
   
   return(list("times"=times,"signal"=signal,
               "conditions"=conditions,"conditions_ori"=conditions_original,
-              "protConcVec"=protConcVec))
+              "protConcVec"=protConcVec,'file_order'=file_order))
 }

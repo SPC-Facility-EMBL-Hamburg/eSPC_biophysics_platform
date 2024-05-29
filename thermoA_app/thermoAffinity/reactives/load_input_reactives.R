@@ -88,12 +88,12 @@ observeEvent(input$FLf,{
         
         xlsx_filesOri   <- list.files(".",pattern = "xlsx")
         # Avoid μ in file names breaking our python code :)
-        xlsx_files      <- gsub("μ", "sArAsA", xlsx_filesOri)
+        xlsx_files      <- gsub("μ", "micro", xlsx_filesOri)
         file.rename(xlsx_filesOri,xlsx_files)
         
         mst_objects <- mst_objects_from_xlsx_files(xlsx_files)
         
-        merged      <- get_merged_signal_mst(mst_objects)
+        merged      <- get_merged_signal_mst(mst_objects,xlsx_files)
        
         signal_keys   <- time_keys    <- c("Raw Fluorescence")
         signal_values <- c(np_array(merged$signal))
@@ -107,7 +107,21 @@ observeEvent(input$FLf,{
         mst$time_data_dictionary   <- time_data_dictionary
         mst$concs                  <- concs
         mst$protConc               <- as.numeric(merged$protConcVec)
-        mst$experimentID           <- "A"
+        
+        # Assing one experimental ID per dataset
+        n_ids                        <- lapply(mst_objects, function (x) length(x$experimentID))
+        
+        experimentID <- c()
+        
+        for (i in 1:length(n_ids)) {
+          
+          fname <- basename(merged$file_order[i]) # Remove the path of the file
+          fname <- sub('\\..[^\\.]*$', '', fname) # Remove the file extension
+            
+          experimentID <- c(experimentID,rep(fname,n_ids[i]))
+        }
+        
+        mst$experimentID           <- experimentID
 
       } else {
         

@@ -22,7 +22,7 @@ if (notebook_app) {
 } 
 
 # Developer path
-base_dir <- paste0('/home/os/spc_shiny_servers/thermoA_app', '/thermoAffinity/')
+base_dir <- paste0('/home/',Sys.info()["user"],'/spc_shiny_servers/thermoA_app', '/thermoAffinity/')
 
 # Set the correct path for the docker user
 if (user == 'shiny') {
