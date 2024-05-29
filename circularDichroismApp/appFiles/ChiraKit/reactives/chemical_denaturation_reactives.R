@@ -503,8 +503,6 @@ output$chemFittedSpectra <- renderPlotly({
   return(fig)
 })
 
-
-
 output$chemExplainedVariance <- renderPlotly({
   
   req(reactives$spectra_was_decomposed_chemical)
@@ -586,6 +584,22 @@ output$chemFittedSVDCoefficients <- renderPlotly({
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
     reactives$fitted_coefficients_method_chemical)
+  
+  return(fig)
+  
+})
+
+output$fractions_SVDchemical <- renderPlotly({
+  
+  req(reactives$chemical_data_was_fitted_svd_or_pca)
+  
+  fractions_df <- generate_fractions_df(cdAnalyzer,'Chemical')
+  
+  fig <- plot_unfolding_fractions(
+    fractions_df,
+    input$plot_width_chem, input$plot_height_chem, 
+    input$plot_type_chem, input$plot_axis_size_chem,
+    'Denaturant agent concentration (M)')
   
   return(fig)
   

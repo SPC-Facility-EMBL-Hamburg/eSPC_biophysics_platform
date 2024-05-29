@@ -213,7 +213,8 @@ shinyUI(dashboardPage(
           
           column(6,
                  source("ui_files/2c_ui_fit_secondary_structure_box.R",local=T)$value,
-                 tabBox(title = "", width = 12,id = "secondary_structure_tabBox")
+                 tabBox(title = "", width = 12,id = "secondary_structure_tabBox",
+                        tabPanel("Secondary structure estimation",tableOutput("secondary_structure")))
           ),
           
           #Custom CSS

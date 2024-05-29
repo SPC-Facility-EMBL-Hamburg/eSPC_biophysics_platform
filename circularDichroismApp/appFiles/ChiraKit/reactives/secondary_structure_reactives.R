@@ -37,17 +37,7 @@ observeEvent(input$matrixC,{
 observeEvent(input$runSecStrEstimation,{
   
   reactives$secStrFittingWasDone <- FALSE
-  
-  # Clear previous TabPanels
-  for (tabPanelTargetName in reactives$secStrFittingTabsNames) {
-    
-    removeTab(inputId = "secondary_structure_tabBox", 
-              target = tabPanelTargetName)
-    
-  }
-  
-  reactives$secStrFittingTabsNames <- c()
-  
+
   withBusyIndicatorServer("hiddenBtnSecStr",{
     
     expNames <- cdAnalyzer$experimentNames
@@ -107,7 +97,11 @@ observeEvent(input$runSecStrEstimation,{
       
     }
     
-    lapply(expNames, function(exp){
+    sec_str_dfs <- list()
+    
+    counter <- 0
+    
+    for (exp in expNames) {
       
       check <- cdAnalyzer$experimentsOri[[exp]]$init_and_check_secondary_str_method(input$lower_wl_secStr)
       
@@ -122,7 +116,6 @@ observeEvent(input$runSecStrEstimation,{
         cdAnalyzer$experimentsOri[[exp]]$set_secondary_structure_method_references_user(
           matF,matC,high_wl,step_wl,ss_lbls
         )
-        
       }
       
       Sys.sleep(0.1)
@@ -136,29 +129,29 @@ observeEvent(input$runSecStrEstimation,{
         
         for (i in 1:length(spectraNames)) {
           
-          sec_str_df     <- secondary_structure_content_lst[i]
+          counter <-  counter + 1
           
-          saneCD_curveName   <- gsub(':','',spectraNames[i])
-          tabPanelTargetName <- paste0(saneCD_curveName,'secStrTarget')
+          sec_str_df     <- data.frame(secondary_structure_content_lst[i])
           
-          tabP <- tabPanel(title=saneCD_curveName,
-                           value=tabPanelTargetName,
-                           fluidRow(column(12,tableOutput(paste0('secStr_',saneCD_curveName)))))
+          method                   <- strsplit(colnames(sec_str_df)[1],'Component_')[[1]][2]
+          colnames(sec_str_df)[1]  <- 'Component'
           
-          reactives$secStrFittingTabsNames <- c(
-            reactives$secStrFittingTabsNames,tabPanelTargetName)
+          sec_str_df <- sec_str_df %>%
+            pivot_wider(names_from = Component, values_from = Percentage)
           
-          appendTab("secondary_structure_tabBox",tabP,select=TRUE)
-          
-          output[[paste0('secStr_',saneCD_curveName)]] <- renderTable({sec_str_df})
-          
-          Sys.sleep(0.2)
+          sec_str_df$Method <- method
+          sec_str_df$Sample <- spectraNames[i]
+            
+          sec_str_dfs[[counter]] <- sec_str_df
+
+          Sys.sleep(0.1)
           
         }
       }
-      
-      return(NULL)
-    })
+    }
+    
+    sec_str_dfs <- do.call(rbind,sec_str_dfs)
+    output[['secondary_structure']] <- renderTable({sec_str_dfs})
     
     list_of_signals  <- list()
     list_of_fittings <- list()

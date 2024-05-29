@@ -930,7 +930,7 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         p0          = np.concatenate(((1,np.median(self.chem_concentration)),self.bNs,self.bUs,self.kNs,self.kUs))
 
         low_bound    =  np.array([0  , np.min(self.chem_concentration) + 1 ] + [x/100-10   if x>0 else 100*x-10  for x in p0[2:]])
-        high_bound   =  np.array([1e5, np.max(self.chem_concentration) - 1 ] + [100*x+10   if x>0 else x/100+10  for x in p0[2:]]) 
+        high_bound   =  np.array([20,  np.max(self.chem_concentration) - 1 ] + [100*x+10   if x>0 else x/100+10  for x in p0[2:]]) 
 
         listOfChemConcentration = [self.chem_concentration for _ in wavelengths]
         listOfSignals           = signal.tolist()

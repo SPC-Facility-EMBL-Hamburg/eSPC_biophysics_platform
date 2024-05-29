@@ -18,7 +18,6 @@ reactives <- reactiveValues(
                                                   #  used in thermal_ramp_reactives.R, chemical_denaturation_reactives.R and custom_analysis_reactives.R
   secStrFittingWasDone                   = FALSE, # show export options - secondary str. from spectra
   secStrCalcWasDone                      = FALSE, # show export options - secondary str. from PDB file
-  secStrFittingTabsNames                 = c(),   # panel 'menu_sec_structure' (secondary_structure_reactives.R)
   secStrCalculationTabsNames             = c(),   # panel 'menu_sec_structure' (secondary_structure_reactives.R)
   
   secStrRefMatrixC                       = NULL, # to use user reference sets, panel 'menu_sec_structure'
