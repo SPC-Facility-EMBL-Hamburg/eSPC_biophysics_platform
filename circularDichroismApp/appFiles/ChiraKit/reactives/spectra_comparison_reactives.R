@@ -1,3 +1,24 @@
+runComparisonPipeline <- function() {
+  
+  append_record_to_logbook('Running the comparison pipeline')
+  
+  if (input$normalise == "L2_norm") {
+    append_record_to_logbook('L2 normalisation option is ON')
+    compareSpectraPyClass$normalise_by_L2norm()
+  } else {
+    append_record_to_logbook('Normalisation option is OFF')
+    compareSpectraPyClass$undo_normalise()
+  }
+  
+  compareSpectraPyClass$summarise_signal_per_label()
+  compareSpectraPyClass$generate_comparison_labels()
+  compareSpectraPyClass$generate_difference_spectra()
+  compareSpectraPyClass$find_distances()
+  
+  return(NULL)
+  
+}
+
 # Create the Table to fill with the categorical labels of the spectra
 observeEvent(list(input$legendInfo,input$workingUnits),{
   
@@ -44,8 +65,6 @@ observeEvent(input$btn_create_compare_dataset,{
   # Stop if there are no CD curves of interest  
   if (nrow(df_ids2find) == 0 ) return(NULL)
   
-  append_record_to_logbook(c('Creating a comparison dataset with the following data',df_to_lines(df_ids2find)))
-  
   relevantSpectra    <- df_ids2find$CD_curve 
   relevantLabels     <- df_ids2find[,2]
   
@@ -59,6 +78,8 @@ observeEvent(input$btn_create_compare_dataset,{
     return(NULL)
   }
   
+  append_record_to_logbook(c('Creating a comparison dataset with the following data',df_to_lines(df_ids2find)))
+  
   merged <- get_signal_dfs_from_selected_spectra(relevantSpectra,cdAnalyzer)
   
   sorted_indexes      <- order(relevantLabels)
@@ -69,18 +90,27 @@ observeEvent(input$btn_create_compare_dataset,{
   compareSpectraPyClass$wavelength          <- np_array(merged[,1])
   compareSpectraPyClass$signalDesiredUnit   <- np_array(sorted_signal)
   compareSpectraPyClass$labels              <- np_array(relevantLabels)
-
+  
   compareSpectraPyClass$workingUnits        <- input$workingUnits
   
-  compareSpectraPyClass$summarise_signal_per_label()
-  compareSpectraPyClass$generate_comparison_labels()
-  compareSpectraPyClass$generate_difference_spectra()
-  compareSpectraPyClass$find_distances()
+  compareSpectraPyClass$signalDesiredUnitOri   <- np_array(sorted_signal)
+  compareSpectraPyClass$labelsOri              <- np_array(relevantLabels)
+  
+  runComparisonPipeline()
   
   Sys.sleep(2)
   reactives$compareDatasetCreated <- TRUE
   
 })
+
+observeEvent(input$normalise,{
+  
+  req(reactives$compareDatasetCreated)
+  reactives$compareDatasetCreated <- FALSE
+  runComparisonPipeline()
+  reactives$compareDatasetCreated <- TRUE
+  
+},ignoreNULL = T,ignoreInit = T)
 
 output$cdSpectraAvg <- renderPlotly({
   
@@ -89,6 +119,19 @@ output$cdSpectraAvg <- renderPlotly({
 
   plot_average_spectra(compareSpectraPyClass$means,compareSpectraPyClass$sds,
                        compareSpectraPyClass$labels_unique,compareSpectraPyClass$wavelength,
+                       compareSpectraPyClass$workingUnits,
+                       input$plot_width_compare,input$plot_height_compare,
+                       input$plot_type_compare,input$plot_axis_size_compare)
+  
+})
+
+output$cdSpectraSim <- renderPlotly({
+  
+  req(reactives$data_loaded)
+  req(reactives$compareDatasetCreated)
+  
+  plot_similarity_spectra(compareSpectraPyClass$means,
+                       compareSpectraPyClass$labels_unique,
                        compareSpectraPyClass$workingUnits,
                        input$plot_width_compare,input$plot_height_compare,
                        input$plot_type_compare,input$plot_axis_size_compare)

@@ -1388,8 +1388,13 @@ Generating a dataset in this module will automatically produce:
  <ol class="vf-intro__text">
    <li class="vf-list__item "> The average spectrum for each label and its associated standard deviation.</li>
       <li class="vf-list__item "> Every possible difference spectrum and its associated standard deviation.</li>
-   <li class="vf-list__item "> Boxplots of the intra-group and inter-group normalised euclidean distances. If the distances between groups are larger that the distances within groups, that would indicate that the spectra of each group are different.   
+   <li class="vf-list__item "> Boxplots of the intra-group and inter-group euclidean distances . If the distances between groups are larger that the distances within groups, that would indicate that the spectra of each group are different. 
+   <li class="vf-list__item "> Spectral comparison plots <a href="https://journals.sagepub.com/doi/10.1177/00037028221134128?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed" target="_blank" rel="noopener noreferrer">(Curtis W. Meuse <i>et al.</i>, 2022)</a>. Useful for instrument calibration.</li>
  </ol> 
+
+<p class="vf-intro__text">
+To compare the shapes of spectra and discard the influence of differences in absorbance intensity, the L2 normalisation can be used. This results in the calculation of normalised euclidean distances <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9720711/" target="_blank" rel="noopener noreferrer">(Taiji Oyama <i>et al.</i>, 2022)</a>.
+</p>
 
 </div>
 

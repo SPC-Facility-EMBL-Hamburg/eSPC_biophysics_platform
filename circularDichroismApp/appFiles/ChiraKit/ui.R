@@ -307,18 +307,17 @@ shinyUI(dashboardPage(
                 tags$head(tags$style("
                 #cdSpectraAvg{height:600px !important;}
                 #cdSpectraDiff{height:600px !important;}
-                #cdSpectraDist{height:700px !important;}"
+                #cdSpectraDist{height:700px !important;}
+                #cdSpectraSim{height:800px !important;}"
                 )),
                 
                 # TabBox to plot the CD spectra and the associated voltage
                 tabBox(title = "", width = 12,id = "tabBoxCompareSpectra",
                        tabPanel("CD avg ± sd",         plotlyOutput("cdSpectraAvg")),
                        tabPanel("Difference spectra",  plotlyOutput("cdSpectraDiff")),
-                       tabPanel("Normalised distances",plotlyOutput("cdSpectraDist"))#,
-                       #tabPanel("CD signal / milidegrees",plotlyOutput("cdSpectraMiliDeg"))
-                       
+                       tabPanel("Distances",           plotlyOutput("cdSpectraDist")),
+                       tabPanel("Spectral similarity plots",plotlyOutput("cdSpectraSim"))
                 )
-          
           )
           
         )),

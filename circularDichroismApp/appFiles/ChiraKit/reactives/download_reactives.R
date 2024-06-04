@@ -644,7 +644,7 @@ output$download_sec_str_spectra_fittings <-   downloadHandler(
   })
 
 output$download_average_spectra        <-   downloadHandler(
-  filename = function() {paste0("CD_average_spectra_",Sys.Date(),".csv")},
+  filename = function() {paste0("CD_average_spectra_Normalisation",paste0(input$normalise),"_",Sys.Date(),".csv")},
   content  = function(file) {
     
     df           <- cbind(compareSpectraPyClass$wavelength,compareSpectraPyClass$means)
@@ -654,7 +654,7 @@ output$download_average_spectra        <-   downloadHandler(
   })
 
 output$download_standard_deviation        <-   downloadHandler(
-  filename = function() {paste0("CD_standard_deviation_",Sys.Date(),".csv")},
+  filename = function() {paste0("CD_standard_deviation_Normalisation",paste0(input$normalise),"_",Sys.Date(),".csv")},
   content  = function(file) {
     
     df           <- cbind(compareSpectraPyClass$wavelength,compareSpectraPyClass$sds)
@@ -664,7 +664,7 @@ output$download_standard_deviation        <-   downloadHandler(
   })
 
 output$download_difference_spectra        <-   downloadHandler(
-  filename = function() {paste0("CD_difference_spectra_",Sys.Date(),".csv")},
+  filename = function() {paste0("CD_difference_spectra_Normalisation",paste0(input$normalise),"_",Sys.Date(),".csv")},
   content  = function(file) {
     
     df           <- cbind(compareSpectraPyClass$wavelength,compareSpectraPyClass$difference_spectra)
@@ -674,7 +674,7 @@ output$download_difference_spectra        <-   downloadHandler(
   })
 
 output$download_difference_std        <-   downloadHandler(
-  filename = function() {paste0("CD_difference_spectra_std_",Sys.Date(),".csv")},
+  filename = function() {paste0("CD_difference_spectra_std_Normalisation",paste0(input$normalise),"_",Sys.Date(),".csv")},
   content  = function(file) {
     
     df           <- cbind(compareSpectraPyClass$wavelength,compareSpectraPyClass$difference_spectra_sd)
@@ -684,7 +684,7 @@ output$download_difference_std        <-   downloadHandler(
   })
 
 output$download_distance_data        <-   downloadHandler(
-  filename = function() {paste0("CD_distance_matrix_normalised_euclidean_",Sys.Date(),".csv")},
+  filename = function() {paste0("CD_distances_Normalisation",paste0(input$normalise),"_",Sys.Date(),".csv")},
   content  = function(file) {
     
     df           <- compareSpectraPyClass$distance_matrix

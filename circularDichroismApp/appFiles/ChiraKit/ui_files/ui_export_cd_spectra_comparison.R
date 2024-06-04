@@ -15,6 +15,6 @@ box(
                  downloadLink('download_difference_std' ,"Standard deviation of the 'difference' spectra"))),
     
     column(12, p(style = "font-size: 120%",HTML(""),
-                 downloadLink('download_distance_data','Normalised euclidean distance matrix')))
+                 downloadLink('download_distance_data','Euclidean distance matrix')))
     
   ))

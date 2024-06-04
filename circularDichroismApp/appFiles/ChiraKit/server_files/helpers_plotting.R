@@ -44,15 +44,26 @@ configFig <- function(fig,nameForDownload,plot_type,plot_width,plot_height) {
 }
 
 # Combine a list of plotly plots into one figure
-plot_list_to_fig <- function(plot_name,plot_list,titleText,axis_size,plot_type,plot_width,plot_height) {
+plot_list_to_fig <- function(plot_name,plot_list,titleText,axis_size,plot_type,plot_width,plot_height,
+                             nrows=2,shareAxis = TRUE) {
   
   i <- length(plot_list)
   
   if (i > 1) {
     
-    fig <- subplot(plot_list,nrows = 2,margin = c(0.03,0.03,0.1,0.1),
-                   shareY = TRUE, shareX = TRUE)
+    if (shareAxis) {
+      
+      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.1),
+                     shareY = TRUE, shareX = TRUE)
+      
+    } else {
+      
+      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.1),
+                     shareY = FALSE, shareX = FALSE,titleX = TRUE,titleY = TRUE)
+      
+    }
     
+
   } else {
     
     fig <- plot_list[[1]] %>%  layout(

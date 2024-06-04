@@ -38,7 +38,6 @@ plot_average_spectra <- function(
     means,sds,lbls,wl,selectedUnits,
     plot_width=12,plot_height=8,plot_type='svg',axis_size=16) {
   
-
   colors <- getPalette(length(lbls)) 
   
   fig <- plot_ly()
@@ -112,6 +111,59 @@ plot_difference_spectra <- function(
     paste0('CD_difference_spectra_',Sys.Date()),
     plot_list,dsLbl,
     axis_size,plot_type,plot_width,plot_height)
+  
+  return(fig)
+  
+}
+
+# Input:
+# means  - matrix with the average spectra
+# labels - labels, one per column in 'means'
+# wU - the working units used to create the comparison dataset
+plot_similarity_spectra <- function(
+    means,labels,wU,
+    plot_width=12,plot_height=8,plot_type='svg',axis_size=16) {
+  
+  plot_list   <- list()
+  nMeans      <- length(labels)
+  
+  c <- 0
+  for (i in 1:(nMeans-1)) { 
+    
+    x <- list(title = paste0(labels[i],'; ',workingUnits2ProperLabel(wU)),titlefont = list(size = axis_size), 
+              tickfont = list(size = axis_size),
+              showgrid = F)
+    
+    for (ii in (i+1):nMeans) {
+      
+      y <- list(title = paste0(labels[ii],'; ',workingUnits2ProperLabel(wU)),
+                titlefont = list(size = axis_size), tickfont = list(size = axis_size),
+                showgrid = F)
+      
+      c <- c + 1
+      fig <- plot_ly()
+      tempDf <- data.frame(x=means[,i],y=means[,ii])
+      
+      model       <- lm(y ~ x , data=tempDf)
+      adjRsquared <- signif(summary(model)$adj.r.squared,4)
+
+      fig    <- fig %>% add_trace(data=tempDf,x=~x,y=~y,
+                                  type = 'scatter', 
+                                  marker = list(size = 9,
+                                                line = list(width = 0)))
+      
+      fig    <- add_layout_to_subplot(fig,x,y,paste("Adj. R-squared: ", adjRsquared),nMeans,axis_size,F)
+      
+      plot_list[[c]] <- fig
+      
+    }
+    
+  }
+  
+  fig <- plot_list_to_fig(
+    paste0('CD_similarity_spectra_',Sys.Date()),
+    plot_list,paste("Adj. R-squared: ", adjRsquared),
+    axis_size,plot_type,plot_width,plot_height,3,F)
   
   return(fig)
   

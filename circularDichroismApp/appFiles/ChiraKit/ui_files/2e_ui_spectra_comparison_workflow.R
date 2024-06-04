@@ -10,7 +10,17 @@ box(title = "2. Compare", width = 12, solidHeader = T, status = "primary",
           tooltip = "Use the information from the 'Spectra labels' Table to create a suitable dataset
           for the comparison analysis.",placement = "right")
       )),
-      
+    
+      column(3,p(
+        HTML("<b>Normalisation</b>"),
+        span(shiny::icon("info-circle"), id = "info_uu_normalise"),
+        selectInput("normalise", NULL,
+                    c("None","L2_norm")),
+        tippy::tippy_this(
+          elementId = "info_uu_normalise",
+          tooltip = "Use the L2 normalisation to compare shapes.",placement = "right")
+      )),
+        
       column(3,p(
         HTML("<b>Show plot export options</b>"),
         checkboxInput("showPlotExportOptionsCompare",NULL,FALSE)

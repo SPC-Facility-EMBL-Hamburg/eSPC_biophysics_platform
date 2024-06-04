@@ -10,6 +10,7 @@ from fitting_helpers     import *
 
 from spectra_comparison_helpers     import *
 
+from scipy.integrate     import simpson
 from scipy.stats         import t
 from scipy.stats         import chi2
 from scipy.signal        import savgol_filter
@@ -700,9 +701,12 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
 
     def __init__(self):
 
-        self.signalDesiredUnit     = None  # 2D (size n x m) np array, CD signal matrix, needs to be called 'signalDesiredUnit' to use the PCA functions 
+        self.signalDesiredUnit         = None  # 2D (size n x m) np array, CD signal matrix, needs to be called 'signalDesiredUnit' to use the PCA functions 
+        self.signalDesiredUnitOri      = None  # copy of self.signalDesiredUnit, to undo normalisation changes
+
         self.wavelength            = None  # 1D (length n)   np array, wavelength
         self.labels                = None  # 1D (length m)   np array, labels of the CD signal matrix - one label per column
+        self.labelsOri             = None  # copy of self.labels, to undo normalisation changes
 
         self.workingUnits          = None  # string, selected working units to create the dataset for comparisons
 
@@ -723,6 +727,39 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
         self.difference_spectra_sd  = None # 2D (size n x h) np array,
         self.difference_spectra_lbl = None # length h, np array, labels of the difference spectra
 
+        return None
+
+    '''
+    def normalise_by_area(self):
+
+        Divide each CD spectrum using the area under the curve (in absolute value, to keep the sign of the peaks)
+        The area is calculated with the simpson rule
+
+        self.integrals         = np.abs(simpson(self.signalDesiredUnitOri, x=self.wavelength,axis=0))
+        self.signalDesiredUnit = self.signalDesiredUnitOri / self.integrals
+        self.labels            = np.array(['Area norm. ' + str(x) for x in self.labelsOri])
+
+        return None
+    '''
+
+    def normalise_by_L2norm(self):
+
+        '''
+        Divide each CD spectrum using the length of the vector (in absolute value, to keep the sign of the peaks)
+        The area is calculated with the simpson rule
+        '''
+
+        self.lengths           = np.linalg.norm(self.signalDesiredUnitOri,axis=0)
+        self.signalDesiredUnit = self.signalDesiredUnitOri / self.lengths
+        self.labels            = np.array(['L2 norm. ' + str(x) for x in self.labelsOri])
+
+        return None
+
+    def undo_normalise(self):
+
+        self.signalDesiredUnit = self.signalDesiredUnitOri
+        self.labels            = self.labelsOri
+        
         return None
 
     def summarise_signal_per_label(self):
@@ -891,7 +928,9 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
                 label2   = self.labels[ii]
                 match_id = comparison_labels_lst.index(label1 + ' versus ' + label2)
 
-                distance = normalised_euclidean_distance(self.signalDesiredUnit[:,i],self.signalDesiredUnit[:,ii])
+                #distance = normalised_euclidean_distance(self.signalDesiredUnit[:,i],self.signalDesiredUnit[:,ii])
+                distance = np.linalg.norm(self.signalDesiredUnit[:,i] - self.signalDesiredUnit[:,ii])
+
                 distances[match_id].append(distance)
                 
                 distance_matrix[i,ii] = distance
@@ -2289,107 +2328,6 @@ class cdAnalyzer:
 
 if False:
     
-    t1 = cd_experiment_thermal_ramp()
+    t1 = cd_experiment_comparison()
     t1.load_data('/home/os/Downloads/zero_new.csv','t')
     t1.signalDesiredUnit = t1.signalInput
-    t1.assign_useful_signal([195,222,200])
-    t1.estimate_signal_derivates()
-    t1.estimate_baselines_parameters(t1.temperature)
-
-    #t1.fit_signal_three_state(True,True)
-    #t1.fit_signal_three_state(True,False)
-    t1.fit_signal_three_state(False,True)
-    t1.fit_signal_three_state(False,False)
-
-if False:
-    
-    t1 = cd_experiment_custom_analysis()
-    t1.load_data('/home/os/Downloads/zero_new.csv','t') 
-
-    t1.temperature = np.array([5.7, 10.3, 15,19.6,24.2,28.9,33.5,38.2,42.8,47.4,52.1,56.7,61.4,66,70.6,75.3,79.9,84.5])  + 273.15
-
-    t1.first_measurement_dimension = t1.temperature 
-    t1.first_exp_param_name         = 'T'
-
-    t1.signalDesiredUnit = t1.signalInput
-    t1.assign_useful_signal([183,193,203,213,223,233])
-    t1.generate_model_function('(bn+kOne*e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))+(bu)*e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))*e^(-deltaHGlobalBPos/(0.001987*T)*(1-T/TGlobalBPos)))/(1+e^(-deltaHGlobalAPos/(0.001987*T)*(1-T/TGlobalAPos))*e^(-deltaHGlobalBPos/(0.001987*T)*(1-T/TGlobalBPos)))')
-
-    p0  = np.repeat([1],18)
-    lb  = np.repeat([-500],18)
-    hb  = np.repeat([500],18)
-
-    t1.p0         = np.concatenate((np.array([305,330,50,50]), p0), axis=0)
-    t1.low_bound  = np.concatenate((np.array([295,320,2,2]), lb), axis=0)
-    t1.high_bound = np.concatenate((np.array([320,380,100,100]), hb), axis=0)
-
-    t1.fit_signal()
-
-    tm1 = t1.fit_params.iloc[0,1]
-    tm2 = t1.fit_params.iloc[0,2]
-    dh1 = t1.fit_params.iloc[0,3]
-    dh2 = t1.fit_params.iloc[0,4]
-
-    R = 1.987 / 1000 # kcal/mol
-
-    A = np.exp(-dh1*(1-t1.temperature/tm1)/(R*t1.temperature))
-    B = np.exp(-dh2*(1-t1.temperature/tm2)/(R*t1.temperature))
-
-    xN = 1 / (1+A+A*B)
-    xi = A / (1+A+A*B)
-    xD = A*B / (1+A+A*B)
-
-    rss = []
-
-    for t in np.arange(305,320):
-
-            t1.p0         = np.concatenate((np.array([t,330,20,20]), p0), axis=0)
-            t1.low_bound  = np.concatenate((np.array([t,320,1,1]), lb), axis=0)
-            t1.high_bound = np.concatenate((np.array([t,380,100,100]), hb), axis=0)
-
-            rss.append(np.sum(np.square(t1.signal_predicted - t1.signal_useful)))
-
-    print(t1.fit_params)
-    print(t1.fit_rel_errors)
-    
-
-    matrix = t1.signal_predicted
-    import matplotlib.pyplot as plt
-
-    num_columns = matrix.shape[0]
-
-    # Plot each column of the matrix against the vector
-    for i in range(num_columns):
-        # Extract the i-th column from the matrix
-        column_data1 = matrix[i, :]
-        column_data2 = t1.signal_useful[i, :]
-
-        # Plot the column against the vector
-        plt.plot(t1.temperature, column_data1, label=f'Column {i+1}')
-        plt.scatter(t1.temperature, column_data2, label=f'Column {i+1}')
-
-    # Add labels and title
-    plt.xlabel('Vector')
-    plt.ylabel('Column Values')
-    plt.title('Plot of Each Column of a Matrix Against a Vector')
-
-    # Add a legend
-    plt.legend()
-
-    # Display the plot
-    plt.show()
-
-    df = pd.DataFrame({'xN':xN,'xI':xi,'xD':xD,'T':t1.temperature})
-
-        # Plot each column against the specified x column
-    ax = df.plot(x='T', y=['xN', 'xI', 'xD'], kind='line')
-
-    # Set labels and title
-    ax.set_xlabel('X Column')
-    ax.set_ylabel('Values')
-
-    # Add a legend to display the labels for the vertical lines
-    ax.legend()
-
-    # Show the plot
-    plt.show()
