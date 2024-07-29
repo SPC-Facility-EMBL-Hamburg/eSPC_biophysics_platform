@@ -10,8 +10,8 @@ box(title = "2. Parameters for molar ellipticity / extinction", width = 12, soli
                     Molecular weight, Concentration, Number of amino acids, Path length and Input units. 
                     The Molecular weight, Concentration and Path length are required to 
                     calculate the molar ellipticity/extinction. 
-                    The 'number of amino acids' is useful for protein samples, 
-                    as it allows normalising for the protein's length (mean residue molar ellipticity/extinction).
+                    The 'number of chromophore units' is useful for polypeptides, 
+                    because it allows normalisation by the number of peptide bonds.
                      ",placement = "right"))),
                        
      column(12,DT::dataTableOutput('cdFilesInfo')),

@@ -5,15 +5,26 @@ runComparisonPipeline <- function() {
   if (input$normalise == "L2_norm") {
     append_record_to_logbook('L2 normalisation option is ON')
     compareSpectraPyClass$normalise_by_L2norm()
+    
   } else {
     append_record_to_logbook('Normalisation option is OFF')
     compareSpectraPyClass$undo_normalise()
   }
   
+  choices <- c('No reference',unique(compareSpectraPyClass$labels))
+  
+  updateSelectInput(session, "comparison_reference",
+                    choices = choices,
+                    selected = choices[1])
+  
+  Sys.sleep(1)
+  
   compareSpectraPyClass$summarise_signal_per_label()
   compareSpectraPyClass$generate_comparison_labels()
   compareSpectraPyClass$generate_difference_spectra()
   compareSpectraPyClass$find_distances()
+  
+  Sys.sleep(0.5)
   
   return(NULL)
   
@@ -95,10 +106,9 @@ observeEvent(input$btn_create_compare_dataset,{
   
   compareSpectraPyClass$signalDesiredUnitOri   <- np_array(sorted_signal)
   compareSpectraPyClass$labelsOri              <- np_array(relevantLabels)
-  
+
   runComparisonPipeline()
   
-  Sys.sleep(2)
   reactives$compareDatasetCreated <- TRUE
   
 })
@@ -134,7 +144,8 @@ output$cdSpectraSim <- renderPlotly({
                        compareSpectraPyClass$labels_unique,
                        compareSpectraPyClass$workingUnits,
                        input$plot_width_compare,input$plot_height_compare,
-                       input$plot_type_compare,input$plot_axis_size_compare)
+                       input$plot_type_compare,input$plot_axis_size_compare,
+                       input$comparison_reference)
   
 })
 
@@ -150,7 +161,8 @@ output$cdSpectraDiff <- renderPlotly({
   plot_difference_spectra(dS,dSe,dsLbl,
                           compareSpectraPyClass$wavelength,compareSpectraPyClass$workingUnits,
                           input$plot_width_compare,input$plot_height_compare,
-                          input$plot_type_compare,input$plot_axis_size_compare)
+                          input$plot_type_compare,input$plot_axis_size_compare,
+                          input$comparison_reference)
   
 })
 
@@ -161,6 +173,19 @@ output$cdSpectraDist <- renderPlotly({
   
   plot_distances(compareSpectraPyClass$comparison_labels,compareSpectraPyClass$distances,
                  'boxplot',
+                 input$plot_width_compare,input$plot_height_compare,
+                 input$plot_type_compare,input$plot_axis_size_compare,
+                 input$comparison_reference)
+  
+})
+
+output$cdSpectraTree <- renderPlotly({
+  
+  req(reactives$data_loaded)
+  req(reactives$compareDatasetCreated)
+  
+  plot_dendogram(compareSpectraPyClass$distance_matrix,
+                 compareSpectraPyClass$labels,
                  input$plot_width_compare,input$plot_height_compare,
                  input$plot_type_compare,input$plot_axis_size_compare)
   

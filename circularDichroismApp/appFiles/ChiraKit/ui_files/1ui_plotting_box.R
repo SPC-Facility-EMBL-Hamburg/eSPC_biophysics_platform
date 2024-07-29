@@ -7,7 +7,7 @@ box(title = "4. Plotting", width = 12, solidHeader = T, status = "primary",
       
       column(width = 3,
              p(HTML("<b><br>Set colour</b>")),
-             colourInput("colorForLegend",label=NULL, value = "#E41A1C")),
+             colourpicker::colourInput("colorForLegend",label=NULL, value = "#E41A1C")),
       
       column(4, p(HTML("<b><br>Show plot export options</b>")),
                   checkboxInput('showAdvancedPlottingOptions',NULL,FALSE))

@@ -63,15 +63,15 @@
 <li class="vf-list__item ">Download the files <a href="R78906.d01" download>R78906.d01</a>,
  <a href="R78906.d02" download>R78906.d02</a>, <a href="R78906.d03" download>R78906.d03</a>,
  <a href="R78907.d01" download>R78907.d01</a>, <a href="R78907.d02" download>R78907.d02</a> 
- and <a href="R78907.d03" download>R78907.d03</a>. These files contain CD measurements of a protein sample ('R78907') and the corresponding buffer ('R78906'),  kindly provided by Nykola Jones from Aahrus University, Denmark.  
+ and <a href="R78907.d03" download>R78907.d03</a>. These files contain CD measurements of a protein sample ('R78907') and the corresponding buffer ('R78906'),  kindly provided by Nykola Jones from Aarhus University, Denmark.  
 </li>
 
-<li class="vf-list__item "> Import the six files simultaneously.
+<li class="vf-list__item "> Import the six files simultaneously (drag and drop, or click 'Browse' and select them).
 </li> 
 
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-<img src="tuto1.1.png" alt="" width="1000" loading="lazy"/>
+<img src="tuto1.1.png" alt="" width="600" loading="lazy"/>
 </figure>
 <br>
 <li class="vf-list__item "> Navigate to the 'HT signal' tab. Adjust the 'HT max value' parameter to 6.5. The wavelength range should automatically update (to 178 - 330 nm).
@@ -119,11 +119,15 @@ Output name: 'baseline subtracted' <br>
 <br>
 <li class="vf-list__item "> 
 Input the parameters of the 'baseline subtracted' spectrum:
-Set the concentration to 1.3 mg/ml, path length to 0.1 mm, number of residues to 129, and molecular weight to 14300 Da. Select 'mean residue molar ellipticity' as the working unit. If desired, delete all previous experiments to keep the workspace organised.
+Set the concentration to 1.3 mg/ml, path length to 0.1 mm, number of peptide bonds to 128, and molecular weight to 14300 Da. Select 'mean unit molar ellipticity' as the working unit. If desired, delete all previous experiments to keep the workspace organised.
 </li>
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-<img src="tuto1.5.png" alt="" width="1100" loading="lazy"/>
+<img src="tuto1.5a.png" alt="" width="800" loading="lazy"/>
+</figure>   
+<br>
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+<img src="tuto1.5b.png" alt="" width="1000" loading="lazy"/>
 </figure>   
 <br>
 <li class="vf-list__item "> 
@@ -135,7 +139,7 @@ Go to the 'Export data' panel and export the spectrum in delta epsilon units.
 </figure>
 <br>
 <li class="vf-list__item "> 
-Congratulations! You have successfully processed CD measurements, obtaining a baseline-subtracted spectrum in delta epsilon units.
+Congratulations! You have successfully processed CD measurements, obtaining a baseline-subtracted spectrum in delta epsilon units. Be aware that the exported file contains also temperature data which was read from the original input files metadata. 
 </li>
 
  </ol>
@@ -152,7 +156,7 @@ Congratulations! You have successfully processed CD measurements, obtaining a ba
 <li class="vf-list__item ">Download the files <a href="R78906.d01" download>R78906.d01</a>,
  <a href="R78906.d02" download>R78906.d02</a>, <a href="R78906.d03" download>R78906.d03</a>,
  <a href="R78907.d01" download>R78907.d01</a>, <a href="R78907.d02" download>R78907.d02</a> 
- and <a href="R78907.d03" download>R78907.d03</a>. These files contain CD measurements of a protein sample ('R78907') and the corresponding buffer ('R78906'),  kindly provided by Nykola Jones from Aahrus University, Denmark.  
+ and <a href="R78907.d03" download>R78907.d03</a>. These files contain CD measurements of a protein sample ('R78907') and the corresponding buffer ('R78906'),  kindly provided by Nykola Jones from Aarhus University, Denmark.  
 </li>
 
 <li class="vf-list__item "> Set the 'Input mode' to 'Automatic baseline subtraction'. 
@@ -163,7 +167,7 @@ Upload the 'R78907' files as 'Sample files' and the 'R78906' files as 'Baseline 
 <img src="tuto2.1.png" alt="" width="400" loading="lazy"/>
 </figure>
 <br>
-<li class="vf-list__item "> Click on the 'Process data' button. Use 'millidegrees' as input units and 'mean residue molar extinction' as desired units.
+<li class="vf-list__item "> Click on the 'Process data' button. Use 'millidegrees' as input units and 'mean unit molar extinction' as desired units.
 </li> 
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
@@ -174,7 +178,7 @@ Upload the 'R78907' files as 'Sample files' and the 'R78906' files as 'Baseline 
 Concentration: 1.3 mg/ml <br>
 Molecular weight: 14300 <br>
 Path length: 0.1 mm <br>
-Number of residues: 130 
+Number of peptide bonds: 128 
 </li> 
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
@@ -231,20 +235,20 @@ Press on '2a. Create dataset'. Then press on '2c. Find wavelength'.
 <img src="tuto3.2.png" alt="" width="700" loading="lazy"/>
 </figure>
 <br>
-<li class="vf-list__item "> Activate the 'Fit unfolded slope' option and fit the thermal unfolding curves by clicking on '2d Fit data'.
+<li class="vf-list__item "> Select the 'Equilibrium Two-State' unfolding model, activate the 'Fit unfolded slope' option and fit the thermal unfolding curves by clicking on '2d Fit data'. 
 </li> 
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
 <img src="tuto3.3.png" alt="" width="1000" loading="lazy"/>
 </figure>
 <br>
-<li class="vf-list__item "> Congratulations! You have successfully fitted a reversible two-state unfolding model to obtain the melting temperature of a protein sample.
+<li class="vf-list__item "> Congratulations! You have successfully fitted a reversible two-state unfolding model to obtain the melting temperature of a protein sample. 
 </li>
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
 <img src="tuto3.4.png" alt="" width="700" loading="lazy"/>
 </figure>
-<br>
+
  </ol>
 
 </div>
@@ -255,6 +259,10 @@ Press on '2a. Create dataset'. Then press on '2c. Find wavelength'.
 
 <div id="tutorial4" style="display:none">
 
+<p class="vf-intro__text">
+To use the whole wavelength range information and reduce noise, we can decompose the CD signal into a set of basis spectra and their associated coefficients. Subsequently, instead of fitting the CD signal at a certain wavelength, we fit the SVD coefficients.
+</p> 
+<br>
  <ol class="vf-intro__text">
 <li class="vf-list__item ">Download the file <a href="thermalRampChirascan.csv" download>thermalRampChirascan.csv</a>, kindly provided by Osvaldo Burastero from European Molecular Biology Laboratory (EMBL), Hamburg, Germany. This file contains a thermal denaturation experiment of a protein sample. 
 </li>
@@ -331,16 +339,20 @@ The CD spectra of OpcA and Wheat germ agglutinin was published in
 <a href="https://academic.oup.com/bioinformatics/article/27/12/1630/257074" target="_blank" rel="noopener noreferrer">Abdul-Gader, Ali <i>et al.</i>, 2011</a>.
 </li>
 
-<li class="vf-list__item "> Import the two files simultaneously. Set the 'Input units' and the 'Working units' to mean residue molar extinction'.
+<li class="vf-list__item "> Import the two files simultaneously. Set the 'Input units' and the 'Working units' to mean unit molar extinction'.
 </li> 
 
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-<img src="tuto5.1.png" alt="" width="1000" loading="lazy"/>
+<img src="tuto5.1a.png" alt="" width="500" loading="lazy"/>
 </figure>
 <br>
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-<img src="tuto5.2.png" alt="" width="900" loading="lazy"/>
+<img src="tuto5.1b.png" alt="" width="500" loading="lazy"/>
+</figure>
+<br>
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+<img src="tuto5.2.png" alt="" width="1000" loading="lazy"/>
 </figure>
 <br>
 
@@ -357,7 +369,7 @@ The CD spectra of OpcA and Wheat germ agglutinin was published in
 <br>
 
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-<img src="tuto5.4.png" alt="" width="400" loading="lazy"/>
+<img src="tuto5.4.png" alt="" width="500" loading="lazy"/>
 </figure>
 <br>
 
@@ -385,7 +397,7 @@ The CD spectra of OpcA and Wheat germ agglutinin was published in
 <div id="tutorial6" style="display:none">
 
  <ol class="vf-intro__text">
-<li class="vf-list__item ">Download the file <a href="wl_385_binding_dataset.csv" download>wl_385_binding_dataset.csv</a>. This files contains the induced CD (ICD) signal for berenil (10 μM) in the presence of increasing concentrations of calf thymus DNA. The data was digitalized (thanks to <a href="https://automeris.io/WebPlotDigitizer/" target="_blank" rel="noopener noreferrer">WebPlotDigitizer</a>) from Figure 1 of <a href="https://www.nature.com/articles/nprot.2007.475" target="_blank" rel="noopener noreferrer">Garbett, Nichola C. <i>et al.</i>, 2007</a>.
+<li class="vf-list__item ">Download the file <a href="wl_385_binding_dataset.csv" download>wl_385_binding_dataset.csv</a>. These files contains the induced CD (ICD) signal for berenil (10 μM) in the presence of increasing concentrations of calf thymus DNA. The data was digitalized (thanks to <a href="https://automeris.io/WebPlotDigitizer/" target="_blank" rel="noopener noreferrer">WebPlotDigitizer</a>) from Figure 1 of <a href="https://www.nature.com/articles/nprot.2007.475" target="_blank" rel="noopener noreferrer">Garbett, Nichola C. <i>et al.</i>, 2007</a>.
 </li>
 
 <li class="vf-list__item "> Import the file and navigate to the 'Custom analysis' panel (Section '2. Analysis'). Replace the 'Paramater name' field with 'DNA_micromolar'. Fill the second column of the Table with the following concentrations (you can copy and paste): <br>
@@ -445,7 +457,7 @@ activate the 'Log scale for the x-axis' option.
 </figure>
 <br>
 
-<li class="vf-list__item "> Inspect the fitted parameters. The Kd shold be in the micromolar (10^'logTenOfKd').
+<li class="vf-list__item "> Inspect the fitted parameters. The Kd should be in the micromolar range (10^'logTenOfKd').
 </li> 
 
 <br>
@@ -455,7 +467,7 @@ activate the 'Log scale for the x-axis' option.
 </figure>
 <br>
 
-<li class="vf-list__item ">Congratulations! You have succesfully used a custom model to estimate the binding affinity of a DNA-ligand system.
+<li class="vf-list__item ">Congratulations! You have successfully used a custom model to estimate the binding affinity of a DNA-ligand system.
 </li> 
 
 <li class="vf-list__item ">Some extra tips:  <br> 

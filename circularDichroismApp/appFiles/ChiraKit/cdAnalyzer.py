@@ -11,7 +11,7 @@ from fitting_helpers     import *
 from spectra_comparison_helpers     import *
 
 from scipy.integrate     import simpson
-from scipy.stats         import t
+#from scipy.stats         import t
 from scipy.stats         import chi2
 from scipy.signal        import savgol_filter
 
@@ -21,16 +21,19 @@ import pandas as pd
 import numpy.polynomial.polynomial as poly
 
 sys.path.append('./secondary_structure_estimation_files')
-
 from SelconsFunction                 import *
 
+sys.path.append('./Dichroic-CD-model-main')
+from single_fit_dichroic_estimator    import *
+
+sys.path.append('./gQuadruplexs_files')
+
 """
-Classes for the analysis of circular dichorism data
+Classes for the analysis of circular dichroism data
 Code written by Osvaldo Burastero 
 
 If you use this script please use a reference similar to the following:
 
-    
 Osvaldo Burastero, Nykola C. Jones, Søren Vrønning Hoffmann, & Maria M. Garcia-Alai (2024). 
 ChiraKit (Version 1.0). Manuscript in preparation. https://spc.embl-hamburg.de/app/chirakit
 
@@ -40,10 +43,32 @@ If you have questions please contact me:
 
 """
  
-# Matrix of secondary structure components (six components)
+# Matrix of protein secondary structure components (six components)
 F1  = np.loadtxt("./secondary_structure_estimation_files/AU-F128_T-Nov22.txt",          dtype='f',   delimiter='\t') 
 # Matrix of known (reference) CD spectra     
 A1  = np.loadtxt("./secondary_structure_estimation_files/AU-A128_PCDDB-Nov22.txt",      dtype='f',   delimiter='\t')
+
+# Matrix of G-Quadruplex structure components 
+
+
+
+# Load the req. data for the peptide helicity model
+# Polynomials (partition function) for all helices (up to v**5) and double helices v**4
+
+###################################
+poly_total_all  = []
+poly_double_all = []
+
+# Iterate over different peptide lengths. The variable 'i' refers to the number of peptide bonds
+for i in range(4,33):
+
+    with open("./Dichroic-CD-model-main/Q_total/Q_total_"+str(i)+".txt",'r') as l:
+        poly_total=l.readlines()[0]
+        poly_total_all.append(poly_total)
+
+    with open("./Dichroic-CD-model-main/Q_double_H/Q_doubleH_"+str(i)+".txt",'r') as l:
+        poly_double=l.readlines()[0]
+        poly_double_all.append(poly_double)
 
 # F1 and A1 contain the AU-SP175 and AU-SMP180 reference datasets
 
@@ -75,23 +100,23 @@ class cd_experiment_general:
 
         # Working units, selected by the user
         # String, one of: 'milliabsorbance', 'absorbance', molarExtinction', 'degrees', 'millidegrees', 'molarEllipticity', 
-        #                 'meanResidueMolarExtinction' or 'meanResidueMolarEllipticity'
+        #                 'meanUnitMolarExtinction' or 'meanUnitMolarEllipticity'
         self.desiredUnits       = 'millidegrees'  
 
         # Start with an impossible temperature (in degree Celsius), so the user has to change it.
         self.temperature        = np.NaN
 
-        self.numberOfResidues   = 0   # If protein sample, number of residues
+        self.numberOfCroms      = 0   # Integer. If protein sample, number of peptide bonds 
         self.concentration      = 0   # Float, in mg/ml
-        self.pathLength         = 0   # Float, in cm
+        self.pathLength         = 0   # Float, in centimeters
         self.molecularWeight    = 0   # Float, in Dalton
 
-        # Boolean to decide if the user needs to modify the parameters numberOfResidues, concentration, pathLength and molecularWeight
+        # Boolean to decide if the user needs to modify the parameters numberOfCroms, concentration, pathLength and molecularWeight
         # if 'isFakeExperiment' is set to True, then the matrix signalDesiredUnit won't be changed once it is created for the first time 
         self.isFakeExperiment       = False 
 
         # String, to know how the 'fake experiment' matrix 'signalDesiredUnit' was created
-        # For example, it should be either 'molarEllipticity',  'molarExtinction', 'meanResidueMolarExtinction' or 'meanResidueMolarEllipticity'
+        # For example, it should be either 'molarEllipticity',  'molarExtinction', 'meanUnitMolarExtinction' or 'meanUnitMolarEllipticity'
         self.fakeExperimentSignal   = 'unknown' 
 
         self.isGenerated        = False # Boolean to help exporting only the generated data
@@ -106,13 +131,13 @@ class cd_experiment_general:
         """
         unitsBegin should be: 
             'absorbance' milliabsorbance', 'molarExtinction', 'degrees', 'millidegrees', 'molarEllipticity',
-            'meanResidueMolarExtinction' or 'meanResidueMolarEllipticity'
+            'meanUnitMolarExtinction' or 'meanUnitMolarEllipticity'
         """
 
         self.units     = unitsBegin
 
         signalInAbsUnits = convert2absorbance(self.signalInput,
-            unitsBegin, self.concentration, self.pathLength, self.molecularWeight, self.numberOfResidues)
+            unitsBegin, self.concentration, self.pathLength, self.molecularWeight, self.numberOfCroms)
 
         self.signalAbs = signalInAbsUnits
           
@@ -123,7 +148,7 @@ class cd_experiment_general:
         """
         unitsEND should be: 
             'absorbance' milliabsorbance', 'molarExtinction', 'degrees', 'millidegrees', 'molarEllipticity',
-            'meanResidueMolarExtinction' or meanResidueMolarEllipticity
+            'meanUnitMolarExtinction' or meanUnitMolarEllipticity
 
         """
 
@@ -138,7 +163,7 @@ class cd_experiment_general:
         else:
 
             signalNew = absorbance2desiredUnits(self.signalAbs,
-                unitsEND, self.concentration, self.pathLength, self.molecularWeight, self.numberOfResidues)
+                unitsEND, self.concentration, self.pathLength, self.molecularWeight, self.numberOfCroms)
 
             self.signalDesiredUnit = signalNew
 
@@ -245,7 +270,7 @@ class cd_experiment_general:
 
         self.units = guess_input_units_from_metadata_dictionary(self.metadata)
 
-        self.numberOfResidues   = guess_parameter_from_metadata_dictionary(self.metadata,['number of residues','nres','aminoacids'])
+        self.numberOfCroms      = guess_parameter_from_metadata_dictionary(self.metadata,['chromophore','ncrom'])
         self.concentration      = guess_parameter_from_metadata_dictionary(self.metadata,['concentration','conc','mg'])
         self.pathLength         = guess_parameter_from_metadata_dictionary(self.metadata,['path length','path',' length'])
         self.molecularWeight    = guess_parameter_from_metadata_dictionary(self.metadata,['molecular weight','mw','dalton'])
@@ -263,9 +288,67 @@ class cd_experiment_general:
 
         return None
 
+    def init_and_check_helicity_method(self):
+
+        # Verify that we have the protein concentration, path length, number of chromophore units, and weight (if needed)
+
+        # To convert back the CD data to the current working units
+        self.currentUnits = self.desiredUnits
+
+        shouldStop1 = any([
+            self.numberOfCroms    == 0, self.concentration   == 0,
+            self.pathLength       == 0, self.molecularWeight == 0
+            ])
+
+        # Check that we actually need the parameters: protein concentration, path length, number of chromophores, and weight
+        shouldStop2 = self.units != 'meanUnitMolarEllipticity'
+
+        shouldStop3 = not np.any(np.logical_and(self.wavelength >= 221,self.wavelength <= 223))
+        
+        shouldStop = (shouldStop1 and shouldStop2) or shouldStop3 or self.numberOfCroms > 32 or self.numberOfCroms < 4 
+
+        return not shouldStop
+
+    def get_MRE_222nm(self):
+
+        self.MRE_222nm                  = []
+
+        self.experimentFromAbsorbanceUnits2otherUnits('meanUnitMolarEllipticity')
+
+        signal_temp     = self.signalDesiredUnit[ self.wavelength >= 221 ]
+        wavelength_temp = self.wavelength[        self.wavelength >= 221 ]
+
+        signal_temp     = signal_temp[wavelength_temp <= 223 ]
+        wavelength_temp = wavelength_temp[wavelength_temp <= 223 ]
+
+        # Sort in increasing order, in case that the data  was not loaded with the self.load_data() function
+        # Get the indices that would sort the wavelength vector
+        sorted_indices = np.argsort(wavelength_temp)
+
+        # Use the sorted_indices to rearrange the rows of the matrix and vector
+        signal_temp     = signal_temp[sorted_indices]
+        wavelength_temp = wavelength_temp[sorted_indices]
+
+        # Total CD spectra of this experiment
+        nSpectra = self.signalDesiredUnit.shape[1]
+
+        # Iterate over the columns 
+        for i in range(nSpectra):
+
+            # Interpolate 
+            Y = np.interp(222, wavelength_temp, signal_temp[:,i], left=None, right=None, period=None)
+
+            self.MRE_222nm.append(Y)
+
+        self.MRE_222nm                  = np.array(self.MRE_222nm)
+
+        self.experimentFromAbsorbanceUnits2otherUnits(self.currentUnits)
+
+        return None
+
     def init_and_check_secondary_str_method(self,lowerWL):
 
-        # Verify that we have the protein concentration, path length, number of aminoacids, and weight (if needed)
+        # Verify that we have the protein concentration, path length, number of chromophores, and weight (if needed)
         # Verify that the higher WL >= 240 nm and lower WL <= 190 nm
 
         self.secondary_structure_content = []
@@ -274,26 +357,23 @@ class cd_experiment_general:
         self.lowerWL_sec_str             = lowerWL
 
         self.currentUnits = self.desiredUnits
-        shouldChangeUnits = self.currentUnits != 'meanResidueMolarExtinction'
 
         shouldStop1 = any([
-            self.numberOfResidues == 0, self.concentration   == 0,
+            self.numberOfCroms    == 0, self.concentration   == 0,
             self.pathLength       == 0, self.molecularWeight == 0
             ])
 
-        # Check that we actually need the parameters: protein concentration, path length, number of aminoacids, and weight
-        shouldStop2 = self.units != 'meanResidueMolarExtinction'
+        # Check that we actually need the parameters: protein concentration, path length, number of chromophores, and weight
+        shouldStop2 = self.units != 'meanUnitMolarExtinction'
 
         shouldStop3 = any([
             np.max(self.wavelength) < 240, 
             np.min(self.wavelength) > 190
             ])
 
-        if (shouldStop1 and shouldStop2) or shouldStop3:
+        shouldStop = (shouldStop1 and shouldStop2) or shouldStop3
 
-            return False
-
-        return True
+        return not shouldStop
 
     def set_secondary_structure_method_references_default(self):
 
@@ -365,7 +445,7 @@ class cd_experiment_general:
         Run the Selcon3 algorithm to estimate the percentage of different secondary structure components
         '''
 
-        self.experimentFromAbsorbanceUnits2otherUnits('meanResidueMolarExtinction')
+        self.experimentFromAbsorbanceUnits2otherUnits('meanUnitMolarExtinction')
 
         # Do secondary structure fitting
         signal_temp     = self.signalDesiredUnit[ self.wavelength >= self.lowerWL_sec_str  ]
@@ -717,7 +797,6 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
         self.sds                   = None  # 2D (size n x z) np array, CD signal standard deviation (per wavelength) of each category
         #HW_Method self.standard_err          = None  # 2D (size n x z) np array, CD signal standard error     (per wavelength) of each category
 
-
         self.distance_matrix       = None  # 2D (size m x m) np array, containing the all versus all comparisons
         self.distances             = None  # list of lists containing the all versus all comparisons. One sublist per comparison
         self.comparison_labels     = None  # list containing the labels of the comparisons.   One element per comparison
@@ -751,7 +830,7 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
 
         self.lengths           = np.linalg.norm(self.signalDesiredUnitOri,axis=0)
         self.signalDesiredUnit = self.signalDesiredUnitOri / self.lengths
-        self.labels            = np.array(['L2 norm. ' + str(x) for x in self.labelsOri])
+        self.labels            = np.array(['Norm. ' + str(x) for x in self.labelsOri])
 
         return None
 
@@ -768,7 +847,9 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
         Obtain the average and standard deviation per unique label
         '''
 
-        self.labels_unique   = np.unique(self.labels)
+        u, ind = np.unique(self.labels, return_index=True)
+
+        self.labels_unique   = np.array(u[np.argsort(ind)])
         
         labels_unique_N = []
         means_by_label  = []
@@ -808,7 +889,6 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
 
         '''
         Create the comparison labels, for example, if we have the unique labels 'Treatment' and 'Control'
-
         Then, the 'comparison_labels' will be 'Treatment versus Treatment', 'Treatment versus Control' and 'Control versus Control'
         '''
 
@@ -843,53 +923,24 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
         
         for i,label1 in enumerate(self.labels_unique[:-1]):
 
-            for ii,label2 in enumerate(self.labels_unique[(i+1):]):
+                for ii,label2 in enumerate(self.labels_unique[(i+1):]):
 
-                difference_spectra.append(self.means[:,i] - self.means[:,(ii+i+1)])
-                difference_spectra_sd.append(np.sqrt(self.sds[:,i]**2          + self.sds[:,(ii+i+1)]**2))
-                
-                difference_spectra_lbl.append(label1 + ' - ' + label2)
+                    difference_spectra.append(self.means[:,i] - self.means[:,(ii+i+1)])
+                    difference_spectra_sd.append(np.sqrt(self.sds[:,i]**2          + self.sds[:,(ii+i+1)]**2))
+                    
+                    difference_spectra_lbl.append(label1 + ' - ' + label2)
 
-                # Uncomment the next lines to use test the method proposed by Hristova, Kalina, and William C. Wimley (2023). Plos one
-                #HW_Method difference_spectra_se.append(np.sqrt(self.standard_err[:,i]**2 + self.standard_err[:,(ii+i+1)]**2))
-                #HW_Method nsmall = np.min([self.labels_unique_N[i],self.labels_unique_N[i+ii+1]])
-                #HW_Method df     = nsmall*2 - 2
+                    # Uncomment the next lines to use test the method proposed by Hristova, Kalina, and William C. Wimley (2023). Plos one
+                    #HW_Method difference_spectra_se.append(np.sqrt(self.standard_err[:,i]**2 + self.standard_err[:,(ii+i+1)]**2))
+                    #HW_Method nsmall = np.min([self.labels_unique_N[i],self.labels_unique_N[i+ii+1]])
+                    #HW_Method df     = nsmall*2 - 2
 
-                #HW_Method difference_spectra_nsmall.append(nsmall)
-                #HW_Method difference_dfreedom.append(df)
+                    #HW_Method difference_spectra_nsmall.append(nsmall)
+                    #HW_Method difference_dfreedom.append(df)
 
         self.difference_spectra        =  np.array(difference_spectra).T 
         self.difference_spectra_sd     =  np.array(difference_spectra_sd).T
         self.difference_spectra_lbl    =  np.array(difference_spectra_lbl)
-        
-        ''' HW_Method lines
-
-        self.difference_spectra_se     =  np.array(difference_spectra_se).T
-        self.difference_spectra_abs    =  np.abs(self.difference_spectra)
-        self.difference_spectra_nsmall =  np.array(difference_spectra_nsmall)
-        self.difference_dfreedom       =  np.array(difference_dfreedom)
-
-        self.difference_t_value        = self.difference_spectra_abs / self.difference_spectra_se
-
-        difference_probabilities  = []
-        difference_chiSquares     = []
-
-        for i,df in enumerate(difference_dfreedom):
-
-            probabilities = 2 * (1 - t.cdf(abs(self.difference_t_value[:,i]), df))
-            chiSquare     = chi2.isf(probabilities, 1)
-
-            difference_probabilities.append(probabilities)
-            difference_chiSquares.append(chiSquare)
-
-        self.difference_probabilities = np.array(difference_probabilities).T
-        self.difference_chiSquares    = np.array(difference_chiSquares).T
-
-        difference_chiSquares_sum      = np.sum(self.difference_chiSquares,axis=0)
-        df_for_chiSq                   = self.difference_chiSquares.shape[0]
-
-        right_tailed_probability       = 1 - chi2.cdf(difference_chiSquares_sum, df_for_chiSq)
-        ''' 
 
         return None
 
@@ -907,34 +958,34 @@ class cd_experiment_comparison(cd_experiment_fitting_model):
                                 one array will have the distances of all the 'Treatment' spectra against the 'Control'   spectra, and
                                 one array will have the distances of all the 'Control'   spectra against the 'Control'   spectra.
 
-            self.distance_matrix - matrix of the normalised euclidean distance for all the spectra
+            self.distance_matrix - matrix of the euclidean distance for all the spectra
         '''
 
         n               = len(self.labels)
         distance_matrix = np.full((n, n), np.nan)
+        
+        n_columns = self.signalDesiredUnit.shape[1]
 
-        comparison_labels_lst = self.comparison_labels.tolist()
-
+        distance_matrix[n_columns-1,n_columns-1] = 0 # Fill the last element of the diagonal
         distances        = [ [] for x in self.comparison_labels]
 
-        for i in range(self.signalDesiredUnit.shape[1] - 1):
+        comparison_labels_lst = self.comparison_labels.tolist()
+ 
+        for i in range(n_columns - 1):
 
             distance_matrix[i,i] = 0 # Fill the diagonal
 
             label1 = self.labels[i]
 
-            for ii in range(i+1,self.signalDesiredUnit.shape[1]):
+            for ii in range(i+1,n_columns):
 
                 label2   = self.labels[ii]
                 match_id = comparison_labels_lst.index(label1 + ' versus ' + label2)
-
-                #distance = normalised_euclidean_distance(self.signalDesiredUnit[:,i],self.signalDesiredUnit[:,ii])
-                distance = np.linalg.norm(self.signalDesiredUnit[:,i] - self.signalDesiredUnit[:,ii])
-
+                distance = np.linalg.norm(self.signalDesiredUnit[:,i] - self.signalDesiredUnit[:,ii]) 
                 distances[match_id].append(distance)
-                
                 distance_matrix[i,ii] = distance
 
+           
         distances            = [ np.array(x) for x in distances]
         self.distances       = distances
         self.distance_matrix = distance_matrix
@@ -1326,7 +1377,6 @@ class cd_experiment_chemical_unfolding(cd_experiment_fitting_model):
         self.fractions  = chem_three_state_rev_unfolding_fractions(self.temperature,self.chem_concentration,M1,D50v1,M2,D50v2)
 
         return None
-
 class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
 
     def __init__(self):
@@ -1419,6 +1469,410 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
 
         return None
 
+    # Not used in production!
+    def fit_signal_three_domains(self,fitSlopeNative=False,fitSlopeUnfolded=False,T1_init=0,T2_init=0,T3_init=0): 
+
+        wavelengths = self.wavelength_useful
+        signal      = self.signal_useful
+    
+        # Initial parameters have to be in order: 
+            # Global melting temperature 1, Global enthalpy of unfolding 1, 
+            # Global melting temperature 2, Global enthalpy of unfolding 2, 
+            # Single intercepts folded, Single slopes folded, 
+            # Single intercepts unfolded, Single slopes unfolded
+
+        # Set initial parameters
+
+        listOfTemperatures = [self.temperature for _ in wavelengths]
+        listOfSignals      = signal.tolist()
+        totalDataSets      = len(listOfTemperatures)
+
+        bn1s   = np.repeat(0,len(self.wavelength_useful))
+
+        bn2s   = bn1s
+        bn3s   = bn1s
+        
+        bu1s   = bn1s
+        bu2s   = bn1s
+        bu3s   = bn1s
+
+        minT  = np.min(self.temperature)
+        maxT  = np.max(self.temperature)
+        meanT = np.median(self.temperature)
+
+        p0           = np.concatenate( ( ( minT+10,30,maxT-20,30,(minT+10 + maxT-20) / 2,30),bn1s,bu1s,bn2s,bu2s,bn3s,bu3s,self.kNs,self.kUs))
+
+        low_bound    =  [minT+4,8,minT+8,8,minT+15,8 ]    + [-10 for x in p0[6:]]
+        high_bound   =  [maxT-7,160,maxT-5,160,maxT,160]  + [10  for x in p0[6:]] 
+
+        if T1_init != 0:
+
+            p0[0], low_bound[0], high_bound[0] = T1_init, T1_init - 15, T1_init + 15
+
+        if T2_init != 0:
+
+            p0[2], low_bound[2], high_bound[2] = T2_init, T2_init - 15, T2_init + 15
+
+        if T3_init != 0:
+
+            p0[4], low_bound[4], high_bound[4] = T3_init, T3_init - 15, T3_init + 15
+
+        if not fitSlopeUnfolded:
+
+            p0, low_bound, high_bound = p0[:-totalDataSets], low_bound[:-totalDataSets], high_bound[:-totalDataSets]
+
+        if not fitSlopeNative:
+
+            l1 = (6+totalDataSets*6)
+            l2 = (6+totalDataSets*7)
+
+            indices_to_delete = [x for x in range(l1,l2)]
+
+            p0           = np.delete(p0, indices_to_delete) 
+            low_bound    = np.delete(low_bound, indices_to_delete) 
+            high_bound   = np.delete(high_bound, indices_to_delete)
+
+        global_fit_params, cov = fit_thermal_unfolding_threedomains_independent_unfolding(listOfTemperatures,listOfSignals,p0,
+            low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+        '''
+        diffMin = (global_fit_params - low_bound)[6:]
+        diffMax = (high_bound        - global_fit_params)[6:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+6] = low_bound[i+6] - 500
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+6] = high_bound[i+6] + 500
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_thermal_unfolding_threedomains_independent_unfolding(listOfTemperatures,listOfSignals,p0,
+                low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+        '''
+        errors                 = np.sqrt(np.diag(cov))
+
+        T1            = global_fit_params[0] # Temperature of melting
+        DH1           = global_fit_params[1] # Enthalpy of unfolding
+
+        T2            = global_fit_params[2] # Temperature of melting
+        DH2           = global_fit_params[3] # Enthalpy of unfolding
+
+        T3            = global_fit_params[4] # Temperature of melting
+        DH3           = global_fit_params[5] # Enthalpy of unfolding
+
+        interceptsFoldedDom1   = global_fit_params[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfoldedDom1 = global_fit_params[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsFoldedDom2   = global_fit_params[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsUnfoldedDom2 = global_fit_params[(6+totalDataSets*3):(6+totalDataSets*4)]
+        interceptsFoldedDom3   = global_fit_params[(6+totalDataSets*4):(6+totalDataSets*5)]
+        interceptsUnfoldedDom3 = global_fit_params[(6+totalDataSets*5):(6+totalDataSets*6)]
+
+        slopesFolded   = global_fit_params[(6+totalDataSets*6):(6+totalDataSets*7)] if fitSlopeNative   else np.full(len(interceptsFoldedDom1), 0)
+        slopesUnfolded = global_fit_params[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFoldedDom1), 0)
+
+        T1_error            = errors[0] # Temperature of melting
+        DH1_error           = errors[1] # Enthalpy of unfolding
+
+        T2_error            = errors[2] # Temperature of melting
+        DH2_error           = errors[3] # Enthalpy of unfolding
+
+        T3_error            = errors[4] # Temperature of melting
+        DH3_error           = errors[5] # Enthalpy of unfolding
+
+        interceptsFoldedDom1Err   = errors[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfoldedDom1Err = errors[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsFoldedDom2Err   = errors[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsUnfoldedDom2Err = errors[(6+totalDataSets*3):(6+totalDataSets*4)]
+        interceptsFoldedDom3Err   = errors[(6+totalDataSets*4):(6+totalDataSets*5)]
+        interceptsUnfoldedDom3Err = errors[(6+totalDataSets*5):(6+totalDataSets*6)]
+
+        slopesFoldedErr   = errors[(6+totalDataSets*6):(6+totalDataSets*7)] if fitSlopeNative   else np.full(len(interceptsFoldedDom1), np.nan)
+        slopesUnfoldedErr = errors[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFoldedDom1), np.nan)
+
+        predicted = []
+
+        # To be filled in this order - kN bN kU bU dHm Tm Condition
+        fit_params = []
+        fit_errors = []
+
+        # Fill the parameters dataframe
+        i = 0
+
+        for bn1,bn2,bn3,bu1,bu2,bu3,kn,ku in zip(interceptsFoldedDom1,interceptsFoldedDom2,interceptsFoldedDom3,
+            interceptsUnfoldedDom1,interceptsUnfoldedDom2,interceptsUnfoldedDom3,slopesFolded,slopesUnfolded):
+
+            Y = thermal_unfolding_threedomains_independent_unfolding(self.temperature,T1,DH1,T2,DH2,T3,DH3,bn1,bn2,bn3,bu1,bu2,bu3,kn,ku)
+            predicted.append(Y)
+
+            fit_params.append([bn1,bn2,bn3,bu1,bu2,bu3,kn,ku,DH1,T1,DH2,T2,DH3,T3, str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        # Fill the errors dataframe
+        i = 0
+
+        for bn1s_err,bn2s_err,bn3s_err,bu1s_err,bu2s_err,bu3s_err,kn_err,ku_err in zip(interceptsFoldedDom1Err,interceptsFoldedDom2Err,interceptsFoldedDom3Err,
+            interceptsUnfoldedDom1Err,interceptsUnfoldedDom2Err,interceptsUnfoldedDom3Err,slopesFoldedErr,slopesUnfoldedErr):
+
+            fit_errors.append([bn1s_err,bn2s_err,bn3s_err,bu1s_err,bu2s_err,bu3s_err,kn_err,ku_err,DH1_error,T1_error,DH2_error,T2_error,DH3_error,T3_error, 
+                str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        fit_params = np.array(fit_params)
+        fit_errors = np.array(fit_errors)
+
+        # Column names
+        column_names = ['bn1','bn2','bn3','bu1','bu2','bu3','kN','kU','DH1', 'T1','DH2', 'T2','DH3', 'T3', 'Condition']
+
+        # Convert the NumPy array to a Pandas DataFrame with column names
+        df_fit_params = pd.DataFrame(fit_params, columns=column_names)
+        df_fit_errors = pd.DataFrame(fit_errors, columns=column_names)
+
+        # Remove non necessary columns
+        if not fitSlopeNative:
+
+            df_fit_params = df_fit_params.drop('kN', axis=1)
+            df_fit_errors = df_fit_errors.drop('kN', axis=1)
+            column_names.remove('kN')
+
+        if not fitSlopeUnfolded:
+
+            df_fit_params = df_fit_params.drop('kU', axis=1)
+            df_fit_errors = df_fit_errors.drop('kU', axis=1)
+            column_names.remove('kU')
+
+        # Convert to numeric (all columns except 'Condition')
+        df_fit_params[ column_names[:-1] ] = df_fit_params[ column_names[:-1] ].apply(pd.to_numeric)
+        df_fit_errors[ column_names[:-1] ] = df_fit_errors[ column_names[:-1] ].apply(pd.to_numeric)
+
+        # Compute relative errors (in percentage)
+        for col in column_names[:-1]:
+
+            df_fit_errors[col] = ( df_fit_errors[col]  / df_fit_params[col] * 100 ).abs()
+
+        self.signal_predicted      = np.array(predicted)
+        self.fit_params            = df_fit_params
+        self.fit_rel_errors        = df_fit_errors
+
+        self.fractions             = four_state_rev_unfolding_fractions(self.temperature,DH1,DH2,DH3,T1,T2,T3)
+
+        return None
+    
+    # Not used in production!
+    def fit_signal_four_state(self,fitSlopeNative=False,fitSlopeUnfolded=False,T1_init=0,T2_init=0,T3_init=0): 
+
+        wavelengths = self.wavelength_useful
+        signal      = self.signal_useful
+    
+        # Initial parameters have to be in order: 
+            # Global melting temperature 1, Global enthalpy of unfolding 1, 
+            # Global melting temperature 2, Global enthalpy of unfolding 2, 
+            # Single intercepts folded, Single slopes folded, 
+            # Single intercepts unfolded, Single slopes unfolded
+
+        # Set initial parameters
+
+        listOfTemperatures = [self.temperature for _ in wavelengths]
+        listOfSignals      = signal.tolist()
+        totalDataSets      = len(listOfTemperatures)
+
+        bI1s   = (self.bNs + self.bUs) * 0.5
+        bI2s   = bI1s
+
+        minT  = np.min(self.temperature)
+        maxT  = np.max(self.temperature)
+        meanT = np.median(self.temperature)
+
+        p0           = np.concatenate( ( ( minT+10,10,maxT-20,10,(minT+10 + maxT-20) / 2,10),self.bNs,self.bUs,bI1s,bI2s,self.kNs,self.kUs))
+
+        low_bound    =  [minT+4,5,minT+8,5,minT+15,5 ]    + [x/100-100 if x>0 else 100*x-100  for x in p0[6:]]
+        high_bound   =  [maxT-7,200,maxT-5,200,maxT,200]  + [100*x+100 if x>0 else x/100+100  for x in p0[6:]] 
+
+        if T1_init != 0:
+
+            p0[0], low_bound[0], high_bound[0] = T1_init, T1_init - 15, T1_init + 15
+
+        if T2_init != 0:
+
+            p0[2], low_bound[2], high_bound[2] = T2_init, T2_init - 15, T2_init + 15
+
+        if T3_init != 0:
+
+            p0[4], low_bound[4], high_bound[4] = T3_init, T3_init - 15, T3_init + 15
+
+        if not fitSlopeUnfolded:
+
+            p0, low_bound, high_bound = p0[:-totalDataSets], low_bound[:-totalDataSets], high_bound[:-totalDataSets]
+
+        if not fitSlopeNative:
+
+            l1 = (6+totalDataSets*4)
+            l2 = (6+totalDataSets*5)
+
+            indices_to_delete = [x for x in range(l1,l2)]
+
+            p0           = np.delete(p0, indices_to_delete) 
+            low_bound    = np.delete(low_bound, indices_to_delete) 
+            high_bound   = np.delete(high_bound, indices_to_delete)
+
+        global_fit_params, cov = fit_thermal_unfolding_four_species(listOfTemperatures,listOfSignals,p0,
+            low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        ## Re fit the slopes and/or baselines if the fitted parameters are close to the boundaries
+
+        diffMin = (global_fit_params - low_bound)[6:]
+        diffMax = (high_bound        - global_fit_params)[6:]
+
+        cond1 = np.any(diffMin < 1)
+        cond2 = np.any(diffMax < 1)
+
+        if cond1:
+
+            for i,value in enumerate(diffMin):
+
+                if value < 1:
+
+                    low_bound[i+6] = low_bound[i+6] - 500
+
+        if cond2:
+
+            for i,value in enumerate(diffMax):
+
+                if value < 1:
+
+                    high_bound[i+6] = high_bound[i+6] + 500
+
+        if cond1 or cond2:
+
+            p0 = global_fit_params
+
+            global_fit_params, cov = fit_thermal_unfolding_four_species(listOfTemperatures,listOfSignals,p0,
+                low_bound,high_bound,fitSlopeNative,fitSlopeUnfolded)
+
+        errors                 = np.sqrt(np.diag(cov))
+
+        T1            = global_fit_params[0] # Temperature of melting
+        DH1           = global_fit_params[1] # Enthalpy of unfolding
+
+        T2            = global_fit_params[2] # Temperature of melting
+        DH2           = global_fit_params[3] # Enthalpy of unfolding
+
+        T3            = global_fit_params[4] # Temperature of melting
+        DH3           = global_fit_params[5] # Enthalpy of unfolding
+
+        interceptsFolded        = global_fit_params[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfolded      = global_fit_params[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsIntermediate1 = global_fit_params[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsIntermediate2 = global_fit_params[(6+totalDataSets*3):(6+totalDataSets*4)]
+
+        slopesFolded   = global_fit_params[(6+totalDataSets*4):(6+totalDataSets*5)] if fitSlopeNative   else np.full(len(interceptsFolded), 0)
+        slopesUnfolded = global_fit_params[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), 0)
+
+        T1_error            = errors[0] # Temperature of melting
+        DH1_error           = errors[1] # Enthalpy of unfolding
+
+        T2_error            = errors[2] # Temperature of melting
+        DH2_error           = errors[3] # Enthalpy of unfolding
+
+        T3_error            = errors[4] # Temperature of melting
+        DH3_error           = errors[5] # Enthalpy of unfolding
+
+        interceptsFoldedError    = errors[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfoldedError  = errors[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsInterm1Error   = errors[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsInterm2Error   = errors[(6+totalDataSets*3):(6+totalDataSets*4)]
+
+        slopesFoldedError   = errors[(6+totalDataSets*4):(6+totalDataSets*5)] if fitSlopeNative   else np.full(len(interceptsFolded), np.nan)
+        slopesUnfoldedError = errors[(len(global_fit_params)-totalDataSets):] if fitSlopeUnfolded else np.full(len(interceptsFolded), np.nan)
+
+        predicted = []
+
+        # To be filled in this order - kN bN kU bU dHm Tm Condition
+        fit_params = []
+        fit_errors = []
+
+        # Fill the parameters dataframe
+        i = 0
+
+        for bN, kN, bU, kU, bI1, bI2 in zip(interceptsFolded,slopesFolded,interceptsUnfolded,
+            slopesUnfolded,interceptsIntermediate1,interceptsIntermediate2):
+
+            Y = thermal_unfolding_one_curve_four_species(self.temperature,T1,DH1,T2,DH2,T3,DH3,bN,kN,bU,kU,bI1,bI2)
+            predicted.append(Y)
+
+            fit_params.append([kN,bN,kU,bU,bI1,bI2,DH1,T1,DH2,T2,DH3,T3, str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        # Fill the errors dataframe
+        i = 0
+
+        for bNe, kNe, bUe, kUe, bI1e, bI2e in zip(interceptsFoldedError,slopesFoldedError,interceptsUnfoldedError,
+            slopesUnfoldedError,interceptsInterm1Error,interceptsInterm2Error):
+
+            fit_errors.append([kNe,bNe,kUe,bUe,bI1e,bI2e,DH1_error,T1_error,DH2_error,T2_error,DH3_error,T3_error, 
+                str(wavelengths[i]) + '. Dataset: ' + self.name])
+
+            i +=1
+
+        fit_params = np.array(fit_params)
+        fit_errors = np.array(fit_errors)
+
+        # Column names
+        column_names = ['kN', 'bN', 'kU', 'bU','bI1','bI2','DH1', 'T1','DH2', 'T2','DH3', 'T3', 'Condition']
+
+        # Convert the NumPy array to a Pandas DataFrame with column names
+        df_fit_params = pd.DataFrame(fit_params, columns=column_names)
+        df_fit_errors = pd.DataFrame(fit_errors, columns=column_names)
+
+        # Remove non necessary columns
+        if not fitSlopeNative:
+
+            df_fit_params = df_fit_params.drop('kN', axis=1)
+            df_fit_errors = df_fit_errors.drop('kN', axis=1)
+            column_names.remove('kN')
+
+        if not fitSlopeUnfolded:
+
+            df_fit_params = df_fit_params.drop('kU', axis=1)
+            df_fit_errors = df_fit_errors.drop('kU', axis=1)
+            column_names.remove('kU')
+
+        # Convert to numeric (all columns except 'Condition')
+        df_fit_params[ column_names[:-1] ] = df_fit_params[ column_names[:-1] ].apply(pd.to_numeric)
+        df_fit_errors[ column_names[:-1] ] = df_fit_errors[ column_names[:-1] ].apply(pd.to_numeric)
+
+        # Compute relative errors (in percentage)
+        for col in column_names[:-1]:
+
+            df_fit_errors[col] = ( df_fit_errors[col]  / df_fit_params[col] * 100 ).abs()
+
+        self.signal_predicted      = np.array(predicted)
+        self.fit_params            = df_fit_params
+        self.fit_rel_errors        = df_fit_errors
+
+        self.fractions             = four_state_rev_unfolding_fractions(self.temperature,DH1,DH2,DH3,T1,T2,T3)
+
+        return None
+
     def fit_signal_three_state(self,fitSlopeNative=False,fitSlopeUnfolded=False,T1_init=0,T2_init=0): 
 
         wavelengths = self.wavelength_useful
@@ -1436,7 +1890,7 @@ class cd_experiment_thermal_ramp(cd_experiment_fitting_model):
         listOfSignals      = signal.tolist()
         totalDataSets      = len(listOfTemperatures)
 
-        bIs   = (self.bNs + self.kUs) * 0.5
+        bIs   = (self.bNs + self.bUs) * 0.5
 
         minT  = np.min(self.temperature)
         maxT  = np.max(self.temperature)
@@ -2265,8 +2719,6 @@ class cdAnalyzer:
 
         """
         experimentName must be in self.experimentNames
-        variable can be 'replicates', 'reads', or 'scans'
-        value is a number
         """
 
         setattr(self.experimentsOri[experimentName], variable, value)
@@ -2276,17 +2728,9 @@ class cdAnalyzer:
 
     def getExperimentProperties(self,variable):
 
-        """
-        variable can be 'replicates', 'reads', or 'scans'
-        """
-
         return [getattr(self.experimentsOri[experimentName], variable) for experimentName in self.experimentNames]
 
     def getExperimentPropertiesModif(self,variable):
-
-        """
-        variable can be 'replicates', 'reads', or 'scans'
-        """
 
         return [getattr(self.experimentsModif[experimentName], variable) for experimentName in self.experimentNames]
 
@@ -2325,9 +2769,3 @@ class cdAnalyzer:
 
         return None
 
-
-if False:
-    
-    t1 = cd_experiment_comparison()
-    t1.load_data('/home/os/Downloads/zero_new.csv','t')
-    t1.signalDesiredUnit = t1.signalInput

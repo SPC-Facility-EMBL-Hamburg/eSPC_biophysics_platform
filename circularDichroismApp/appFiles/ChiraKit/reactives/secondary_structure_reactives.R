@@ -31,7 +31,6 @@ observeEvent(input$matrixC,{
   
 })
 
-
 # End of Reactives to process user reference sets
 
 observeEvent(input$runSecStrEstimation,{
@@ -105,7 +104,7 @@ observeEvent(input$runSecStrEstimation,{
       
       check <- cdAnalyzer$experimentsOri[[exp]]$init_and_check_secondary_str_method(input$lower_wl_secStr)
       
-      if (!check) return(NULL)
+      if (!check) next
       
       if (input$useDefaultReferenceSet) {
         cdAnalyzer$experimentsOri[[exp]]$set_secondary_structure_method_references_default()
@@ -172,7 +171,6 @@ observeEvent(input$runSecStrEstimation,{
         list_of_fittings <- append(list_of_fittings,list(cdAnalyzer$experimentsOri[[exp]]$fitted_spectra_sec_str))
         
       }
-      
     }
     
     if (includePlot) {
@@ -192,11 +190,8 @@ observeEvent(input$runSecStrEstimation,{
         return(fig)
         
       })
-      
     }
-
   })
-  
 })
 
 observeEvent(input$pdbFiles,{

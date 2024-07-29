@@ -136,7 +136,7 @@ replace0valuesWithNAs <- function(vector) {
 }
 
 # Generate the DT table (user editable) with the experiments information about
-# molecular, path length, number of amino acids, etc. 
+# molecular, path length, number of chromophore units, etc. 
 # This table is shown in the Tab 1. Load Input
 # Requires:
 #   - cdAnalyzer, a python object used to handle CD data 
@@ -154,7 +154,7 @@ generateDTtable <- function(cdAnalyzer) {
     molWeights       <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight')))
     pathLengths      <- (unlist(cdAnalyzer$getExperimentProperties('pathLength')))*10
     concs            <- (unlist(cdAnalyzer$getExperimentProperties('concentration')))
-    numberOfResidues <- (unlist(cdAnalyzer$getExperimentProperties('numberOfResidues')))
+    numberOfCroms <- (unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')))
     
     iUnits           <- unlist(cdAnalyzer$getExperimentProperties('units'))
     
@@ -163,7 +163,7 @@ generateDTtable <- function(cdAnalyzer) {
     molWeights          <- molWeights[trueExperiments]
     pathLengths         <- pathLengths[trueExperiments]
     concs               <- concs[trueExperiments]
-    numberOfResidues    <- numberOfResidues[trueExperiments]
+    numberOfCroms       <- numberOfCroms[trueExperiments]
     iUnits              <- iUnits[trueExperiments]
     currentN            <- length(exps)
     
@@ -172,11 +172,11 @@ generateDTtable <- function(cdAnalyzer) {
                                choices = getChoices(iUnits[i]), selectize=FALSE))
     })
     
-    df   <- data.frame(exps,molWeights,numberOfResidues,concs,inputUnits,pathLengths) 
+    df   <- data.frame(exps,molWeights,numberOfCroms,concs,inputUnits,pathLengths) 
     
   }
 
-  colnames(df) <- c('File name',"Mol. weight (Dalton)","#Residues (for proteins only)","Conc. (mg/ml)",
+  colnames(df) <- c('File name',"Mol. weight (Dalton)","#Chromophore units","Conc. (mg/ml)",
                     "Input units","Path length (mm)")
   
   return(df)
@@ -404,7 +404,7 @@ generateDTtableProcessing <- function(cdAnalyzer,
   } else if (operation == 'Zero') {
     possibleSpectra2choices <- c(3,5,10,20,40)
   } else if (operation == 'Smooth') {
-    possibleSpectra2choices <- c(6,8,10)
+    possibleSpectra2choices <- c(3,6,8,10)
   } else {
     possibleSpectra2choices <- c(internal.IDs)
   }
@@ -609,7 +609,7 @@ full_join_df_lst <- function(dfs,by_column = 'wavelength') {
 
 ## Find experiments where the 'signalDesiredUnit' matrix units do not match the selected working units
 ## In other words, experiments of the type 'fakeExperiment' which were created by preprocessing spectra
-## using (mean residue) molar extinction / ellipticity as units
+## using (mean unit) molar extinction / ellipticity as units
 
 ## Input
 ##  - cdAnalyzer, python object to handle CD data
@@ -660,7 +660,7 @@ df_to_lines <- function(df) {
 ## Add custom comments to the exported file
 df_usual_comments <- function(workingUnits,
                               concentration_vector,pathLength_vector,
-                              molWeight_vector,nResidues_vector) {
+                              molWeight_vector,nPepBond_vector) {
   
   # Convert to a nice format
   workingUnits <- workingUnits2ProperLabel(workingUnits)
@@ -674,13 +674,13 @@ df_usual_comments <- function(workingUnits,
                               '#Sample concentration (mg/ml) :',
                               '#Path length (cm) :',
                               '#Molecular weight (Da) :',
-                              '#Number of residues (for protein samples) :',
+                              '#Number of chromophore units :',
                               '#Wavelength units :'),48)
   
   if (length(unique(concentration_vector)) == 1) concentration_vector  <- concentration_vector[1]
   if (length(unique(pathLength_vector))    == 1) pathLength_vector     <- pathLength_vector[1]
   if (length(unique(molWeight_vector))     == 1) molWeight_vector      <- molWeight_vector[1]
-  if (length(unique(nResidues_vector))     == 1) nResidues_vector      <- nResidues_vector[1]
+  if (length(unique(nPepBond_vector))     == 1)  nPepBond_vector       <- nPepBond_vector[1]
   
   commentsRight <- c('Exported with ChiraKit',
                      format(Sys.time(),usetz = TRUE),
@@ -688,7 +688,7 @@ df_usual_comments <- function(workingUnits,
                      paste0(concentration_vector,collapse = ' '),
                      paste0(pathLength_vector,collapse = ' '),
                      paste0(molWeight_vector,collapse = ' '),
-                     paste0(nResidues_vector,collapse = ' '),
+                     paste0(nPepBond_vector,collapse = ' '),
                      'nanometers (nm)')
 
   

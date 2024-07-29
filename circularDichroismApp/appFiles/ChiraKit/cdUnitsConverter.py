@@ -49,25 +49,20 @@ def molarEllipticity2absorbance(molarEllipticity,concentration,pathLength,molecu
 
 ## General function to convert between different units
 
-def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWeight=50,numberOfResidues=1):
+def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWeight=50,numberOfCroms=1):
 
 	"""
 
 	Based on https://www.chem.uci.edu/~dmitryf/manuals/Fundamentals/CD%20practical%20guide.pdf
 	
-	If the sample is a protein, the mean residual
-	weight (average molecular weight of the amino
-	acids it contains) is used in place of the molecular
-	weight, essentially treating the protein as a
-	solution of amino acids.
 
 	"""
 
-	if unitsBegin in ['meanResidueMolarExtinction','meanResidueMolarEllipticity']:
+	if unitsBegin in ['meanUnitMolarExtinction','meanUnitMolarEllipticity']:
 
 		try: 
-			molecularWeight = molecularWeight / numberOfResidues  
-			unitsBegin      = unitsBegin.replace("meanResidueM", "m")
+			molecularWeight = molecularWeight / numberOfCroms  
+			unitsBegin      = unitsBegin.replace("meanUnitM", "m")
 
 		except:
 
@@ -89,13 +84,13 @@ def convert2absorbance(value,unitsBegin,concentration=1,pathLength=1,molecularWe
 
 	return functions[unitsBegin](value,concentration,pathLength,molecularWeight)
 
-def absorbance2desiredUnits(value,unitsEnd,concentration=1,pathLength=1,molecularWeight=50,numberOfResidues=1):
+def absorbance2desiredUnits(value,unitsEnd,concentration=1,pathLength=1,molecularWeight=50,numberOfCroms=1):
 
-	if unitsEnd in ['meanResidueMolarExtinction','meanResidueMolarEllipticity']:
+	if unitsEnd in ['meanUnitMolarExtinction','meanUnitMolarEllipticity']:
 
 		try: 
-			molecularWeight = molecularWeight / numberOfResidues  
-			unitsEnd        = unitsEnd.replace("meanResidueM", "m")
+			molecularWeight = molecularWeight / numberOfCroms  
+			unitsEnd        = unitsEnd.replace("meanUnitM", "m")
 
 		except:
 

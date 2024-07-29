@@ -15,6 +15,12 @@ fitThermalExperiment <- function(exp) {
       input$T1_init,input$T2_init)
   }
   
+  if (input$thermal_unfolding_model == 'fourState') {
+    cdAnalyzer$experimentsThermal[[exp]]$fit_signal_four_state(
+      input$fitSlopeNative,input$fitSlopeUnfolded,
+      input$T1_init,input$T2_init)
+  }
+  
   return(NULL)
 }
 

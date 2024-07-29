@@ -19,7 +19,6 @@ def temperature_to_kelvin(T):
 
     return(T)
 
-
 # not used in the app
 def compute_bootstrap_regression_slope(x_data,y_data,num_bootstrap_samples=60):
 
@@ -610,6 +609,166 @@ def fit_thermal_unfolding(listOfTemperatures,listOfSignals,initialParameters,
 
     return global_fit_params, cov
 
+def get_fractions_threedomains_independent_unfolding(T,dh1,t1,dh2,t2,dh3,t3):
+
+    T  = temperature_to_kelvin(T)
+    t1 = temperature_to_kelvin(t1)
+    t2 = temperature_to_kelvin(t2)
+    t3 = temperature_to_kelvin(t3)
+
+    dg1 = dh1*(1 - T/t1)
+    dg2 = dh2*(1 - T/t2)
+    dg3 = dh3*(1 - T/t3)
+
+    k1 = np.exp(-dg1/(R_gas*T))
+    k2 = np.exp(-dg2/(R_gas*T))
+    k3 = np.exp(-dg3/(R_gas*T))
+    
+    den = (1 + k1 + k2 + k3 + k1*k2 + k1*k3 + k2*k3 + k1*k2*k3) 
+    
+    fractionN   = 1        /  den
+    
+    fractionU1  = k1       /  den
+    fractionU2  = k2       /  den
+    fractionU3  = k3       /  den
+
+    fractionU12 = k1*k2    /  den
+    fractionU13 = k1*k3    /  den
+    fractionU23 = k2*k3    /  den
+
+    fractionU   = k1*k2*k3 /  den
+    
+    return fractionN, fractionU1, fractionU2, fractionU3, fractionU12, fractionU13, fractionU23, fractionU    
+
+def thermal_unfolding_threedomains_independent_unfolding(T,dh1,t1,dh2,t2,dh3,t3,bn1,bn2,bn3,bu1,bu2,bu3,kn,ku):
+
+    frN, frU1, frU2, frU3, frU12, frU13, frU23, frU = get_fractions_threedomains_independent_unfolding(T,dh1,t1,dh2,t2,dh3,t3)
+
+    signalN = ( bn1+bn2+bn3 + kn*T) * frN
+    signalU = ( bu1+bu2+bu3 + ku*T) * frU
+
+    signalU1  = (bu1+bn2+bn3 ) * frU1
+    signalU2  = (bn1+bu2+bn3 ) * frU2
+    signalU3  = (bn1+bn2+bu3 ) * frU3
+
+    signalU12 = (bu1+bu2+bn3 ) * frU12
+    signalU13 = (bu1+bn2+bu3 ) * frU13
+    signalU23 = (bn1+bu2+bu3 ) * frU23
+
+    signal =  signalN   + signalU1  + signalU2  + signalU3 
+    signal += signalU12 + signalU13 + signalU23 + signalU 
+    
+    return signal
+
+def fit_thermal_unfolding_threedomains_independent_unfolding(listOfTemperatures,listOfSignals,initialParameters,
+    lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded):
+
+    '''
+    Fit the thermal unfolding profile of many curves at the same time
+    Useful function to do global fitting of local and global parameters
+
+    We use a multidomain independent unfolding model: 
+
+    Requires:
+
+        - The 'listOfTemperatures' (one per dataset)
+        - The 'listOfSignals'      (one per dataset)
+
+    Returns:
+
+        The fitting of the melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+            slopes and intercept of the folded and unfolded states
+
+    '''
+
+    # We need 1D arrays for numpy
+    try:
+        allSignal       = np.concatenate(listOfSignals)
+    except:
+        allSignal       = listOfSignals
+    
+    def thermal_unfolding(dummyVariable,*args):
+
+        '''
+        Calculate the thermal unfolding profile of many curves at the same time
+
+        Requires:
+
+            - The 'listOfTemperatures' containing each of them a single dataset
+
+        The other arguments have to be in the following order:
+
+            - Global melting temperature   for the first transition   
+            - Global enthalpy of unfolding for the first transition
+            - Global melting temperature   for the second transition   
+            - Global enthalpy of unfolding for the second transition
+            - Single intercepts, folded domain 1
+            - Single intercepts, unfolded domain 1
+            - Single intercepts, folded domain 2
+            - Single intercepts, unfolded domain 2
+            - Single intercepts, folded domain 3
+            - Single intercepts, unfolded domain 3
+
+            - Single slopes,     folded
+            - Single slopes,     unfolded
+
+        Returns:
+
+            The melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+                slopes and intercept of the folded, intermediate and unfolded states
+
+        '''
+
+        totalDataSets = len(listOfTemperatures)
+
+        T1            = args[0] # Temperature of melting, first transition     
+        DH1           = args[1] # Enthalpy of unfolding, first transition      
+        T2            = args[2] # Temperature of melting, second transition    
+        DH2           = args[3] # Enthalpy of unfolding, second transition     
+        T3            = args[4] # Temperature of melting, third transition    
+        DH3           = args[5] # Enthalpy of unfolding, third transition     
+        
+        interceptsFoldedDom1   = args[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfoldedDom1 = args[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsFoldedDom2   = args[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsUnfoldedDom2 = args[(6+totalDataSets*3):(6+totalDataSets*4)]
+        interceptsFoldedDom3   = args[(6+totalDataSets*4):(6+totalDataSets*5)]
+        interceptsUnfoldedDom3 = args[(6+totalDataSets*5):(6+totalDataSets*6)]
+
+        kN, kU = 0, 0
+        
+        if fitSlopeNative:
+
+            slopesFolded   = args[(6+totalDataSets*6):(6+totalDataSets*7)]
+
+        if fitSlopeUnfolded:
+
+            slopesUnfolded = args[(len(args)-totalDataSets):]
+
+        signal = []
+
+        for i,T in enumerate(listOfTemperatures):
+
+            bN1, bN2, bN3 = interceptsFoldedDom1[i],   interceptsFoldedDom2[i],   interceptsFoldedDom3[i]
+            bU1, bU2, bU3 = interceptsUnfoldedDom1[i], interceptsUnfoldedDom2[i], interceptsUnfoldedDom3[i]
+
+            if fitSlopeNative:
+                kN = slopesFolded[i]
+            
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
+
+            Y = thermal_unfolding_threedomains_independent_unfolding(T,DH1,T1,DH2,T2,DH3,T3,bN1,bN2,bN3,bU1,bU2,bU3,kN,kU)
+
+            signal.append(Y)
+
+        return np.array(signal).flatten()
+
+    global_fit_params, cov = curve_fit(thermal_unfolding,1,allSignal,
+        p0=initialParameters,bounds=(lowBounds, highBounds))
+
+    return global_fit_params, cov 
+
 def thermal_unfolding_one_curve_three_species(T,T1,DH1,T2,DH2,bN,kN,bU,kU,bI):
 
     """
@@ -730,6 +889,155 @@ def fit_thermal_unfolding_three_species(listOfTemperatures,listOfSignals,initial
                 kU = slopesUnfolded[i]
 
             Y = thermal_unfolding_one_curve_three_species(T,T1,DH1,T2,DH2,bN,kN,bU,kU,bI)
+            signal.append(Y)
+
+        return np.array(signal).flatten()
+
+    global_fit_params, cov = curve_fit(thermal_unfolding,1,allSignal,
+        p0=initialParameters,bounds=(lowBounds, highBounds))
+
+    return global_fit_params, cov
+
+def thermal_unfolding_one_curve_four_species(T,T1,DH1,T2,DH2,T3,DH3,bN,kN,bU,kU,bI1,bI2):
+
+    """
+    Three states reversible unfolding
+    N <-> I1 <-> I2 <-> U
+    We assume a heat capacity of unfolding equal to zero.
+    """
+
+    T  = temperature_to_kelvin(T)
+    T1 = temperature_to_kelvin(T1)
+    T2 = temperature_to_kelvin(T2)
+    T3 = temperature_to_kelvin(T2)
+
+    dg1 = DH1*(1 - T/T1)
+    dg2 = DH2*(1 - T/T2)
+    dg3 = DH3*(1 - T/T3)
+
+    K1 = np.exp(-dg1/(R_gas*T))
+    K2 = np.exp(-dg2/(R_gas*T))
+    K3 = np.exp(-dg3/(R_gas*T))
+    
+    K12  = K1*K2
+    K23  = K2*K3
+    K123 = K1*K23
+
+    fraction_u  = 1 / (1 + 1/K123 + 1/K23 + 1/K3)
+    fraction_i2 = 1 / (1 + K3     + 1/K2  + 1/K12)
+    fraction_i1 = 1 / (1 + K23    + K2    + 1/K1)
+    fraction_f  = 1 / (1 + K123   + K12   + K1)
+    
+    signal_u    = (kU  * T + bU) * fraction_u
+    signal_i    =  bI1           * fraction_i1
+    signal_i2   =  bI2           * fraction_i2
+    signal_f    = (kN  * T + bN) * fraction_f
+    
+    signal      =  signal_u + signal_i + signal_i2 + signal_f
+
+    return signal
+
+def fit_thermal_unfolding_four_species(listOfTemperatures,listOfSignals,initialParameters,
+    lowBounds,highBounds,fitSlopeNative,fitSlopeUnfolded):
+
+    '''
+    Fit the thermal unfolding profile of many curves at the same time
+    Useful function to do global fitting of local and global parameters
+
+    We use a three species model with two reversible equilibria:  N <-> I1 <-> I2 <-> U
+
+    Requires:
+
+        - The 'listOfTemperatures' (one per dataset)
+        - The 'listOfSignals'      (one per dataset)
+
+    Returns:
+
+        The fitting of the melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+            slopes and intercept of the folded and unfolded states
+
+    '''
+
+    # We need 1D arrays for numpy
+    try:
+        allSignal       = np.concatenate(listOfSignals)
+    except:
+        allSignal       = listOfSignals
+    
+    def thermal_unfolding(dummyVariable,*args):
+
+        '''
+        Calculate the thermal unfolding profile of many curves at the same time
+
+        Requires:
+
+            - The 'listOfTemperatures' containing each of them a single dataset
+
+        The other arguments have to be in the following order:
+
+            - Global melting temperature   for the first transition   
+            - Global enthalpy of unfolding for the first transition
+            - Global melting temperature   for the second transition   
+            - Global enthalpy of unfolding for the second transition
+            - Single intercepts, folded
+            - Single intercepts, unfolded
+            - Single intercepts, intermediate
+
+            - Single slopes,     folded
+            - Single slopes,     unfolded
+
+        Returns:
+
+            The melting curves based on the parameters Temperature of melting, enthalpy of unfolding,
+                slopes and intercept of the folded, intermediate and unfolded states
+
+        '''
+
+        totalDataSets = len(listOfTemperatures)
+        T1            = args[0] # Temperature of melting, first transition     ([N] = [I1]) DG1 = 0
+        DH1           = args[1] # Enthalpy of unfolding, first transition      ([N] = [I1])
+        T2            = args[2] # Temperature of melting, second transition    ([I1] = [I2]) DG2 = 0
+        DH2           = args[3] # Enthalpy of unfolding, second transition     ([I1] = [I2])
+        T3            = args[4] # Temperature of melting, third transition    ([I2] = [U]) DG2 = 0
+        DH3           = args[5] # Enthalpy of unfolding, third transition     ([I2] = [U])
+        
+        if T2 < T1:
+
+            return allSignal*1e5
+
+        if T3 < T2:
+
+            return allSignal*1e5
+
+        interceptsFolded        = args[(6+totalDataSets*0):(6+totalDataSets*1)]
+        interceptsUnfolded      = args[(6+totalDataSets*1):(6+totalDataSets*2)]
+        interceptsIntermediate1 = args[(6+totalDataSets*2):(6+totalDataSets*3)]
+        interceptsIntermediate2 = args[(6+totalDataSets*3):(6+totalDataSets*4)]
+
+        kN, kU = 0, 0
+        
+        if fitSlopeNative:
+
+            slopesFolded   = args[(6+totalDataSets*4):(6+totalDataSets*5)]
+
+        if fitSlopeUnfolded:
+
+            slopesUnfolded = args[(len(args)-totalDataSets):]
+
+        signal = []
+
+        for i,T in enumerate(listOfTemperatures):
+
+            bN, bU, bI1, bI2 = interceptsFolded[i], interceptsUnfolded[i], interceptsIntermediate1[i], interceptsIntermediate2[i]
+            
+            if fitSlopeNative:
+                kN = slopesFolded[i]
+            
+            if fitSlopeUnfolded:
+                kU = slopesUnfolded[i]
+
+            Y = thermal_unfolding_one_curve_four_species(T,T1,DH1,T2,DH2,T3,DH3,bN,kN,bU,kU,bI1,bI2)
+
             signal.append(Y)
 
         return np.array(signal).flatten()
@@ -1140,6 +1448,56 @@ def three_state_rev_unfolding_fractions(T,DH1,DH2,T1,T2):
     xU = A*B /  den
 
     return {'Native':xN, 'Intermediate':xI, 'Unfolded':xU}
+
+def four_state_rev_unfolding_fractions(T,DH1,DH2,DH3,T1,T2,T3):
+
+    '''
+    Compute the folded, intermediate1, intermediate2 and unfolded fraction for a system with
+    three reversible equilibria, thermal unfolding
+
+    F <-> I1 <-> I2 <-> U
+    
+    K1 = [I1] / [F] 
+    K2 = [I2] / [I1]
+    K3 = [U]  / [I2] 
+
+
+    Input:
+
+        Parameter name  Detail                                      Units
+        - 'T'           temperature                                 in celsius or kelvin
+        - 'DH1'         enthalpy of DG1                             in kcal/mol    
+        - 'T1'          temperature where  DG1 equals zero          in celsius or kelvin
+        - 'DH2'         enthalpy of DG2                             in kcal/mol    
+        - 'T2'          temperature where  DG2 equals zero          in celsius or kelvin
+        - 'DH3'         enthalpy of DG3                             in kcal/mol    
+        - 'T3'          temperature where  DG3 equals zero          in celsius or kelvin
+    '''
+
+    T  = temperature_to_kelvin(T)
+    T1 = temperature_to_kelvin(T1)
+    T2 = temperature_to_kelvin(T2)
+    T3 = temperature_to_kelvin(T3)
+
+        
+    dg1 = DH1*(1 - T/T1)
+    dg2 = DH2*(1 - T/T2)
+    dg3 = DH3*(1 - T/T3)
+
+    K1 = np.exp(-dg1/(R_gas*T))
+    K2 = np.exp(-dg2/(R_gas*T))
+    K3 = np.exp(-dg3/(R_gas*T))
+    
+    K12  = K1*K2
+    K23  = K2*K3
+    K123 = K1*K23
+
+    fraction_u  = 1 / (1 + 1/K123 + 1/K23 + 1/K3)
+    fraction_i2 = 1 / (1 + K3     + 1/K2  + 1/K12)
+    fraction_i1 = 1 / (1 + K23    + K2    + 1/K1)
+    fraction_f  = 1 / (1 + K123   + K12   + K1)
+    
+    return {'Native':fraction_f, 'Intermediate1':fraction_i1, 'Intermediate2':fraction_i2, 'Unfolded':fraction_u}
 
 def chem_two_state_rev_unfolding_fractions(T,D,M,D50):
 

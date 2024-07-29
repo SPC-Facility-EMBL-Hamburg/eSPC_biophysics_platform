@@ -12,7 +12,7 @@ output$download_cd_data_row_wise        <-   downloadHandler(
     concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep])
     pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep])
     molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep])
-    nResidues      <- unlist(cdAnalyzer$getExperimentProperties('numberOfResidues')[id_to_keep])
+    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {
@@ -30,7 +30,7 @@ output$download_cd_data_row_wise        <-   downloadHandler(
     colnames(df) <- c('wavelength','Sample_name',input$workingUnits)
     
     header_lines <- df_usual_comments(input$workingUnits,concentration,
-                                      pathLength,molWeight,nResidues)
+                                      pathLength,molWeight,numberOfCroms)
     
     data_lines   <- df_to_lines(df)
     
@@ -53,7 +53,7 @@ output$download_cd_data_col_wise        <-   downloadHandler(
     concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep])
     pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep])
     molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep])
-    nResidues      <- unlist(cdAnalyzer$getExperimentProperties('numberOfResidues')[id_to_keep])
+    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {
@@ -68,7 +68,7 @@ output$download_cd_data_col_wise        <-   downloadHandler(
     df <- df[order(df$wavelength),]
     
     header_lines <- df_usual_comments(input$workingUnits,concentration,
-                                      pathLength,molWeight,nResidues)
+                                      pathLength,molWeight,numberOfCroms)
     
     data_lines   <- df_to_lines(df)
     lines        <- c(header_lines,data_lines)
@@ -91,7 +91,7 @@ output$download_generated_cd_data_row_wise        <-   downloadHandler(
     concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep][isGenerated])
     pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep][isGenerated])
     molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep][isGenerated])
-    nResidues      <- unlist(cdAnalyzer$getExperimentProperties('numberOfResidues')[id_to_keep][isGenerated])
+    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep][isGenerated])
     
     dfs <- list()
 
@@ -110,7 +110,7 @@ output$download_generated_cd_data_row_wise        <-   downloadHandler(
     colnames(df) <- c('wavelength','Sample_name',input$workingUnits)
     
     header_lines <- df_usual_comments(input$workingUnits,concentration,
-                                      pathLength,molWeight,nResidues)
+                                      pathLength,molWeight,numberOfCroms)
     
     data_lines   <- df_to_lines(df)
     lines        <- c(header_lines,data_lines)
@@ -133,7 +133,7 @@ output$download_generated_cd_data_col_wise        <-   downloadHandler(
     concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep][isGenerated])
     pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep][isGenerated])
     molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep][isGenerated])
-    nResidues      <- unlist(cdAnalyzer$getExperimentProperties('numberOfResidues')[id_to_keep][isGenerated])
+    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep][isGenerated])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {
@@ -148,7 +148,7 @@ output$download_generated_cd_data_col_wise        <-   downloadHandler(
     df <- df[order(df$wavelength),]
 
     header_lines <- df_usual_comments(input$workingUnits,concentration,
-                                      pathLength,molWeight,nResidues)
+                                      pathLength,molWeight,numberOfCroms)
     
     data_lines   <- df_to_lines(df)
     lines        <- c(header_lines,data_lines)
@@ -208,14 +208,14 @@ output$download_selected_cd_exp        <-   downloadHandler(
     # Replace the html like <sup> tag with the character '^' 
     workingUnits <- clean_html_sup_tag(workingUnits)
 
-    # Path length, molecular weight, concentration and number of residues
+    # Path length, molecular weight, concentration and number of chromophores
     parametersValue <- c(paste0(pyObject$temperature,collapse = ' '), 
-                         pyObject$concentration, pyObject$numberOfResidues , 
+                         pyObject$concentration, pyObject$numberOfCroms , 
                          pyObject$pathLength, pyObject$molecularWeight,
                          workingUnits)
     
     parametersInfo <- c('Temperature (°C)','Concentration (mg/ml)',
-                        'Number of residues (for protein samples)',
+                        'number of chromophore units',
                         'Path length (cm)','Molecular weight (Dalton)',
                         'Units of the CD signal')
     

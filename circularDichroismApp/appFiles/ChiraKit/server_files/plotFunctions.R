@@ -785,7 +785,7 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
             tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
   
-  y <- list(title = workingUnits2ProperLabel('meanResidueMolarExtinction'),
+  y <- list(title = workingUnits2ProperLabel('meanUnitMolarExtinction'),
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
@@ -868,5 +868,26 @@ plot_unfolding_fractions <- function(unfolding_fractions,
   return( fig )
 }
 
+plot_helicity <- function(x,y,color) {
+  
+  fig <- plot_ly(x = ~x, y = ~y, color = ~color,
+                 type = 'scatter', mode = 'markers') %>%
+    layout(
+      xaxis = list(
+        title = 'Temperature °C',
+        tickfont = list(size  = 18),
+        titlefont = list(size = 18)  # Set font size for x-axis label
+      ),
+      yaxis = list(
+        title = 'Helicity fraction',
+        range = c(0, 1),
+        tickfont = list(size  = 18),
+        titlefont = list(size = 18)  # Set font size for y-axis label
+      )
+    )
+  
+  return(fig)
+  
+}
 
 

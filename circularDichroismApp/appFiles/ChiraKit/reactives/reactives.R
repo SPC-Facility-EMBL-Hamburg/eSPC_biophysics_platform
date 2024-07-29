@@ -258,7 +258,7 @@ observeEvent(input$automaticProcess,{
     selectInput("workingUnitsAutomatic", 'Desired units of the final spectrum',
                 global_cd_units_choice),
     checkboxInput('zeroFinalSpectrum',
-    'Subtract the average signal of the last 
+    'Subtract the average signal of the highest 
     10 nm wavelength interval from the final CD spectrum?',
     FALSE),
     
@@ -271,13 +271,13 @@ observeEvent(input$automaticProcess,{
 })
 
 # Modal dialog to ask for the molecular weight, concentration, path length, and
-# number of residues, if required.
+# number of chromophore units, if required.
 observeEvent(input$submitUnits, {
   
   removeModal()
   
   c1 <- grepl('molar'  , input$workingUnitsAutomatic, ignore.case = TRUE)
-  c2 <- grepl('residue', input$workingUnitsAutomatic, ignore.case = TRUE)
+  c2 <- grepl('unit'   , input$workingUnitsAutomatic, ignore.case = TRUE)
   
   if (c1 & c2) {
     
@@ -287,7 +287,7 @@ observeEvent(input$submitUnits, {
       numericInput('pathLength'   , 'Path length (mm)',     1,min = 0,max = 100,step = 1),
       numericInput('molWeight'    , 'Molecular weight (Da)',1,min = 0,max = 1e6,step = 1),
       numericInput('concentration', 'Concentration (mg/ml)',1,min = 0,max = 100,step = 0.2),
-      numericInput('numberOfAA'   , 'Number of residues'   ,1,min = 0,max = 1e6,step = 1),
+      numericInput('numberOfC'   ,  'Number of chromophore units'   ,1,min = 0,max = 1e6,step = 1),
       footer=tagList(
         actionButton('submitExperimentalDetails', 'Submit'),
         modalButton('Cancel')
@@ -663,10 +663,10 @@ observeEvent(input$submitExperimentalDetails,{
   })
   
   # Add the information about the molecular weight, concentration, path length
-  # and number of residues, if required.
+  # and number of chromophore units, if required.
   
   c1 <- grepl('molar'  , input$workingUnitsAutomatic, ignore.case = TRUE)
-  c2 <- grepl('residue', input$workingUnitsAutomatic, ignore.case = TRUE)
+  c2 <- grepl('unit'   , input$workingUnitsAutomatic, ignore.case = TRUE)
   
   cdAnalyzer$initializeExperimentModif()
   
@@ -697,8 +697,8 @@ observeEvent(input$submitExperimentalDetails,{
     
     for (name in experimentsToModifyParams) {
       
-      cdAnalyzer$setExperimentProperties(name,'numberOfResidues', input$numberOfAA)
-      append_record_to_logbook(paste0('Setting residue number of '    ,name,' to ',input$numberOfAA))
+      cdAnalyzer$setExperimentProperties(name,'numberOfCroms', input$numberOfC)
+      append_record_to_logbook(paste0('Setting chromophore units of '    ,name,' to ',input$numberOfC))
     }
   }
   
@@ -846,8 +846,8 @@ observeEvent(input$cdFilesInfo_cell_edit, {
       selectedVar <- "molecularWeight"
       selectedVar2print <- 'molecular weight (Da)'
     } else if (columnIndex == 3) {
-      selectedVar <- "numberOfResidues"
-      selectedVar2print <- 'residue number'
+      selectedVar <- "numberOfCroms"
+      selectedVar2print <- 'chromophore units number'
     } else if (columnIndex == 4) {
       selectedVar <- "concentration"
       selectedVar2print <- 'concentration (mg/ml)'
@@ -899,7 +899,7 @@ observeEvent(input$sharedExperimentParameters,{
                        as.character(selectInput('inputUnitsAll',label=NULL, choices = getChoices('Millidegrees'))),
                        1)
     
-    colnames(df) <- c('File name',"Mol. weight (Dalton)","#Residues (for proteins only)","Conc. (mg/ml)",
+    colnames(df) <- c('File name',"Mol. weight (Dalton)","#Chromophore units","Conc. (mg/ml)",
                       "Input units","Path length (mm)")
     
     # Set default values
@@ -910,12 +910,12 @@ observeEvent(input$sharedExperimentParameters,{
     for (exp in exps) {
       
       cdAnalyzer$setExperimentProperties(exp,'units'            , 'millidegrees')
-      cdAnalyzer$setExperimentProperties(exp,'numberOfResidues' , 1)
+      cdAnalyzer$setExperimentProperties(exp,'numberOfCroms'    , 1)
       cdAnalyzer$setExperimentProperties(exp,'concentration'    , 1)
       cdAnalyzer$setExperimentProperties(exp,'pathLength'       , 0.1)
       cdAnalyzer$setExperimentProperties(exp,'molecularWeight'  , 1)
       
-      append_record_to_logbook(paste0('Setting number of residues / concentration (mg/ml)/ molecular weight (Da) of ',
+      append_record_to_logbook(paste0('Setting number of chromophore units / concentration (mg/ml)/ molecular weight (Da) of ',
                                       exp,' to 1'))
       
       append_record_to_logbook(paste0('Setting path length (cm) of: ',
@@ -1068,30 +1068,30 @@ observeEvent(input$triggerProcessing,{
 
   # Decide if the generated experiments are of the type 'fake'
   # In other words, the calculated spectra will not be available for further processing
-  opertionIsInMolarUnits       <- grepl('molar', operationUnits, ignore.case = TRUE)
-  opertionIsInMeanResidueUnits <- grepl('mean' , operationUnits, ignore.case = TRUE)
+  operationIsInMolarUnits       <- grepl('molar', operationUnits, ignore.case = TRUE)
+  operationIsInMeanUnits        <- grepl('mean' , operationUnits, ignore.case = TRUE)
   
-  molWeights  <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight'  )))[selected_id]
-  pathLengths <- (unlist(cdAnalyzer$getExperimentProperties('pathLength'       )))[selected_id]
-  concs       <- (unlist(cdAnalyzer$getExperimentProperties('concentration'    )))[selected_id]
-  numberOfRes <- (unlist(cdAnalyzer$getExperimentProperties('numberOfResidues' )))[selected_id]
+  molWeights   <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight'  )))[selected_id]
+  pathLengths  <- (unlist(cdAnalyzer$getExperimentProperties('pathLength'       )))[selected_id]
+  concs        <- (unlist(cdAnalyzer$getExperimentProperties('concentration'    )))[selected_id]
+  numberOfCU   <- (unlist(cdAnalyzer$getExperimentProperties('numberOfCroms' )))[selected_id]
   
   ##  Check that we can process normalized CD units
   
-  mw_is_not_zero <- molWeights  != 0 & !is.na(molWeights)  
-  pl_is_not_zero <- pathLengths != 0 & !is.na(pathLengths) 
-  cn_is_not_zero <- concs       != 0 & !is.na(concs)       
-  nr_is_not_zero <- numberOfRes != 0 & !is.na(numberOfRes) 
+  mw_is_not_zero <- molWeights   != 0 & !is.na(molWeights)  
+  pl_is_not_zero <- pathLengths  != 0 & !is.na(pathLengths) 
+  cn_is_not_zero <- concs        != 0 & !is.na(concs)       
+  nr_is_not_zero <- numberOfCU   != 0 & !is.na(numberOfCU) 
   
   check_list <- c()
   
-  if (opertionIsInMolarUnits) {
+  if (operationIsInMolarUnits) {
     
     check_list <- c(check_list,mw_is_not_zero,pl_is_not_zero,cn_is_not_zero)
     
   }
   
-  if (opertionIsInMeanResidueUnits) {
+  if (operationIsInMeanUnits) {
     
     should_stop_process <- c(check_list,nr_is_not_zero)  
     
@@ -1150,7 +1150,7 @@ observeEvent(input$triggerProcessing,{
   # the generated spectra or not ... 
   
   isFake <- length(c(unique(molWeights),unique(pathLengths),
-                      unique(concs),unique(numberOfRes))) != 4    
+                      unique(concs),unique(numberOfCU))) != 4    
   
   ## End of check that we can process normalized CD units
   
@@ -1494,7 +1494,7 @@ observeEvent(input$triggerProcessing,{
     # Use first experiment as proxy for the parameters
     mol_weight  <- cdAnalyzer$experimentsOri[[1]]$molecularWeight
     path_length <- cdAnalyzer$experimentsOri[[1]]$pathLength
-    res_num     <- cdAnalyzer$experimentsOri[[1]]$numberOfResidues
+    cro_num     <- cdAnalyzer$experimentsOri[[1]]$numberOfCroms
     conc        <- cdAnalyzer$experimentsOri[[1]]$concentration
     
     # Assign the same values to the generated experiments
@@ -1502,7 +1502,7 @@ observeEvent(input$triggerProcessing,{
       
       cdAnalyzer$experimentsOri[[exp]]$molecularWeight  <- mol_weight
       cdAnalyzer$experimentsOri[[exp]]$pathLength       <- path_length
-      cdAnalyzer$experimentsOri[[exp]]$numberOfResidues <- res_num
+      cdAnalyzer$experimentsOri[[exp]]$numberOfCroms    <- cro_num
       cdAnalyzer$experimentsOri[[exp]]$concentration    <- conc
       
     }
@@ -1518,12 +1518,12 @@ observeEvent(input$triggerProcessing,{
         
         mol_weight  <- cdAnalyzer$experimentsOri[[unique(exp1s)[i]]]$molecularWeight
         path_length <- cdAnalyzer$experimentsOri[[unique(exp1s)[i]]]$pathLength
-        res_num     <- cdAnalyzer$experimentsOri[[unique(exp1s)[i]]]$numberOfResidues
+        cro_num     <- cdAnalyzer$experimentsOri[[unique(exp1s)[i]]]$numberOfCroms
         conc        <- cdAnalyzer$experimentsOri[[unique(exp1s)[i]]]$concentration
         
         cdAnalyzer$experimentsOri[[expNew]]$molecularWeight  <- mol_weight
         cdAnalyzer$experimentsOri[[expNew]]$pathLength       <- path_length
-        cdAnalyzer$experimentsOri[[expNew]]$numberOfResidues <- res_num
+        cdAnalyzer$experimentsOri[[expNew]]$numberOfCroms    <- cro_num
         cdAnalyzer$experimentsOri[[expNew]]$concentration    <- conc
         
       }

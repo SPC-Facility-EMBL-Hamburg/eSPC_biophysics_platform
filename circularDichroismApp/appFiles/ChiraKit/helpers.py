@@ -19,15 +19,15 @@ def string_to_units(string):
     Convert the string into one of the followings:
 
         'milliabsorbance', 'molarExtinction', 'degrees', 'millidegrees', 'molarEllipticity',
-        'meanResidueMolarEllipticity', 'meanResidueMolarExtinction'
+        'meanUnitMolarEllipticity', 'meanUnitMolarExtinction'
 
     Useful function to reverse the output from the function 'workingUnits2ProperLabel' from 'helpers_plotting.R'
 
     E.g. 
     Input - 'Millidegrees (m°)'      /   Output - millidegrees
     Input - 'Milliabsorbance (mΔA)'  /   Output - milliabsorbance
-    Input - 'Δε ...'                /   Output - meanResidueMolarExtinction
-    Input - '... MRE ...'           /   Output - meanResidueMolarEllipticity
+    Input - 'Δε ...'                /   Output - meanUnitMolarExtinction
+    Input - '... MRE ...'           /   Output - meanUnitMolarEllipticity
 
     '''
 
@@ -39,9 +39,9 @@ def string_to_units(string):
     unit_mappings = {
     'absorbance'            : 'absorbance',
     'degrees'               : 'degrees',
-    'mre'                   : 'meanResidueMolarEllipticity',
-    'δε'                    : 'meanResidueMolarExtinction',
-    'delta epsilon'         : 'meanResidueMolarExtinction',
+    'mue'                   : 'meanUnitMolarEllipticity',
+    'δε'                    : 'meanUnitMolarExtinction',
+    'delta epsilon'         : 'meanUnitMolarExtinction',
     'molar extinction'      : 'molarExtinction',
     'molar ellipticity'     : 'molarEllipticity'
     }
@@ -95,35 +95,6 @@ def guess_parameter_from_metadata_dictionary(metadata_dic,parameter_names):
                     pass
 
     return 0
-
-def guess_nres(metadata_dic):
-
-    for key, value in metadata_dic.items():
-
-        key_lower = key.lower()
-
-        # Known case, exported files from ChiraKit
-        if 'concentration' in key:
-
-            return float(value)
-
-    # Set 0 as default concentration
-    return 0
-
-def guess_sample_concentration(metadata_dic):
-
-    for key, value in metadata_dic.items():
-
-        key_lower = key.lower()
-
-        # Known case, exported files from ChiraKit
-        if 'concentration' in key:
-
-            return float(value)
-
-    # Set 0 as default concentration
-    return 0
-
 
 def filter_matrix_by_vector(np_matrix,np_vector,min_value,max_value):
 

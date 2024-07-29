@@ -1,5 +1,5 @@
 packages <- c("shinydashboard","shinycssloaders","rhandsontable","plotly","shinyalert","reticulate",
-              "DT","reshape2","tidyverse","colourpicker",'signal')
+              "DT","reshape2","tidyverse","colourpicker",'signal','ggdendro')
 
 invisible(lapply(packages, library, character.only = TRUE))
 
@@ -43,11 +43,11 @@ global_cd_units_choice <- c(
   'Millidegrees (m°)'       = 'millidegrees',
   'Degrees (°)'           = 'degrees',
   'Molar ellipticity' = 'molarEllipticity',
-  'Mean residue molar ellipticity (MRE [θ])'  = 'meanResidueMolarEllipticity',
+  'Mean unit molar ellipticity ([θ])'  = 'meanUnitMolarEllipticity',
   'Differential absorbance (\u0394A)'        = 'absorbance',
   'Differential milliabsorbance (\u0394mA)'    = 'milliabsorbance',
   'Molar extinction'  = 'molarExtinction',
-  'Mean residue molar extinction (\u0394\u03B5)'  = 'meanResidueMolarExtinction'
+  'Mean unit molar extinction (\u0394\u03B5)'  = 'meanUnitMolarExtinction'
 )
 
 myrenderer <- "function(instance, td, row, col, prop, value, cellProperties) {

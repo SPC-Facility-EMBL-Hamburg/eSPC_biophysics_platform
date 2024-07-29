@@ -1,6 +1,9 @@
 install.packages("reticulate",repos = "http://cran.us.r-project.org")
 stopifnot("reticulate" %in% installed.packages()[,"Package"])
 
+install.packages("tidyverse",repos = "http://cran.us.r-project.org")
+stopifnot("tidyverse" %in% installed.packages()[,"Package"])
+
 install.packages("shiny",repos = "http://cran.us.r-project.org")
 stopifnot("shiny" %in% installed.packages()[,"Package"])
 
@@ -22,9 +25,6 @@ stopifnot("tippy" %in% installed.packages()[,"Package"])
 install.packages("rhandsontable",repos = "http://cran.us.r-project.org")
 stopifnot("rhandsontable" %in% installed.packages()[,"Package"])
 
-install.packages("tidyverse",repos = "http://cran.us.r-project.org")
-stopifnot("tidyverse" %in% installed.packages()[,"Package"])
-
 install.packages("colourpicker",repos = "http://cran.us.r-project.org")
 stopifnot("colourpicker" %in% installed.packages()[,"Package"])
 
@@ -39,3 +39,6 @@ stopifnot("DT" %in% installed.packages()[,"Package"])
 
 install.packages("signal",repos = "http://cran.us.r-project.org")
 stopifnot("signal" %in% installed.packages()[,"Package"])
+
+install.packages("ggdendro",repos = "http://cran.us.r-project.org")
+stopifnot("ggdendro" %in% installed.packages()[,"Package"])

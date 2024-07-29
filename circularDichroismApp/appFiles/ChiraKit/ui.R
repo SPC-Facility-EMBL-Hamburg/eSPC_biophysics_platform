@@ -25,7 +25,11 @@ shinyUI(dashboardPage(
       
       menuSubItem("2d. Custom  analysis",    icon = icon("chart-line"),    tabName = "menu_custom"),
       
-      menuSubItem("2e. Spectra comparison",icon = icon("scale-balanced"), tabName = "menu_spectra_comparison")
+      menuSubItem("2e. Spectra comparison",icon = icon("scale-balanced"), tabName = "menu_spectra_comparison"),
+      
+      menuSubItem("2f. Helix/coil content of peptides",icon = icon("percent"), tabName = "menu_peptide")#,
+      
+      #menuSubItem("2g. G-quadruplexes analysis",icon = icon("dna"), tabName = "menu_gQuadruplex")
       
       ),
       
@@ -308,6 +312,7 @@ shinyUI(dashboardPage(
                 #cdSpectraAvg{height:600px !important;}
                 #cdSpectraDiff{height:600px !important;}
                 #cdSpectraDist{height:700px !important;}
+                #cdSpectraTree{height:700px !important;}
                 #cdSpectraSim{height:800px !important;}"
                 )),
                 
@@ -316,12 +321,56 @@ shinyUI(dashboardPage(
                        tabPanel("CD avg ± sd",         plotlyOutput("cdSpectraAvg")),
                        tabPanel("Difference spectra",  plotlyOutput("cdSpectraDiff")),
                        tabPanel("Distances",           plotlyOutput("cdSpectraDist")),
+                       tabPanel("Dendogram",           plotlyOutput("cdSpectraTree")),
                        tabPanel("Spectral similarity plots",plotlyOutput("cdSpectraSim"))
                 )
           )
           
         )),
       
+      tabItem(
+        tabName = "menu_peptide",
+        fluidRow(
+          
+          column(6,
+                 source("ui_files/2f_ui_load_peptide_data.R", local = TRUE)$value),
+          
+          column(6,
+                 source("ui_files/2f_ui_fitting_peptide.R" , local = TRUE)$value,
+          
+          tabBox(title = "", width = 12,id = "helicityResults",
+                 tabPanel("Helicity Table", tableOutput( "helicityTable")),
+                 tabPanel("Helicity Plot" , plotlyOutput("helicityPlot" ))
+                 ))
+
+          
+        )),
+
+      tabItem(
+        tabName = "menu_gQuadruplex",
+        
+        column(6,
+               fluidRow(
+                 
+                 column(12,
+                        source("ui_files/2g_ui_gQuadruplex_references.R",local=T)$value,
+                        
+                        # TabBox to plot the CD spectra and the associated voltage
+                        tabBox(title = "", width = 12,id = "tabBoxRefSpectraGQuadruplex")
+                 
+                        )
+                        
+               )),
+        
+        column(6,
+               fluidRow(
+                 
+                 column(12,
+                        source("ui_files/2g_ui_gQuadruplex_estimation.R",local=T)$value)
+               ))
+                
+        ),      
+            
       tabItem(tabName = "menu_export",
               fluidRow(
                 

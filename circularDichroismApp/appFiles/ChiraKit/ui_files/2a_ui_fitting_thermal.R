@@ -145,6 +145,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         selectInput('thermal_unfolding_model',NULL,
                     choices = c('Reversible two-state'     = 'twoState',
                                 'Reversible three-state'   = 'threeState')),
+                                #'Reversible four-state'    = 'fourState')),
         tippy::tippy_this(
           elementId = "info_uu_unfolding_model",
           tooltip = "Apply an unfolding model where the protein unfolds in one step (reversible two-state), or 
@@ -214,7 +215,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
   ),
   
   conditionalPanel(
-    "input.thermal_unfolding_model == 'threeState'",
+    "input.thermal_unfolding_model != 'twoState'",
     
     fluidRow(
       

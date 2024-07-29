@@ -12,7 +12,7 @@ box(title = "2. Compare", width = 12, solidHeader = T, status = "primary",
       )),
     
       column(3,p(
-        HTML("<b>Normalisation</b>"),
+        HTML("<b>2b. Normalisation</b>"),
         span(shiny::icon("info-circle"), id = "info_uu_normalise"),
         selectInput("normalise", NULL,
                     c("None","L2_norm")),
@@ -21,6 +21,17 @@ box(title = "2. Compare", width = 12, solidHeader = T, status = "primary",
           tooltip = "Use the L2 normalisation to compare shapes.",placement = "right")
       )),
         
+      column(3,p(
+        HTML("<b>2c. Reference group</b>"),
+        span(shiny::icon("info-circle"), id = "info_uu_reference"),
+        selectInput("comparison_reference", NULL,
+                    c("None" = 'unknown')),
+        tippy::tippy_this(
+          elementId = "info_uu_reference",
+          tooltip = "Select a reference to plot only the comparisons 
+          against this group.",placement = "right")
+      )),
+      
       column(3,p(
         HTML("<b>Show plot export options</b>"),
         checkboxInput("showPlotExportOptionsCompare",NULL,FALSE)

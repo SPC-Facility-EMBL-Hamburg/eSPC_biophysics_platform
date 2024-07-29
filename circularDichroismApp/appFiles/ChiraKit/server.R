@@ -34,6 +34,7 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/secondary_structure_reactives.R"    ), local = T)
   source(paste0(base_dir,"reactives/custom_analysis_reactives.R"        ), local = T)
   source(paste0(base_dir,"reactives/spectra_comparison_reactives.R"     ), local = T)
+  source(paste0(base_dir,"reactives/peptide_helix_content_reactives.R"  ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"               ), local = T)
   
   # Create folder for this specific user

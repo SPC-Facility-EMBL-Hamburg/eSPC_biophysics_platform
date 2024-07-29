@@ -167,7 +167,7 @@ $$
   
   <br>  
   
-<p class="vf-intro__text">In the case of protein samples, \( M \) can be replaced by the mean residual weight ( \( M_r \), average molecular weight of the amino acids; divide the molecular weight by the number of residues). This normalisation is particulary useful to compare proteins with different molecular weights. 
+<p class="vf-intro__text">The CD signal can be further normalised by the number of chromophore units. This is especially useful for comparing peptides or proteins of different lengths. For measurements in the far-UV region (185-240 nm), the number of peptide bonds is used because the amide bond is the main chromophore of interest. In the near-UV region (> 250 nm), where side chains and prosthetic groups contribute to the CD signal, the choice of normalisation units should be different and using the number of peptide bonds would be inappropriate (Kahn, Peter C. "[16] The interpretation of near-ultraviolet circular dichroism." Methods in Enzymology, vol. 61, Academic Press, 1979).
 
 <p class="vf-intro__text">A summary table of the different units is presented below.
 </p>
@@ -208,9 +208,9 @@ $$
     </tr>
 
     <tr class="vf-table__row">
-      <td class="vf-table__cell">Mean residue molar extinction</td>
-      <td class="vf-table__cell">\( Absorbance * M_r / (C * L) \) </td>
-      <td class="vf-table__cell">Lts/(mol*cm*residue)</td>
+      <td class="vf-table__cell">Mean unit molar extinction</td>
+      <td class="vf-table__cell">\( Absorbance * M_u / (C * L) \) </td>
+      <td class="vf-table__cell">Lts/(mol*cm*chromophores)</td>
     </tr>
 
     <tr class="vf-table__row">
@@ -232,15 +232,15 @@ $$
     </tr>
 
         <tr class="vf-table__row">
-      <td class="vf-table__cell">Mean residue molar ellipticity</td>
-      <td class="vf-table__cell">\( Degrees * M_r * 100 / (C * L) \) </td>
-      <td class="vf-table__cell">°*cm<sup>2</sup>/(dmol*residue)</td>
+      <td class="vf-table__cell">Mean unit molar ellipticity</td>
+      <td class="vf-table__cell">\( Degrees * M_u * 100 / (C * L) \) </td>
+      <td class="vf-table__cell">°*cm<sup>2</sup>/(dmol*chromophores)</td>
     </tr>
 
   </tbody>
 </table>
    
- <p class="vf-intro__text">Here, 'residue' refers to the total number of residues.
+ <p class="vf-intro__text">Here, 'chromophores' refers to the total number of chromophore units (e.g., the number of peptide bonds).
 </p>  
    
    <br>
@@ -272,7 +272,7 @@ $$
  <ol class="vf-intro__text">
    <li class="vf-list__item "> Subtract one spectrum from another (e.g., for baseline correction) </li>
    <li class="vf-list__item "> Add two spectra together</li>
-   <li class="vf-list__item "> Smooth selected spectra using a Savitzky-Golay filter (window size of 6, 8 or 10 nm). For example, if the wavelength was measured every 1 nm, a window size of 6 nm equals a 7 point filter. If the wavelength was measured every 0.5 nm, a window size of 6 nm equals equals a 14 point filter.</li>
+   <li class="vf-list__item "> Smooth selected spectra using a Savitzky-Golay filter (window size of 3, 6, 8 or 10 nm). For example, if the wavelength was measured every 1 nm, a window size of 6 nm equals a 7 point filter. If the wavelength was measured every 0.5 nm, a window size of 6 nm equals equals a 14 point filter.</li>
     <li class="vf-list__item "> Average selected spectra </li>
     <li class="vf-list__item "> Average selected spectra in batch mode. For example,
       you can average every five curves (N = 5).</li>
@@ -289,7 +289,7 @@ $$
 1) the resulting spectrum will only cover the region where the spectra overlap and 2) a linear interpolation will be performed, implying that the new spectrum will be computed at all the wavelength data points present in both spectra.   
   </p>
 
-<p class="vf-intro__text">If you're using (mean residue) molar extinction / ellipticity as the operation unit, and the selected spectra have different experimental parameters (such as concentration and path length), the new spectra will not any experimental parameters. Furthermore, you can only work with the new spectra using the same operation unit that was used to generate them.
+<p class="vf-intro__text">If you're using (mean unit) molar extinction / ellipticity as the operation unit, and the selected spectra have different experimental parameters (such as concentration and path length), the new spectra will not any experimental parameters. Furthermore, you can only work with the new spectra using the same operation unit that was used to generate them.
 </p>
 
   <p class="vf-intro__text">The following behaviour is applied for the high tension voltage curves.
@@ -854,7 +854,7 @@ the eigenvalues  \( \lambda \) (sorted in descending order). The eigenvectors re
 
 $$
 \large{ 
-\text{explained variance} (\lambda_i) = \lambda_i \sum_{j=1}^{n} \lambda_j
+\text{explained variance} (\lambda_i) = \lambda_i / \sum_{j=1}^{n} \lambda_j
    }
 $$
 
@@ -1056,7 +1056,7 @@ $$
 
 </div>
 
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_estimation')">Secondary structure estimation<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_estimation')">Protein secondary structure estimation<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
 
@@ -1131,7 +1131,7 @@ F = XC
 $$  
   
 <p class="vf-intro__text">
-where \( C \) is the \( m \times  n \) matrix containing the CD spectra in delta epsilon (mean residue molar extinction) units, \( F \) is the \( l \times  n \)
+where \( C \) is the \( m \times  n \) matrix containing the CD spectra in delta epsilon (mean unit molar extinction) units, \( F \) is the \( l \times  n \)
 matrix containing the known secondary structure elements, and \( X \) is the \( l \times  m \)
 matrix that allows the transition between the space of secondary structure elements \( F \)
 and the space of CD spectra \( C \). Here, \( n \), \( l \) and \( m \) represent, respectively, 
@@ -1237,7 +1237,7 @@ Finally, the mean of the double filtered valid solutions is reported.
 </div>
 
 <br>
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_elements')">Secondary structure elements<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_elements')">Protein secondary structure elements<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
 
@@ -1388,12 +1388,30 @@ Generating a dataset in this module will automatically produce:
  <ol class="vf-intro__text">
    <li class="vf-list__item "> The average spectrum for each label and its associated standard deviation.</li>
       <li class="vf-list__item "> Every possible difference spectrum and its associated standard deviation.</li>
-   <li class="vf-list__item "> Boxplots of the intra-group and inter-group euclidean distances . If the distances between groups are larger that the distances within groups, that would indicate that the spectra of each group are different. 
-   <li class="vf-list__item "> Spectral comparison plots <a href="https://journals.sagepub.com/doi/10.1177/00037028221134128?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed" target="_blank" rel="noopener noreferrer">(Curtis W. Meuse <i>et al.</i>, 2022)</a>. Useful for instrument calibration.</li>
+   <li class="vf-list__item "> Boxplots of the intra-group and inter-group euclidean distances . If the distances between groups are larger that the distances within groups, that would indicate that the spectra of each group are different. </li>
+      <li class="vf-list__item "> Hierarchical Clustering Dendogram computed from the euclidean distance matrix. The agglomeration method is 'Ward.2D' <a href="https://link.springer.com/article/10.1007/s00357-014-9161-z" target="_blank" rel="noopener noreferrer">(Fionn Murtagh <i>et al.</i>, 2014)</a>. Use the dendogram for exploratory analyses.</a> 
+      </li>
+   <li class="vf-list__item "> Spectral comparison plots <a href="https://journals.sagepub.com/doi/10.1177/00037028221134128?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed" target="_blank" rel="noopener noreferrer">(Curtis W. Meus <i>et al.</i>, 2022)</a>. Useful for instrument calibration.</li>
  </ol> 
 
 <p class="vf-intro__text">
 To compare the shapes of spectra and discard the influence of differences in absorbance intensity, the L2 normalisation can be used. This results in the calculation of normalised euclidean distances <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9720711/" target="_blank" rel="noopener noreferrer">(Taiji Oyama <i>et al.</i>, 2022)</a>.
+</p>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('peptide_helix_content')">Peptide helix / coil content<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="peptide_helix_content" style="display:none">
+
+<p class="vf-intro__text">
+In the case of peptides that undergo helix to coil transitions, it's possible to estimate the percentage of alpha-helix using the dichroic ensemble model proposed in <a href="https://pubs.acs.org/doi/10.1021/acs.jpcb.3c07511" target="_blank" rel="noopener noreferrer"> Uroš Zavrtanik <i>et al.</i> 2024</a>. The helicity is estimated from the CD signal at 222 nm (in mean unit molar ellipticity). To use this feature, the Table 'Parameters for molar ellipticity / extinction' from the panel '1. Import data' should be filled.
+</p>
+
+<p class="vf-intro__text">
+This model is suitable only for helix-coil type peptides having between 4 and 32 peptide-bonds. Avoid using it for peptides that do not exhibit clear helix to coil transitions (e.g., peptides with beta-sheet structure).
 </p>
 
 </div>
@@ -1415,15 +1433,6 @@ To compare the shapes of spectra and discard the influence of differences in abs
 
   <p class="vf-intro__text"> Units of CD measurement and sample concentration effects  - <a href="https://www.chem.uci.edu/~dmitryf/manuals/Fundamentals/CD%20practical%20guide.pdf" target="_blank" rel="noopener noreferrer"> Pauls_Guide_Broch</a>
   </p>
-
-  <p class="vf-intro__text"> To process and analyse CD data  - <a href="https://cdtools.cryst.bbk.ac.uk/" target="_blank" rel="noopener noreferrer"> CDToolX</a>
-  </p>
-
-<!-- You will not be able to see this text. 
-  <p class="vf-intro__text"> To perform CD spectra analysis, including secondary structure fitting 
-  and fold recognition  - <a href="https://bestsel.elte.hu/extcoeff.php" target="_blank" rel="noopener noreferrer"> BeStSel</a>
-  </p>
--->
 
 </div>
 </div>

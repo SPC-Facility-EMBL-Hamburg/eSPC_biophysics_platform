@@ -11,8 +11,8 @@ workingUnits2ProperLabel <- function(choice) {
     return("Molar ellipticity (deg\u2219cm<sup>2</sup>\u2219dmol<sup>-1</sup>)")
   }         
 
-  if (choice == 'meanResidueMolarEllipticity')  {
-    return("MRE (deg\u2219cm<sup>2</sup>\u2219dmol<sup>-1</sup>\u2219residue<sup>-1</sup>)")
+  if (choice == 'meanUnitMolarEllipticity')  {
+    return("MRE (deg\u2219cm<sup>2</sup>\u2219dmol<sup>-1</sup>\u2219chromophores<sup>-1</sup>)")
   }   
   
   if (choice == 'absorbance')                 return("Differential absorbance (\u0394A)"     )
@@ -22,8 +22,8 @@ workingUnits2ProperLabel <- function(choice) {
     return("Molar extinction (L\u2219mol<sup>-1</sup>\u2219cm<sup>-1</sup>)")
   }         
   
-  if (choice == 'meanResidueMolarExtinction')  {
-    return("\u0394\u03B5 (L\u2219mol<sup>-1</sup>\u2219cm<sup>-1</sup>\u2219residue<sup>-1</sup>)")
+  if (choice == 'meanUnitMolarExtinction')  {
+    return("\u0394\u03B5 (L\u2219mol<sup>-1</sup>\u2219cm<sup>-1</sup>\u2219chromophores<sup>-1</sup>)")
   }
   
   return('CD Signal')
@@ -53,12 +53,12 @@ plot_list_to_fig <- function(plot_name,plot_list,titleText,axis_size,plot_type,p
     
     if (shareAxis) {
       
-      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.1),
+      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.2),
                      shareY = TRUE, shareX = TRUE)
       
     } else {
       
-      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.1),
+      fig <- subplot(plot_list,nrows = nrows,margin = c(0.03,0.03,0.1,0.2),
                      shareY = FALSE, shareX = FALSE,titleX = TRUE,titleY = TRUE)
       
     }
@@ -141,4 +141,33 @@ find_y_plotting_range <- function(y_values_matrix,y_err_matrix) {
   
   return(list('yMin'=yMin - totalRange*factor,'yMax'=yMax + totalRange*factor))
 }
+
+# Find if the label contains the selected reference
+reference_is_in_label <- function(reference,label,separator=' - ') {
+  
+  cond0 <- reference == "No reference"
+  
+  # Verify if the reference is in the selected label 
+  cond1 <- grepl(paste0(separator,reference),label) 
+  cond2 <- grepl(paste0(reference,separator),label) 
+  # To avoid problems such as selecting '1' as reference, but also '10' is in the labels
+  
+  vec   <- strsplit(label,paste0(separator,reference))[[1]]
+  vec   <- vec[vec != ""]
+  cond3 <- length(vec) == 1   
+  
+  vec   <- strsplit(label,paste0(reference,separator))[[1]]
+  vec   <- vec[vec != ""]
+  cond4 <- length(vec) == 1 
+
+  
+  
+  return(cond0 | (cond1 & cond3) | (cond2 & cond4))
+  
+}
+
+
+
+
+
 

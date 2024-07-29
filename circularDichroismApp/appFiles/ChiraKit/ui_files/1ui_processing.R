@@ -35,8 +35,8 @@ box(title = "3. Processing", width = 12, solidHeader = T, status = "primary",
                     To calculate the molar ellipticity/extinction, 
                     please input the molecular weight, concentration and path length
                     ('2. Parameters for molar ellipticity / extinction' Box).
-                    To calculate the mean residue molar ellipticity/extinction, 
-                    please add the number of amino acids.",placement = "right"))), 
+                    To calculate the mean unit molar ellipticity/extinction, 
+                    please add the number of chromophore units.",placement = "right"))), 
       conditionalPanel(
         'output.showVoltageThreshold',
                        
