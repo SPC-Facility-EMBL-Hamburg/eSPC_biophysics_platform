@@ -33,6 +33,16 @@ def subset_panta_data(data,columns_positions):
     dfs    = [pd.DataFrame(np.array(data.iloc[:,[pos-1,pos]]),
         columns = ["temperature","signal"+str(i)]) for i,pos in enumerate(columns_positions)]
 
+    # Case N = 1 (1 capillary)
+    if len(dfs) == 1:
+
+        mat   = dfs[0].to_numpy(dtype='float')
+
+        fluo = mat[:,1:]         # You must use '1:' and not '1' to return a 2D array!
+        temp = mat[:,0] + 273.15 # To kelvin 
+
+        return fluo, temp
+
     # Combine dataframes so we can obtain a vector of temperatures and a matrix of fluorescence signal
     merged = pd.merge_asof(dfs[0].dropna(),dfs[1].dropna(),on="temperature", direction='nearest',allow_exact_matches=True)
 
@@ -483,3 +493,4 @@ def get_IrrevTwoState_pkd(Tf, Ea,temp_standard=298.15):
 	Ea = np.array(Ea)
 
 	return -np.log10(arrhenius(temp_standard,Tf,Ea))
+

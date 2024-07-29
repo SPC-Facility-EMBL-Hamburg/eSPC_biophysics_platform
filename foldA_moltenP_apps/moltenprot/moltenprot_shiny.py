@@ -114,7 +114,6 @@ class DSF_molten_prot_fit:
 
             dat = pd.read_excel(xls, signal, index_col=None, header=None)
 
-            # Find first index with numbers (above is header)
             first_row = int(np.argwhere(list(dat.iloc[:, 0] == 'Time [s]'))) + 1
 
             fluo   = np.array(dat.iloc[first_row:, 2:]).astype('float')
@@ -1336,111 +1335,8 @@ class DSF_molten_prot_fit:
 
         return None
 
-def test_xls_file(xls_file):
+if False:
 
-    print(xls_file)
     t = DSF_molten_prot_fit()
-    t.load_nanoDSF_xlsx(xls_file)
-    t.set_signal("Ratio")
-
-    t.fluo = t.fluo[:,24:38]
-    t.estimate_fluo_derivates(10)
-    t.estimate_baselines_parameters(8)
-
-    t.cp = 0
-    t.EquilibriumTwoState()
-
-    Tms = [x[5] for x in t.params_all]
-    DHs = [x[4] * 0.2390057361 / 1e3 for x in t.params_all]
-
-    dG_stds = []
-    temps = np.arange(-40,120)
-
-    for temp in temps:
-    	print(temp)
-    	dG_std , dCp_component = get_EquilibriumTwoState_model_dGstd(DHs,Tms,0,temp+273.15)
-    	dG_stds.append(dG_std)
-
-    #print(t.conditions[24:38])
-
-    dG_stds = pd.DataFrame(np.row_stack(dG_stds))
-    dG_stds["temp"] = temps
-    urea = [float(x.split()[2]) for x in t.conditions[24:38]]
-    print(urea)
-    print(dG_stds)
-    dG_stds.to_csv("test.csv",index=False)    
-    #print(t.fitted_conditions_indexes)
-
-
-xls_file1   = "./www/20200504_sg_mpro.xls"
-xls_file2   = "./www/demo.xlsx"
-
-#test_xls_file(xls_file2)
-
-dwf = "/home/osvaldo/Downloads/nDSF_HALOS_Sept_2020/"
-
-xls_file3   = dwf + "AfCopAdNC_0.2mgperml__96_well_new_screen_Columns_A1_to_H3_07.09.2020.xlsx"
-xls_file4   = dwf + "AfCopAdNC_0.2mgperml__96_well_new_screen_Columns_A4_to_H6_07.09.2020.xlsx"
-xls_file5   = dwf + "AfCopAdNC_0.2mgperml__96_well_new_screen_Columns_A7_to_H9_07.09.2020.xlsx"
-xls_file6   = dwf + "AfCopAdNC_0.5mgperml_Proteoliposomes_LPR1_LPR2_02.09.2020.xlsx"
-xls_file7   = dwf + "AfCopAdNC_2mgperml__and_SEC_Reconstitution_buffers_02.09.2020.xlsx"
-xls_file8   = dwf + "AfCopAdNC_0.2mgperml__96_well_new_screen_Columns_A10_to_H12_07.09.2020.xlsx"
-
-layout_file = "./www/RUBIC Buffer Screen (MD1-96) screen conditions.xlsx"
-
-files = [xls_file2,xls_file3,xls_file4,xls_file5,xls_file6,xls_file7,xls_file8]
-files = [xls_file3]
-
-debug_runNanoDSF = False
-
-if debug_runNanoDSF:
-
-    for file in files:
-
-        test_xls_file(file)
-
-debug_runqPCR = False
-
-xls_file8   = "/home/osvaldo/spc_shiny_servers/foldA_moltenP_apps/moltenprot/www/demo.xlsx"
-
-if debug_runqPCR:
+    t.load_nanoDSF_xlsx('/home/osvaldo/spc_shiny_servers/foldA_moltenP_apps/moltenprot/www/demo.xlsx')
     
-    t = DSF_molten_prot_fit()
-    t.load_nanoDSF_xlsx(xls_file8)
-    print(t.signals)
-    t.set_signal("Ratio")
-    #t.fluo  = filter_fluo_by_temp(t.fluo[:,15],t.temps,30+273,70+273)
-    #t.temps = filter_temp_by_temp(t.temps,30+273,70+273)
-
-    #t.estimate_fluo_derivates(10)
-
-    #print(t.derivative)
-
-#xls_file  = "~/Downloads/Tapasin_nDSF_1_22022021.xlsx"
-
-#f="/home/osvaldo/Downloads/2022-01-13_1520CET_T6-039.xlsx"
-
-
-#t = DSF_molten_prot_fit()
-#t.load_tycho_xlsx(f)
-#
-
-
-#t.estimate_fluo_derivates(10)
-
-if False:
-
-    t = DSF_molten_prot_fit()
-    #t.load_QuantStudio_txt("/home/os/Downloads/rawdata from ViiA7 082322.txt")
-    t.load_csv_file("/home/osvaldo/Downloads/test/tt.csv")
-    t.set_signal("Fluorescence")
-    #print(t.fluo.shape)
-    #print(t.temps)
-    print(t.conditions)
-
-if False:
-
-    t = DSF_molten_prot_fit()
-    t.load_supr_dsf('/home/os/Downloads/minimal_example_json.supr')
-    t.set_signal('310nm')
-    t.estimate_fluo_derivates()
