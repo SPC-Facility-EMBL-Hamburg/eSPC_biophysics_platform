@@ -136,8 +136,10 @@ load_Excel_files_without_acquisitions <- function(xlsx_files) {
   i <- 0
   for (file in xlsx_files) {
     
+    sampleName <- basename(file)
+    
     # Load the first sheet into a dataframe
-    data <- read_excel_file(file)
+    data <- read_excel_file(file,sampleName)
     
     # Delete the file
     if (!is.null(data)) {
@@ -161,6 +163,7 @@ load_Excel_files_with_acquisitions <- function(xlsx_files) {
   for (f in xlsx_files) {
     
     splitted     <- strsplit(f, '/', fixed = FALSE)[[1]]
+    
     len_splitted <- length(splitted)
     
     if (grepl('cquisit',splitted[len_splitted - 1],ignore.case = TRUE)) {

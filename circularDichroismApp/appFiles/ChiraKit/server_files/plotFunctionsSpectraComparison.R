@@ -298,7 +298,6 @@ plot_dendogram <- function(distance_matrix,groups,
     theme(axis.ticks.y = element_blank(),
           axis.text.y  = element_blank()) 
 
-  
   fig <- ggplotly(p)
   
   fig <- configFig(fig,

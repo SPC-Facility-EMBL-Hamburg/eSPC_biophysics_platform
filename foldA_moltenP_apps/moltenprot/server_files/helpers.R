@@ -31,6 +31,9 @@ make_derivative_df <- function(temp,conditon) {data.frame("Tm_derivative"=temp,"
 
 make_df4plot_row_wise <- function(fluo_matrix,cond_vector,temp_vector) {
 
+  if (ncol(fluo_matrix) != length(cond_vector)) return(NULL)
+  if (nrow(fluo_matrix) != length(temp_vector)) return(NULL)
+  
   cond_vector <- as.character(cond_vector)
   fluo_matrix <- unname(fluo_matrix)
   df          <- data.frame(fluo_matrix)

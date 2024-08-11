@@ -231,4 +231,4 @@ def run_helicity_estimation(poly_double_all,poly_total_all,n_input,t_input,Y):
         
         #print("Input values of ellipticity out of reasonable range.")
         
-        return {"Helicity_fraction":np.NaN,"Propagation_parameter_w":np.NaN}
+        return {"Helicity_fraction":np.nan,"Propagation_parameter_w":np.nan}

@@ -108,10 +108,10 @@ def getStartLineQuantStudioFile(file_name):
 def generateQS3DataFrame(df):
 
     df = pd.DataFrame(np.array(df.iloc[:,[3,4]]),
-        columns = ["temperature","signal"])
+        columns = ["temperature","signal"],dtype=str)
 
-    # Remove commas and convert tu numeric
-    df = df.replace(',','', regex=True)
+    df.replace(to_replace=',', value='',inplace=True,regex=True)
+
     df[["temperature", "signal"]] = df[["temperature", "signal"]].apply(pd.to_numeric)
 
     df.sort_values('temperature',inplace=True)

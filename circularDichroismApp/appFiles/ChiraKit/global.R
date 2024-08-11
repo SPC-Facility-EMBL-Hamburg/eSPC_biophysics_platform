@@ -1,25 +1,18 @@
-packages <- c("shinydashboard","shinycssloaders","rhandsontable","plotly","shinyalert","reticulate",
-              "DT","reshape2","tidyverse","colourpicker",'signal','ggdendro')
+packages <- c("shinydashboard","shinycssloaders","rhandsontable","plotly",
+              "shinyalert","reticulate","DT","reshape2","tidyverse",
+              "colourpicker",'signal','ggdendro','factoextra','FactoMineR')
 
 invisible(lapply(packages, library, character.only = TRUE))
 
-appName      <- "ChiraKit"
+appName     <- "ChiraKit"
+user        <- Sys.info()['user']
 
-user      <- Sys.info()['user']
-users_dir <- paste0("/home/",user,"/data_users/")
-
-notebook_app  <- (Sys.info()["nodename"] == "osvaldo")
-
-if (notebook_app) {
-  use_python("/home/osvaldo/miniconda3/bin/python")
-} else  {
-  reticulate::use_condaenv("r-reticulate",required = TRUE)
-} 
+reticulate::use_python(paste0("/home/",user,"/myenv/bin/python"), required = TRUE)
 
 # developer path
 base_dir <- paste0("/home/",user,"/spc_shiny_servers/circularDichroismApp/appFiles/",appName,"/")
 
-# set the corrrect path for the docker user
+# path for the docker user
 if (user == 'shiny') {
   base_dir <- paste0("/home/shiny/",appName,'/')
 }

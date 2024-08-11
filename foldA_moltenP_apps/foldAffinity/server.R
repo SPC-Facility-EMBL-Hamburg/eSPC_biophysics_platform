@@ -1,6 +1,5 @@
 options(shiny.maxRequestSize=100*1024^2)
 options(stringsAsFactors = F)
-options(shiny.useragg = FALSE)
 
 source("server_files/global_variables.R")
 
@@ -25,26 +24,6 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/load_input_reactives.R"), local = T)
   source(paste0(base_dir,"reactives/reactives.R"           ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"  ), local = T)
-  
-  cwd <- getwd()
-  
-  setwd(users_dir);   Sys.sleep(1)
-  total_folders <- paste(count_folders(".")+1)
-  
-  # Create folder for this specific user # Useful when using Rstudio server.
-  dir.create((total_folders)); Sys.sleep(1)
-  setwd(total_folders)
-  
-  file.copy(paste0(cwd,"/www/testFluo.npy"),"testFluo.npy")
-  file.copy(paste0(cwd,"/www/testTemp.npy"),"testTemp.npy")
-  file.copy(paste0(cwd,"/www/testConcs.txt"),"testConcs.txt")
-  
-  # Delete all the files inside the folder we have created during this Session. 
-  session$onSessionEnded(function() {
-  #  setwd("..")
-    system(paste0("rm -rf ",users_dir,total_folders,"/*"))
-  #  stopApp()
-  })
   
 }
 

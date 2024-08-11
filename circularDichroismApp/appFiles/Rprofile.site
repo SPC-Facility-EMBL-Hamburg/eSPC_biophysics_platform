@@ -1,3 +1,10 @@
 local({
-   options(shiny.port = 3838, shiny.host = "0.0.0.0")
+    r <- getOption("repos")
+    r["CRAN"] <- "https://cloud.r-project.org"
+    options(repos = r)
+    options(shiny.port=3838, shiny.host='0.0.0.0')
 })
+options(bspm.version.check=FALSE)
+options(bspm.backend.check=FALSE) # added, such that bspm does not create warning when using non-root
+suppressMessages(bspm::enable())
+

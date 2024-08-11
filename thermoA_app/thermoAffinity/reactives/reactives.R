@@ -165,6 +165,8 @@ fluo_fit_data <- eventReactive(input$btn_cal, {
   
   uniqueExpIDs <- unique(df$expID_vector)
 
+  reactives$exportNameFittings  <- paste0(uniqueExpIDs,collapse = '_')
+  
   asymmetric_ci95List  <- list()
   fittingListTidy      <- list()
   fittingListObj       <- list()
@@ -597,6 +599,8 @@ fluo_fit_data_advance <- eventReactive(input$btn_cal_advance, {
   fitting_function <- fitting_function_from_model_name(input$model_selected)
   
   uniqueExpIDs     <- id2include
+  
+  reactives$exportNameFittings  <- paste0(id2include,collapse = '_')
   
   fittingMetaListTidy      <- list()
   fittingMetaListObj       <- list()

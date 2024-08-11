@@ -43,7 +43,9 @@ observeEvent(input$btn_create_peptide_dataset,{
   
   df_peptide <- df_peptide[df_peptide$cd_curves %in% internalID_to_keep,]
   
-  colnames(df_peptide) <- c('CD_curve','Temperature','#Peptide_bonds','MRE_222nm')
+  colnames(df_peptide) <- c('CD_curve','Temperature (°C or K)','#Peptide_bonds','MRE_222nm')
+  
+  append_record_to_logbook(c('Creating a peptide dataset with the following data',df_to_lines(df_peptide)))
   
   # Assign the created dataframe to the Table thermal_denaturation_data (available at the 2a. Thermal analysis Tab)
   output$thermal_peptide_data <- renderRHandsontable({
@@ -61,6 +63,17 @@ observeEvent(input$btn_fit_helicity,{
   Ys     <- df[,4] 
   nPepBs <- df[,3]
     
+  nan_temps <- sum(is.na(temps))
+  
+  if (nan_temps > 0) {
+    
+    shinyalert(text = "Please fill the missing temperature data.",
+               type = "warning",closeOnEsc = T,closeOnClickOutside = T,
+               html=T)
+    
+    return(NULL)
+  }  
+  
   if (max(temps) > 273) temps <- temps - 273.15 # If required, convert from Kelvin to Celsius
   
   results <- list()
@@ -86,6 +99,9 @@ observeEvent(input$btn_fit_helicity,{
   
   output[['helicityTable']] <- renderTable({results})
   output$helicityPlot       <- renderPlotly({plot_helicity(temps,results[,1],as.character(nPepBs))})
+  
+  append_record_to_logbook('Estimating the peptide helicity using the method from U. Zavrtanik et al., 2024')
+  
   
 })
 

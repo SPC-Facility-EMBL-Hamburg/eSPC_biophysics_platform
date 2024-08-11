@@ -2,7 +2,7 @@ source("ui_files/theme.R")
 source("ui_files/logo.R")
 source("ui_files/busy_indicator.R")
 
-packages <- c("shinydashboard","shinycssloaders","rhandsontable","plotly","shinyalert")
+packages <- c("shinydashboard","shinycssloaders","rhandsontable","shinyalert","plotly")
 invisible(lapply(packages, library, character.only = TRUE))
 
 shinyUI(dashboardPage(title = "ThermoAffinity",
@@ -12,18 +12,17 @@ shinyUI(dashboardPage(title = "ThermoAffinity",
                    
     sidebarMenu(
       
-      menuItem("1. Load input",            icon = icon("chart-simple"),                tabName = "menu_input"),
-      menuItem("2. Fitting",               icon = icon("chart-simple"),                tabName = "menu_fit"),
-      menuItem("3. Export results",        icon = icon("file-export"),                tabName = "menu_export"),
-      menuItem("Simulate data",            icon = icon("magnifying-glass-chart"),                tabName = "menu_simulate"),
-      menuItem("User guide",               icon = icon("user-circle"),       tabName = "menu_user_guide"),
-      menuItem("Tutorial",                 icon = icon("user-circle"),       tabName = "menu_tutorial"),
-      menuItem("About",                    icon = icon("circle-info"), tabName = "menu_about"))
+      menuItem("1. Load input",            icon = icon("file-circle-plus"),       tabName = "menu_input"),
+      menuItem("2. Fitting",               icon = icon("chart-line"),             tabName = "menu_fit"),
+      menuItem("3. Export results",        icon = icon("file-export"),            tabName = "menu_export"),
+      menuItem("Simulate data",            icon = icon("magnifying-glass-chart"), tabName = "menu_simulate"),
+      menuItem("User guide",               icon = icon("user-astronaut"),         tabName = "menu_user_guide"),
+      menuItem("Tutorial",                 icon = icon("book-open"),              tabName = "menu_tutorial"),
+      menuItem("About",                    icon = icon("circle-info"),            tabName = "menu_about"))
     
       ),
   
   dashboardBody(theme_grey_light,
-#    tags$head(includeHTML(("ui_files/google-analytics.html"))),                
     tabItems(
       tabItem(tabName = "menu_input",
         fluidRow(

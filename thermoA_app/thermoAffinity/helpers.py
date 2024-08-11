@@ -1,8 +1,64 @@
 #!/usr/bin/python3
+import os
 import pandas as pd
 import numpy  as np
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
+
+# Function to find the first occurrence of a value in an array
+def find_first_occurrence(array, value):
+
+    try:
+
+        return int(np.where(array == value)[0][0])
+
+    except:
+
+        return None
+
+def fileIsNanoTemperCSV(file):
+
+    with open(file) as f:
+
+        l0 = f.read().splitlines()[0].lower()
+
+    return 'capillary index' in l0 and 'response' in l0 
+
+#  Load CSV with five columns, Capillary Index;Response;Ligand Concentration;Target Concentration;Buffer
+
+def readNanoTemperCSV(file,sep,expid='A'):
+
+    csv                    = pd.read_csv(file,sep=sep)
+    ligand_concentrations  = np.array(csv.iloc[:,2]).astype('float32')
+    proteinConc            = np.array(csv.iloc[:,3]).astype('float32')
+
+    signal                 =  np.tile(np.array(csv.iloc[:,1]).astype('float32'),(3, 1))
+
+    experimentID  = np.array([expid for _ in ligand_concentrations])
+
+    return ligand_concentrations, signal, proteinConc, experimentID
+
+def readManyNanoTemperCSV(files,sep):
+
+    ligand_concentrations, signal, proteinConc, experimentID = [], [], [], []
+
+    for file in files:
+
+        file_name_without_extension = os.path.splitext(os.path.basename(file))[0]
+
+        lt, st, pt, et = readNanoTemperCSV(file,sep,file_name_without_extension)
+
+        ligand_concentrations.append(lt)
+        signal.append(st)
+        proteinConc.append(pt)
+        experimentID.append(et)
+
+    ligand_concentrations = np.concatenate(ligand_concentrations)  
+    proteinConc           = np.concatenate(proteinConc)  
+    experimentID          = np.concatenate(experimentID)
+    signal                = np.hstack(signal)
+
+    return ligand_concentrations, signal, proteinConc, experimentID
 
 def getSepCharacter(file):
 
@@ -27,7 +83,7 @@ def getSepCharacter(file):
             lens = [ len(l.split(sep)) for l in ls ]
             
             c1 = (lens.count(lens[0]) == len(lens)) # Check all columns have equal length
-            c2 = lens[0] >=2 and lens[0] <= 4
+            c2 = lens[0] >=2 and lens[0] <= 5
 
             if c1 and c2:
                 return sep
@@ -81,6 +137,8 @@ def readCSV(file,sep,header):
         csv = pd.read_csv(file,sep=sep)
     else:
         csv = pd.read_csv(file,sep=sep,header=None)
+
+    # Read Nanotemper csvs
 
     # By default, the first column has the ligand concentration
     # and the second column, the signal value

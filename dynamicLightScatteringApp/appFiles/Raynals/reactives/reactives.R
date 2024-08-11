@@ -43,7 +43,7 @@ renderDlsPlateInfo <- function(name,tables) {
 # Load example dataset
 observeEvent(input$GoLoadExample,{
   
-  load <- dlsAnalyzer$loadExperiment('test.csv','test')
+  load <- dlsAnalyzer$loadExperiment('www/test.csv','test')
   dlsAnalyzer$experimentsOri[['test']]$setAutocorrelationData()
 
   output$dlsFilesInfo    <- NULL
@@ -84,18 +84,32 @@ observeEvent(input$dlsFiles,{
     datapath  <- input$dlsFiles[[1, 'datapath']]
     name      <- input$dlsFiles[[1]]
     
+    exps      <- dlsAnalyzer$experimentNames
+    
     fileExt   <- getFileNameExtension(name)
     name      <- sub(paste0(".",fileExt),'',name)
     
-    newFilePath   <- paste0("0.",fileExt)
-    file.copy(datapath,newFilePath,overwrite=TRUE)
+    if (name %in% exps) {
+      shinyalert(text = paste("<b>File name is already being used.</b>"),
+                 type = "warning",closeOnEsc = T,closeOnClickOutside = T,
+                 html=T)
+      reactives$data_loaded <- TRUE
+      return(NULL)
+    }
     
-    if (fileExt == '7z')  system(paste0('7z e ',newFilePath))
-    if (fileExt == 'zip') unzip(newFilePath)
+    if (fileExt %in% c('7z','zip')) {
+      # Create a temporary directory to unzip files
+      unzipDir <- tempfile()
+      dir.create(unzipDir)
+    }
+    
+    if (fileExt == '7z')  system(paste0('7z e ',datapath,' -o ',unzipDir))
+    if (fileExt == 'zip') unzip(datapath,exdir = unzipDir)
     
     if (fileExt %in% c('7z','zip')) {
       
-      xlsx_files <- list.files(path = ".", pattern = "\\.xlsx$", recursive = TRUE, full.names = TRUE)
+      xlsx_files <- list.files(path = unzipDir, pattern = "\\.xlsx$",
+                               recursive = TRUE, full.names = TRUE)
       
       fileType <- detect_Excel_files_type(xlsx_files)
       
@@ -111,78 +125,57 @@ observeEvent(input$dlsFiles,{
       } else {
         
         merged_df <- load_Excel_files_without_acquisitions(xlsx_files)
-        
+       
       }
       
-      # Remove the files
-      for (f in xlsx_files) {
-        system(paste0("rm -f ",f))
-      }  
+      tempFile <- tempfile(fileext = ".csv")
+      write.csv(merged_df,tempFile,row.names = F)
       
-      write.csv(merged_df,'0.csv',row.names = F)
-      
+      load <- dlsAnalyzer$loadExperiment(tempFile,name)
+      dlsAnalyzer$experimentsOri[[name]]$lambda0         <- 405
+      dlsAnalyzer$experimentsOri[[name]]$scatteringAngle <- 147 / 180 * pi
+
+    } else {
+      load <- dlsAnalyzer$loadExperiment(datapath,name)
     }
-    ###
     
-    exps      <- dlsAnalyzer$experimentNames
-    
-    if (name %in% exps) {
-      shinyalert(text = paste("<b>File name is already being used.</b>"),
+    dlsAnalyzer$experimentsOri[[name]]$setAutocorrelationData()
+
+    # Catch exception when data has wrong format
+    if (load != "Data loaded successfully!!!") {
+      shinyalert(text = paste("<b>The file was not loaded! Please verify the file format (User guide).</b>"),
                  type = "warning",closeOnEsc = T,closeOnClickOutside = T,
                  html=T)
       
       reactives$data_loaded <- TRUE
       return(NULL)
-    } else { # Load last loaded file
-      
-      load <- dlsAnalyzer$loadExperiment('0.csv',name)
-      
-      # Change the angle of detection and wavelength (Prometheus Panta defaults)
-      if (fileExt %in% c('7z','zip')) {
-        
-        dlsAnalyzer$experimentsOri[[name]]$lambda0         <- 405
-        dlsAnalyzer$experimentsOri[[name]]$scatteringAngle <- 147 / 180 * pi
-        
-      }
-      
-      dlsAnalyzer$experimentsOri[[name]]$setAutocorrelationData()
-
-      # Catch exception when data has wrong format
-      if (load != "Data loaded successfully!!!") {
-        shinyalert(text = paste("<b>The file was not loaded! Please verify the file format (User guide).</b>"),
-                   type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-                   html=T)
-        
-        reactives$data_loaded <- TRUE
-        return(NULL)
-      }
-      
-      output$dlsFilesInfo    <- NULL
-      Sys.sleep(0.1)
-
-      df <- generateDTtable(dlsAnalyzer)
-      # To allow the creation of selectInput inside DT table
-      session$sendCustomMessage('unbind-DT', 'dlsFilesInfo')
-      output$dlsFilesInfo <- renderDTtable(df)
-      
-      updateSelectInput(session,"experiment2delete",choices = c("None",dlsAnalyzer$experimentNames))
-
-      nMeasurements <- dlsAnalyzer$experimentsOri[[name]]$nMeasurements
-      
-      numberOfDesiredTables <- get_numberOfDesiredTables(nMeasurements)
-      
-      df <- dlsAnalyzer$experimentsOri[[name]]$sampleInfo
-      
-      tables                <- get_Table_list(df$conditions,1,1,numberOfDesiredTables)
-      tables                <- split_table_into_list_of_tables(df,numberOfDesiredTables)
-
-      tabP <- generateTabPanel(numberOfDesiredTables,name)
-      appendTab("tabBoxDlsWellsInfo",tabP,select=TRUE)
-      
-      renderDlsPlateInfo(name,tables)
-
     }
-    Sys.sleep(2)
+    
+    output$dlsFilesInfo    <- NULL
+    Sys.sleep(0.1)
+
+    df <- generateDTtable(dlsAnalyzer)
+    # To allow the creation of selectInput inside DT table
+    session$sendCustomMessage('unbind-DT', 'dlsFilesInfo')
+    output$dlsFilesInfo <- renderDTtable(df)
+    
+    updateSelectInput(session,"experiment2delete",choices = c("None",dlsAnalyzer$experimentNames))
+
+    nMeasurements <- dlsAnalyzer$experimentsOri[[name]]$nMeasurements
+    
+    numberOfDesiredTables <- get_numberOfDesiredTables(nMeasurements)
+    
+    df <- dlsAnalyzer$experimentsOri[[name]]$sampleInfo
+    
+    tables                <- get_Table_list(df$conditions,1,1,numberOfDesiredTables)
+    tables                <- split_table_into_list_of_tables(df,numberOfDesiredTables)
+
+    tabP <- generateTabPanel(numberOfDesiredTables,name)
+    appendTab("tabBoxDlsWellsInfo",tabP,select=TRUE)
+    
+    renderDlsPlateInfo(name,tables)
+
+    Sys.sleep(1)
     
     shinyalert(text = paste("<b>The DLS file was successfully loaded. 
                             If you want to automatically complete the scan and read number

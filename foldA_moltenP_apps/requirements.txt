@@ -1,0 +1,10 @@
+nomkl
+numpy
+pandas
+scipy
+xlrd
+openpyxl
+natsort
+packaging
+kaleido
+plotly

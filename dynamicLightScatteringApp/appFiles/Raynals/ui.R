@@ -9,22 +9,19 @@ shinyUI(dashboardPage(title = paste0(appName),
                    
     sidebarMenu(
       
-      menuItem("1. Load input",            icon = icon("chart-simple"),                tabName = "menu_input"),
-      menuItem("2. Analysis",              icon = icon("chart-simple"),                tabName = "menu_analysis"),
-      menuItem("3. Export",                icon = icon("file-export"),                tabName = "menu_export"),
-      menuItem("Simulation",               icon = icon("magnifying-glass-chart"),                tabName = "menu_simulate"),
-      menuItem("User guide",               icon = icon("user-circle"),       tabName = "menu_user_guide"),
-      #menuItem("Tutorial",                 icon = icon("user-circle"),       tabName = "menu_tutorial"),
-      menuItem("About",                    icon = icon("circle-info"), tabName = "menu_about"))
+      menuItem("1. Load input",       icon = icon("file-circle-plus"),       tabName = "menu_input"     ),
+      menuItem("2. Analysis",         icon = icon("chart-line"),             tabName = "menu_analysis"  ),
+      menuItem("3. Export",           icon = icon("file-export"),            tabName = "menu_export"    ),
+      menuItem("Simulation",          icon = icon("magnifying-glass-chart"), tabName = "menu_simulate"  ),
+      menuItem("User guide",          icon = icon("user-astronaut"),         tabName = "menu_user_guide"),
+      menuItem("About",               icon = icon("circle-info"),            tabName = "menu_about"     ))
     
       ),
   
   dashboardBody(theme_grey_light,
-#    tags$head(includeHTML(("ui_files/google-analytics.html"))),                
     tabItems(
       tabItem(tabName = "menu_input",
         fluidRow(
-          useShinyalert(),
           
           source("ui_files/ui_load_input_box.R",local = TRUE)$value,
           

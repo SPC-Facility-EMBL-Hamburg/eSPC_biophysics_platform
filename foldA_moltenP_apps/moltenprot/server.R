@@ -20,16 +20,4 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/reactives.R"           ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"  ), local = T)
   
-  setwd(users_dir);             Sys.sleep(2)  # Create folder for this specific user
-  total_folders <- paste(count_folders(".")+1)
-  
-  dir.create((total_folders));  Sys.sleep(2)
-  setwd(total_folders)
-  
-  # Delete all the files inside the folder we have created during this Session. 
-  session$onSessionEnded(function() {
-    #  setwd("..")
-    system(paste0("rm -rf ",users_dir,total_folders,"/*"))
-    #  stopApp()
-  })
 }

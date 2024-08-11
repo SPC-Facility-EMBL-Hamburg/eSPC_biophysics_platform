@@ -27,21 +27,4 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/reactives.R"           ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"  ), local = T)
   
-  cwd <- getwd()
-  
-  # Create folder for this specific user
-  setwd(users_dir);   Sys.sleep(1)
-  total_folders <- paste(count_folders(".")+1)
-  dir.create((total_folders)); Sys.sleep(1)
-  setwd(total_folders)
-  
-  file.copy(paste0(cwd,"/www/signal.npy"),"signal.npy")
-  file.copy(paste0(cwd,"/www/time.npy"),"time.npy")
-
-  # Delete all the files inside the folder we have created during this Session. 
-  session$onSessionEnded(function() {
-    #  setwd("..")
-    system(paste0("rm -f ",users_dir,total_folders,"/*"))
-    #  stopApp()
-  })
 }

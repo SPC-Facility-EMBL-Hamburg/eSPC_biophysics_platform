@@ -114,7 +114,10 @@ class DSF_molten_prot_fit:
 
             dat = pd.read_excel(xls, signal, index_col=None, header=None)
 
-            first_row = int(np.argwhere(list(dat.iloc[:, 0] == 'Time [s]'))) + 1
+            indices   = np.argwhere(dat.iloc[:, 0].values == 'Time [s]')
+            first_row = int(indices[0][0]) + 1
+
+            #first_row = int(np.argwhere(list(dat.iloc[:, 0] == 'Time [s]'))) + 1
 
             fluo   = np.array(dat.iloc[first_row:, 2:]).astype('float')
             temp   = np.array(dat.iloc[first_row:, 1]).astype('float') + 273.15 # To kelvin 
@@ -360,7 +363,7 @@ class DSF_molten_prot_fit:
         """
 
         start_row = getStartLineQuantStudioFile(QSfile)
-        data      = pd.read_csv(QSfile,skiprows=start_row,sep="\s+",header=None)
+        data      = pd.read_csv(QSfile,skiprows=start_row,sep=r"\s+",header=None)
 
         u, ind     = np.unique(data.iloc[:,1], return_index=True)
         conditions = u[np.argsort(ind)]

@@ -1,6 +1,6 @@
 # The FoldAffinity and MoltenProt apps
 
-Last time updated: March 2023
+Last time updated: August 2024
 
 ## Introduction
 
@@ -10,43 +10,30 @@ The input data for both apps consists of fluorescence-based melting curves, whil
 
 ## Getting started
 
-To run the apps locally you need to 
+To run the apps locally you need R (tested with version 4.4.0) and Python (tested with version 3.10.9). Then,
 
-1) Install R (tested with version 4.2.2)
-2) Install python (tested with version 3.10.9) 
-3) Install the required R packages (it may take a long time):
+1) Install the required R packages (it may take a long time)
 
-``` R 
+``` bash 
 Rscript install_r_packages.R
 ```
 
-4) Install conda/miniconda:
+2) Create a Python environment
 
 ``` bash 
 user=$(whoami) 
-wget --no-verbose https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  -P /home/${user}/               
-bash  /home/${user}/Miniconda3-latest-Linux-x86_64.sh -b                                                                
-rm -f /home/${user}/Miniconda3-latest-Linux-x86_64.sh
+python3 -m venv /home/${user}/myenv
 ```
 
-5) Install the required python packages in the conda environment 'r-reticulate':
+3) Install the required Python packages (if you prefer Conda, contact us)
 
 ```bash
-/home/${user}/miniconda3/bin/conda  create    --name r-reticulate                                                      
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda nomkl           
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda numpy   
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c conda-forge pandas   
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda scipy     
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda xlrd      
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda openpyxl        
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda natsort   
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c conda-forge python-kaleido  
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c plotly plotly    
+/home/${user}/myenv/bin/pip install --prefer-binary --no-cache-dir -r requirements.txt
 ```
 
-6) Set the correct path for both apps
+4) Set the correct path for both apps
 
-``` bash 
+```bash
 if [ "$(basename "$(pwd)")" = "foldA_moltenP_apps" ]; then
    sed -i "s|base_dir <- paste0.*|base_dir <- paste0('$PWD', '/foldAffinity/')|" foldAffinity/server_files/global_variables.R
    sed -i "s|base_dir <- paste0.*|base_dir <- paste0('$PWD', '/moltenprot/')|" moltenprot/server_files/global_variables.R
@@ -54,24 +41,19 @@ else
    echo "Change the working directory to foldA_moltenP_apps"
 fi
 ```
-7) Create a folder to store temporary files:
 
-``` R 
-mkdir -p "/home/${user}/data_users/" 
-```
+5a) Run FoldAffinity
 
-8a) Run the shiny app with R (FoldAffinity):
-
-``` R 
+``` bash 
 cd foldAffinity
-shiny::runApp()
+R -e 'shiny::runApp()'
 ```
 
-8b) Run the shiny app with R (MoltenProt):
+5b) Or, run MoltenProt
 
-``` R 
+``` bash 
 cd moltenprot
-shiny::runApp()
+R -e 'shiny::runApp()'
 ```
 
 ## General code structure

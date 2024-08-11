@@ -33,9 +33,12 @@ box(title = "Settings", width = 5, solidHeader = T, status = "primary",
       
       ),
       
-      column(4,   p(HTML("<b><br></b>"),
-                    withBusyIndicatorUI(
-                      actionButton("btn_cal","Run Fitting",class = "btn-primary"))))
+      column(4, p(HTML('<p style="margin-bottom:0px;"><br></p>'),
+                  actionButton(
+                    inputId = "btn_cal",label = "Run Fitting!",
+                    icon("meteor"),
+                    style="color: #fff; background-color: #337ab7; 
+               border-color: #2e6da4")))
       
       ),
     

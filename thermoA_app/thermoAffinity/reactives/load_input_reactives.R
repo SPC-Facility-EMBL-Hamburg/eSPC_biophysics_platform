@@ -1,6 +1,7 @@
 reactives <- reactiveValues(data_loaded=FALSE,using_simulated_data=FALSE,
                             logScaleType_fit_values=c("micromolar"),is_csv=FALSE,
-                            dataWasFitted=FALSE)
+                            dataWasFitted=FALSE,exportName='A',
+                            exportNameFittings='A')
 
 # Make available the value of reactives$data_loaded to the code in ui.R
 # useful to have conditional panels
@@ -16,7 +17,7 @@ observeEvent(input$GoLoadExample,{
   reactives$is_csv        <- FALSE
   reactives$dataWasFitted <- FALSE
   
-  mst$load_example_data()
+  mst$load_example_data('www/signal.npy','www/time.npy')
 
   mst$conditions_original <- mst$concs
   
@@ -42,7 +43,7 @@ observeEvent(input$GoLoadExample,{
   Sys.sleep(1)
   reactives$using_simulated_data <- TRUE
   reactives$data_loaded          <- TRUE
-
+  reactives$exportName           <- 'SimulatedData'
 })
 
 # load data into the MST_fit() when the user uploads data
@@ -52,82 +53,96 @@ observeEvent(input$FLf,{
   
   reactives$data_loaded   <- FALSE
   reactives$dataWasFitted <- FALSE
+  reactives$is_csv        <- FALSE
   
   output$table1 <- output$table2 <- output$table3  <- output$table4             <- NULL
   output$experiments2fit1 <- output$experiments2fit2 <- output$experiments2fit3 <- NULL
   
-  if (!(is.null(input$FLf))) {
-    fileExt <- getFileNameExtension(input$FLf$datapath)
-  } 
-    
+  datapath <- input$FLf$datapath
+  fileExt  <- getFileNameExtension(datapath)
+  
+  reactives$exportName <- sub("\\.[^.]+$", "", input$FLf$name)
+  
   withBusyIndicatorServer("Go",{
     
+    # We load one csv file
     if (fileExt == "csv") {
       
       reactives$is_csv               <- TRUE
       
-      file.copy(input$FLf$datapath,"0.csv",overwrite=TRUE)
-      
-      sep <- getSepCharacter("./0.csv")
+      sep <- getSepCharacter(datapath)
       if (is.null(sep)) return(NULL) # No delimiter found
       
-      header <- csvHasHeader("./0.csv",sep)
-
-      mst$load_MST_csv("./0.csv",sep,header)
+      header <- csvHasHeader(datapath,sep)
+      mst$load_MST_csv(datapath,sep,header)
       mst$set_signal("Raw Fluorescence")
       
     } else {
       
-      reactives$is_csv               <- FALSE
-      
       if (fileExt == "zip") {
         
-        system(paste0("rm -f *xlsx"))
-        file.copy(input$FLf$datapath,"0.zip",overwrite=TRUE)
-        unzip("0.zip")
+        # Create a temporary directory to unzip files
+        unzipDir <- tempfile()
+        dir.create(unzipDir)
         
-        xlsx_filesOri   <- list.files(".",pattern = "xlsx")
-        # Avoid μ in file names breaking our python code :)
-        xlsx_files      <- gsub("μ", "micro", xlsx_filesOri)
-        file.rename(xlsx_filesOri,xlsx_files)
+        unzip(datapath,exdir = unzipDir)
         
-        mst_objects <- mst_objects_from_xlsx_files(xlsx_files)
+        xlsx_filesOri <- list.files(unzipDir,pattern = "xlsx",
+                                 recursive=T,full.names = T)
         
-        merged      <- get_merged_signal_mst(mst_objects,xlsx_files)
-       
-        signal_keys   <- time_keys    <- c("Raw Fluorescence")
-        signal_values <- c(np_array(merged$signal))
-        time_values   <- c(np_array(merged$times))
-                         
-        signal_data_dictionary <- py_dict(signal_keys, signal_values, convert = F)
-        time_data_dictionary   <- py_dict(time_keys, time_values,     convert = F)
-        concs                  <- as.numeric(merged$conditions_ori)
-
-        mst$signal_data_dictionary <- signal_data_dictionary
-        mst$time_data_dictionary   <- time_data_dictionary
-        mst$concs                  <- concs
-        mst$protConc               <- as.numeric(merged$protConcVec)
-        
-        # Assing one experimental ID per dataset
-        n_ids                        <- lapply(mst_objects, function (x) length(x$experimentID))
-        
-        experimentID <- c()
-        
-        for (i in 1:length(n_ids)) {
+        if (length(xlsx_filesOri) > 0) {
+          # Avoid μ in file names breaking our python code :)
+          xlsx_files      <- gsub("μ", "micro", xlsx_filesOri)
+          file.rename(xlsx_filesOri,xlsx_files)
           
-          fname <- basename(merged$file_order[i]) # Remove the path of the file
-          fname <- sub('\\..[^\\.]*$', '', fname) # Remove the file extension
+          mst_objects <- mst_objects_from_xlsx_files(xlsx_files)
+          
+          merged      <- get_merged_signal_mst(mst_objects,xlsx_files)
+          
+          signal_keys   <- time_keys    <- c("Raw Fluorescence")
+          signal_values <- c(np_array(merged$signal))
+          time_values   <- c(np_array(merged$times))
+          
+          signal_data_dictionary <- py_dict(signal_keys, signal_values, convert = F)
+          time_data_dictionary   <- py_dict(time_keys, time_values,     convert = F)
+          concs                  <- as.numeric(merged$conditions_ori)
+          
+          mst$signal_data_dictionary <- signal_data_dictionary
+          mst$time_data_dictionary   <- time_data_dictionary
+          mst$concs                  <- concs
+          mst$protConc               <- as.numeric(merged$protConcVec)
+          
+          # Assing one experimental ID per dataset
+          n_ids                      <- lapply(mst_objects, function (x) length(x$experimentID))
+          
+          experimentID <- c()
+          
+          for (i in 1:length(n_ids)) {
             
-          experimentID <- c(experimentID,rep(fname,n_ids[i]))
+            fname <- basename(merged$file_order[i]) # Remove the path of the file
+            fname <- sub('\\..[^\\.]*$', '', fname) # Remove the file extension
+            
+            experimentID <- c(experimentID,rep(fname,n_ids[i]))
+          }
+          
+          mst$experimentID           <- experimentID
+          
+        } else {
+          
+          # We load many csvs files
+          csvs_files <- list.files(
+            unzipDir,pattern = "csv",
+            recursive=T,full.names = T)
+          
+          sep <- getSepCharacter(csvs_files[1]) 
+          mst$load_many_nanotemper_MST_csv(csvs_files,sep)
+          reactives$is_csv               <- TRUE
+          
         }
         
-        mst$experimentID           <- experimentID
-
+        # We load one xlsx file
       } else {
-        
-        file.copy(input$FLf$datapath,"0.xlsx",overwrite=TRUE)
-        mst$load_MST_xlsx("./0.xlsx")
-        
+        mst$load_MST_xlsx(datapath)
       }
       
       mst$set_signal("Raw Fluorescence")
@@ -303,7 +318,7 @@ output$ui_signal_tab_box <- renderUI({
     
   } else {
     
-    is_csv <- getFileNameExtension(input$FLf$datapath) == "csv"  
+    is_csv <- reactives$is_csv  
     
     if (is_csv) {
       

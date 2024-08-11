@@ -76,7 +76,7 @@ class RefeynCalib:
             list_pos.append((self.popt[3*i]))
             list_ampl.append((self.popt[3*i+1]))
             list_sigma.append((self.popt[3*i+2]))
-            list_counts.append(round(np.trapz(self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_centers_contrasts)[0]))
+            list_counts.append(round(np.trapezoid(self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_centers_contrasts)[0]))
         # Create Pandas Dataframe
         self.fit_table = pd.DataFrame(data={'Position / contrast': list_pos,
                                             'Sigma / contrast': list_sigma,

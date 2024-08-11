@@ -77,12 +77,8 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
                                    type = 'scatter', mode = 'markers',
                                    name = legends[counter])
         }
-        
-
       }
-
     }
-
   }
   
   minWL <- min(sapply(wlsAll, min)) - 5
@@ -144,10 +140,7 @@ plotCDexperimentsHT <- function(cdAnalyzer,
                                  line = list(width = 1.8),
                                  name = legends[counter])
       }
-      
     }
-      
-    
   }
   
   minWL <- min(sapply(wlsAll, min)) - 5
@@ -888,6 +881,142 @@ plot_helicity <- function(x,y,color) {
   
   return(fig)
   
+}
+
+# Input: 
+# 'wavelength'    : vector    (float),     length n
+# 'signal_matrix' : 2D matrix (float),     size n*m
+# 'sample_names'  : vector    (character), size m
+plot_gQuadruplexReferences <- function(wavelength,signal_matrix,sample_names,
+                                       axis_size=18,plot_type='png',
+                                       plot_width=12,plot_height=12) {
+  
+  fig          <- plot_ly()
+  colorPalette <- getPalette(length(sample_names))
+  
+  for (i in 1:ncol(signal_matrix)) {
+    
+    signal  <- signal_matrix[,i]
+    
+    df      <- data.frame('wavelength'=wavelength,signal)
+    
+    fig <- fig %>% add_trace(data=df,color=I(colorPalette[i]),x=~wavelength,y=~signal,
+                             type = 'scatter', mode = 'markers+lines',
+                             marker = list(size=4),
+                             line = list(width = 1.8),
+                             name = sample_names[i])
+    
+  }
+  
+  minWL <- min(wavelength) - 5
+  maxWL <- max(wavelength) + 5
+  
+  x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+  
+  y <- list(title = workingUnits2ProperLabel('molarExtinction'),
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+  
+  fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
+                        legend = list(font = list(size = axis_size-3)))
+  
+  fig <- configFig(fig,paste0("CDspectra_G-Quadruplex_references_",strsplit(as.character(Sys.time())," ")[[1]][1]),
+                   plot_type,plot_width,plot_height)
+  return(fig)  
+  
+}
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+# Principal Cluster Analysis plotting function, provided by Rafael Del Villar-Guerra and minimally edited by O.B.
+#---------------------------------------------------------------------------------------------------------------------------------------
+plot_pca_analysis <- function( X,wavelength,spectraNames, text_graph_title = NULL, slider_graph_label_size = 5, slider_axis_label_size = 14,
+                               slider_point_size = 2, slider_arrow_width = 1, slider_ellipse_confidence = 0.85, checkbox_show_ellipse = TRUE,
+                               checkbox_show_legend = FALSE, slider_pca_num_clusters = 3, slider_pca_num_components = 8, PC1 = 1, PC2 = 2 ) {
+  
+  rownames(X) <- spectraNames
+  colnames(X) <- wavelength
+  
+  axes = c( as.numeric( PC1 ), as.numeric( PC2 ) )
+  if( checkbox_show_legend == FALSE ) { show_legend = "none" } else { show_legend = "right" }
+  
+  # Principal Component Analysis (PCA)
+  result.pca  <- FactoMineR::PCA( X, scale.unit = TRUE, ncp = slider_pca_num_components, graph = FALSE )
+  # Hierarchical Clustering on Principle Components (HCPC)
+  result.hcpc <- FactoMineR::HCPC( result.pca, nb.clust = slider_pca_num_clusters, consol = TRUE, 
+                                   min = 3, max = 10, graph = FALSE )
+  
+  nClust <- n_distinct(result.hcpc$data.clust$clust)
+
+  wavelength_labels <- list()
+  for( n in 1:nClust ) {
+    pasted_string = paste0( "result.hcpc$desc.var$quanti$`", n, "`" )
+    v.test_data <- eval( parse( text = pasted_string ) )
+    max_value   <- abs( v.test_data[1,1] )
+    min_value   <- abs( v.test_data[nrow(v.test_data),1] )
+    
+    v.test_data <- as.data.frame( v.test_data )
+
+    if( max_value > min_value ) {
+      wavelength_labels$list <- c( ( wavelength_labels$list ), rownames( v.test_data[1,] ) )
+    } else {
+      wavelength_labels$list <- c( ( wavelength_labels$list ), rownames( v.test_data[nrow(v.test_data),] ) )
+    }
+  }
+  
+  cluster = result.hcpc$data.clust[,ncol(result.hcpc$data.clust), drop = FALSE]
+  
+  colnames( cluster ) <- c( "Cluster" )
+  df.cluster.bind     <- cbind.data.frame( cluster, X )
+  
+  result.pca <- FactoMineR::PCA( df.cluster.bind, scale.unit = TRUE, ncp = slider_pca_num_components, graph = FALSE, quali.sup = 1 )
+  
+  label.biplot.axis.x <- paste ("PC", axes[1], " (", round(result.pca$eig[PC1,2], digits = 1)," %", ")", sep="")
+  label.biplot.axis.y <- paste ("PC", axes[2], " (", round(result.pca$eig[PC2,2], digits = 1)," %", ")", sep="")
+  textElement_labels = element_text( face = "bold", color = "black", size = slider_axis_label_size )
+  
+  pca_plot <- factoextra::fviz_pca_biplot(
+    result.pca,
+    axes = axes,
+    col.var = "blue",
+    repel = TRUE,
+    habillage = 1,
+    addEllipses = checkbox_show_ellipse,
+    labelsize = slider_graph_label_size,
+    pointsize = slider_point_size,
+    arrowsize = slider_arrow_width,
+    ellipse.level = slider_ellipse_confidence,
+    select.var =  list( name = wavelength_labels$list )
+  ) +
+    labs( title = text_graph_title, x = label.biplot.axis.x, y = label.biplot.axis.y ) +
+    theme( legend.position = show_legend ) +
+    theme( text = textElement_labels )
+  
+  return(pca_plot)
+  
+}
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+# Principal Cluster Analysis plotting function, provided by Rafael Del Villar-Guerra and minimally edited by O.B.
+#---------------------------------------------------------------------------------------------------------------------------------------
+plot_cluster_analysis <- function( X, spectraNames,cluster_num_clusters = 3, cluster_graph_title = NULL, 
+                                   cluster_text_size = 1, cluster_num_components = 8, axis_text_size = 14 ) {
+  
+  rownames(X) <- spectraNames
+  
+  result.pca  <- FactoMineR::PCA( X, scale.unit = TRUE, ncp = cluster_num_components, graph = FALSE )
+  result.hcpc <- FactoMineR::HCPC( result.pca, nb.clust = cluster_num_clusters, consol = TRUE, min = 3, max = 10, graph = FALSE )
+  
+  tree_height <- max(result.hcpc$call$t$tree$height)
+  upper_lim   <- ceiling(tree_height / 10) * 10
+  breaks      <- seq(0,upper_lim,10)
+  
+  cluster_plot <- fviz_dend( result.hcpc,  k = cluster_num_clusters, cex = cluster_text_size, 
+                              main = cluster_graph_title) +
+    theme(axis.text.y  = element_text(size = axis_text_size),
+          axis.title.y = element_text(size = axis_text_size+1))+
+    scale_y_continuous(limits = c(-upper_lim/3,upper_lim),breaks = breaks)
+
+  cluster_plot
 }
 
 

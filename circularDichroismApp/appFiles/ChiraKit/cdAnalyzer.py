@@ -8,12 +8,10 @@ from cdUnitsConverter    import *
 from helpers             import *
 from fitting_helpers     import *
 
-from spectra_comparison_helpers     import *
-
 from scipy.integrate     import simpson
-#from scipy.stats         import t
 from scipy.stats         import chi2
 from scipy.signal        import savgol_filter
+
 
 import numpy  as np 
 import pandas as pd 
@@ -26,7 +24,6 @@ from SelconsFunction                 import *
 sys.path.append('./Dichroic-CD-model-main')
 from single_fit_dichroic_estimator    import *
 
-sys.path.append('./gQuadruplexs_files')
 
 """
 Classes for the analysis of circular dichroism data
@@ -45,12 +42,8 @@ If you have questions please contact me:
  
 # Matrix of protein secondary structure components (six components)
 F1  = np.loadtxt("./secondary_structure_estimation_files/AU-F128_T-Nov22.txt",          dtype='f',   delimiter='\t') 
-# Matrix of known (reference) CD spectra     
+# Matrix of known (reference) CD spectra - Proteins    
 A1  = np.loadtxt("./secondary_structure_estimation_files/AU-A128_PCDDB-Nov22.txt",      dtype='f',   delimiter='\t')
-
-# Matrix of G-Quadruplex structure components 
-
-
 
 # Load the req. data for the peptide helicity model
 # Polynomials (partition function) for all helices (up to v**5) and double helices v**4
@@ -104,7 +97,7 @@ class cd_experiment_general:
         self.desiredUnits       = 'millidegrees'  
 
         # Start with an impossible temperature (in degree Celsius), so the user has to change it.
-        self.temperature        = np.NaN
+        self.temperature        = np.nan
 
         self.numberOfCroms      = 0   # Integer. If protein sample, number of peptide bonds 
         self.concentration      = 0   # Float, in mg/ml
@@ -169,7 +162,7 @@ class cd_experiment_general:
 
         return None
 
-    def load_data(self,file,name):
+    def load_data(self,file,name=''):
 
         fileType = detectFileType(file)
 
@@ -210,7 +203,6 @@ class cd_experiment_general:
             self.wavelength, self.signalInput, self.temperature, self.signalHT  = readDataFunctionDict[fileType](file)
         
             self.internalID   = [name + ' ' + str(round(t,1)) for t in self.temperature]
-            self.spectraNames = [name + ' ' + str(round(t,1)) for t in self.temperature]
 
         else:
 
@@ -266,7 +258,7 @@ class cd_experiment_general:
                 # Assign internalID if we have many spectra
                 self.internalID = [name + ' ' + x for x in self.spectraNames]
 
-            self.spectraNames = self.internalID
+        self.spectraNames = self.internalID
 
         self.units = guess_input_units_from_metadata_dictionary(self.metadata)
 
@@ -2768,4 +2760,3 @@ class cdAnalyzer:
             self.experimentsModif[expName].wavelength        = filter_vector_by_values(wl,minWL,maxWL)
 
         return None
-

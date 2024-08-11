@@ -11,12 +11,12 @@ shinyUI(dashboardPage(title = "MoltenProt",
   dashboardSidebar(collapsed = F,width = 200,
     sidebarMenu(
       
-      menuItem("1. Load input",       icon = icon("chart-simple"),                tabName = "menu_input"),
-      menuItem("2. Fitting",          icon = icon("chart-simple"),                tabName = "menu_fit"),
+      menuItem("1. Load input",       icon = icon("file-circle-plus"),                tabName = "menu_input"),
+      menuItem("2. Fitting",          icon = icon("chart-line"),                tabName = "menu_fit"),
       menuItem("3. Analyze",          icon = icon("chart-simple"),                tabName = "menu_analyze"),
       menuItem("4. Export",           icon = icon("file-export"),                tabName = "menu_export"),
-      menuItem("User guide",          icon = icon("user-circle"),       tabName = "menu_user_guide"),
-      menuItem("Tutorial",            icon = icon("user-circle"),       tabName = "menu_tutorial"),
+      menuItem("User guide",          icon = icon("user-astronaut"),       tabName = "menu_user_guide"),
+      menuItem("Tutorial",            icon = icon("book-open"),       tabName = "menu_tutorial"),
       menuItem("About",               icon = icon("circle-info"), tabName = "menu_about"))
     
       ),
@@ -26,10 +26,8 @@ shinyUI(dashboardPage(title = "MoltenProt",
       
       tabItem(tabName = "menu_input",
         fluidRow(
-          useShinyalert(),
-          
+
           source("ui_files/menu_input/ui_load_input_box.R",       local = TRUE)$value,
-          
           source("ui_files/menu_input/ui_conditions_table_box.R", local = TRUE)$value,
     
 

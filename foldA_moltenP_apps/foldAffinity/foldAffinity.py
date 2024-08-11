@@ -188,17 +188,17 @@ elements separated by semicolons.'}
 
         return None
 
-    def load_example_data(self):
+    def load_example_data(self,fluo_file='testFluo.npy',temps_file='testTemp.npy',concs_file="testConcs.txt"):
 
-        fluo  = np.load('testFluo.npy')    
-        temps = np.load('testTemp.npy')
+        fluo  = np.load(fluo_file)    
+        temps = np.load(temps_file)
     
         self.signals        = np.array(["350nm"])
 
         self.signal_data_dictionary["350nm"]   = fluo
         self.temp_data_dictionary["350nm"]     = temps
 
-        self.conditions_original = np.loadtxt("testConcs.txt")
+        self.conditions_original = np.loadtxt(concs_file)
 
         return None
 
@@ -238,8 +238,8 @@ elements separated by semicolons.'}
 
             dat = pd.read_excel(xls, sn, index_col=None, header=None)
 
-            # Find first index with numbers (above is header)
-            first_row = int(np.argwhere(list(dat.iloc[:, 0] == 'Time [s]'))) + 1
+            indices   = np.argwhere(dat.iloc[:, 0].values == 'Time [s]')
+            first_row = int(indices[0][0]) + 1
 
             fluo   = np.array(dat.iloc[first_row:, 2:]).astype('float')
             temp   = np.array(dat.iloc[first_row:, 1]).astype('float') 
@@ -428,7 +428,7 @@ elements separated by semicolons.'}
         """
 
         start_row = getStartLineQuantStudioFile(QSfile)
-        data      = pd.read_csv(QSfile,skiprows=start_row,sep="\s+",header=None)
+        data      = pd.read_csv(QSfile,skiprows=start_row,sep=r"\s+",header=None)
 
         u, ind     = np.unique(data.iloc[:,1], return_index=True)
         conditions = u[np.argsort(ind)]

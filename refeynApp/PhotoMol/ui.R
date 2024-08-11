@@ -22,8 +22,7 @@ shinyUI(dashboardPage(title = paste0(appName),
     tabItems(
       tabItem(tabName = "menu_input",
         fluidRow(
-          useShinyalert(),
-          
+
           source("ui_files/ui_load_input_box.R",local = TRUE)$value, 
             
           tabBox(title = "", width = 9,id = "tabset_sim",

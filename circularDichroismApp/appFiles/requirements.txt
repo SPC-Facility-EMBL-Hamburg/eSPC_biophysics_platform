@@ -1,0 +1,4 @@
+nomkl
+numpy
+pandas
+scipy

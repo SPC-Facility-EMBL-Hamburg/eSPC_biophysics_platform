@@ -1,6 +1,6 @@
 # Load example dataset
 observeEvent(input$GoLoadExample,{
-  dsf$load_example_data()
+  dsf$load_example_data('www/testFluo.npy','www/testTemp.npy','www/testConcs.txt')
   updateSelectInput(session, "which",choices  = c("350nm"))
   updateSliderInput(session, "sg_range", value = c(30,50),
                     min = 30, max = 50, step = 1)
@@ -39,16 +39,19 @@ observeEvent(input$FLf,{
     if (!(is.null(input$FLf))) {
       
       fileExtension <- getFileNameExtension(input$FLf$datapath)
-      newFileName   <- paste0("0.",fileExtension)
-      file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
-      
-      if (fileExtension == "json") {dsf$load_JSON_file(newFileName)}
+
+      if (fileExtension == "json") {dsf$load_JSON_file(input$FLf$datapath)}
       
       if ((fileExtension == "zip")) {
         
-        system(paste0("rm -f *xlsx"))
-        unzip(newFileName)
-        xlsx_files <- list.files(".",pattern = "xlsx",recursive=T)
+        # Create a temporary directory to unzip files
+        unzipDir <- tempfile()
+        dir.create(unzipDir)
+        
+        unzip(input$FLf$datapath,exdir = unzipDir)
+        
+        xlsx_files <- list.files(unzipDir,pattern = "xlsx",
+                                 recursive=T,full.names = T)
         
         dsf_objects_from_xlsx_files <- dsf_objects_from_xlsx_files(xlsx_files)
         
@@ -83,28 +86,28 @@ observeEvent(input$FLf,{
       
       if (fileExtension == "txt") {
 
-        fileType <- detect_txt_file_type(newFileName)
+        fileType <- detect_txt_file_type(input$FLf$datapath)
         
-        if (fileType == 'MX3005P')     dsf$load_Agilents_MX3005P_qPCR_txt(newFileName)
-        if (fileType == 'QuantStudio') dsf$load_QuantStudio_txt(newFileName)
+        if (fileType == 'MX3005P')     dsf$load_Agilents_MX3005P_qPCR_txt(input$FLf$datapath)
+        if (fileType == 'QuantStudio') dsf$load_QuantStudio_txt(input$FLf$datapath)
         
       }
       
-      if (fileExtension == "csv") {dsf$load_csv_file(newFileName)}
+      if (fileExtension == "csv") {dsf$load_csv_file(input$FLf$datapath)}
       
       if (fileExtension == "xlsx" | fileExtension == "xls") {
         
         # Get file type: DSF or nDSF
-        sheet_names <- get_sheet_names_of_xlsx(newFileName)
+        sheet_names <- get_sheet_names_of_xlsx(input$FLf$datapath)
         # ... Load the data to the python class ...
         if ("RFU" %in% sheet_names)  {
-          dsf$load_Thermofluor_xlsx(newFileName)
+          dsf$load_Thermofluor_xlsx(input$FLf$datapath)
         } else if ("Data Export" %in% sheet_names || "melting-scan" %in% sheet_names) {
-          dsf$load_panta_xlsx(newFileName)
+          dsf$load_panta_xlsx(input$FLf$datapath)
         } else if ("Profiles_raw" %in% sheet_names) {
-          dsf$load_tycho_xlsx(newFileName)
+          dsf$load_tycho_xlsx(input$FLf$datapath)
         } else {
-          dsf$load_nanoDSF_xlsx(newFileName,sheet_names)
+          dsf$load_nanoDSF_xlsx(input$FLf$datapath,sheet_names)
         }
         
       }

@@ -31,7 +31,6 @@ parse_selected_wavelengths <- function(input_string) {
   return(parsed_values)
 }
 
-
 ## Use spectra names to merge CD datasets
 ## Requires:
 ##  - relevantSpectra:  vector of strings, each string represents one CD curve

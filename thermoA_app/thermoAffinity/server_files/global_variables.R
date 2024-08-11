@@ -1,34 +1,20 @@
 # load libraries
-library(reshape2)
-library(tidyverse)
-library(reticulate)
-library(minpack.lm)
-library(nlstools)
-library(broom)
-library(data.table)
-library(colourpicker)
-library(RColorBrewer)
-## Set the working directory according to the user name
+packages <- c("reshape2","tidyverse","reticulate","minpack.lm","nlstools","broom",
+              "data.table","colourpicker","RColorBrewer")
+
+invisible(lapply(packages, library, character.only = TRUE))
 
 user      <- Sys.info()['user']
-users_dir <- paste0("/home/",user,"/data_users/")
 
-notebook_app  <- (Sys.info()["nodename"] == "osvaldo")
-
-if (notebook_app) {
-  use_python("/home/osvaldo/miniconda3/bin/python")
-} else  {
-  reticulate::use_condaenv("r-reticulate",required = TRUE)
-} 
+reticulate::use_python(paste0("/home/",user,"/myenv/bin/python"), required = TRUE)
 
 # Developer path
 base_dir <- paste0('/home/',Sys.info()["user"],'/spc_shiny_servers/thermoA_app', '/thermoAffinity/')
 
-# Set the correct path for the docker user
+# path for the docker user
 if (user == 'shiny') {
   base_dir <- "/home/shiny/thermoAffinity/"
 }
-
 
 # To convert between units 
 factorList <- list("molar"=1,"milimolar"=1e3,"micromolar"=1e6,'nanomolar'=1e9)

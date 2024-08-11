@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en" class="vf-no-js" >
+<head>
+  <script>
+  // Detect if JS is on and swap vf-no-js for vf-js on the html element
+  (function(H){H.className=H.className.replace(/\bvf-no-js\b/,'vf-js')})(document.documentElement);
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1">
+  <link rel="stylesheet" media="all" href="https://assets.emblstatic.net/vf/v2.4.5/css/styles.css">
+  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+    
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+</head>
+
+<body class="vf-body vf-stack"><script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+
+
+<section class="vf-intro" id="an-id-for-anchor">
+
+  <div class="vf-stack">
+
+    <p class="vf-intro__text">ChiraKit allows the processing, analysis and visualization of circular dichroism data.</p>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('inputFile')">Input files <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="inputFile" style="display:none">
+  
+<!-- 
+<p class="vf-intro__text">General description: Each input file should be associated with a single sample and, optionally, its corresponding baseline measurement (buffer). The minimum information that must be included is the wavelength and spectral data. </p>
+-->
+
+  <br>
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('singleSpectra')"
+ style="padding-left: 20px;">
+  Single / Multiple Spectra <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="singleSpectra" style="display:none">
+  
+  <br>
+  
+      <p class="vf-intro__text">1) A <a href="../example_files/test.csv" download>csv file</a> with a header, and two or three columns: wavelength, sample name  (optional) and the CD signal. The first column must be called 'wavelength'.</p>
+  
+        <p class="vf-intro__text">2) A <a href="../example_files/test2.csv" download>csv file</a> with a header and more than three columns: wavelength, CD signal of the first sample , ..., CD signal of the n-th sample.The first column must be called 'wavelength' or 'xydata'.</p>
+  
+    <p class="vf-intro__text">3) A <a href="../example_files/Pkng_WT_0.7mgperml_12.11.2019.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data should start three lines after a line with the word 'CircularDichroism' and two lines after a line with the word 'Wavelength'.  The CD data is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (e.g., scan repeats). This type of file is exported by the ProData software from AppliedPhotophysics&#8482;.</p>
+
+    <p class="vf-intro__text">4) A <a href="../example_files/CD0000003000.pcd" download>PCDDB file</a> (.pcd, Protein Circular Dichroism Data Bank format) with header lines containing the metadata. The metadata keys and values are organized into two columns, with the second column starting after the 60th character. The CD data starts after the first line containing 'DATA' and 'wavelength', and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectra data (e.g., 1. Wavelength. 2. Final. 3. HT. 4.Smoothed. 5. Avg. Sample. 6. Avg. Baseline.).</p>
+
+    <p class="vf-intro__text">5) A <a href="../example_files/CD0000002000.gen" download>'generic' file</a> (.gen, CDTool format) with header lines containing the metadata. The metadata keys and values are organized into two columns, separated by tabs. The CD data starts after the first line with more than three tab divided columns. The first column has the wavelength data (in nm), and the subsequent columns have the  spectral data (e.g., 'Final Processed Spectrum', 'HT values (from raw spectrum 1)'). Duplicated or missing data is removed.</p>
+
+    <p class="vf-intro__text">6) A <a href="../example_files/three-aviv-baseline.dat" download>text file (.dat)</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'MDCDATA' in it and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data. There could be one or more scans separated in blocks. The voltage data is read from the column called 'CD_Dynode'.</p>
+
+    <p class="vf-intro__text">7) <a href="../example_files/R78906.d01" download>Aarhus synchrotron data file</a> (.dx, where x means any number) with header lines containing the metadata. The metadata keys and values are separated into two columns where the second column starts after the 32th character (or the character ':'). The CD data starts after the first line containing 'Lambda' and 'CD', and is arranged in columns. The first column has the wavelength data (in nm), the second column has the spectral data ('CD/mdeg'), the fifth column the voltage data ('Servo_Volts'), and the eighth column the temperature data ('temperature').</p>
+
+    <p class="vf-intro__text">8) A csv file containing a line with the words 'ORIGIN'and 'JASCO'. The CD data is arranged in columns and the column names are defined between the lines 'XUNITS' and 'FIRSTX'. This type of file is exported by Jasco&#8482; circular dichroism instruments.
+    </p>
+
+    <p class="vf-intro__text">9) A zip file containing multiples files in any format as described in points 1-8.</p>
+
+    <p class="vf-intro__text">10) If your standard input file does not work, send it to us and we'll add a parser.</p>
+
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('thermalRamp')"
+ style="padding-left: 20px;">
+  Thermal ramp <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="thermalRamp" style="display:none">
+
+<br>
+
+    <p class="vf-intro__text">1) A <a href="../example_files/thermalRampChirascan.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'Wavelength' and 'Temperature' in it and is ordered in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (one column per temperature). The associated temperature data is available one line before the CD data starts.</p>
+
+    <p class="vf-intro__text">2) Import multiple files and assign the temperature manually.</p>
+
+    <p class="vf-intro__text">3) Send us your input file and we'll add a parser.</p>
+
+</div>
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('unitsCD')">CD Units<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="unitsCD" style="display:none">
+  
+    <p class="vf-intro__text">The CD signal is the difference in absorbance between left-handed (\( A_{l} \)) and right-handed (\( A_{r} \)) circularly polarised light:</p>
+   
+$$
+\large{ 
+    \Delta A = A_{l} - A_{r}
+   }
+$$
+   
+<p class="vf-intro__text">Additionally, the CD data can be expressed as an angle. When polarised light, with equally intense left and right-hand circular polarised components, interacts with a chiral sample, one of these components is preferentially absorbed. As a result, the light becomes elliptically polarised. The ellipse has a major and a minor axis, and it is the angle of the line extending from the tip of the long axis to the tip of the short axis with respect to the major axis that is the measure of CD. 
+</p>
+
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+  <img src="../user_guide_images/ellipticity_explained.png" alt="Degree of ellipticity explained" width="700" loading="lazy"/>
+  <figcaption>Taken from 
+  <a href="https://www.mosbri.eu/training/end-user-short-courses/esc1/" target="_blank" rel="noopener noreferrer"> ESC1: Circular Dichroism: best practice and data analysis</a>
+  </figcaption>
+</figure>
+
+<br>
+<p class="vf-intro__text">
+The degree of ellipticity (\( \Theta \)) is related to the differential absorbance as follows:
+</p>
+   
+$$
+\large{ 
+    \Theta = \Delta A * 32.98
+   }
+$$      
+   
+<p class="vf-intro__text">
+Typically, the ellipse is extremely elongated, almost resembling a line, and the measured angle is quite small. Consequently, millidegrees rather than degrees are used as the unit.
+</p>
+
+<p class="vf-intro__text">To compare results from different experiments, we can normalise the CD units by considering the sample concentration and cell path length. Molar extinction and molar ellipticity normalise respectively the CD units of differential absorbance and ellipticity.
+</p>
+   
+$$
+\large{ 
+    Molar \ extinction  = \Delta A * M / (C * L)
+   }
+$$      
+   
+$$
+\large{ 
+    Molar \ ellipticity  = \Theta * M * 100 / (C * L)
+   }
+$$
+
+          <p class="vf-intro__text">Where \( M \), \( C \) and \( L \) correspond to:
+          </p>
+          
+    <ul class="vf-intro__text">
+  <li>M: molecular weight (g/mol)</li>
+  <li>C: concentration  (mg/ml)</li>
+  <li>L: cell path length  (cm)</li>
+
+  </ul>  
+  
+  <br>  
+  
+<p class="vf-intro__text">The CD signal can be further normalised by the number of chromophore units. This is especially useful for comparing peptides or proteins of different lengths. For measurements in the far-UV region (185-240 nm), the number of peptide bonds is used because the amide bond is the main chromophore of interest. In the near-UV region (> 250 nm), where side chains and prosthetic groups contribute to the CD signal, the choice of normalisation units should be different and using the number of peptide bonds would be inappropriate (Kahn, Peter C. "[16] The interpretation of near-ultraviolet circular dichroism." Methods in Enzymology, vol. 61, Academic Press, 1979).
+
+<p class="vf-intro__text">A summary table of the different units is presented below.
+</p>
+   
+   <br>
+   
+   <table class="vf-table">
+
+  <thead class="vf-table__header">
+    <tr class="vf-table__row">
+      <th class="vf-table__heading" scope="col"> Name
+      </th>
+      <th class="vf-table__heading" scope="col"> Formula
+      </th>
+      <th class="vf-table__heading" scope="col"> Units
+      </th>
+    </tr>
+  </thead>
+
+  <tbody class="vf-table__body">
+    
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">(Differential) Absorbance</td>
+      <td class="vf-table__cell">\( A_{l} - A_{r} \)</td>
+      <td class="vf-table__cell">Unitless</td>
+    </tr>
+    
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">(Differential) Milliabsorbance</td>
+      <td class="vf-table__cell">\( Absorbance / 1000 \)</td>
+      <td class="vf-table__cell">Unitless</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">Molar extinction</td>
+      <td class="vf-table__cell">\( Absorbance * M / (C * L) \) </td>
+      <td class="vf-table__cell">Lts/(mol*cm)</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">Mean unit molar extinction</td>
+      <td class="vf-table__cell">\( Absorbance * M_u / (C * L) \) </td>
+      <td class="vf-table__cell">Lts/(mol*cm*chromophores)</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">Degrees (ellipticity)</td>
+      <td class="vf-table__cell">\( Absorbance * 32.98 \) </td>
+      <td class="vf-table__cell">degrees (°)</td>
+    </tr>
+    
+        <tr class="vf-table__row">
+      <td class="vf-table__cell">Millidegrees (ellipticity)</td>
+      <td class="vf-table__cell">\( Degrees / 1000 \) </td>
+      <td class="vf-table__cell">m°</td>
+    </tr>
+    
+        <tr class="vf-table__row">
+      <td class="vf-table__cell">Molar ellipticity</td>
+      <td class="vf-table__cell">\( Degrees * M * 100 / (C * L) \) </td>
+      <td class="vf-table__cell">°*cm<sup>2</sup>/dmol</td>
+    </tr>
+
+        <tr class="vf-table__row">
+      <td class="vf-table__cell">Mean unit molar ellipticity</td>
+      <td class="vf-table__cell">\( Degrees * M_u * 100 / (C * L) \) </td>
+      <td class="vf-table__cell">°*cm<sup>2</sup>/(dmol*chromophores)</td>
+    </tr>
+
+  </tbody>
+</table>
+   
+ <p class="vf-intro__text">Here, 'chromophores' refers to the total number of chromophore units (e.g., the number of peptide bonds).
+</p>  
+   
+   <br>
+   
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('htCurves')">High Tension (HT) Voltage
+<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="htCurves" style="display:none">
+
+    <p class="vf-intro__text">If included, the High Tension (HT) Voltage curves will be read from the input files.</p>
+
+    <p class="vf-intro__text">The HT voltage curves should be inspected to determine where the CD data recorded are valid. The threshold for this depends on the instrument being used, so you should check the manufacturers’ recommendation. After determining at which wavelength this threshold is passed, change the lower limit of the 'Wavelength range' slider to remove the invalid data at low wavelengths.</p>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('processing')">Processing CD spectra<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="processing" style="display:none">
+
+  <p class="vf-intro__text">There are several options for processing the loaded CD spectra:
+  </p>
+
+ <ol class="vf-intro__text">
+   <li class="vf-list__item "> Subtract one spectrum from another (e.g., for baseline correction) </li>
+   <li class="vf-list__item "> Add two spectra together</li>
+   <li class="vf-list__item "> Smooth selected spectra using a Savitzky-Golay filter (window size of 3, 6, 8 or 10 nm). For example, if the wavelength was measured every 1 nm, a window size of 6 nm equals a 7 point filter. If the wavelength was measured every 0.5 nm, a window size of 6 nm equals equals a 14 point filter.</li>
+    <li class="vf-list__item "> Average selected spectra </li>
+    <li class="vf-list__item "> Average selected spectra in batch mode. For example,
+      you can average every five curves (N = 5).</li>
+    <li class="vf-list__item "> Zero selected spectra: subtract the mean signal within a selected wavelength range interval. The width of the interval is given by the User and the maximum wavelength of the zeroing range is defined by the 'Wavelength range' Slider ("1. Input" Box). After this process the slider can be changed to show all data again.</li>
+    
+ </ol> 
+
+  <p class="vf-intro__text"><b>Important details below: </b></p>
+
+  <p class="vf-intro__text">For baseline correction, the 'subtract' option should be only used selecting 'Milli(absorbance)' or '(Milli)degrees' as input units. 
+  </p>
+
+  <p class="vf-intro__text">Spectra that were measured at different wavelength steps or ranges can not be processed unless the option 'allow linear interpolation' is selected. In that case, 
+1) the resulting spectrum will only cover the region where the spectra overlap and 2) a linear interpolation will be performed, implying that the new spectrum will be computed at all the wavelength data points present in both spectra.   
+  </p>
+
+<p class="vf-intro__text">If you're using (mean unit) molar extinction / ellipticity as the operation unit, and the selected spectra have different experimental parameters (such as concentration and path length), the new spectra will not any experimental parameters. Furthermore, you can only work with the new spectra using the same operation unit that was used to generate them.
+</p>
+
+  <p class="vf-intro__text">The following behaviour is applied for the high tension voltage curves.
+  For the subtract, addition, smooth or zero operations, the new generated spectra will have the same high tension voltage curve as the spectra selected in the box 'Spectrum / Spectra 1'. For the (batch) average operation, the high tension voltage curves will be averaged.
+  </p>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('thermalRampAnalysis')">Thermal unfolding<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="thermalRampAnalysis" style="display:none">
+  
+<p class="vf-intro__text"> If the CD spectra are measured as a function of temperature, it is possible to extract thermodynamic parameters of unfolding. For this purpose, it is necessary to choose one (or more) wavelength(s) to monitor and the unfolding model. 
+</p>   
+   <br>
+   
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('signalToFollow')"
+ style="padding-left: 20px;">
+  Signal to follow <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="signalToFollow" style="display:none">  
+
+<br>
+  <p class="vf-intro__text"> As the temperature increases, the CD signal will (hopefully) change due to the unfolding of the biomolecule's secondary structure. Typically, the wavelength with the most significant changes in signal intensity is chosen for analysis. This wavelength often corresponds to the maximum or minimum of the CD signal of the native state spectrum. However, if state changes are not well captured by examination at a single wavelength, it's recommended to analyse the 'basis' spectra (See Section 'Spectra decomposition')
+</p>
+
+  <p class="vf-intro__text"> Last, when studying unfolding data is important to consider that a change in the CD spectrum may result not only from unfolding but also from sample degradation, precipitation, and aggregation.
+</p>
+
+</div>  
+  
+<br>
+  
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsGeneral')"
+ style="padding-left: 20px;">
+  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsGeneral" style="display:none">  
+  
+<br>
+<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied by certain factors. 
+</p>
+  
+ $$
+\large{ 
+    Signal  = \sum_{i=1}^{n} [X_i]*factor_i
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( n \) corresponds to the total number of 
+species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
+</p>  
+</div>  
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsTwoState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsTwoState" style="display:none">  
+  
+<br>
+
+  <p class="vf-intro__text">For a two-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded and folded species; and  \( factorU \)
+and \( factorF \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \) and \( [F] \) depend on the equilibrium unfolding constant \( K_u \):
+</p>
+  
+$$
+\large{ 
+    K_u(T)  = [U] / [F]
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_u(T) \)  depends on the temperature of melting (Tm), enthalpy of unfolding ( \( \Delta H \) ), and heat capacity of unfolding ( \( \Delta Cp \) ):
+</p>
+  
+$$
+\large{ 
+    K_u = \exp(-\frac{\Delta G}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G = \Delta H (1 - \frac{T}{T_m}) - \Delta C_p (T_m - T + T \ln(\frac{T}{T_m}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant. Last,  the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a two-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = \frac{K_u}{1 + K_u} (k_U \cdot T + b_U) + \frac{1}{1 + K_u} (k_N \cdot T + b_N)
+   }
+$$
+
+<p class="vf-intro__text"> where \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states. And \( b_U \) and \( b_N \) represent the intercept of the linear dependence.
+</p>
+
+<p class="vf-intro__text"> For simplicity, \( \Delta Cp \) is assumed to be zero, which does not affect significantly the estimation of the parameters  \( \Delta H \)  and \( Tm \).
+</p> 
+ 
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsThreeState" style="display:none">  
+  
+<br>
+
+<p class="vf-intro__text">For a three-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF + [I]*factorI
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \), \( [F] \) and \( [I] \) are respectively the concentration of the unfolded, folded and intermediate species; and  \( factorU \), \( factorF \)
+and \( factorI \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = [I] / [F]
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = [U] / [I]
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \):
+</p>
+  
+$$
+\large{ 
+    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{1/2} = \Delta H_{1/2} (1 - \frac{T}{T_{1/2}}) - \Delta C_{p1/2} (T_{1/2} - T + T \ln(\frac{T}{T_{1/2}}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant,  \( \Delta H \) is the enthalpy,
+\( T_{1/2} \) is the temperature where \( \Delta G_{1/2} \) equals zero and \( \Delta C_{p1/2} \) is the heat capacity change (for simplicity, assumed to be zero). Last, the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = f_u (k_U \cdot T + b_U) + f_n (k_N \cdot T + b_N) + f_i (b_I)
+   }
+$$
+
+
+$$
+\large{ 
+f_n = \frac{1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+</p>
+
+
+</div>
+
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('chemicalUnfoldingAnalysis')">Chemical unfolding<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="chemicalUnfoldingAnalysis" style="display:none">
+
+<p class="vf-intro__text">If the CD spectra are measured as a function of denaturant agent concentration, it is possible to extract thermodynamic parameters of unfolding. For this purpose, it is necessary to choose one (or more) wavelength(s) to monitor and an unfolding model.
+</p>   
+   <br>
+
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('signalToFollowChemical')"
+ style="padding-left: 20px;">
+  Signal to follow <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="signalToFollowChemical" style="display:none">  
+
+<br>
+
+  <p class="vf-intro__text"> As the denaturant agent concentration increases, the CD signal will (hopefully) change due to the unfolding of the biomolecule's secondary structure. Typically, the wavelength with the most significant changes in signal intensity is chosen for analysis. This wavelength often corresponds to the maximum or minimum of the CD signal of the native state spectrum. However, if state changes are not well captured by examination at a single wavelength, it's recommended to analyse the 'basis' spectra (See Section 'Spectra decomposition')
+</p>
+
+  <p class="vf-intro__text"> Last, when studying unfolding data is important to consider that a change in the CD spectrum may result not only from unfolding but also from sample degradation, precipitation, and aggregation.
+</p>
+
+</div>  
+  
+    <br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalGeneral')"
+ style="padding-left: 20px;">
+  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemicalGeneral" style="display:none"> 
+
+<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied 
+by certain factors. 
+</p>
+  
+ $$
+\large{ 
+    Signal  = \sum_{i=1}^{n} [X_i]*factor_i
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( n \) corresponds to the total number of 
+species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
+</p>
+
+</div>  
+  
+  <br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemical')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemical" style="display:none">  
+  
+<br>
+
+  <p class="vf-intro__text">For a two-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded and folded species; and  \( factorU \)
+and \( factorF \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \) and \( [F] \) depend on the equilibrium unfolding constant \( K_u \):
+</p>
+  
+$$
+\large{ 
+    K_u  = [U] / [F]
+   }
+$$ 
+
+$$
+\large{ 
+    K_u = \exp(-\frac{\Delta G}{R_{gas} T})
+   }
+$$ 
+
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin and \( R_{gas} \) is the gas constant. Assuming a linear dependence of stability on the denaturant concentration, \( \Delta G \)
+can be expressed as 
+</p>
+
+
+$$
+\large{ 
+    \Delta G = M * (D50 - D)
+   }
+$$   
+  
+<p class="vf-intro__text">
+where \( D \) is the denaturant concentration in molar, \( D50 \) is the denaturant concentration at which 50% of the molecules are folded and \( M \) the slope \( \frac{\partial \Delta G(D)}{\partial D} \).
+</p>  
+  
+<p class="vf-intro__text">  Last, the CD signal contribution may show a linear dependence on the denaturant concentration, implying that the final signal of the equation for a two-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = \frac{K_u}{1 + K_u} (k_U \cdot D + b_U) + \frac{1}{1 + K_u} (k_N \cdot D + b_N)
+   }
+$$
+
+<p class="vf-intro__text"> where \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states. And \( b_U \) and \( b_N \) represent the intercept of the linear dependence.
+</p>
+
+</div> 
+
+  <br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalThreeState')"
+ style="padding-left: 20px;">
+  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemicalThreeState" style="display:none">  
+  
+<br>
+
+  <p class="vf-intro__text">For a three-state unfolding model, the total signal is given by,
+</p>
+  
+$$
+\large{ 
+    Signal  = [U]*factorU + [F]*factorF + [I]*factorI
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded, folded 
+and intermediate species; and  \( factorU \), \( factorF \)
+and \( factorI \) determine how much each of the species contributes to the signal.
+</p>
+  
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = [I] / [F]
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = [U] / [I]
+   }
+$$   
+
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \), assuming a linear dependence of stability on the denaturant concentration:
+</p>
+  
+$$
+\large{ 
+    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{1/2} = M_{1/2} * (D50_{1/2} - D)
+   }
+$$   
+  
+<p class="vf-intro__text">
+where \( D \) is the denaturant concentration in molar, \( D50_{1/2} \) is the denaturant concentration where \( \Delta G_{1/2}  \) equals zero,  and \( M_{1/2} \) the slope \( \frac{\partial \Delta G_{1/2}(D)}{\partial D} \).
+</p>  
+  
+<p class="vf-intro__text">  Last, the CD signal contribution may show a linear dependence on the denaturant concentration, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
+</p> 
+
+$$
+\large{ 
+Signal = f_u (k_U \cdot D + b_U) + f_n (k_N \cdot D + b_N) + f_i (b_I)
+   }
+$$
+
+$$
+\large{ 
+f_n = \frac{1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+$$
+\large{ 
+f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
+   }
+$$
+
+<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+</p>
+
+</div>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('spectra_decomposition')">Spectra decomposition<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="spectra_decomposition" style="display:none">
+
+<p class="vf-intro__text"> If several CD spectra are acquired, it is possible to reduce them to a set of basis spectra.  A linear combination of the basis spectra should be able to explain all the original spectra. ChiraKit provides two methods to find the so called basis spectra: Singular Value Decomposition (SVD) and Principal component Analysis (PCA).
+</p>   
+
+<p class="vf-intro__text">
+Mathematically, the SVD/PCA method decomposes the CD spectra into basis spectra such that any measured CD spectrum is given by 
+</p>  
+
+$$
+\large{ 
+CD(x) = c_1(x)\phi_1 + c_2(x)\phi_2 + c_3(x)\phi_3 + ...
+   }
+$$
+
+<p class="vf-intro__text">
+where the \( \phi s \) are the basis spectra, and the coefficients \( c \) 
+are the amount of the given basis spectrum present in the spectrum \( CD(x) \) 
+<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/php.12183?casa_token=UmXah3FqFsIAAAAA%3AujWGfV7KZXvLHVzgAmkt0VVbtDQ_V4Sc7rGGDLmzvKBoNkjUyP_ajTytZeArj1gYxsHfRiINuNl3zA" target="_blank" rel="noopener noreferrer">(Baggesen, Lisbeth Munksgaard<i>et al.</i>, 2014)</a>. The variable \( x \) signifies a dimension used for the measurement, such as temperature or denaturant agent concentration.
+</p>
+
+<br>
+
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('spectra_decomposition_svd')"
+ style="padding-left: 20px;">
+  Singular value decomposition (SVD) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="spectra_decomposition_svd" style="display:none">  
+
+<br>
+  <p class="vf-intro__text"> SVD consist of factorizing a matrix into three matrices with special properties. Specifically, from the matrix \( M \) of dimensions \( m \times  n \) we obtain the matrices \( U \), 
+  \( \Sigma \) and \( V^T \), such that
+</p>
+
+$$
+\large{ 
+M = U \Sigma V^T
+   }
+$$
+
+<p class="vf-intro__text"> 
+where \( U \) is an \( m \times m \) orthogonal matrix,
+\( \Sigma \) is an \( m \times n \) non-negative rectangular diagonal matrix, 
+and \( V^T \) is an \( n \times \ n \)  orthogonal matrix. 
+\( U \) contains the left singular vectors, \( V^T \) the right singular vectors, and 
+the diagonal elements of \( \Sigma \) are the so called singular values.  
+</p>
+
+<p class="vf-intro__text"> 
+In our case, \( M \) can be thought as a matrix containing the CD signal values 
+where each column represents one spectrum. For example, we may have measured
+several spectra of the sample at different temperatures. 
+Then, the matrix \( U \) will contain the basis spectra, and 
+the singular values of \( \Sigma \) can be used to decide the required number 
+of basis spectra. The amount of explained variance associated to each singular value \( s_i \)
+can be calculated as:
+</p>
+
+$$
+\large{ 
+\text{explained variance} (s_i) =  s_i^2 / \sum_{j=1}^{n} s_j^2
+   }
+$$
+
+<p class="vf-intro__text"> 
+After obtaining a set of basis spectra (normally one or two), the associated coefficient for the i-th basis spectrum (\( \phi_{svd,i} \)) and the j-th acquired CD spectrum is given by
+</p>
+
+$$
+\large{ 
+\phi_{svd,i} \cdot M_j
+   }
+$$
+
+<p class="vf-intro__text"> 
+where \( M_j \) denotes the \( j \) column (spectrum) of the matrix M. Therefore,
+we will have, for each basis spectra, as many coefficients as columns in the M matrix. 
+For example, one coefficient per measured temperature.
+</p>
+
+<p class="vf-intro__text"> 
+Examples of SVD applied to CD data are available in the publications listed below:
+</p>
+
+<br>
+ <ol class="vf-intro__text">
+   <li class="vf-list__item "> <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2143977/pdf/9568904.pdf" target="_blank" rel="noopener noreferrer">Konno, Takashi, 1998</a></li>
+      <li class="vf-list__item "><a href="https://link.springer.com/article/10.1007/s00249-017-1246-2" target="_blank" rel="noopener noreferrer">O’Reilly, Andrias O. <i>et al.</i>, 2017</a></li>
+   <li class="vf-list__item "><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/ange.201709184?casa_token=noTHQMYG_ckAAAAA%3AYrpy1YxkpqgXmXcVPazvZWkypDeigFan8ZoyLhRJQJ8lwbM_O46YFV2kWyrqaMvM9xtdmRIL26GCag" target="_blank" rel="noopener noreferrer">del Villar‐Guerra, Rafael <i>et al.</i>, 2018</a></li>
+ </ol> 
+
+</div>
+
+<br>
+
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('spectra_decomposition_pca')"
+ style="padding-left: 20px;">
+  Principal component analysis (PCA) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="spectra_decomposition_pca" style="display:none">  
+
+<br>
+  <p class="vf-intro__text"> PCA is similar to SVD but involves some extra steps. In our case, only centering the data. Indeed, if the data matrix \( M \) is first centered to have zero mean then PCA and SVD should produce the same basis spectra. 
+</p>
+
+<p class="vf-intro__text"> ChiraKit performs PCA through eigen-decomposition of the covariance matrix \( C \):
+</p>
+
+$$
+\large{ 
+C = VLV^t
+   }
+$$
+
+<p class="vf-intro__text"> 
+where V is the matrix containing the eigenvectors and L is a diagonal matrix with 
+the eigenvalues  \( \lambda \) (sorted in descending order). The eigenvectors represent the basis spectra and the associated eigenvalues are used to decide the required number of basis spectra:
+</p>
+
+$$
+\large{ 
+\text{explained variance} (\lambda_i) = \lambda_i / \sum_{j=1}^{n} \lambda_j
+   }
+$$
+
+<p class="vf-intro__text"> 
+where \( n \) equals the total number of eigenvalues. It is important to rembember that here we refer to the variance of the centered matrix. Similarly to SVD, the associated coefficient of the i-th basis spectrum \( \phi_{pca,i} \) on the j-th acquired spectrum are calculated as:
+</p>
+
+$$
+\large{ 
+\phi_{pca,i} \cdot M_{meaned,j}
+   }
+$$
+
+<p class="vf-intro__text"> 
+where \( M_{meaned,j} \) denotes the \( j \) column (spectrum) of the centered matrix M (called here \( M_{meaned} \) ). Therefore, we will have, for each basis spectrum, as many coefficients as columns in the M matrix. For example, one coefficient per measured temperature.
+</p>
+
+<p class="vf-intro__text"> 
+Examples of PCA applied to CD data are available in the publications listed below:
+</p>
+
+<br>
+ <ol class="vf-intro__text">
+   <li class="vf-list__item "> <a href="https://pubs.rsc.org/en/content/articlehtml/2012/sc/c1sc00496d?casa_token=93IU4J--cNwAAAAA:-rcy1CGFsB6cjV6Jso9_rm6isMhikAzemIGxI6sHKevXt2XbAZ0awHlPxZ3Uja71ZFRaXy6D70dG" target="_blank" rel="noopener noreferrer">Metola, Pedro, 2011</a></li>
+   
+   <li class="vf-list__item "><a href="https://onlinelibrary.wiley.com/doi/full/10.1002/bip.22038?casa_token=j0BVduZT-EsAAAAA%3A0va_BBcwEc492lPDbXgJ6gluPuOpRvfNzzyGt1l1vUvnJDiDLxYo7zbxjh81lS_XvCq9D0hPGZjSUQ" target="_blank" rel="noopener noreferrer">Anne, Holm <i>et al.</i>, 2012</a></li>   
+   
+  <li class="vf-list__item "><a href="https://pubs.acs.org/doi/full/10.1021/acs.jctc.9b00203" target="_blank" rel="noopener noreferrer">Nagy, Gabor <i>et al.</i>, 2019</a></li>
+      
+ </ol> 
+
+</div>
+
+<br>
+
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('invert_spectrum')"
+ style="padding-left: 20px;">
+  Basis spectrum inversion <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="invert_spectrum" style="display:none">  
+
+<br>
+<p class="vf-intro__text">
+Once obtained the set of basis spectra, it may happen that they appear to be inverted in comparison to our original CD spectra. Without loss of information or explained variance, any particular basis spectrum can be inverted. The only mathematical step is to change the sign of the basis spectrum and the associated coefficients.
+</p>
+
+</div>
+
+<br>
+
+  <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('change_of_basis')"
+ style="padding-left: 20px;">
+  Change of basis (case k = 2 or k = 3) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="change_of_basis" style="display:none">  
+
+<br>
+<p class="vf-intro__text">In the particular case that two or three relevant basis spectra were obtained after the decomposition, it is possible to rotate them and obtain a new set of two basis spectra with the following properties: 
+1) the first new basic spectrum is similar to the acquired spectrum
+with the lowest temperature / denaturant agent concentration
+2) the amount of explained variance remains constant.
+</p>
+
+<p class="vf-intro__text"> <b> Case 1) Two basis spectra</b>
+</p>
+
+<p class="vf-intro__text">
+Mathematically, if we consider \( c_{1,1} \) and \( c_{2,1} \) to be the associated coefficients for \( \phi_{1} \) and \( \phi_{2} \), and the first acquired spectrum.
+Then, the new basis set can be calculated as follows:
+</p>
+
+$$
+\large{ 
+\phi_{1}' = (\phi_{1} * c_{1,1} + \phi_{2} * c_{2,1} )  / Z1
+   }
+$$
+
+$$
+\large{ 
+\phi_{2}' = (\phi_{1} * c_{2,1} - \phi_{2} * c_{1,1} )  / Z2
+   }
+$$
+
+<p class="vf-intro__text">
+were \( \phi_{1}' \) and \( \phi_{2}' \) are the new basis spectra, and Z1 and Z2
+are two normalisation constants (to obtain unit vectors, \( ||\phi_{1}'|| = ||\phi_{2}'|| = 1 \)). 
+</p>
+
+<p class="vf-intro__text">
+were \( \phi_{1}' \) and \( \phi_{2}' \) are the new basis spectra, and Z1 and Z2
+are two normalisation constants (to obtain unit vectors, \( ||\phi_{1}'|| = ||\phi_{2}'|| = 1 \)). 
+</p>
+
+<p class="vf-intro__text">
+An example of this procedure is shown in <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/php.12183?casa_token=UmXah3FqFsIAAAAA%3AujWGfV7KZXvLHVzgAmkt0VVbtDQ_V4Sc7rGGDLmzvKBoNkjUyP_ajTytZeArj1gYxsHfRiINuNl3zA" target="_blank" rel="noopener noreferrer">Baggesen, Lisbeth Munksgaard<i>et al.</i>, 2014</a>.
+</p>
+
+<p class="vf-intro__text">
+An alternative, but equivalent, way of obtaining the same new set of rotated basis spectra is to use the 2D rotation matrix (rotM) given by  
+</p>
+
+$$
+\large{ 
+rotM = \begin{bmatrix}
+\cos(\alpha)  & \sin(\alpha) \\
+-\sin(\alpha) & \cos(\alpha)
+\end{bmatrix}
+   }
+$$
+
+<p class="vf-intro__text">
+where \( \alpha \) is the angle of a right-triangle between a catheti of size \( c_{1,1} \)  and the hyoptenuse of size \( \sqrt{c_{1,1}^2 + c_{2,1}^2} \) .
+The new set is defined as follows:
+</p>
+
+$$
+\large{ 
+\begin{bmatrix}
+\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad \\
+\phi_{1} \ , \ \phi_{2} \\
+\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad \\
+\end{bmatrix}
+    \cdot rotM =
+\begin{bmatrix}
+\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad \\
+\phi_{1}' \ , \ \phi_{2}' \\
+\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad \\
+\end{bmatrix}
+   }
+$$
+
+<p class="vf-intro__text"> <b> Case 2) Three basis spectra</b>
+</p>
+
+<p class="vf-intro__text">
+Inspired by the rotation matrix method, we also extended the procedure in case of three basis spectra. Let rotZ be the rotation matrix corresponding to a counterclockwise rotation of the z-axis by a specific angle \( \gamma \),
+</p>
+
+$$
+\large{ 
+rotZ = 
+\begin{bmatrix}
+\cos(\gamma) & \sin(\gamma) & 0 \\
+-\sin(\gamma) & \cos(\gamma) & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+   }
+$$
+
+<p class="vf-intro__text">
+Let rotY be the rotation matrix corresponding to a clockwise rotation of the y-axis by a specific angle \( \beta \),
+</p>
+
+$$
+\large{ 
+rotY = 
+\begin{bmatrix}
+\cos(\beta) & 0 & \sin(\beta) \\
+0 & 1 & 0 \\
+-\sin(\beta) & 0 & \cos(\beta)
+\end{bmatrix}
+   }
+$$
+
+<p class="vf-intro__text">
+Let \( \gamma \) be the angle of a right-triangle between a catheti of size \( c_{1,1} \) and the hyoptenuse of size \( \sqrt{c_{1,1}^2 + c_{2,1}^2} \).
+Let \( \beta \) be the angle of a right-triangle between a catheti of size \( \sqrt{c_{1,1}^2 + c_{2,1}^2} \) and the hypotenuse of size \(\sqrt{ c_{3,1}^2 + c_{1,1}^2 + c_{2,1}^2} \). Then,
+</p>
+
+$$
+\large{ 
+\begin{bmatrix}
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\phi_{1} \ , \ \phi_{2} \ \ \ , \ \phi_{3} \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\end{bmatrix}
+    \cdot rotZ \cdot rotY=
+\begin{bmatrix}
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\phi_{1}' \ , \ \phi_{2}' \ \ \ , \ \phi_{3}' \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\quad|\quad,\quad|\quad,\quad|\quad \\
+\end{bmatrix}
+   }
+$$
+
+</div>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_estimation')">Protein secondary structure estimation<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="secondary_structure_estimation" style="display:none">
+
+<p class="vf-intro__text">
+Proteins containing different amounts of secondary structure elements, such as alpha helices, beta sheets, and random coils, produce different CD spectra:
+</p>
+
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+  <img src="../user_guide_images/CD_spectra_secondary_structure.png" alt="CD spectra of Myglobin, OpcA and Wheat germ agglutinin" width="800" loading="lazy"/>
+  <figcaption>
+    <p class="vf-intro__text">
+<b>CD spectra of Myglobin, OpcA and Wheat germ agglutinin.</b> 
+<br>
+Data was downloaded from the Protein Circular Dichroism Data Bank
+<a href="https://www.sciencedirect.com/science/article/pii/S0022283622000018" target="_blank" rel="noopener noreferrer">(Ramalli, Sergio Gomes <i>et al.</i>, 2022)</a>. 
+The CD spectrum of Myoglobin was published in
+<a href="https://academic.oup.com/bioinformatics/article/22/16/1955/208282" target="_blank" rel="noopener noreferrer">Lees, Jonathan G. <i>et al.</i>, 2006</a>. 
+The CD spectra of OpcA and Wheat germ agglutinin was published in 
+<a href="https://academic.oup.com/bioinformatics/article/27/12/1630/257074" target="_blank" rel="noopener noreferrer">Abdul-Gader, Ali <i>et al.</i>, 2011</a>.
+ Protein structures images were rendered with Pymol (The PyMOL Molecular Graphics System, Version 2.5 Schrödinger, LLC.) based on the PDBs 
+ 1a6m
+<a href="https://www.cell.com/biophysj/pdf/S0006-3495(99)77056-6.pdf" target="_blank" rel="noopener noreferrer">(Vojtěchovský, Jaroslav <i>et al.</i>, 1999)</a>
+, 2vdf 
+<a href="https://onlinelibrary.wiley.com/doi/full/10.1002/prot.21841" target="_blank" rel="noopener noreferrer">(Cherezov, Vadim <i>et al.</i>, 2008)</a>
+and 9wga
+<a href="https://www.sciencedirect.com/science/article/pii/S0022283605801743" target="_blank" rel="noopener noreferrer">(Wright, Christine S.  <i>et al.</i>, 1990)</a>
+, respectively. 
+  </figcaption>
+  </p>
+</figure>
+
+<br>
+
+<p class="vf-intro__text">
+Several algorithms were developed to infer the secondary structure content from a given CD spectrum. Among them, Selcon <a href="https://fitzkee.chemistry.msstate.edu/sites/default/files/gradbpc/papers/09_woody_anal-biochem_1993.pdf" target="_blank" rel="noopener noreferrer">(Sreerama, Narasimha <i>et al.</i>, 1993</a>; 
+<a href="https://www.sciencedirect.com/science/article/abs/pii/S0003269700948796" target="_blank" rel="noopener noreferrer">Sreerama, Narasimha <i>et al.</i>, 2000)</a>
+and CDsstr <a href="https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0134(19990515)35:3%3C307::AID-PROT4%3E3.0.CO;2-3" target="_blank" rel="noopener noreferrer">(Johnson, W. Curtis<i>et al.</i>, 1999)</a> are two methods that 
+involve comparing the measured CD spectrum to a reference set of spectra. 
+</p> 
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('selcon')">The Selcon method<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="selcon" style="display:none">
+
+<br>  
+  
+<p class="vf-intro__text">
+The Selcon algorithm can be divided into three versions (1, 2 and 3). ChiraKit will try to run Selcon 3 and if it fails it will run Selcon2. If you use the results from the secondary structure estimation in your manuscript please cite the original algorithm <a href="https://www.sciencedirect.com/science/article/abs/pii/S0003269700948796" target="_blank" rel="noopener noreferrer">(Sreerama, Narasimha <i>et al.</i>, 2000)</a> 
+and the ChiraKit software.
+</p>  
+  
+<p class="vf-intro__text">
+<b>Selcon Version 1</b>
+</p>
+  
+<p class="vf-intro__text">
+The Selcon Version 1 method is a self-consistent procedure for estimating the secondary structure content 
+<a href="https://fitzkee.chemistry.msstate.edu/sites/default/files/gradbpc/papers/09_woody_anal-biochem_1993.pdf" target="_blank" rel="noopener noreferrer">(Sreerama, Narasimha <i>et al.</i>, 1993)</a>. 
+Briefly, we start with a set of linear equations that relate the 
+CD spectra with the secondary structure content:
+</p> 
+  
+$$
+\large{ 
+F = XC
+   }
+$$  
+  
+<p class="vf-intro__text">
+where \( C \) is the \( m \times  n \) matrix containing the CD spectra in delta epsilon (mean unit molar extinction) units, \( F \) is the \( l \times  n \)
+matrix containing the known secondary structure elements, and \( X \) is the \( l \times  m \)
+matrix that allows the transition between the space of secondary structure elements \( F \)
+and the space of CD spectra \( C \). Here, \( n \), \( l \) and \( m \) represent, respectively, 
+the number of proteins, secondary structure elements and wavelengths. 
+</p> 
+  
+<p class="vf-intro__text">
+The matrix C depends on the so-called reference set and the matrix F
+depends on the wavelength range. In ChiraKit, if the lower wavelength value is below 180 nm, we can detect at most six secondary structure elements, and if the value is between 180 and 190 nm, four secondary structure elements. No calculation is possible if the spectrum does not go to at least 190 nm.
+</p> 
+  
+<p class="vf-intro__text">
+Then, let \( c \) be the spectrum of the protein to be analysed, an initial guess for the secondary structure components is done based on the most similar spectrum from the reference set, and we build the set of equations
+</p>  
+  
+$$
+\large{ 
+F_2 = XC_2
+   }
+$$    
+
+<p class="vf-intro__text">
+where \( C_2 \) now includes \( c \), has \( (n + 1) \) columns, and is ordered according to the
+root mean square (RMS) distance to \( c \). \( F_2 \) is also rearranged accordingly. The Equation is
+solved for \( X \) and then the secondary structure \( f \) (of the protein to be analysed) is calculated as
+</p>
+  
+$$
+\large{ 
+f = Xc
+   }
+$$    
+
+<p class="vf-intro__text">
+To solve the Equation regarding \( F_2 \), \( C_2 \) is factorized using the Singular Value Decomposition (SVD) algorithm. Indeed, 
+by varying the number of proteins from the reference set (from 2 to \( n \) ) and the number of relevant singular values (from 1 to 7 ),
+several solutions are obtained for \( f \). Those satisfying the following criteria are considered: 1) the sum of the secondary structure elements' fractions lies between 95% and 105%, and 2) each secondary structure element fraction is greater than - 2.5 %.</p>
+  
+<p class="vf-intro__text">
+If no acceptable solutions are found during this step, the rules are relaxed by adding a tolerance of 1 % to the total sum of fractions, and of 0.5 % to the individual fractions.
+</p>  
+  
+<p class="vf-intro__text">
+For each set of valid solutions that share a certain number of proteins from the reference set but vary in the number of relevant singular values, only the solution whose sum of secondary structure element fractions is closest to 100% is kept. Let \( N_p \) be the number of valid solutions, we will have at most \(2 \le N_p \le n \) solutions.  
+</p>  
+  
+<p class="vf-intro__text">
+The \( N_p \) solutions are averaged to obtain \( f_1 \), which replaces the initial guess in the matrix \( F_2 \) as the second approximation. Finally, the same process is repeated until the RMS difference between two successive solutions is less than 0.0025 delta epsilon units.  
+</p>    
+
+<p class="vf-intro__text">
+<b>Selcon Version 2</b>
+</p>  
+  
+<p class="vf-intro__text">
+The Selcon Version 2 method starts with the same algorithm as Selcon Version 1. After self-consistency is achieved, the final \( N_p \) set of valid solutions are filtered by removing those where the RMS between the reconstructed spectrum and the query spectrum \( c \) is larger than 0.25 delta epsilon units. If the filter does not leave any solution, the tolerance is relaxed using 0.01 delta epsilon units steps until at least one solution is found. Finally, the mean solution of the filtered solutions is reported.  
+</p>   
+  
+<p class="vf-intro__text">
+<b>Selcon Version 3</b>
+</p>  
+  
+<p class="vf-intro__text">
+The Selcon Version 3 method follows the same procedure as Selcon Version 2 with the difference that one more rule is applied <a href="https://www.sciencedirect.com/science/article/abs/pii/S0003269700948796" target="_blank" rel="noopener noreferrer">(Sreerama, Narasimha <i>et al.</i>, 2000)</a>. Basically, the \( N_p \) set of valid solutions is further filtered based on the amount of alpha helix.
+</p>     
+  
+<p class="vf-intro__text">
+Let \( h_{i} \) be the alpha-helix content fraction of the i-th solution, 
+\( h_{q} \) the predicted alpha-helix content fraction for the query spectrum (after the Selcon 2 method); and \( h_{min} \), \( h_{ave} \) and \( h_{max} \) the minimum, average, and maximum fraction of alpha-helix content, respectively, considering all the reference proteins required to obtain the \( N_p \) solutions. Then, for the i-th solution to be valid, it needs to satisfy any of these criteria:
+</p>    
+  
+$$
+\large{ 
+\text{Case 1) } h_q > 0.65 \:\&\: h_i > 0.65 
+   }
+$$    
+  
+$$
+\large{ 
+\text{Case 2) } 0.25 \leq h_q \leq 0.65 \:\&\: 
+\frac{h_q + h_{max}}{2} - 0.03 \leq h_i \leq \frac{h_q + h_{max}}{2} + 0.03
+   }
+$$
+
+$$
+\large{ 
+\text{Case 3) } 0.15 \leq h_q < 0.25 \:\&\: 
+\frac{h_q + h_{ave}}{2} - 0.03 \leq h_i \leq \frac{h_q + h_{ave}}{2} + 0.03
+   }
+$$
+ 
+$$
+\large{ 
+\text{Case 4) } h_q < 0.15 \:\&\: 
+\frac{h_q + h_{min}}{2} - 0.03 \leq h_i \leq \frac{h_q + h_{min}}{2} + 0.03
+   }
+$$
+
+<p class="vf-intro__text">
+Finally, the mean of the double filtered valid solutions is reported.
+</p>  
+
+</div>
+
+<br>
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_elements')">Protein secondary structure elements<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="secondary_structure_elements" style="display:none">
+
+<br>
+
+<p class="vf-intro__text">
+All secondary structures elements come from the DSSP routine <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/bip.360221211?casa_token=afBAV3v9mqcAAAAA:jv8LbugAhgajsISeg2h1flntJEtfxyNo_yM5I1Ox14BCZ9MDYiitwEw-C8TJCz43Sowtg4YxBmutyw" target="_blank" rel="noopener noreferrer">(Kabsch, Wolfgang, and Christian Sander, 1983)</a>.
+Following the method of <a href="https://onlinelibrary.wiley.com/doi/abs/10.1110/ps.8.2.370" target="_blank" rel="noopener noreferrer">Sreerama, Narasimha <i>et al.</i>, 1999</a>, the secondary structure elements are further categorized as regular or distorted alpha-helix, regular or distorted beta-sheet, turns and 'other'.
+Alpha helix are the sum of fractions H and G. Beta sheets are the fraction E.
+Turns are fraction T. All other fractions (I, B, S, C) are assigned to Other.
+The alpha helix fraction is divided into two groups: Alpha_D (distorted) which are the two first and two last residues in a helix and the rest are Alpha_R (regular). If the helix is less than 4 residues all go into the Alpha_D fraction.
+The same division is made for beta sheets, with the difference that only the first and the last residue of a beta strand goes into the distorted fraction Beta_D. The rest goes into the regular fraction Beta_R.
+</p> 
+
+<p class="vf-intro__text">
+For a given spectrum with an unkown associated secondary structure, 
+if the lower wavelength range value is below 180 nm, the six secondary 
+structure elements can be detected. If the lower limit is between 180 and 190 nm (inclusive), four different fractions will be estimated:  Alpha, Beta, Turns and Other (Alpha = Alpha_R + Alpha_D, Beta = Beta_R + Beta_D).  
+</p>   
+  
+</div>
+
+<br>
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('reference_sets')">Reference sets<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="reference_sets" style="display:none">
+
+<br>
+<p class="vf-intro__text">
+ChiraKit provides two reference sets: 1) AU_SP175 and 2) AU_SM180. These sets contain CD spectra from the same group of proteins as the original SP175 <a href="https://academic.oup.com/bioinformatics/article/22/16/1955/208282" target="_blank" rel="noopener noreferrer">(Lees, Jonathan G. <i>et al.</i>, 2006)</a> 
+and SMP180 <a href="https://academic.oup.com/bioinformatics/article/27/12/1630/257074" target="_blank" rel="noopener noreferrer">(Abdul-Gader, Ali <i>et al.</i>, 2011)</a> sets.
+AU_SP175 contains the CD spectra of 71 soluble proteins measured down to 175 nm. AU_SM180 contains the AU_SP175 set and 57 additional CD spectra, including membrane proteins. The lower limit of the AU_SM180 set is 180 nm. In both cases, the data sets have 1 nm steps and start at 240 nm.
+</p> 
+
+<p class="vf-intro__text">
+The number of secondary structure elements to be detected depends on the reference set (or the lower wavelength limit). Six secondary structure elements for values lower than 180 nm (AU_SP175), and four secondary structure elements for values between 180 and 190 nm (AU_SM180). 
+</p> 
+
+<p class="vf-intro__text">
+To select the reference data, the CD spectra were downloaded from the <a href="https://pcddb.cryst.bbk.ac.uk/" target="_blank" rel="noopener noreferrer">Protein Circular Dichroism Data Bank (PCDDB)</a>. In case that many versions were available, the latest one was chosen (September 2023). In two cases we did not use the PCDDB data directly:
+The Human Serum Albumin CD spectrum was replaced with an in-house measured spectrum. The Lysozyme spectrum CD0000045100 was zeroed again and averaged with the spectrum CD0000045000. 
+</p>
+
+<p class="vf-intro__text">
+<b>Reference sets for download:</b>
+</p>
+
+<ul class="vf-intro__text">
+
+<li>AU_SP175: <a href="../example_files/AU_SP175_F.csv" download>Matrix F</a>  and <a href="../example_files/AU_SP175_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix regular, alpha-helix distorded, beta-sheet regular, beta-sheet distorded, turns and other.</li>
+<br>
+<li>AU_SMP180: <a href="../example_files/AU_SMP180_F.csv" download>Matrix F</a>  and <a href="../example_files/AU_SMP180_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix, beta-sheet, turns and other.</li>
+<br>
+
+</ul> 
+
+<p class="vf-intro__text">
+Custom reference sets can be imported too. For instance, you can load the IDP175 reference dataset from
+<a href="https://www.nature.com/articles/s42003-023-05178-2" target="_blank" rel="noopener noreferrer">Miles, Andrew J. <i>et al.</i>, 2023</a> by using the <a href="../example_files/F_IDP175.txt" download>Matrix F</a>  and <a href="../example_files/A_IDP175.txt" download>Matrix C</a>. The secondary structure elements are: alpha-helix, beta-sheet, turns and other. 
+</p>
+
+<p class="vf-intro__text">
+When using the secondary structure algorithm, you must cite also 
+the original publications of the reference sets.   
+</p>
+
+</div>
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('custom_analysis')">Custom analysis<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="custom_analysis" style="display:none">
+
+<p class="vf-intro__text">
+The CD signal can also be analysed as a function of any desired experimental parameter (e.g., time). To use this feature, follow these steps:
+</p>
+
+ <ol class="vf-intro__text">
+   <li class="vf-list__item "> Load the CD spectra of interest and go to the 'Custom analysis' Tab</li>
+   <li class="vf-list__item "> Give a name to the experimental parameter (e.g., 'T')</li>
+   <li class="vf-list__item "> Input the value of the experimental parameter 
+   for each CD curve of interest and generate the dataset</li>
+   <li class="vf-list__item "> Set a fixed wavelength to be analysed or 
+   decompose the CD spectra using the SVD/PCA algorithm.</li>
+   <li class="vf-list__item "> Input the fitting function. Important details: 
+   The experimental parameter should be included in the fitting function string.
+   For example, if you used 'T' as an experimental parameter, to fit a line, 
+   the function string could be: 'T*a + b'. To use exponential or logarithm functions, 
+   use 'e^(...)' or 'log(...)'; don't forget the parenthesis. 
+   The function parameters can not contain mathematical characters; e.g., 
+   instead of 'dG_h2o', use 'dG_water'.
+   Parameters with the pattern 'pos' (e.g., 'TmPos') and 'neg' will be constrained 
+   to be positive or negative, respectively. Parameters with the pattern 'Global'
+   will be shared across all curves (of a given dataset).</li>
+   <li class="vf-list__item "> Obtain the initial estimates of the function
+   parameters</li>
+    <li class="vf-list__item "> Verify the initial estimates and fitting boundaries and 
+    proceed to do the fitting</li>
+ </ol> 
+
+<p class="vf-intro__text">
+<b>Fitting function examples</b>
+</p>
+
+<br>
+ <ul class="vf-intro__text">
+    <li class="vf-list__item "> Two state reversible thermal unfolding, CD signal as a function of 'T' (with slope for the unfolded state): '( e^(-GlobalDhPos * (1 - (T+273) / (GlobalTmPos+273))  / (0.001987 * (T+273))) / (1 +  e^(-GlobalDhPos * (1 - (T+273) / (GlobalTmPos+273))  / (0.001987 * (T+273))))) * (kU * (T+273) + bU) + (1 / (1 +  e^(-GlobalDhPos * (1 - (T+273) / (GlobalTmPos+273))  / (0.001987 * (T+273))))) * (0 * (T+273) + bN)' </li>
+
+    <li class="vf-list__item "> TFE (2,2,2-trifluoroethanol) water–peptide interactions, CD signal (at 222 nm) as a function of the molar ratio between TFE and water ('TFE_ratio', [TFE]/[H<sub>2</sub>0]): '(ThetaTFE + ThetaWater * e^(1.689 *( m * TFE_ratio - dG_water))) / (1 + e^(1.689 *( m * TFE_ratio - dG_water)) )'. Based on <a href="https://pubmed.ncbi.nlm.nih.gov/8117669/" target="_blank" rel="noopener noreferrer">Jasanoff A <i>et al.</i>, 1994</a> and <a href="https://pubmed.ncbi.nlm.nih.gov/8117669/" target="_blank" rel="noopener noreferrer">Gonzalo de Prat-Gay, 1997</a>
+    
+</li>    
+  
+      <li class="vf-list__item ">Single site interaction between two biomolecules (partner A and B), where the signal is only determined by the amount of free A and the complex AB (free B does not contribute to the signal). We also assume that the total concentration of A is constant. 
+      For example, if the total concentration of A is 6 micromolar, we can express the CD signal as a function of the concentration of B ('Bconc', in micromolar) by using: '0.5 * (ABsignal - freeAsignal) * ((10**logTenOfKd+6+Bconc) - sqrt((10**logTenOfKd+6+Bconc)**2 - 4*6*Bconc)) + freeAsignal*6'.
+      As a result we will fit the two baselines (function parameters 'ABsignal' and 'freeAsignal') and the logarithm of the binding affinity ('logTenOfKd', in micromolar). Based on <a href="https://www.nature.com/articles/nprot.2007.475" target="_blank" rel="noopener noreferrer">Garbett, Nichola C 
+<i>et al.</i>, 2007</a> and <a href="https://journals.iucr.org/d/issues/2021/10/00/qt5002/index.html" target="_blank" rel="noopener noreferrer">Burastero, Osvaldo 
+<i>et al.</i>, 2021</a>
+</li>   
+    
+<li class="vf-list__item "> If you need help implementing a certain equation please contact us:
+spc@embl-hamburg.de</a>
+</li>
+    
+ </ul> 
+ 
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('spectra_comparison')">Spectra comparison<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="spectra_comparison" style="display:none">
+
+<p class="vf-intro__text">
+Use this module to compare groups of spectra with categorical labels. For instance, to investigate whether the 'Treatment' spectrum is different from the 'Control' spectrum.  
+</p>
+
+<p class="vf-intro__text">
+Generating a dataset in this module will automatically produce: 
+</p>
+<br>
+ <ol class="vf-intro__text">
+   <li class="vf-list__item "> The average spectrum for each label and its associated standard deviation.</li>
+      <li class="vf-list__item "> Every possible difference spectrum and its associated standard deviation.</li>
+   <li class="vf-list__item "> Boxplots of the intra-group and inter-group euclidean distances . If the distances between groups are larger that the distances within groups, that would indicate that the spectra of each group are different. </li>
+      <li class="vf-list__item "> Hierarchical Clustering Dendogram computed from the euclidean distance matrix. The agglomeration method is 'Ward.2D' <a href="https://link.springer.com/article/10.1007/s00357-014-9161-z" target="_blank" rel="noopener noreferrer">(Fionn Murtagh <i>et al.</i>, 2014)</a>. Use the dendogram for exploratory analyses.</a> 
+      </li>
+   <li class="vf-list__item "> Spectral comparison plots <a href="https://journals.sagepub.com/doi/10.1177/00037028221134128?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed" target="_blank" rel="noopener noreferrer">(Curtis W. Meus <i>et al.</i>, 2022)</a>. Useful for instrument calibration.</li>
+ </ol> 
+
+<p class="vf-intro__text">
+To compare the shapes of spectra and discard the influence of differences in absorbance intensity, the L2 normalisation can be used. This results in the calculation of normalised euclidean distances <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9720711/" target="_blank" rel="noopener noreferrer">(Taiji Oyama <i>et al.</i>, 2022)</a>.
+</p>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('peptide_helix_content')">Peptide helix / coil content<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="peptide_helix_content" style="display:none">
+
+<p class="vf-intro__text">
+In the case of peptides that undergo helix to coil transitions, it's possible to estimate the percentage of alpha-helix using the dichroic ensemble model proposed in <a href="https://pubs.acs.org/doi/10.1021/acs.jpcb.3c07511" target="_blank" rel="noopener noreferrer"> Uroš Zavrtanik <i>et al.</i> 2024</a>. The helicity is estimated from the CD signal at 222 nm (in mean unit molar ellipticity). To use this feature, the Table 'Parameters for molar ellipticity / extinction' from the panel '1. Import data' should be filled.
+</p>
+
+<p class="vf-intro__text">
+This model is suitable only for helix-coil type peptides having between 4 and 32 peptide-bonds. Avoid using it for peptides that do not exhibit clear helix to coil transitions (e.g., peptides with beta-sheet structure).
+</p>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('additionalResources')">Additional resources<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="additionalResources" style="display:none">
+
+  <p class="vf-intro__text"> To deposit and explore CD and synchrotron radiation CD (SRCD) spectral data - <a href="https://pcddb.cryst.bbk.ac.uk/" target="_blank" rel="noopener noreferrer"> The Protein Circular Dichroism Data Bank (PCDDB)</a>
+  </p>
+
+  <p class="vf-intro__text"> Beginners guide to circular dichroism - <a href="https://portlandpress.com/biochemist/article/43/2/58/228163/Beginners-guide-to-circular-dichroism" target="_blank" rel="noopener noreferrer"> The Biochemist article </a> 
+  </p>
+
+  <p class="vf-intro__text"> Slides for best practice and data analysis - <a href="https://www.mosbri.eu/training/end-user-short-courses/esc1/" target="_blank" rel="noopener noreferrer"> MOSBRI End User Short Course (ESC1) on Circular Dichroism (CD) spectroscopy at Aarhus University, Denmark. </a> 
+  </p>
+
+  <p class="vf-intro__text"> Units of CD measurement and sample concentration effects  - <a href="https://www.chem.uci.edu/~dmitryf/manuals/Fundamentals/CD%20practical%20guide.pdf" target="_blank" rel="noopener noreferrer"> Pauls_Guide_Broch</a>
+  </p>
+
+</div>
+</div>
+
+</section>
+
+  <!-- IE11 polyfill JS -->
+  <script nomodule crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default"></script>
+  <script src="https://assets.emblstatic.net/vf/v2.4.5/scripts/scripts.js"></script>
+  
+  <!-- Hide div element onclick JS -->
+  <script>
+    function myFunction(divID) {
+      var x = document.getElementById(divID);
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+  
+
+</body>
+</html>

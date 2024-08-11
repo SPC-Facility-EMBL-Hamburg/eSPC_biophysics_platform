@@ -1,5 +1,5 @@
 
-Last time updated: January 2024
+Last time updated: August 2024
 
 ## General description
 
@@ -27,8 +27,6 @@ Follow the README.md document:
 | ChiraKit              | circularDichroismApp/README.md          | 
 
 ## Installation of the whole eSPC platform 
-
-Minimum requirements: R version 4.2.2 and Python version 3
 
 To install the eSPC platform in the development machine, follow this instructions:
 

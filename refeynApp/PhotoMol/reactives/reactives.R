@@ -29,7 +29,7 @@ updateInputBox <- function(){
 observeEvent(input$GoLoadExample,{
   
   reactives$data_loaded <- FALSE
-  refeyn$load_data_h5("demoTestFile")
+  refeyn$load_data_h5("www/demo.h5")
   
   updateInputBox()
   reactives$data_loaded <- TRUE
@@ -47,13 +47,11 @@ observeEvent(input$massPhotometryFile,{
     fileExtension <- getFileNameExtension(input$massPhotometryFile$datapath)
     
     if (fileExtension == "h5") {
-      file.copy(input$massPhotometryFile$datapath,"0.h5",overwrite=TRUE)
-      refeyn$load_data_h5("0.h5")
+      refeyn$load_data_h5(input$massPhotometryFile$datapath)
     }
     
     if (fileExtension == "csv") {
-      file.copy(input$massPhotometryFile$datapath,"0.csv",overwrite=TRUE)
-      refeyn$load_data_csv("0.csv")
+      refeyn$load_data_csv(input$massPhotometryFile$datapath)
     }
 
     if (refeyn$massesLoaded) {

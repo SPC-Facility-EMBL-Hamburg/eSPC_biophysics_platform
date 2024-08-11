@@ -1,11 +1,12 @@
 import numpy  as np 
+from scipy.linalg        import pinv
 
 import numpy.polynomial.polynomial as poly
 
 from scipy.optimize  import curve_fit
 from scipy.signal    import savgol_filter
-from scipy.stats     import t
 from scipy.linalg    import svd
+
 from scipy.integrate import solve_ivp
 
 # R gas constant in kcal/(kelvin mol)

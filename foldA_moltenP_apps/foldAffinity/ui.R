@@ -12,25 +12,23 @@ shinyUI(dashboardPage(title = "FoldAffinity",
                    
     sidebarMenu(
       
-      menuItem("1. Load input",            icon = icon("chart-simple"),                tabName = "menu_input"),
-      menuItem("2. Fit fluorescence",      icon = icon("chart-simple"),                tabName = "menu_fit"),
-      menuItem("3. Fit unfolded fraction", icon = icon("chart-simple"),                tabName = "menu_fit2"),
-      menuItem("4. Export results",        icon = icon("file-export"),                tabName = "menu_export"),
-      menuItem("Tm fitting",               icon = icon("chart-simple"),                tabName = "menu_tm_fit"),
-      menuItem("Simulate data",            icon = icon("magnifying-glass-chart"),                tabName = "menu_simulate"),
-      menuItem("User guide",               icon = icon("user-circle"),       tabName = "menu_user_guide"),
-      menuItem("Tutorial",                 icon = icon("user-circle"),       tabName = "menu_tutorial"),
-      menuItem("About",                    icon = icon("circle-info"), tabName = "menu_about"))
+      menuItem("1. Load input",            icon = icon("file-circle-plus"),       tabName = "menu_input"),
+      menuItem("2. Fit fluorescence",      icon = icon("chart-line"),             tabName = "menu_fit"),
+      menuItem("3. Fit unfolded fraction", icon = icon("boxes-stacked"),          tabName = "menu_fit2"),
+      menuItem("4. Export results",        icon = icon("file-export"),            tabName = "menu_export"),
+      menuItem("Tm fitting",               icon = icon("temperature-half"),       tabName = "menu_tm_fit"),
+      menuItem("Simulate data",            icon = icon("magnifying-glass-chart"), tabName = "menu_simulate"),
+      menuItem("User guide",               icon = icon("user-astronaut"),         tabName = "menu_user_guide"),
+      menuItem("Tutorial",                 icon = icon("book-open"),              tabName = "menu_tutorial"),
+      menuItem("About",                    icon = icon("circle-info"),            tabName = "menu_about"))
     
       ),
   
   dashboardBody(theme_grey_light,
-    #tags$head(includeHTML(("ui_files/google-analytics.html"))),
     tabItems(
       tabItem(tabName = "menu_input",
         fluidRow(
-          useShinyalert(),
-          
+
           # input$FLf, conc_units, which, sg_range, median_filter, n_replicates, dil_factor, initial_ligand, rev_order, fill_table
           source("ui_files/ui_load_input_box.R",local = TRUE)$value, 
           source("ui_files/ui_position_vs_concentration_box.R",local = TRUE)$value, # input$table1, table2, table3, table4

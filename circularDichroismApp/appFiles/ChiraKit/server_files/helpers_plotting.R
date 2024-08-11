@@ -160,12 +160,9 @@ reference_is_in_label <- function(reference,label,separator=' - ') {
   vec   <- vec[vec != ""]
   cond4 <- length(vec) == 1 
 
-  
-  
   return(cond0 | (cond1 & cond3) | (cond2 & cond4))
   
 }
-
 
 
 

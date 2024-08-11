@@ -116,6 +116,8 @@ output$download_fit_plots = downloadHandler(
   }
 )
 
+reactives
+
 # The downloadHandler function has an intrinsic timeout limit. We need to generate first the report
 observeEvent(input$downloadReport,{
   req(fluo_fit_data())
@@ -123,9 +125,15 @@ observeEvent(input$downloadReport,{
   filename <- paste0(input$filename_report,".pdf")
   withBusyIndicatorServer("downloadReport",{ 
     
-    file.copy(paste0(base_dir,"report_template/report.Rmd"), 'report.Rmd', overwrite = TRUE)
-    file.copy(paste0(base_dir,"report_template/header.tex"), 'header.tex', overwrite = TRUE)
-    rmarkdown::render(input = 'report.Rmd', output_format = 'pdf_document',output_file=filename)
+    reactives$reportDir <- paste0(tempfile(),'/')
+    dir.create(reactives$reportDir)
+    
+    file.copy(paste0(base_dir,"report_template/report.Rmd"), reactives$reportDir, overwrite = TRUE)
+    file.copy(paste0(base_dir,"report_template/header.tex"), reactives$reportDir, overwrite = TRUE)
+    
+    rmarkdown::render(input = paste0(reactives$reportDir,'report.Rmd'), 
+                      output_format = 'pdf_document',output_file=filename)
+    
     reactives$report_was_created             <- TRUE
   })
 })
@@ -136,7 +144,7 @@ output$downloadReportHidden <- downloadHandler(
   },
   
   content <- function(file) {
-    file.copy(paste0(input$filename_report,".pdf"), file)
+    file.copy(paste0(reactives$reportDir,input$filename_report,".pdf"), file)
   }
 )
 

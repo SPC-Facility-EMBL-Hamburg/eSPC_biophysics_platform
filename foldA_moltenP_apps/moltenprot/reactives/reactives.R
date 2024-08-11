@@ -5,7 +5,8 @@ reactives <- reactiveValues(
   global_n_rows_conditions_table = 96,    # Number of rows for the load input table
   include_vector                 = NULL,  # To know which conditions to plot         (for the SUPR DSF data)
   full_spectra                   = FALSE, # Full spectra instead of fixed wavelength (for the SUPR DSF data)
-  spectra_panel_names            = NULL
+  spectra_panel_names            = NULL,
+  reportDir                      = NULL
   )
 
 output$data_loaded             <- reactive({
@@ -89,19 +90,19 @@ observeEvent(input$FLf,{
   
   withBusyIndicatorServer("Go",{
     
-    system(paste0("rm -f ",users_dir,total_folders,"/*"))
-    
     # Check that we have the xlsx file
     if (!(is.null(input$FLf))) {
       
       fileExtension <- getFileNameExtension(input$FLf$datapath)
       if ((fileExtension == "zip")) {
         
-        system(paste0("rm -f *xlsx"))
-        file.copy(input$FLf$datapath,"0.zip",overwrite=TRUE)
-        unzip("0.zip")
-        xlsx_files <- list.files(".",pattern = "xlsx",recursive=T)
+        # Create a temporary directory to unzip files
+        unzipDir <- tempfile()
+        dir.create(unzipDir)
+        unzip(input$FLf$datapath,exdir = unzipDir)
         
+        xlsx_files <- list.files(unzipDir,pattern = "xlsx",recursive=T,full.names = T)
+
         dsf_objects_from_xlsx_files <- dsf_objects_from_xlsx_files(xlsx_files)
         
         dsf_objects   <- dsf_objects_from_xlsx_files$dsf_objects
@@ -131,29 +132,22 @@ observeEvent(input$FLf,{
 
       }
 
-      newFileName <- paste0("0.",fileExtension)
       if (fileExtension == "txt") {
-        # Copy txt file to the current folder
-        file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
+
+        fileType <- detect_txt_file_type(input$FLf$datapath)
         
-        fileType <- detect_txt_file_type(newFileName)
-        
-        if (fileType == 'MX3005P')     dsf$load_Agilents_MX3005P_qPCR_txt(newFileName)
-        if (fileType == 'QuantStudio') dsf$load_QuantStudio_txt(newFileName)
+        if (fileType == 'MX3005P')     dsf$load_Agilents_MX3005P_qPCR_txt(input$FLf$datapath)
+        if (fileType == 'QuantStudio') dsf$load_QuantStudio_txt(input$FLf$datapath)
         
       }
       
       if (fileExtension == "csv") {
-        # Copy txt file to the current folder
-        file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
-        dsf$load_csv_file(newFileName)
+        dsf$load_csv_file(input$FLf$datapath)
         
       }
       
       if (fileExtension == "supr") {
-        # Copy txt file to the current folder
-        file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
-        dsf$load_supr_dsf(newFileName)
+        dsf$load_supr_dsf(input$FLf$datapath)
         
         reactives$full_spectra   <- TRUE
         reactives$include_vector <- rep(T,length(dsf$conditions))
@@ -165,20 +159,17 @@ observeEvent(input$FLf,{
       
       if (fileExtension == "xlsx" | fileExtension == "xls") {
         
-        # Copy xlsx file to the current folder
-        file.copy(input$FLf$datapath,newFileName,overwrite=TRUE)
-        
         # Get file type: DSF or nDSF
-        sheet_names <- get_sheet_names_of_xlsx(newFileName)
+        sheet_names <- get_sheet_names_of_xlsx(input$FLf$datapath)
         # ... Load the data to the python class ...
         if ("RFU" %in% sheet_names)  {
-          dsf$load_Thermofluor_xlsx(newFileName)
+          dsf$load_Thermofluor_xlsx(input$FLf$datapath)
         } else if ("Data Export" %in% sheet_names || "melting-scan" %in% sheet_names) {
-          dsf$load_panta_xlsx(newFileName)
+          dsf$load_panta_xlsx(input$FLf$datapath)
         } else if ("Profiles_raw" %in% sheet_names) {
-          dsf$load_tycho_xlsx(newFileName)
+          dsf$load_tycho_xlsx(input$FLf$datapath)
         }else {
-          dsf$load_nanoDSF_xlsx(newFileName,sheet_names)
+          dsf$load_nanoDSF_xlsx(input$FLf$datapath,sheet_names)
         }
       
       }
@@ -203,8 +194,11 @@ observeEvent(input$FLf,{
       min_temp <- round(min(dsf$temps) - 273.15) # To degree celsius
       max_temp <- round(max(dsf$temps) - 273.15) # To degree celsius
       
+      dsf$estimate_fluo_derivates(input$SG_window2)
+      
       updateSliderInput(session,"sg_range",NULL,min = min_temp, max = max_temp,value = c(min_temp+3,max_temp-3))
       
+      Sys.sleep(0.5)
       reactives$data_loaded             <- TRUE
       
     }})
@@ -344,6 +338,7 @@ output$signal_der1 <- renderPlotly({
   modify_fluo_temp_cond()
   
   fluo_m <- make_df4plot(dsf$derivative,dsf$conditions,dsf$temps)
+
   if (!(is.null(fluo_m))) {
     p <- plot_fluo_signal(fluo_m,"First derivative",
                           input$plot_width, input$plot_height, 

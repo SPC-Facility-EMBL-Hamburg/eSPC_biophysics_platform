@@ -205,24 +205,25 @@ observeEvent(input$cdFiles,{
     
     if (fileExtension == 'zip') {
       
-      file.copy(cd_data_file,'0.zip')
-      unzip('0.zip')
+      # Create a temporary directory to unzip files
+      unzipDir <- tempfile()
+      dir.create(unzipDir)
+      
+      unzip(cd_data_file,exdir = unzipDir)
       
       # List all possible types of files
-      file_list <- list.files('./', 
+      file_list <- list.files(unzipDir, 
                               pattern = "\\.xlsx$|\\.gen$|\\.dat$|\\.txt$|\\.csv$|d\\d+$",
                               ignore.case = TRUE,
-                              recursive = TRUE)
+                              recursive = TRUE,
+                              full.names = TRUE)
       
       for (file in file_list) {
       
-        load_one_experiment(file,file)
+        load_one_experiment(file,basename(file))
         
-        # Remove the file
-        system(paste0('rm -f ',file))
       }
-      system('rm -f 0.zip')
-      
+
     } else {
       
       load_one_experiment(cd_data_file,name)

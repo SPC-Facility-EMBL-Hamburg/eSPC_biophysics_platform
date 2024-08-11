@@ -5,18 +5,14 @@ observeEvent(input$massPhotometryFileCalibration,{
   
   withBusyIndicatorServer("Go2",{
     
-    system(paste0("rm -f ",users_dir,total_folders,"/*"))
-    
     fileExtension <- getFileNameExtension(input$massPhotometryFileCalibration$datapath)
     
     if (fileExtension == "h5") {
-      file.copy(input$massPhotometryFileCalibration$datapath,"Calib.h5",overwrite=TRUE)
-      refeynCalib$load_data_h5("Calib.h5")
+      refeynCalib$load_data_h5(input$massPhotometryFileCalibration$datapath)
     }
     
     if (fileExtension == "csv") {
-      file.copy(input$massPhotometryFileCalibration$datapath,"Calib.csv",overwrite=TRUE)
-      refeynCalib$load_data_csv("Calib.csv")
+      refeynCalib$load_data_csv(input$massPhotometryFileCalibration$datapath)
     }
     
     pks_initial <- sapply(refeynCalib$pks_initial, function(x) signif(x*factorForContrast,2))

@@ -1,7 +1,19 @@
 rm(list=ls())
 gc()
-setwd("/home/osvaldo/spc_shiny_servers/refeynApp/PhotoMol/")
+setwd("/home/os/spc_shiny_servers/refeynApp/PhotoMol/")
 library(reticulate)
+
+use_virtualenv("/home/os/myenv", required = TRUE)
+py_run_string("import sys")
+py_run_string("import pandas")
+py_run_string("import scipy")
+py_run_string("import xlrd")
+py_run_string("import h5py")
+
+config <- py_config()
+print(config)
+
+
 library(tidyverse)
 library(plotly)
 library(reshape2)

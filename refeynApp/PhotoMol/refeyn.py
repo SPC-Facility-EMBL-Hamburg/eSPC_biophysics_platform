@@ -178,7 +178,7 @@ class Refeyn:
             list_pos.append(round(self.popt[3*i]))
             list_ampl.append(round(self.popt[3*i+1]))
             list_sigma.append(round(self.popt[3*i+2]))
-            list_counts.append(round(np.trapz(self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_mass)[0]))
+            list_counts.append(round(np.trapezoid(self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_mass)[0]))
         # Create Pandas Dataframe
 
         total_counts = self.n_binding

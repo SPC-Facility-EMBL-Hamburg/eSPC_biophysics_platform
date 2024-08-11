@@ -1,6 +1,6 @@
 # The ThermoAffinity app
 
-Last time updated: March 2023
+Last time updated: August 2024
 
 ## Introduction
 
@@ -15,37 +15,27 @@ Example data is available when running the app.
 
 ## Getting started
 
-To run the apps locally you need to 
+To run the apps locally you need R (tested with version 4.4.1) and Python (tested with version 3.12.3). Then,
 
-1) Install R (tested with version 4.2.2)
-2) Install Python (tested with version 3.10.9) 
-3) Install the required R packages (it may take a long time):
+1) Install the required R packages (it may take a long time)
 
-``` R 
+``` bash 
 Rscript install_r_packages.R
 ```
+2) Create a Python environment
 
-4) Install conda/miniconda:
-
-``` bash
-user=$(whoami)
-wget --no-verbose https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  -P /home/${user}/               
-bash  /home/${user}/Miniconda3-latest-Linux-x86_64.sh -b                                                                
-rm -f /home/${user}/Miniconda3-latest-Linux-x86_64.sh
+``` bash 
+user=$(whoami) 
+python3 -m venv /home/${user}/myenv
 ```
 
-5) Install the python packages numpy, pandas, xlrd and openpyxl in the conda environment 'r-reticulate':
+3) Install the required Python packages (if you prefer Conda, contact us)
 
 ```bash
-/home/${user}/miniconda3/bin/conda  create    --name r-reticulate                                                      
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda nomkl           
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda numpy   
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c conda-forge pandas   
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda xlrd      
-/home/${user}/miniconda3/bin/conda  install   --freeze-installed -n r-reticulate -c anaconda openpyxl        
+/home/${user}/myenv/bin/pip install --prefer-binary --no-cache-dir -r requirements.txt
 ```
 
-6) Set the correct path for the app
+4) Set the correct path for the app
 
 ``` bash 
 if [ "$(basename "$(pwd)")" = "thermoA_app" ]; then
@@ -55,17 +45,11 @@ else
 fi
 ```
 
-7) Create a folder to store temporary files:
+5) Run ThermoAffinity
 
-``` R 
-mkdir -p "/home/${user}/data_users/" 
-```
-
-8) Run the shiny app with R:
-
-``` R 
+``` bash 
 cd thermoAffinity
-shiny::runApp()
+R -e 'shiny::runApp()'
 ```
 
 ## General code structure

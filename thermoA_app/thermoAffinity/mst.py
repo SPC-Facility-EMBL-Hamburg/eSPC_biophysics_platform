@@ -33,16 +33,17 @@ class MST_fit:
         self.signal_data_dictionary = {}
         self.time_data_dictionary   = {}
 
-    def load_example_data(self):
+    def load_example_data(self,signal_file="signal.npy",time_file="time.npy"):
 
-        """ Requires signal.npy and time.npy !!!
-
+        """ 
+        Requires signal.npy and time.npy !!!
         """
 
         self.init_dictionary_to_store_original_fluo_time_data()
-        self.signal_data_dictionary["Raw Fluorescence"] = np.load("signal.npy")
-        self.time_data_dictionary["Raw Fluorescence"]   = np.load("time.npy")
+        self.signal_data_dictionary["Raw Fluorescence"] = np.load(signal_file)
+        self.time_data_dictionary["Raw Fluorescence"]   = np.load(time_file)
         self.concs  = 150 / np.power(2,np.arange(0,16))
+        self.experimentID = np.array(["A" for _ in self.concs])
 
         return None
 
@@ -58,10 +59,12 @@ class MST_fit:
         
         dat = pd.read_excel(xls, 'RawData', index_col=None, header=None)
 
-        first_row_signal = int(np.argwhere(list(dat.iloc[:,0] == 'Time [s]'))) + 1
-        row_ligand_conc  = int(np.argwhere(list(dat.iloc[:,0] == 'Ligand Concentration:'))) 
-        row_cap_pos      = int(np.argwhere(list(dat.iloc[:,0] == 'Capillary Position:'))) 
-        row_ligand       = int(np.argwhere(list(dat.iloc[:,0] == 'Ligand:'))) 
+        values_temp      = dat.iloc[:, 0].values
+
+        first_row_signal = find_first_occurrence(values_temp,'Time [s]') + 1
+        row_ligand_conc  = find_first_occurrence(values_temp,'Ligand Concentration:')
+        row_cap_pos      = find_first_occurrence(values_temp,'Capillary Position:')
+        row_ligand       = find_first_occurrence(values_temp,'Ligand:')
 
         total_measurements = int((len(dat.iloc[first_row_signal,:]) + 1) / 3)
         ligand_columns     = [1+x*3 for x in range(total_measurements)]
@@ -83,8 +86,10 @@ class MST_fit:
         protConc = np.ones(len(ligand_concentrations)) 
 
         try: 
-            row_prot_conc    =  int(np.argwhere(list(dat.iloc[:,0] == 'TargetConcentration:')))
+
+            row_prot_conc    = find_first_occurrence(values_temp,'TargetConcentration:') 
             possibleProtConc =  np.array(dat.iloc[row_prot_conc,ligand_columns]).astype('float32')
+
             if len(possibleProtConc) == len(ligand_concentrations) and len(possibleProtConc) > 5:
                 protConc = possibleProtConc
 
@@ -108,11 +113,31 @@ class MST_fit:
 
         self.init_dictionary_to_store_original_fluo_time_data()
 
-        ligand_concentrations, signal, proteinConc, experimentID = readCSV(file, sep,header)
+        if fileIsNanoTemperCSV(file):
+
+            ligand_concentrations, signal, proteinConc, experimentID = readNanoTemperCSV(file, sep) 
+
+        else:
+
+            ligand_concentrations, signal, proteinConc, experimentID = readCSV(file, sep,header)
 
         self.concs                                      = ligand_concentrations
         self.protConc                                   = proteinConc
         self.experimentID                               = experimentID
+
+        self.signal_data_dictionary["Raw Fluorescence"] = signal
+        self.time_data_dictionary["Raw Fluorescence"]   = np.arange(-1,2) # placeholder only
+
+        return None
+
+    def load_many_nanotemper_MST_csv(self, files,sep):
+
+        """
+        Load CSV with two columns, ligand concentration and signal
+        """
+
+        self.init_dictionary_to_store_original_fluo_time_data()
+        self.concs, signal, self.protConc, self.experimentID = readManyNanoTemperCSV(files, sep)
 
         self.signal_data_dictionary["Raw Fluorescence"] = signal
         self.time_data_dictionary["Raw Fluorescence"]   = np.arange(-1,2) # placeholder only
@@ -186,43 +211,3 @@ class MST_fit:
         self.F_norm = F_hot / self.F_cold
 
         return None
-
-run_debug = False
-
-if run_debug:
-
-    # Hot region
-    hot = 25
-    # File names, adjust these!
-    mst = MST_fit()
-    mst.load_MST_xlsx("./www/demo.xlsx")
-    mst.set_signal("Raw Fluorescence")
-    print(mst.times)
-    #mst.sort()
-    #mst.normalize()
-    # Calculate fnorm and chose the "hot" region
-    #mst.calc_fnorm(hot=hot)
-
-#mst = MST_fit()
-#mst.load_MST_csv("./www/test3.csv")
-
-#for file in ["./www/test3.csv","./www/test.csv","./www/test2.csv","./www/test4.csv"]:
-
-#	s = getSepCharacter(file)
-
-#	for k in s:
-#		h  = csvHasHeader(file,k)
-#		res = readCSV(file,k,h)
-#		print(res)
-
-if False:
-
-    print(csvHasHeader("./www/test4.csv",","))
-    print(csvHasHeader("./www/test3.csv",","))
-    print(csvHasHeader("./www/test2.csv",","))
-    print(csvHasHeader("./www/test.csv",","))
-
-    readCSV("./www/test4.csv",",",True)
-    readCSV("./www/test3.csv",",",False)
-    readCSV("./www/test2.csv",",",False)
-    readCSV("./www/test.csv",",",False)

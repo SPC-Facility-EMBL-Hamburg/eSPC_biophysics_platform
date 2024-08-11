@@ -12,14 +12,13 @@ library(broom)
 library(grid)
 
 user      <- Sys.info()['user']
-users_dir <- paste0("/home/",user,"/data_users/")
 
 notebook_app  <- (Sys.info()["nodename"] == "osvaldo")
 
 if (notebook_app) {
   use_python("/home/osvaldo/miniconda3/bin/python")
 } else  {
-  reticulate::use_condaenv("r-reticulate",required = TRUE)
+  reticulate::use_python(paste0("/home/",user,"/myenv/bin/python"), required = TRUE)
 }
 
 # developer path

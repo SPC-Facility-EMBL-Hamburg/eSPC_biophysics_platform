@@ -1,3 +1,6 @@
+# The code below maybe a bit repetitive, but creating general functions for saving data / images
+# may result in the lost of reactivity
+
 output$download_cd_data_row_wise        <-   downloadHandler(
   filename = function() {paste0("CD_spectra_",Sys.Date(),".csv")},
   content  = function(file) {
@@ -693,3 +696,79 @@ output$download_distance_data        <-   downloadHandler(
     write.csv(df,file,row.names = F)
   })
 
+# G-Quadruplex download reactives.
+# Remember: the code is repetitive, but creating general functions for saving data / images
+# may result in the lost of reactivity
+
+output$download_reference_png        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_references_pca_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = reference_cd_plot() ,width = 10,height = 10)
+  })
+
+output$download_reference_pdf        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_references_pca_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = reference_cd_plot() ,width = 10,height = 10)
+  })
+
+output$download_cluster_png        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_references_clustering_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot() ,width = 10,height = 10)
+  })
+
+output$download_cluster_pdf        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_references_clustering_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot() ,width = 10,height = 10)
+  })
+
+output$download_samples_png        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_samples_pca_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = samples_pca_plot() ,width = 10,height = 10)
+  })
+
+output$download_samples_pdf        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_samples_pca_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = samples_pca_plot() ,width = 10,height = 10)
+  })
+
+
+output$download_combined_png        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_combined_pca_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = combined_pca_plot() ,width = 10,height = 10)
+  })
+
+output$download_combined_pdf        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_combined_pca_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = combined_pca_plot() ,width = 10,height = 10)
+  })
+
+output$download_cluster_png_samples        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_samples_clustering_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot_samples() ,width = 10,height = 10)
+  })
+
+output$download_cluster_pdf_samples        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_samples_clustering_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot_samples() ,width = 10,height = 10)
+  })
+
+output$download_cluster_png_combined        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_combined_clustering_",Sys.Date(),".png")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot_combined() ,width = 10,height = 10)
+  })
+
+output$download_cluster_pdf_combined        <-   downloadHandler(
+  filename = function() {paste0("CD_G-Quadruplex_combined_clustering_",Sys.Date(),".pdf")},
+  content  = function(file) {
+    ggsave( file, plot = cluster_plot_combined() ,width = 10,height = 10)
+  })

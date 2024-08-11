@@ -1,0 +1,6 @@
+nomkl
+numpy
+pandas
+scipy
+h5py
+xlrd

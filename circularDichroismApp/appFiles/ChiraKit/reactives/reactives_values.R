@@ -38,6 +38,11 @@ reactives <- reactiveValues(
   fitted_coefficients_method_chemical    = 'None',# can be 'svd' or 'pca' (chemical_denaturation_reactives.R)
   fitted_coefficients_method_custom      = 'None',# can be 'svd' or 'pca' (custom_analysis_reactives.R)
   
+  GQ_ref_load                            = FALSE, #(gQuadruplex_reactives.R)
+  GQ_sample_load                         = FALSE, #(gQuadruplex_reactives.R)
+  secondary_parameters                   = NULL,  #(gQuadruplex_reactives.R)
+  tertiary_parameers                     = NULL   #(gQuadruplex_reactives.R)
+  
 )
 
 # Allow the UI to know the values of these reactives
