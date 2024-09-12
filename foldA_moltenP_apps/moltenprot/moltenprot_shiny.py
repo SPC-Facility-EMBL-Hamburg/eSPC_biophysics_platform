@@ -3,9 +3,10 @@ import json
 
 import pandas as pd
 import numpy  as np
-import numpy.polynomial.polynomial as poly
 
 from scipy.signal     import savgol_filter
+from scipy.stats      import linregress
+
 from scipy.optimize   import curve_fit
 from scipy.integrate  import solve_ivp
 from natsort          import index_natsorted
@@ -14,8 +15,8 @@ from natsort          import index_natsorted
 from helpers                 import *
 
 ### Constants
-R_gas_constant = 8.314 # In J / ( Kelvin * mol )
-temp_standard = 298.15 # In Kelvins, 25 degree Celsius
+R_gas_constant = 8.314  # In J / ( Kelvin * mol )
+temp_standard  = 298.15 # In Kelvins, 25 degree Celsius
 
 class DSF_molten_prot_fit:
 
@@ -95,7 +96,7 @@ class DSF_molten_prot_fit:
 
         self.init_dictionary_to_store_fluo_temp_data()
 
-        possible_signals    = ["350nm","330nm","Scattering","Ratio"]
+        possible_signals    = ["350nm","330nm","Scattering","Ratio","Turbidity"]
 
         include             = []
 
@@ -298,19 +299,20 @@ class DSF_molten_prot_fit:
 
             data          = pd.read_excel(pantaFile, "melting-scan") # Alternative format of PANTA
 
-
         column_names  = [str.lower(c) for c in data.columns]
 
-        pos_350       = [i for i,x in enumerate(column_names) if "350"   in x and "deriv" not in x and "330" not in x]
-        pos_330       = [i for i,x in enumerate(column_names) if "330"   in x and "deriv" not in x and "350" not in x]
-        scattering    = [i for i,x in enumerate(column_names) if "scattering"   in x and "deriv" not in x]
-        pos_ratio     = [i for i,x in enumerate(column_names) if "ratio" in x and "deriv" not in x]
+        pos_350       = [i for i,x in enumerate(column_names) if "350"        in x and "deriv" not in x and "330" not in x]
+        pos_330       = [i for i,x in enumerate(column_names) if "330"        in x and "deriv" not in x and "350" not in x]
+        scattering    = [i for i,x in enumerate(column_names) if "scattering" in x and "deriv" not in x]
+        pos_ratio     = [i for i,x in enumerate(column_names) if "ratio"      in x and "deriv" not in x]
+        pos_turb      = [i for i,x in enumerate(column_names) if "turbidity"  in x and "deriv" not in x]
 
-        possible_signals    = ["350nm","330nm","Scattering","Ratio"]
+        possible_signals    = ["350nm","330nm","Scattering","Ratio","Turbidity"]
         signals             = []
+
         self.init_dictionary_to_store_fluo_temp_data()
 
-        all_positions = [pos_350,pos_330,scattering,pos_ratio]
+        all_positions = [pos_350,pos_330,scattering,pos_ratio,pos_turb]
 
         for positions,signal in zip(all_positions,possible_signals):
 
@@ -803,24 +805,33 @@ class DSF_molten_prot_fit:
 
         """
 
-        max_native_temp   = min(self.temps) + baseline_degree_window
-        min_unfolded_temp = max(self.temps) - baseline_degree_window
+        max_native_temp   = np.min(self.temps) + baseline_degree_window
+        min_unfolded_temp = np.max(self.temps) - baseline_degree_window
 
         native_fluo       = filter_fluo_by_temp(self.fluo,self.temps,
-            min(self.temps),max_native_temp)
+            np.min(self.temps),max_native_temp)
 
-        native_temps      = filter_temp_by_temp(self.temps,min(self.temps),max_native_temp)
+        native_temps      = filter_temp_by_temp(self.temps,np.min(self.temps),max_native_temp)
 
         unfolded_fluo     = filter_fluo_by_temp(self.fluo,self.temps,
-            min_unfolded_temp,max(self.temps))
+            min_unfolded_temp,np.max(self.temps))
 
         unfolded_temps    = filter_temp_by_temp(self.temps,min_unfolded_temp,max(self.temps))
 
-        coef_Native, stats_Native     = poly.polyfit(native_temps,    native_fluo,1,full=True)
-        coef_Unfolded, stats_Unfolded = poly.polyfit(unfolded_temps, unfolded_fluo,1,full=True)
+        fitNative   = [linregress(native_temps,  native_fluo[:,i])
+        for i in range(native_fluo.shape[1])]
 
-        self.bNs, self.kNs  = coef_Native[0],   coef_Native[1]
-        self.bUs, self.kUs  = coef_Unfolded[0], coef_Unfolded[1]
+        fitUnfolded = [linregress(unfolded_temps,  unfolded_fluo[:,i])
+        for i in range(unfolded_fluo.shape[1])]
+        
+        kN           = np.array( [c.slope     for c in fitNative] )
+        bN           = np.array( [c.intercept for c in fitNative] )
+        
+        kU           = np.array( [c.slope     for c in fitUnfolded] )
+        bU           = np.array( [c.intercept for c in fitUnfolded] )
+
+        self.bNs, self.kNs  = bN, kN
+        self.bUs, self.kUs  = bU, kU
 
         self.tms_initial = estimate_initial_tm_from_baseline_fitting(self.bUs,self.bNs,
             self.kNs,self.kUs,self.temps,baseline_degree_window,self.derivative)
@@ -986,8 +997,8 @@ class DSF_molten_prot_fit:
 
             p0 = (self.kNs[index], self.bNs[index], self.kUs[index], self.bUs[index], init_dH, tm_init)
 
-            low_bound    =  [0.3*x if x>0 else 1.7*x for x in p0[:-2]] + [0,min(self.temps)+5]
-            high_bound    = [1.7*x if x>0 else 0.3*x for x in p0[:-2]] + [3140098,max(self.temps)-5] 
+            low_bound    =  [0.1*x if x>0 else 10*x for x in p0[:-2]] + [0,min(self.temps)+5]
+            high_bound    = [10*x if x>0 else 0.1*x for x in p0[:-2]] + [3140098,max(self.temps)-5] 
 
             initial_estimates.append(p0)
             low_bounds.append(low_bound)
@@ -1027,6 +1038,13 @@ class DSF_molten_prot_fit:
 
         self.initialize_model("EquilibriumThreeState",params_name)
 
+        minT, maxT = np.min(self.temps), np.max(self.temps)
+
+        bStart = self.bNs + self.kNs * minT
+        bEnd   = self.bUs + self.kUs * maxT
+
+        self.init_KIs = (bStart + bEnd) / 2
+
         def model(T, kN, bN, kU, bU, kI, dHm1, T1, dHm2, T2):
 
             return (kN * T + bN + kI * np.exp(dHm1 / R_gas_constant * (1 / T1 - 1 / T)) + (kU * T + bU)*
@@ -1035,7 +1053,6 @@ class DSF_molten_prot_fit:
                 np.exp(dHm2 / R_gas_constant * (1 / T2 - 1 / T)))
 
         init_dH = 60000
-        init_KI = 10
 
         low_bounds        = []
         high_bounds       = []
@@ -1046,13 +1063,17 @@ class DSF_molten_prot_fit:
 
         for index in range(self.fluo.shape[1]):
 
-            p0 = (self.kNs[index], self.bNs[index], self.kUs[index], self.bUs[index],init_KI, init_dH, temp1_init, init_dH, temp2_init)
+            p0 = (self.kNs[index], self.bNs[index], self.kUs[index], self.bUs[index],self.init_KIs[index], init_dH, temp1_init, init_dH, temp2_init)
 
-            low_bound     =  [0.3*x if x>0 else 1.7*x for x in p0[:-5]] 
+            low_bound     =  [0.1*x if x>0 else 10*x for x in p0[:-5]] 
             low_bound    +=  [0,0,t1min,0,t2min]
 
-            high_bound    = [1.7*x if x>0 else 0.3*x for x in p0[:-5]]  
+            high_bound    = [10*x if x>0 else 0.1*x for x in p0[:-5]] 
+
             high_bound   += [100,3140098,t1max,3140098,t2max] 
+
+            low_bound[4]  = low_bound[4]  - np.abs(bStart[index]) - np.abs(bEnd[index])
+            high_bound[4] = high_bound[4] + np.abs(bStart[index]) + np.abs(bEnd[index])
 
             initial_estimates.append(p0)
             low_bounds.append(low_bound)
@@ -1236,6 +1257,13 @@ class DSF_molten_prot_fit:
         params_name = ['kN', 'bN', 'kU', 'bU', 'kI', 'T_onset1', 'T1', 'T_onset2', 'T2']
         self.initialize_model("EmpiricalThreeState",params_name)
 
+        minT, maxT = np.min(self.temps), np.max(self.temps)
+
+        bStart = self.bNs + self.kNs * minT
+        bEnd   = self.bUs + self.kUs * maxT
+
+        self.init_KIs = (bStart + bEnd) / 2
+
         def model(T, kN, bN, kU, bU, kI, T_onset1, T1, T_onset2, T2):
 
             return (kN * T+ bN+ kI* np.exp((T - T1)*
@@ -1249,7 +1277,6 @@ class DSF_molten_prot_fit:
         low_bounds        = []
         high_bounds       = []
         initial_estimates = []
-        init_KI = 10
 
         temp1_init = (t1min + t1max) / 2
         temp2_init = (t2min + t2max) / 2
@@ -1257,10 +1284,13 @@ class DSF_molten_prot_fit:
         for index in range(self.fluo.shape[1]):
 
             p0 = (self.kNs[index], self.bNs[index], self.kUs[index], self.bUs[index], 
-                init_KI,temp1_init-8,temp1_init,temp2_init-8,temp2_init)
+                self.init_KIs[index],temp1_init-8,temp1_init,temp2_init-8,temp2_init)
 
-            low_bound     =  [0.3*x if x>0 else 1.7*x for x in p0[:-5]] + [0]       + [t1min-5,t1min,t2min-5,t2min]
-            high_bound    =  [1.7*x if x>0 else 0.3*x for x in p0[:-5]] + [1000]    + [t1max-5,t1max,t2max-5,t2max]
+            low_bound     =  [0.1*x if x>0 else 10*x for x in p0[:-5]]  + [0]       + [t1min-5,t1min,t2min-5,t2min]
+            high_bound    =  [10*x  if x>0 else 0.1*x for x in p0[:-5]] + [1000]    + [t1max-5,t1max,t2max-5,t2max]
+
+            low_bound[4]  = low_bound[4]  - np.abs(bStart[index]) - np.abs(bEnd[index])
+            high_bound[4] = high_bound[4] + np.abs(bStart[index]) + np.abs(bEnd[index])
 
             initial_estimates.append(p0)
             low_bounds.append(low_bound)

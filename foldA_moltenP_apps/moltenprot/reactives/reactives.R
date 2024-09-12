@@ -153,8 +153,7 @@ observeEvent(input$FLf,{
         reactives$include_vector <- rep(T,length(dsf$conditions))
         
         Sys.sleep(0.5)
-        #renderSpectralPlots()
-        
+
       }
       
       if (fileExtension == "xlsx" | fileExtension == "xls") {
