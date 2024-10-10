@@ -1,6 +1,6 @@
 # The eSPC platform 
 
-Last time updated: August 2024
+Last time updated: October 2024
 
 ## Introduction
 
