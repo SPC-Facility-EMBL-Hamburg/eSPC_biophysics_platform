@@ -43,7 +43,7 @@ updateCDFilesInfoTable <- function() {
 }
 
 updateMaxVoltageValue <- function() {
-  allVoltageData <- unlist(cdAnalyzer$getExperimentProperties('signalHT'))
+  allVoltageData <- unlist(cdAnalyzer$get_experiment_properties('signalHT'))
   maxVoltage     <- max(c(allVoltageData,0),na.rm = T)
   
   reactives$showVoltageThreshold <- maxVoltage > 0
@@ -73,7 +73,7 @@ load_one_experiment <- function(cd_data_file,name,inputUnits = 'millidegrees') {
       return(NULL)
     } else { # Load last loaded file
       
-      load <- cdAnalyzer$loadExperiment(cd_data_file,name)
+      load <- cdAnalyzer$load_experiment(cd_data_file,name)
       
       # Catch exception when data has wrong format
       if (load != "Data loaded successfully!!!") {
@@ -96,11 +96,11 @@ load_one_experiment <- function(cd_data_file,name,inputUnits = 'millidegrees') {
       names(l1) <- c(name)
       
       # Convert to absorbance
-      cdAnalyzer$experiments2absorbanceUnits(l1)
+      cdAnalyzer$experiments_to_absorbance_units(l1)
       
       # Convert to desired units
       l1[[1]]   <- input$workingUnits
-      cdAnalyzer$experimentsAbsorbanceUnits2otherUnits(l1)
+      cdAnalyzer$experiments_absorbance_units_to_other_units(l1)
       
       metadata_info     <- cdAnalyzer$experimentsOri[[name]]$metadata
       
@@ -153,7 +153,7 @@ renderInputData <- function() {
   
   output$cdFilesInfo    <- NULL
   
-  wls  <- cdAnalyzer$getExperimentProperties('wavelength')
+  wls  <- cdAnalyzer$get_experiment_properties('wavelength')
   
   if (length(wls) == 0) return(NULL)
   
@@ -198,7 +198,7 @@ observeEvent(input$cdFiles,{
   
   # iterate over the files
   for (name in names) {
-    i <- i + 1
+    i              <- i + 1
     cd_data_file   <- cd_data_files[i]
     
     fileExtension <- getFileNameExtension(name)
@@ -232,7 +232,7 @@ observeEvent(input$cdFiles,{
   }
   
   # Copy experiments to allow modifying the wavelength range
-  cdAnalyzer$initializeExperimentModif()
+  cdAnalyzer$initialize_experiment_modif()
   
   updateMaxVoltageValue()
   
@@ -334,13 +334,13 @@ append_cd_experiment <- function(expName,spectraNames,wlNew,signalNew,inputUnits
                                  fakeExperimentSignal=NULL) {
   
   signalNew <- as.matrix(signalNew)
-  
-  cdAnalyzer$experimentsOri[[expName]]                   <- cd_experiment_general()
+
+  cdAnalyzer$experimentsOri[[expName]]                   <- CdExperimentGeneral()
   cdAnalyzer$experimentsOri[[expName]]$wavelength        <- np_array(wlNew)
-  cdAnalyzer$experimentsOri[[expName]]$spectraNames      <- c(spectraNames)
-  cdAnalyzer$experimentsOri[[expName]]$internalID        <- c(spectraNames)
+  cdAnalyzer$experimentsOri[[expName]]$spectraNames      <- np_array(c(spectraNames))
+  cdAnalyzer$experimentsOri[[expName]]$internalID        <- np_array(c(spectraNames))
   cdAnalyzer$experimentsOri[[expName]]$signalInput       <- np_array(signalNew)
-  
+
   if (!is.null(temperature)) {
     cdAnalyzer$experimentsOri[[expName]]$temperature     <- np_array(temperature)
   }
@@ -362,7 +362,7 @@ append_cd_experiment <- function(expName,spectraNames,wlNew,signalNew,inputUnits
     # other operation units different from 'fakeExperimentSignal'
     cdAnalyzer$experimentsOri[[expName]]$concentration        <- -1
   } else {
-    cdAnalyzer$experimentsOri[[expName]]$experiment2absorbanceUnits(inputUnits)
+    cdAnalyzer$experimentsOri[[expName]]$experiment_to_absorbance_units(inputUnits)
   }
   
   cdAnalyzer$experimentsOri[[expName]]$isGenerated       <- TRUE
@@ -669,7 +669,7 @@ observeEvent(input$submitExperimentalDetails,{
   c1 <- grepl('molar'  , input$workingUnitsAutomatic, ignore.case = TRUE)
   c2 <- grepl('unit'   , input$workingUnitsAutomatic, ignore.case = TRUE)
   
-  cdAnalyzer$initializeExperimentModif()
+  cdAnalyzer$initialize_experiment_modif()
   
   # Spectra to convert into molar ellipticity / extinction
   experimentsToModifyParams    <- c(baselineSubName)
@@ -682,9 +682,9 @@ observeEvent(input$submitExperimentalDetails,{
     
     for (name in experimentsToModifyParams) {
       
-      cdAnalyzer$setExperimentProperties(name,'concentration',   input$concentration)
-      cdAnalyzer$setExperimentProperties(name,'molecularWeight', input$molWeight)
-      cdAnalyzer$setExperimentProperties(name,'pathLength',      input$pathLength / 10) # Divide by 10 (from mm to cm)
+      cdAnalyzer$set_experiment_properties(name,'concentration',   input$concentration)
+      cdAnalyzer$set_experiment_properties(name,'molecularWeight', input$molWeight)
+      cdAnalyzer$set_experiment_properties(name,'pathLength',      input$pathLength / 10) # Divide by 10 (from mm to cm)
       
       append_record_to_logbook(paste0('Setting concentration (mg/ml) of '    ,name,' to ',input$concentration))
       append_record_to_logbook(paste0('Setting molecular weight (Dalton) of ',name,' to ',input$molWeight))
@@ -698,7 +698,7 @@ observeEvent(input$submitExperimentalDetails,{
     
     for (name in experimentsToModifyParams) {
       
-      cdAnalyzer$setExperimentProperties(name,'numberOfCroms', input$numberOfC)
+      cdAnalyzer$set_experiment_properties(name,'numberOfCroms', input$numberOfC)
       append_record_to_logbook(paste0('Setting chromophore units of '    ,name,' to ',input$numberOfC))
     }
   }
@@ -708,7 +708,7 @@ observeEvent(input$submitExperimentalDetails,{
   updateSelectInput(session,'workingUnits',NULL,
                     choices = getChoices(input$workingUnitsAutomatic))
   
-  cdAnalyzer$allExperimentsAbsorbanceUnits2otherUnits(input$workingUnitsAutomatic)
+  cdAnalyzer$all_experiments_absorbance_units_to_other_units(input$workingUnitsAutomatic)
   
   Sys.sleep(0.5)
   renderInputData()
@@ -731,7 +731,7 @@ observeEvent(input$triggerDeletion,{
   
   # Delete the legend table
   output$legendInfo <- NULL
-  cdAnalyzer$deleteExperiment(selected)
+  cdAnalyzer$delete_experiment(selected)
   
   # Remove the metadata Tabs
   for (sel in c(selected)) {
@@ -782,14 +782,14 @@ convertExperimentToWorkingUnits <- function() {
   # Convert everything (except 'fake' experiments) to absorbance units (from input units)
   namesAll  <- cdAnalyzer$experimentNames
   
-  trueExperiments   <- !unlist(cdAnalyzer$getExperimentProperties('isFakeExperiment'))
+  trueExperiments   <- !unlist(cdAnalyzer$get_experiment_properties('isFakeExperiment'))
   names             <- namesAll[trueExperiments]
   namesN            <- length(names)
   
   # Check if the input units are shared and convert to absorbance
   if (cdAnalyzer$sharedParameters) {
     
-    cdAnalyzer$allExperiments2absorbanceUnits(input[["inputUnitsAll"]])
+    cdAnalyzer$all_experiments_to_absorbance_units(input[["inputUnitsAll"]])
     append_record_to_logbook(paste0('Setting input units to ',input[["inputUnitsAll"]]))
     
   } else {
@@ -804,17 +804,17 @@ convertExperimentToWorkingUnits <- function() {
     
     names(rList) <- names
     
-    modifiedExperiments <- cdAnalyzer$experiments2absorbanceUnits(rList) 
+    modifiedExperiments <- cdAnalyzer$experiments_to_absorbance_units(rList)
     append_record_to_logbook(paste0('Setting input units of ',modifiedExperiments))
   }
   
   # Convert everything from absorbance units to selected units
-  cdAnalyzer$allExperimentsAbsorbanceUnits2otherUnits(input[["workingUnits"]])
+  cdAnalyzer$all_experiments_absorbance_units_to_other_units(input[["workingUnits"]])
   
   append_record_to_logbook(paste0('Converting CD units to: ',input[["workingUnits"]]))
   
   wlRange <- input$wavelengthRange
-  cdAnalyzer$filterDataByWavelength(wlRange[1], wlRange[2])
+  cdAnalyzer$filter_data_by_wavelength(wlRange[1], wlRange[2])
 
 }
 
@@ -834,7 +834,7 @@ observeEvent(input$cdFilesInfo_cell_edit, {
   if (cdAnalyzer$sharedParameters) {
     
     expNames          <- cdAnalyzer$experimentNames
-    trueExperiments   <- !unlist(cdAnalyzer$getExperimentProperties('isFakeExperiment'))
+    trueExperiments   <- !unlist(cdAnalyzer$get_experiment_properties('isFakeExperiment'))
     expNames          <- expNames[trueExperiments]
   } else {
     expNames <- c(cdAnalyzer$experimentNames[rowIndex])
@@ -858,7 +858,7 @@ observeEvent(input$cdFilesInfo_cell_edit, {
       valueNew <- valueNew / 10 # To cm!
     } 
     
-    cdAnalyzer$setExperimentProperties(expName,selectedVar,valueNew)
+    cdAnalyzer$set_experiment_properties(expName,selectedVar,valueNew)
     
     append_record_to_logbook(paste0('Setting ',selectedVar2print,' of ',
                                     expName,' to ',valueNew))
@@ -875,12 +875,12 @@ observeEvent(input$workingUnits,{
   req(reactives$data_loaded)
   reactives$data_loaded <- NULL
   # Convert everything from absorbance units to selected units
-  cdAnalyzer$allExperimentsAbsorbanceUnits2otherUnits(input[["workingUnits"]])
+  cdAnalyzer$all_experiments_absorbance_units_to_other_units(input[["workingUnits"]])
   
   append_record_to_logbook(paste0('Converting CD units to: ',input[["workingUnits"]]))
   
   wlRange <- input$wavelengthRange
-  cdAnalyzer$filterDataByWavelength(wlRange[1], wlRange[2])
+  cdAnalyzer$filter_data_by_wavelength(wlRange[1], wlRange[2])
 
   reactives$data_loaded <- TRUE
   
@@ -905,16 +905,16 @@ observeEvent(input$sharedExperimentParameters,{
     
     # Set default values
     exps              <- cdAnalyzer$experimentNames
-    trueExperiments   <- !unlist(cdAnalyzer$getExperimentProperties('isFakeExperiment'))
+    trueExperiments   <- !unlist(cdAnalyzer$get_experiment_properties('isFakeExperiment'))
     exps              <- exps[trueExperiments]
     
     for (exp in exps) {
       
-      cdAnalyzer$setExperimentProperties(exp,'units'            , 'millidegrees')
-      cdAnalyzer$setExperimentProperties(exp,'numberOfCroms'    , 1)
-      cdAnalyzer$setExperimentProperties(exp,'concentration'    , 1)
-      cdAnalyzer$setExperimentProperties(exp,'pathLength'       , 0.1)
-      cdAnalyzer$setExperimentProperties(exp,'molecularWeight'  , 1)
+      cdAnalyzer$set_experiment_properties(exp,'units'            , 'millidegrees')
+      cdAnalyzer$set_experiment_properties(exp,'numberOfCroms'    , 1)
+      cdAnalyzer$set_experiment_properties(exp,'concentration'    , 1)
+      cdAnalyzer$set_experiment_properties(exp,'pathLength'       , 0.1)
+      cdAnalyzer$set_experiment_properties(exp,'molecularWeight'  , 1)
       
       append_record_to_logbook(paste0('Setting number of chromophore units / concentration (mg/ml)/ molecular weight (Da) of ',
                                       exp,' to 1'))
@@ -924,7 +924,7 @@ observeEvent(input$sharedExperimentParameters,{
       
     }
     
-    cdAnalyzer$allExperiments2absorbanceUnits('millidegrees')
+    cdAnalyzer$all_experiments_to_absorbance_units('millidegrees')
     
     append_record_to_logbook('Setting all experiment input units to millidegrees')
     
@@ -935,7 +935,7 @@ observeEvent(input$sharedExperimentParameters,{
   
   }
   
-  cdAnalyzer$allExperimentsAbsorbanceUnits2otherUnits(input$workingUnits)
+  cdAnalyzer$all_experiments_absorbance_units_to_other_units(input$workingUnits)
 
   append_record_to_logbook(paste0('Converting CD units to: ',input[["workingUnits"]]))
   
@@ -965,7 +965,7 @@ observeEvent(input$legendInfo$changes$changes, {
   if (any(changes[[2]] == 2)) {
 
     names          <- cdAnalyzer$experimentNames
-    internalIDs    <- cdAnalyzer$getExperimentProperties('internalID')
+    internalIDs    <- cdAnalyzer$get_experiment_properties('internalID')
     spectraID      <- get_ID_from_rhandTable(input$legendInfo)[changes[[1]]+1]
     newSpectraName <- get_legend_from_rhandTable(input$legendInfo)[changes[[1]]+1]
     
@@ -1002,7 +1002,7 @@ observeEvent(input$triggerProcessing,{
   names          <- cdAnalyzer$experimentNames
   
   # Retrieve the internal IDs
-  internalIDs        <- cdAnalyzer$getExperimentProperties('internalID')
+  internalIDs        <- cdAnalyzer$get_experiment_properties('internalID')
   names(internalIDs) <- names
   
   # Retrieve the user selected label for the new spectrum / spectra
@@ -1072,10 +1072,10 @@ observeEvent(input$triggerProcessing,{
   operationIsInMolarUnits       <- grepl('molar', operationUnits, ignore.case = TRUE)
   operationIsInMeanUnits        <- grepl('mean' , operationUnits, ignore.case = TRUE)
   
-  molWeights   <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight'  )))[selected_id]
-  pathLengths  <- (unlist(cdAnalyzer$getExperimentProperties('pathLength'       )))[selected_id]
-  concs        <- (unlist(cdAnalyzer$getExperimentProperties('concentration'    )))[selected_id]
-  numberOfCU   <- (unlist(cdAnalyzer$getExperimentProperties('numberOfCroms' )))[selected_id]
+  molWeights   <- (unlist(cdAnalyzer$get_experiment_properties('molecularWeight'  )))[selected_id]
+  pathLengths  <- (unlist(cdAnalyzer$get_experiment_properties('pathLength'       )))[selected_id]
+  concs        <- (unlist(cdAnalyzer$get_experiment_properties('concentration'    )))[selected_id]
+  numberOfCU   <- (unlist(cdAnalyzer$get_experiment_properties('numberOfCroms' )))[selected_id]
   
   ##  Check that we can process normalized CD units
   
@@ -1117,8 +1117,8 @@ observeEvent(input$triggerProcessing,{
 
   # Special check for fake experiments which can only be processed using the same units
   # that were used to generate them
-  areSelSpecFake <- (unlist(cdAnalyzer$getExperimentProperties('isFakeExperiment')))[selected_id]
-  fakeSignals     <- (unlist(cdAnalyzer$getExperimentProperties('fakeExperimentSignal')))[selected_id]
+  areSelSpecFake <- (unlist(cdAnalyzer$get_experiment_properties('isFakeExperiment')))[selected_id]
+  fakeSignals     <- (unlist(cdAnalyzer$get_experiment_properties('fakeExperimentSignal')))[selected_id]
   
   if (any(areSelSpecFake)) {
     
@@ -1159,7 +1159,7 @@ observeEvent(input$triggerProcessing,{
   rList2        <- as.list(rep(operationUnits,length(unique(names(ids)))))
   names(rList2) <- unique(names(ids))
   
-  cdAnalyzer$experimentsAbsorbanceUnits2otherUnits(rList2)
+  cdAnalyzer$experiments_absorbance_units_to_other_units(rList2)
 
   # 3rd step - Retrieve the desired signals and process them
   
@@ -1539,11 +1539,11 @@ observeEvent(input$triggerProcessing,{
   rList2        <- as.list(rep(input$workingUnits,length(unique(names(ids)))+length(newExperimentNames)))
   names(rList2) <- c(unique(names(ids)),newExperimentNames)
   
-  cdAnalyzer$experimentsAbsorbanceUnits2otherUnits(rList2)
+  cdAnalyzer$experiments_absorbance_units_to_other_units(rList2)
   
   # Filter the new experiments
   wlRange <- input$wavelengthRange
-  cdAnalyzer$filterDataByWavelength(wlRange[1], wlRange[2]) 
+  cdAnalyzer$filter_data_by_wavelength(wlRange[1], wlRange[2])
   
   updateSelectInput(session,"experiment2delete",selected = "ALL",
                     choices = c('ALL',cdAnalyzer$experimentNames))
@@ -1599,8 +1599,8 @@ observeEvent(input$maxHTvalue,{
   req(reactives$data_loaded)
   req(is.numeric(input$maxHTvalue))
   
-  allVoltageData <- cdAnalyzer$getExperimentProperties('signalHT')
-  allWLData      <- cdAnalyzer$getExperimentProperties('wavelength')
+  allVoltageData <- cdAnalyzer$get_experiment_properties('signalHT')
+  allWLData      <- cdAnalyzer$get_experiment_properties('wavelength')
   
   # current values of the wavelength range slider
   minWL <- input$wavelengthRange[1]

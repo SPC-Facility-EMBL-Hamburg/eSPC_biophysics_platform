@@ -15,7 +15,7 @@ observeEvent(input$btn_create_peptide_dataset,{
     
     if (!check) next
     
-    cdExp$get_MRE_222nm()
+    cdExp$get_mre_222nm()
     
     temperatures <- c(temperatures,cdExp$temperature)
     cd_curves    <- c(cd_curves,cdExp$internalID)
@@ -38,7 +38,7 @@ observeEvent(input$btn_create_peptide_dataset,{
   
   # Remove experiments with non-matching units
   id_to_keep         <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-  internalID_all     <- cdAnalyzer$getExperimentProperties('internalID')
+  internalID_all     <- cdAnalyzer$get_experiment_properties('internalID')
   internalID_to_keep <- unlist(internalID_all[id_to_keep])
   
   df_peptide <- df_peptide[df_peptide$cd_curves %in% internalID_to_keep,]

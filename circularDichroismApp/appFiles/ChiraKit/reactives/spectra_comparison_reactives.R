@@ -48,7 +48,7 @@ observeEvent(list(input$legendInfo,input$workingUnits),{
   
   # Remove experiments with non-matching units
   id_to_keep         <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-  internalID_all     <- cdAnalyzer$getExperimentProperties('internalID')
+  internalID_all     <- cdAnalyzer$get_experiment_properties('internalID')
   internalID_to_keep <- unlist(internalID_all[id_to_keep])
   
   df <- df[df$CD_curve %in% internalID_to_keep,]

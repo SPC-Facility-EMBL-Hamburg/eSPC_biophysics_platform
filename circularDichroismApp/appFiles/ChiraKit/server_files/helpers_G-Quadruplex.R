@@ -1,4 +1,4 @@
-source_python('fitting_helpers.py')
+import("scipy.linalg")
 # To avoid installing the whole 'pracma' package.
 # Copied from https://github.com/cran/pracma 
 # We still need to install 'quadprog'
@@ -99,14 +99,14 @@ svd_spectra_analysis <- function( cd_reference, parameters, test_spectra, name, 
   Su = D[1:num_fraction_rows,1:num_fraction_rows]
   Vu = V[,1:num_fraction_rows]
   
-  iSu = pinv( Su )
+  iSu = scipy$pinv( Su )
   
   Xu = parameters %*% Vu %*% iSu %*% base::t( Uu )
   
-  pinvXu = pinv( Xu )
+  pinvXu = scipy$pinv( Xu )
   
   Cu = Uu %*% Su %*% base::t( Vu )
-  BCuFu = Cu %*% pinv( parameters )
+  BCuFu = Cu %*% scipy$pinv( parameters )
   
   ## basis spectra
   basis_spectra <- pinvXu

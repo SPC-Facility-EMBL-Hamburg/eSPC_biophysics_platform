@@ -28,6 +28,11 @@ parse_selected_wavelengths <- function(input_string) {
   }
   
   parsed_values <- sort(unique(parsed_values))
+
+  if (length(parsed_values) == 0) {
+    return(c(220)) # Default value
+  }
+
   return(parsed_values)
 }
 
@@ -42,7 +47,7 @@ get_signal_dfs_from_selected_spectra <- function(relevantSpectra,cdAnalyzer) {
   
   # Retrieve a list of internalIDs
   names              <- cdAnalyzer$experimentNames
-  internalIDs        <- cdAnalyzer$getExperimentProperties('internalID')
+  internalIDs        <- cdAnalyzer$get_experiment_properties('internalID')
   # Assign experiment names as names for the list objects
   names(internalIDs) <- names
   
@@ -155,6 +160,8 @@ generate_thermal_ramp_df <- function(cdAnalyzer,signal_type='signal_useful') {
   df <- NULL
   if (length(dfs) > 0 ) df <- do.call(rbind, dfs)
   
+  df <- na.omit(df)
+  
   # Return the final dataframe for plotting
   return(df)
 }
@@ -168,6 +175,7 @@ generate_thermal_ramp_df <- function(cdAnalyzer,signal_type='signal_useful') {
 # - a merged dataframe with 4 columns 
 # The columns are 'wavelength', 'chem_conc' , 'value' and 'legend'
 generate_chemical_unfolding_df <- function(cdAnalyzer,signal_type='signal_useful') {
+  
   
   # Initialize an empty list to hold individual dataframes
   dfs <- list()
@@ -217,6 +225,8 @@ generate_chemical_unfolding_df <- function(cdAnalyzer,signal_type='signal_useful
   # Combine individual dataframes into a single dataframe
   df <- NULL
   if (length(dfs) > 0 ) df <- do.call(rbind, dfs)
+  
+  df <- na.omit(df)
   
   # Return the final dataframe for plotting
   return(df)
@@ -347,12 +357,46 @@ get_fitted_params_unfolding <- function(cdAnalyzer,type='Thermal',errors=FALSE) 
   
   df <- do.call(rbind,dfs)
   
-  numeric_cols      <- colnames(df)[-length(colnames(df))]
+  numeric_cols      <- colnames(df)[1:(ncol(df)-2)]
   for (numeric_col in numeric_cols) {
     df[,numeric_col] <- signif(as.numeric(df[,numeric_col]),5)
   }
   return(df)
 }
+
+# Generate the dataframe with the fitted parameters and the fitting bounds
+# Requires:
+# - the python object to handle CD data, cdAnalyzer
+# - the type of unfolding model, either 'Thermal' or 'Chemical'
+# Returns:
+# - a dataframe with the fitted parameters and the fitting bounds 
+get_fitting_bounds_unfolding <- function(cdAnalyzer,type='Thermal') {
+  
+  res       <- get_py_class_and_exp_names(cdAnalyzer,type)
+  exps      <- res$exps
+  py_object <- res$py_object
+  
+  dfs <- list()
+  
+  i <- 0
+  for (exp in exps) {
+    i  <- i + 1
+    df <- py_object[[exp]]$bounds_df
+    dfs[[i]] <- df
+    
+  }
+  
+  df <- do.call(rbind,dfs)
+
+  numeric_cols      <- 2:4
+  
+  for (numeric_col in numeric_cols) {
+    df[,numeric_col] <- signif(as.numeric(df[,numeric_col]),3)
+  }
+  
+  return(df)
+}
+
 
 ## Generate dataframe to plot the basis spectra
 get_basis_spectra_df <- function(cdAnalyzer,type='Thermal') {
@@ -513,7 +557,7 @@ generate_fractions_df <- function(cdAnalyzer,type='Thermal') {
     
     i                      <- i + 1
     fractions              <- py_object[[exp]]$fractions
-    df                     <- data.frame(fractions)
+    df                     <- data.frame(fractions,check.names = F)
     
     if (type == 'Thermal')  {
       mment_factor <- py_object[[exp]]$temperature

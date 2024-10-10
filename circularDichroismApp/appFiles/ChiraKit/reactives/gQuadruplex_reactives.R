@@ -44,11 +44,11 @@ observeEvent(input$launchReferenceGquad,{
   } else {
     
     # Load structure default parameters
-    reactives$secondary_parameters <- read.csv('www/example_files/default_secondary_parameters.csv',check.names = F)
-    reactives$tertiary_parameters  <- read.csv('www/example_files/default_tertiary_parameters.csv', check.names = F)
+    reactives$secondary_parameters <- read.csv('www/default_secondary_parameters.csv',check.names = F)
+    reactives$tertiary_parameters  <- read.csv('www/default_tertiary_parameters.csv', check.names = F)
     
     # In molar extinction units!
-    gQuadRefPyClass$load_data('www/example_files/default_spectra_GQuadruplex.csv')
+    gQuadRefPyClass$load_data('www/default_spectra_GQuadruplex.csv')
     gQuadRefPyClass$spectraNames <- trimws(gQuadRefPyClass$spectraNames)
     
   }
@@ -157,7 +157,7 @@ observeEvent(input$launchSamplesPCAGquad,{
     return(NULL)
   } 
   
-  signals <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')  # In molar extinction units!
+  signals <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')  # In molar extinction units!
   
   # Find which experiments have data
   sel_exps_ids <- c()
@@ -180,7 +180,7 @@ observeEvent(input$launchSamplesPCAGquad,{
     return(NULL)
   } 
   
-  relevantSpectra <- unlist(cdAnalyzer$getExperimentProperties('internalID')[sel_exps_ids])
+  relevantSpectra <- unlist(cdAnalyzer$get_experiment_properties('internalID')[sel_exps_ids])
   
   merged  <- get_signal_dfs_from_selected_spectra(relevantSpectra,cdAnalyzer)
   signal  <- as.matrix(merged[,-1],drop = FALSE)

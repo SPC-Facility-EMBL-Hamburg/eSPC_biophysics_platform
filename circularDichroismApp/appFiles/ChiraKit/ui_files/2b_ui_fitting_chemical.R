@@ -1,6 +1,9 @@
 box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary", 
     fluidRow(
       
+      conditionalPanel(
+        "input.inputMode != 'chemicalUnfolding'",
+      
       column(3,p(
         HTML(
           "<b><br></b>"),
@@ -43,11 +46,12 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
             tooltip = "Apply the SVD/PCA algorithm.",placement = "right")
         ))
         
-      )
-    
-      ),
+      ))),
     
     fluidRow(
+      
+      conditionalPanel(
+        "input.inputMode != 'chemicalUnfolding'",
       
       conditionalPanel(
         "input.analysis_model_chemical != 'fixedWL'",
@@ -135,7 +139,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
           ))
         
         )
-      ),
+      )),
     
     fluidRow(
       
@@ -143,12 +147,10 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         HTML("<b>Unfolding model</b>"),
         span(shiny::icon("info-circle"), id = "info_uu_unfolding_model_chem"),
         selectInput('chemical_unfolding_model',NULL,
-                    choices = c('Reversible two-state'     = 'twoState',
-                                'Reversible three-state'   = 'threeState')),
+                    choices = c('Create the dataset first')),
         tippy::tippy_this(
           elementId = "info_uu_unfolding_model_chem",
-          tooltip = "Apply an unfolding model where the protein unfolds in one step (reversible two-state), or 
-          an unfolding model where where the proteins unfolds via an intermediate (reversible three-state).",
+          tooltip = "Apply an unfolding model where the protein unfolds in one step or two steps.",
           placement = "right")
         
       )),
@@ -214,36 +216,38 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
     ),
     
     conditionalPanel(
-      "input.chemical_unfolding_model == 'threeState'",
+      "input.chemical_unfolding_model == 'threeState'           ||
+       input.chemical_unfolding_model == 'threeStateDimerMI'    ||
+       input.chemical_unfolding_model == 'threeStateDimerDI'    ||
+       input.chemical_unfolding_model == 'threeStateTrimerMI'   ||
+       input.chemical_unfolding_model == 'threeStateTrimerDI'   ||
+       input.chemical_unfolding_model == 'threeStateTetramerMI'
+      ",
   
       fluidRow(
         
-        column(3, p(HTML("<b>D50 Initial value (F <-> I)</b>"),
+        column(3, p(HTML("<b>D50 Initial guess (DG1 = 0)</b>"),
                     span(shiny::icon("info-circle"), id = "info_uuD50v1_init"),
                     numericInput('D50v1_init',NULL, 0,min = 0, max = 10),
                     tippy::tippy_this(
                       elementId = "info_uuD50v1_init",
-                      tooltip = "Initial value for the parameter D50.
+                      tooltip = "Initial value for the parameter D50 (first step).
+                      If zero, ChiraKit will try to find a good initial value.
                       If non-zero, the parameter is constrained
                       within [initial_guess - 1.75, initial_guess + 1.75].
-                      If zero, the parameter is constrained between [minD + 0.5, maxD - 2],
-                      where minD, and maxD are respectively the minimum and maximum 
-                      denaturant agent concentration. 
                       Note: Ensure the fitted parameter is not too close to the boundaries 
                       after fitting.",
                       placement = "right"))),
         
-        column(3, p(HTML("<b>D50 Initial value (I <-> U)</b>"),
+        column(3, p(HTML("<b>D50 Initial guess (DG2 = 0)</b>"),
                     span(shiny::icon("info-circle"), id = "info_uuD50v2_init"),
                     numericInput('D50v2_init',NULL, 0,min = 0, max = 10),
                     tippy::tippy_this(
                       elementId = "info_uuD50v2_init",
-                      tooltip = "Initial value for theparameter D50.
+                      tooltip = "Initial value for the parameter D50 (second step).
+                      If zero, ChiraKit will try to find a good initial value.
                       If non-zero, the parameter is constrained
                       within [initial_guess - 1.75, initial_guess + 1.75].
-                      If zero, the parameter is constrained between [minD + 0.5, maxD - 0.5],
-                      where minD, and maxD are respectively the minimum and maximum 
-                      denaturant agent concentration. 
                       Note: Ensure the fitted parameter is not too close to the boundaries 
                       after fitting.",
                       placement = "right")))

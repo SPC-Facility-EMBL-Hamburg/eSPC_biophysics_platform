@@ -1,31 +1,127 @@
 # Fit a certain thermal experiment using the unfolding model selected by the user
+# Returns TRUE (boolean) if the fitting could be run, otherwise it returns FALSE
 fitThermalExperiment <- function(exp) {
   
-  cdAnalyzer$experimentsThermal[[exp]]$estimate_signal_derivates()
-  temperature <- cdAnalyzer$experimentsThermal[[exp]]$temperature
-  cdAnalyzer$experimentsThermal[[exp]]$estimate_baselines_parameters(temperature,12)
+  pyExp <- cdAnalyzer$experimentsThermal[[exp]]
+
+  user_sel_model <- input$thermal_unfolding_model
+  fitSlopeN      <- input$fitSlopeNative
+  fitSlopeU      <- input$fitSlopeUnfolded
   
-  if (input$thermal_unfolding_model == 'twoState') {
-    cdAnalyzer$experimentsThermal[[exp]]$fit_signal(input$fitSlopeNative,input$fitSlopeUnfolded)
+  append_record_to_logbook(paste0("Selected model: ", user_sel_model))
+  
+  # Models that require the user to input some value for the parameter Cp
+  models_req_cp <- c('twoStateDimer','twoState','twoStateTrimer','twoStateTetramer',
+                     'threeStateCp','threeStateDimerMICp','threeStateDimerDICp')
+  
+  if (user_sel_model %in% models_req_cp) {
+    
+    Cp             <- suppressWarnings(as.numeric(input$Cp))
+    is_not_numeric <- is.na(Cp)
+    
+    if (is_not_numeric) {
+      popUpWarning("Please set a valid Cp.")
+      return(F)
+    }
+  }  
+  
+  if (user_sel_model %in% c('threeStateCp','threeStateDimerMICp','threeStateDimerDICp')) {
+    
+    if (Cp == 0) {
+      popUpWarning("If you want to fit the Cp of the first equilibrium constant, please set a global Cp greater than 0.")
+      return(F)
+    }
+  }  
+  
+  if (user_sel_model %in% c('twoStateDimer','twoState','twoStateTrimer','twoStateTetramer')) {
+    
+    selModel <- switch(user_sel_model,
+                       'twoStateDimer'    = 'Dimer',
+                       'twoStateTrimer'   = 'Trimer',
+                       'twoStateTetramer' = 'Tetramer',
+                       'Monomer'  # Default value if none of the cases match
+    )
+      
+    pyExp$fit_signal(fitSlopeN,fitSlopeU,Cp,selModel)
+    append_record_to_logbook(paste0("Cp (set by the user): ", Cp))
   } 
   
-  if (input$thermal_unfolding_model == 'threeState') {
-    cdAnalyzer$experimentsThermal[[exp]]$fit_signal_three_state(
-      input$fitSlopeNative,input$fitSlopeUnfolded,
-      input$T1_init,input$T2_init)
+  if (user_sel_model %in% c('threeState','threeStateDimerMI','threeStateDimerDI',
+                            'threeStateTrimerMI','threeStateTrimerTI','threeStateTetramerMI')) {
+    
+    selModel <- switch(user_sel_model,
+                       'threeStateDimerMI' = 'Dimer_monomeric_intermediate',
+                       'threeStateDimerDI' = 'Dimer_dimeric_intermediate',
+                       'threeStateTrimerMI' = 'Trimer_monomeric_intermediate',
+                       'threeStateTrimerTI' = 'Trimer_trimeric_intermediate',
+                       'threeStateTetramerMI' = 'Tetramer_monomeric_intermediate',
+                       'Monomer'  # Default value if none of the cases match
+    )
+    
+    pyExp$fit_signal_three_state(fitSlopeN,fitSlopeU,input$T1_init,input$T2_init,selModel)
+    append_record_to_logbook(paste0("Cp1 and Cp2: ", 0))
+    append_record_to_logbook(paste0("T1 init: ", input$T1_init, ". T2 init: ", input$T2_init))
+  }  
+  
+  if (user_sel_model %in% c('threeStateCp','threeStateDimerMICp','threeStateDimerDICp')) {
+    
+    selModel <- 'Monomer'
+    if (user_sel_model == 'threeStateDimerMICp') selModel <- 'Dimer_monomeric_intermediate'
+    if (user_sel_model == 'threeStateDimerDICp') selModel <- 'Dimer_dimeric_intermediate'
+    
+    pyExp$fit_signal_three_state_with_cp(fitSlopeN,fitSlopeU,input$T1_init,input$T2_init,Cp,selModel)
+    append_record_to_logbook(paste0("Global Cp: ", Cp))
+    append_record_to_logbook(paste0("T1 init: ", input$T1_init, ". T2 init: ", input$T2_init))
   }
   
-  if (input$thermal_unfolding_model == 'fourState') {
-    cdAnalyzer$experimentsThermal[[exp]]$fit_signal_four_state(
-      input$fitSlopeNative,input$fitSlopeUnfolded,
-      input$T1_init,input$T2_init)
+  if (user_sel_model %in% c('twoState_irrev','threeState_rev_irrev')) {
+    
+    v              <- input$scan_rate
+    is_not_numeric <- is.na(suppressWarnings(as.numeric(v)))
+    
+    if (is_not_numeric) {
+      popUpWarning("Please set a valid scan rate. For example, '0.25'. The units are degrees per minute.")
+      return(F)
+    }
+    
+    v <- as.numeric(v)
+    
+    if (v == 0) {
+      popUpWarning("The scan rate can not be zero.")
+      return(F)
+    }
+    
+    all_temperatures_lst <- pyExp$xAxis_lst
+    for (vec in all_temperatures_lst) {
+      has_duplicates <- any(duplicated(vec))
+      if (has_duplicates) {
+        popUpWarning("Please remove temperature duplicates")
+        return(F)
+      }
+    }
+    
+    append_record_to_logbook(paste0("Scan rate: ", v))
   }
   
-  return(NULL)
+  if (user_sel_model == 'twoState_irrev') pyExp$fit_signal_two_state_irrev(v,fitSlopeN,fitSlopeU)
+
+  if (user_sel_model == 'threeState_rev_irrev') {
+    
+    if (input$T1_init_irrev <= 0) {
+      popUpWarning("The initial estimate for T1 must be greater than zero. Fitting process canceled.")
+      return(F)
+    }
+    
+    popUpInfo("Fitting started, it might take a few minutes.")
+    pyExp$fit_signal_three_state_irrev(v,input$fitSlopeNative,input$fitSlopeUnfolded,input$T1_init_irrev)
+    append_record_to_logbook(paste0("T1 init: ", input$T1_init_irrev))
+  } 
+  
+  return(T)
 }
 
 # Create the Table to fill with the temperature data
-observeEvent(list(input$legendInfo,input$workingUnits),{
+observeEvent(list(input$legendInfo,input$workingUnits,input$oligomeric_state_term),{
   
   req(reactives$data_loaded)
   
@@ -33,23 +129,35 @@ observeEvent(list(input$legendInfo,input$workingUnits),{
   legendDf <- getLegendDF(input$legendInfo)
   id       <- legendDf$Internal.ID
   
-  temperature <- cdAnalyzer$getExperimentProperties('temperature')
+  temperature <- cdAnalyzer$get_experiment_properties('temperature')
   temperature <- unlist(temperature)
 
-  # Initialize the dataframe with the CD curves and the temperature 
-  df           <- data.frame(id,temperature,'A')
-  colnames(df) <- c('CD_curve','Temperature (°C or K)','Dataset_name')
+  oligo_state <- input$oligomeric_state_term
+  
+  if (oligo_state == 'monomer') {
+    df           <- data.frame(id,temperature,'A')
+    colnames(df) <- c('CD_curve','Temperature (°C/K)','Dataset')
+  } else {
+    df           <- data.frame(id,0,temperature,'A')
+    
+    oligoColumnName <- '[Dimer] (μM)'
+    if (oligo_state == 'trimer')   oligoColumnName <- '[Trimer] (μM)'
+    if (oligo_state == 'tetramer') oligoColumnName <- '[Tetramer] (μM)'
+    
+    colnames(df) <- c('CD_curve',oligoColumnName,'Temperature (°C/K)','Dataset')
+  }  
   
   # Remove non-selected CD curves
   df <- df[legendDf$Show,]
   
   # Remove experiments with non-matching units
   id_to_keep         <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-  internalID_all     <- cdAnalyzer$getExperimentProperties('internalID')
+
+  internalID_all     <- cdAnalyzer$get_experiment_properties('internalID')
   internalID_to_keep <- unlist(internalID_all[id_to_keep])
   
   df <- df[df$CD_curve %in% internalID_to_keep,]
-  
+
   # Assign the created dataframe to the Table thermal_denaturation_data (available at the 2a. Thermal analysis Tab)
   output$thermal_denaturation_data <- renderRHandsontable({
     rhandsontable(df,rowHeaders=NULL)    %>% 
@@ -73,16 +181,29 @@ observeEvent(input$btn_create_thermal_dataset,{
   df_ids2find        <- hot_to_r(input$thermal_denaturation_data)
   
   # Reassign the column name
-  colnames(df_ids2find)[2] <- 'Temperature'
+  idx <- which(grepl('Temperature',colnames(df_ids2find)))
+  colnames(df_ids2find)[idx] <- 'Temperature'
   
-  groups             <- unique(df_ids2find$Dataset_name)
+  groups             <- unique(df_ids2find$Dataset)
   
   append_record_to_logbook(c('Creating a thermal dataset with the following data',df_to_lines(df_ids2find)))
+  
+  if (nrow(df_ids2find) < 2) {
+    popUpWarning("Please load more CD data")
+    return(NULL)
+  }
+  
+  we_have_nas <- sum(is.na(as.numeric(df_ids2find$Temperature))) > 0
+  
+  if (we_have_nas) {
+    popUpWarning("Please check the temperature column, there is missing data or non-numeric values")
+    return(NULL)
+  }
   
   # Create one thermal dataset per group
   for (group in groups) {
     
-    df_temp <- df_ids2find[df_ids2find$Dataset_name == group,]
+    df_temp <- df_ids2find[df_ids2find$Dataset == group,]
     
     relevantSpectra      <- df_temp$CD_curve 
     relevantTemperature  <- df_temp$Temperature 
@@ -100,10 +221,11 @@ observeEvent(input$btn_create_thermal_dataset,{
     sorted_signal   <- as.matrix(merged[,-1][,sorted_indexes],drop = FALSE)
     
     # Assign the signal and temperature data to the new thermal unfolding experiment
-    cdAnalyzer$experimentsThermal[[group]]                    <- cd_experiment_thermal_ramp()
+    cdAnalyzer$experimentsThermal[[group]]                    <- CdExperimentThermalRamp()
     cdAnalyzer$experimentsThermal[[group]]$wavelength         <- np_array(merged[,1])
     cdAnalyzer$experimentsThermal[[group]]$signalDesiredUnit  <- np_array(sorted_signal)
     cdAnalyzer$experimentsThermal[[group]]$temperature        <- np_array(relevantTemperature)
+    cdAnalyzer$experimentsThermal[[group]]$temperature_ori    <- np_array(relevantTemperature)
     cdAnalyzer$experimentsThermal[[group]]$name               <- group
     
     # Convert the string of selected wavelengths to a numeric vector
@@ -111,11 +233,119 @@ observeEvent(input$btn_create_thermal_dataset,{
     
     cdAnalyzer$experimentsThermal[[group]]$assign_useful_signal(selected_wl)
     
+    if (input$oligomeric_state_term != 'monomer') {
+      relevantOligoConc  <- df_temp[,2]
+      relevantOligoConc  <- relevantOligoConc[sorted_indexes]/1e6 # Transform micromolar (user input) to molar
+      cdAnalyzer$experimentsThermal[[group]]$oligo_conc_molar <- np_array(relevantOligoConc)
+
+    } else {
+      
+      updateSelectInput(session,'thermal_unfolding_model',NULL,
+                        choices = c(
+                          'N ⇌ U'                  = 'twoState',
+                          'N ⇌ I ⇌ U'              = 'threeState',
+                          'N ⇌ I ⇌ U (fit Cp1)'    = 'threeStateCp',
+                          'N → U '                 = 'twoState_irrev',
+                          'N ⇌ I → U'              = 'threeState_rev_irrev'))
+      
+    }
+    
+    if (input$oligomeric_state_term == 'dimer') {
+      updateSelectInput(session,'thermal_unfolding_model',NULL,
+                        choices = c(
+                          'N2 ⇌ 2U'                     = 'twoStateDimer',
+                          'N2 ⇌ 2I ⇌ 2U'                = 'threeStateDimerMI',
+                          'N2 ⇌ I2 ⇌ 2U'                = 'threeStateDimerDI',
+                          'N2 ⇌ 2M ⇌ 2U (fit Cp of K1)' = 'threeStateDimerMICp',
+                          'N2 ⇌ I2 ⇌ 2U (fit Cp of K1)' = 'threeStateDimerDICp'))
+    }
+    
+    if (input$oligomeric_state_term == 'trimer') {
+      updateSelectInput(session,'thermal_unfolding_model',NULL,
+                        choices = c(
+                          'N3 ⇌ 3U'       = 'twoStateTrimer',
+                          'N3 ⇌ 3I ⇌ 3U'  = 'threeStateTrimerMI',
+                          'N3 ⇌ I3 ⇌ 3U'  = 'threeStateTrimerTI'))
+    }
+    
+    if (input$oligomeric_state_term == 'tetramer') {
+      updateSelectInput(session,'thermal_unfolding_model',NULL,
+                        choices = c(
+                          'N4 ⇌ 4U'       = 'twoStateTetramer',
+                          'N4 ⇌ 4I ⇌ 4U'  = 'threeStateTetramerMI'))
+    }
+    
+    cdAnalyzer$experimentsThermal[[group]]$reshape_signal_oligomer('Thermal')    
+    
   }
 
   cdAnalyzer$experimentNamesThermal <- groups
   
   reactives$thermalWorkingUnits   <- input$workingUnits
+  reactives$thermalDatasetCreated <- TRUE
+  
+})
+
+observeEvent(input$thermalUnfoldingFile,{
+  
+  req(input$thermalUnfoldingFile)
+  
+  reactives$thermalDatasetCreated  <- NULL
+  reactives$spectra_was_decomposed <- NULL
+  
+  cdAnalyzer$clean_experiments('thermal')
+  group <- 'A'
+    # Assign the signal and temperature data to the new thermal unfolding experiment
+  cdAnalyzer$experimentsThermal[[group]]                    <- CdExperimentThermalRamp()
+  cdAnalyzer$experimentsThermal[[group]]$name               <- group
+    
+
+  cdAnalyzer$experimentNamesThermal <- c(group)
+
+  is_monomer <- !are_headers_numeric(input$thermalUnfoldingFile$datapath)
+
+  if (is_monomer) {
+
+    loadState <- cdAnalyzer$experimentsThermal[[group]]$load_unfolding_data_monomer(input$thermalUnfoldingFile$datapath)
+
+    updateSelectInput(session,'thermal_unfolding_model',NULL,
+                      choices = c(
+                        'N ⇌ U'                  = 'twoState',
+                        'N ⇌ I ⇌ U'              = 'threeState',
+                        'N ⇌ I ⇌ U (fit Cp1)'    = 'threeStateCp'))
+
+    reactives$thermalWorkingUnits   <- 'yMonomer'
+
+  } else {
+
+    loadState <- cdAnalyzer$experimentsThermal[[group]]$load_unfolding_data_oligomer(input$thermalUnfoldingFile$datapath)
+
+    updateSelectInput(session,'thermal_unfolding_model',NULL,
+                      choices = c(
+                        'N2 ⇌ 2U'                     = 'twoStateDimer',
+                        'N2 ⇌ 2I ⇌ 2U'                = 'threeStateDimerMI',
+                        'N2 ⇌ I2 ⇌ 2U'                = 'threeStateDimerDI',
+                        'N2 ⇌ 2M ⇌ 2U (fit Cp of K1)' = 'threeStateDimerMICp',
+                        'N2 ⇌ I2 ⇌ 2U (fit Cp of K1)' = 'threeStateDimerDICp',
+                        'N3 ⇌ 3U'       = 'twoStateTrimer',
+                        'N3 ⇌ 3I ⇌ 3U'  = 'threeStateTrimerMI',
+                        'N3 ⇌ I3 ⇌ 3U'  = 'threeStateTrimerTI',
+                        'N4 ⇌ 4U'       = 'twoStateTetramer',
+                        'N4 ⇌ 4I ⇌ 4U'  = 'threeStateTetramerMI'))
+
+    reactives$thermalWorkingUnits   <- 'yOligomer'
+
+  }
+
+  cdAnalyzer$experimentsThermal[[group]]$reshape_signal_oligomer('Thermal')
+
+    if (!loadState) {
+      popUpWarning("The file could not be loaded. Please check the format.")
+      return(NULL)
+    } else {
+      popUpSuccess("The file was loaded successfully. Navigate to the Thermal unfolding panel")
+    }
+
   reactives$thermalDatasetCreated <- TRUE
   
 })
@@ -140,10 +370,8 @@ observeEvent(input$btn_find_wl,{
   
   wavelength_filtered_common <- Reduce(intersect, wavelength_filtered_all)
   if (length(wavelength_filtered_common) == 0) {
-    shinyalert(text = "The automatic selection algorithm didn't work. 
-               Please select the wavelength manually.",
-               type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-               html=T)
+    
+    popUpWarning("The automatic selection algorithm didn't work, select the wavelength manually")
     wavelength_filtered_common <- 220
   }
     
@@ -166,26 +394,26 @@ observeEvent(list(input$selected_wavelength_thermal_unfolding,input$analysis_mod
     
   }
 
-  reactives$data_loaded <- FALSE
+  reactives$thermalDatasetCreated <- FALSE
   Sys.sleep(0.1)
   # Convert the string of selected wavelengths to a numeric vector
   selected_wl <- parse_selected_wavelengths(input$selected_wavelength_thermal_unfolding)
-  
+
   thermal_exps <- cdAnalyzer$experimentNamesThermal
   
   for (exp in thermal_exps) {
     
     cdAnalyzer$experimentsThermal[[exp]]$assign_useful_signal(selected_wl)
+    cdAnalyzer$experimentsThermal[[exp]]$reshape_signal_oligomer('Thermal')
     
   }
   
-  reactives$data_loaded <- TRUE
+  reactives$thermalDatasetCreated <- TRUE
   
 })
 
 output$meltingCurves <- renderPlotly({
   
-  req(reactives$data_loaded)
   req(reactives$thermalDatasetCreated)
   
   thermal_ramp_df <- generate_thermal_ramp_df(cdAnalyzer)
@@ -193,13 +421,18 @@ output$meltingCurves <- renderPlotly({
   plot_unfolding_exp(thermal_ramp_df,
                      reactives$thermalWorkingUnits,
                      input$plot_width_melt, input$plot_height_melt, 
-                     input$plot_type_melt, input$plot_axis_size_melt)
+                     input$plot_type_melt, input$plot_axis_size_melt,
+                     reactives$spectra_decomposition_method_thermal,
+                     F,input$x_legend_pos,input$y_legend_pos,input$show_title
+                     )  
   
 })
 
 observeEvent(input$btn_fit_melting_data,{
   
   req(reactives$thermalDatasetCreated)
+  
+  append_record_to_logbook("Fitting procedure started")
   
   withBusyIndicatorServer("fitThermalHidden",{
     
@@ -210,8 +443,8 @@ observeEvent(input$btn_fit_melting_data,{
     
     for (exp in thermal_exps) {
       
-      fitThermalExperiment(exp)
-
+      fit <- fitThermalExperiment(exp)
+      if (!fit) return(NULL)
     }
     
     Sys.sleep(0.5)
@@ -219,18 +452,16 @@ observeEvent(input$btn_fit_melting_data,{
     
     reactives$fitted_coefficients_method_thermal <- 'fixedWL'
     
-    append_record_to_logbook(paste0("Fitting the CD signal versus Temperature curve",
-                                    '. Fit native slope mode: ',input$fitSlopeNative,
-                                    '. Fit unfolded slope mode: ',input$fitSlopeUnfolded))
+    append_record_to_logbook(
+      paste0('. Fit native slope mode: ',input$fitSlopeNative,
+             '. Fit unfolded slope mode: ',input$fitSlopeUnfolded))
     
     # Set SVD / PCA fit to FALSE
     reactives$melting_data_was_fitted_svd_or_pca <- FALSE
     
   })
   
-  shinyalert(text = paste("<b>Fitting done!</b>"),
-             type = "success",closeOnEsc = T,closeOnClickOutside = T,
-             html=T)
+  popUpSuccess("<b>Fitting done!</b>")
     
 })
 
@@ -242,6 +473,15 @@ output$fittedParams_melting <- renderTable({
   
   return(df)
 })
+
+output$fittingBounds_melting <- renderTable({
+  
+  req(reactives$melting_data_was_fitted)
+  df <- get_fitting_bounds_unfolding(cdAnalyzer,type='Thermal')
+
+  return(df)
+})
+
 
 output$fittedErrors_melting <- renderTable({
   
@@ -263,7 +503,10 @@ output$fittedMeltingCurves <- renderPlotly({
     df,dfFit,
     reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt)
+    input$plot_type_melt, input$plot_axis_size_melt,
+    reactives$fitted_coefficients_method_thermal,
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title
+    )
   
   return(fig)
   
@@ -279,7 +522,10 @@ output$fractions_melting <- renderPlotly({
     fractions_df,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    'Temperature (°C)')
+    'Temperature (°C)',
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title)
   
   return(fig)
   
@@ -313,7 +559,10 @@ output$meltingSpectra <- renderPlotly({
     reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    plot_mode=input$plot_style_melt)
+    plot_mode = input$plot_style_melt,
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title)
   
   return(fig)
 })
@@ -342,11 +591,7 @@ observeEvent(input$btn_decompose_spectra,{
 
     if (!cdAnalyzer$experimentsThermal[[exp]]$decompositionDone) {
       
-      shinyalert(text = 
-                   paste("<b>The spectra decomposition algorithm did
-                   not converge. Please remove noisy data."),
-                 type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-                 html=T)
+      popUpWarning("The spectra decomposition algorithm did not converge. Please remove noisy data.")
       return(NULL)
       
     }
@@ -467,7 +712,10 @@ output$basisSpectra <- renderPlotly({
     df,
     reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt)
+    input$plot_type_melt, input$plot_axis_size_melt,
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title)
   
   return(fig)
 })
@@ -483,7 +731,11 @@ output$fittedSpectra <- renderPlotly({
     reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    dfFit)
+    dfFit,
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title
+    )
   
   return(fig)
 })
@@ -496,7 +748,10 @@ output$explainedVariance <- renderPlotly({
   fig <- plot_explained_variance(
     df,
     input$plot_width_melt, input$plot_height_melt, 
-    input$plot_type_melt, input$plot_axis_size_melt)
+    input$plot_type_melt, input$plot_axis_size_melt,
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title)
   
   return(fig)
 })
@@ -505,11 +760,13 @@ output$svdCoefficients <- renderPlotly({
   
   req(reactives$spectra_was_decomposed)
   df  <- get_coefficients_df(cdAnalyzer)
+  
   fig <- plot_unfolding_exp(
     df, reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    reactives$spectra_decomposition_method_thermal)
+    reactives$spectra_decomposition_method_thermal,
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title)
   
   return(fig)
 })
@@ -528,6 +785,8 @@ observeEvent(input$btn_fit_melting_data_svd,{
     for (exp in thermal_exps) {
       
       cdAnalyzer$experimentsThermal[[exp]]$assign_useful_signal_svd(input$selectedK)
+      cdAnalyzer$experimentsThermal[[exp]]$reshape_signal_oligomer('Thermal')
+      
       Sys.sleep(0.1)
       fitThermalExperiment(exp)
       
@@ -550,9 +809,7 @@ observeEvent(input$btn_fit_melting_data_svd,{
     Sys.sleep(0.5)    
   })
   
-  shinyalert(text = paste("<b>Fitting done!</b>"),
-             type = "success",closeOnEsc = T,closeOnClickOutside = T,
-             html=T)
+  popUpSuccess("<b>Fitting done!</b>")
   
 })
 
@@ -567,7 +824,8 @@ output$fittedSVDCoefficients <- renderPlotly({
     reactives$thermalWorkingUnits,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    reactives$spectra_decomposition_method_thermal)
+    reactives$fitted_coefficients_method_thermal,
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title)
   
   return(fig)
   
@@ -601,6 +859,14 @@ output$fittedParams_meltingSVD <- renderTable({
   return(df)
 })
 
+output$fittingBoundsSVD_melting <- renderTable({
+  
+  req(reactives$melting_data_was_fitted_svd_or_pca)
+  df <- get_fitting_bounds_unfolding(cdAnalyzer)
+  
+  return(df)
+})
+
 output$fittedErrors_meltingSVD <- renderTable({
   
   req(reactives$melting_data_was_fitted_svd_or_pca)
@@ -621,7 +887,10 @@ output$fractions_melting_svd <- renderPlotly({
     fractions_df,
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
-    'Temperature (°C)')
+    'Temperature (°C)',
+    xLegend   = input$x_legend_pos,
+    yLegend   = input$y_legend_pos,
+    showTitle = input$show_title)
   
   return(fig)
   

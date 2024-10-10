@@ -26,7 +26,7 @@ workingUnits2ProperLabel <- function(choice) {
     return("\u0394\u03B5 (L\u2219mol<sup>-1</sup>\u2219cm<sup>-1</sup>\u2219chromophores<sup>-1</sup>)")
   }
   
-  return('CD Signal')
+  return('Signal')
 }
 
 # - remove unnecessary options shown in the plotly figures
@@ -87,7 +87,7 @@ add_layout_to_subplot <- function(fig,xaxis,yaxis,leg,tot_cond,axis_size,
   
   fig <- fig %>% 
     layout(xaxis = xaxis,yaxis=yaxis,
-           legend = list(font = list(size = axis_size-3)),
+           legend = list(font = list(size = axis_size-1)),
            annotations = list(
              x = 0.5 , y = 1.12, 
              text = ifelse(tot_cond > 1,leg,""), showarrow = F, 

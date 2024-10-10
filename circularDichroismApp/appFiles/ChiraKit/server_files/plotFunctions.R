@@ -7,18 +7,18 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
   
   if (useMilliDeg) {
     # Fetch the differential absorbance signal
-    signalsAll      <- cdAnalyzer$getExperimentPropertiesModif('signalAbs')
+    signalsAll      <- cdAnalyzer$get_experiment_properties_modif('signalAbs')
     # Replace working units
     workingUnits    <- 'millidegrees'
   } else {
-    signalsAll      <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')
+    signalsAll      <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')
   }
   
-  wlsAll          <- cdAnalyzer$getExperimentPropertiesModif('wavelength')
-  spectraNamesAll <- cdAnalyzer$getExperimentPropertiesModif('spectraNames')
+  wlsAll          <- cdAnalyzer$get_experiment_properties_modif('wavelength')
+  spectraNamesAll <- cdAnalyzer$get_experiment_properties_modif('spectraNames')
 
-  isFake                 <- unlist(cdAnalyzer$getExperimentPropertiesModif('isFakeExperiment'))
-  fakeExperimentSignal   <- unlist(cdAnalyzer$getExperimentPropertiesModif('fakeExperimentSignal'))
+  isFake                 <- unlist(cdAnalyzer$get_experiment_properties_modif('isFakeExperiment'))
+  fakeExperimentSignal   <- unlist(cdAnalyzer$get_experiment_properties_modif('fakeExperimentSignal'))
   
   # Detect if we need to reduce data points
   nPointsPerExp   <- unlist(lapply(signalsAll, function(x) ncol(x) * nrow(x)))
@@ -91,7 +91,7 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
    
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
-                        legend = list(font = list(size = axis_size-3)))
+                        legend = list(font = list(size = axis_size-1)))
   
   fig <- configFig(fig,paste0("CDspectra_",strsplit(as.character(Sys.time())," ")[[1]][1]),
                    plot_type,plot_width,plot_height)
@@ -107,8 +107,8 @@ plotCDexperimentsHT <- function(cdAnalyzer,
   
   fig          <- plot_ly()
   
-  signalsAll   <- cdAnalyzer$getExperimentPropertiesModif('signalHT')
-  wlsAll       <- cdAnalyzer$getExperimentPropertiesModif('wavelength')
+  signalsAll   <- cdAnalyzer$get_experiment_properties_modif('signalHT')
+  wlsAll       <- cdAnalyzer$get_experiment_properties_modif('wavelength')
   
   counter <- 0
   i       <- 0
@@ -153,7 +153,7 @@ plotCDexperimentsHT <- function(cdAnalyzer,
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
-                        legend = list(font = list(size = axis_size-3)))
+                        legend = list(font = list(size = axis_size-1)))
   
   fig <- configFig(fig,paste0("CDspectra_voltage_",strsplit(as.character(Sys.time())," ")[[1]][1]),
                    plot_type,plot_width,plot_height)
@@ -167,13 +167,13 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
   
   fig         <- plot_ly()
   
-  signalsHTAll    <- cdAnalyzer$getExperimentPropertiesModif('signalHT')
-  signalsAll      <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')
-  wlsAll          <- cdAnalyzer$getExperimentPropertiesModif('wavelength')
-  spectraNamesAll <- cdAnalyzer$getExperimentPropertiesModif('spectraNames')
+  signalsHTAll    <- cdAnalyzer$get_experiment_properties_modif('signalHT')
+  signalsAll      <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')
+  wlsAll          <- cdAnalyzer$get_experiment_properties_modif('wavelength')
+  spectraNamesAll <- cdAnalyzer$get_experiment_properties_modif('spectraNames')
   
-  isFake                 <- unlist(cdAnalyzer$getExperimentPropertiesModif('isFakeExperiment'))
-  fakeExperimentSignal   <- unlist(cdAnalyzer$getExperimentPropertiesModif('fakeExperimentSignal'))
+  isFake                 <- unlist(cdAnalyzer$get_experiment_properties_modif('isFakeExperiment'))
+  fakeExperimentSignal   <- unlist(cdAnalyzer$get_experiment_properties_modif('fakeExperimentSignal'))
   
   counter <- 0
   i       <- 0
@@ -243,7 +243,7 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(xaxis = x, yaxis = y,font="Roboto",showlegend=TRUE,
-                        legend = list(x = 1.05, y = 1,font = list(size = axis_size-3)),
+                        legend = list(x = 1.05, y = 1,font = list(size = axis_size-1)),
                         yaxis2 = list(overlaying = "y", side = "right",
                                       title = "High Tension Voltage",
                                       titlefont = list(size = axis_size), 
@@ -264,7 +264,9 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
 plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
                                plot_width=12,plot_height=8,
                                plot_type='svg', axis_size=12,
-                               spectra_decomposition_method='fixedWL',useLogAxis=F) {
+                               spectra_decomposition_method='fixedWL',
+                               useLogAxis=F,
+                               xLegend=1,yLegend=1,showTitle=T) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -317,28 +319,40 @@ plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
     
     for (group_value in unique_groups) {
       
-      name <- ifelse(svd_or_pca_based,paste(group_value),paste("WL", group_value))
-      
       subset_df <- df_temp[df_temp$group_var == group_value, ]
+      
       fig <- add_trace(
         fig,
         x = subset_df$measurement_factor,
         y = subset_df$value,
         type = "scatter",
         mode = "markers",
-        name = name
+        name = group_value
       )
     }
     
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
     
+    legend_title <- ifelse(svd_or_pca_based,"Basis spectra","Wavelength (nm)")
+    
+    # Remove legend title to handle signal of unknown origin
+    if (workingUnits == 'yOligomer') legend_title <- 'N-mer concentration'
+    if (workingUnits == 'yMonomer')  legend_title <- 'Curve'
+
+    fig <- fig %>% layout(legend = list(title = list(text = legend_title,
+                                                     font = list(size = axis_size-1)),
+                                        x = xLegend,y = yLegend))
+    
     plot_list[[i]] <- fig
     
   }
   
+  titleText <- unique(unfolding_exp_data$legend)
+  if (!showTitle) titleText <- ''
+  
   fig <- plot_list_to_fig(
     paste0('unfolding_curves_',Sys.Date()),plot_list,
-    unique(unfolding_exp_data$legend),
+    titleText,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -355,7 +369,8 @@ plot_unfolding_fitting <- function(
     workingUnits,
     plot_width=12, plot_height=8,
     plot_type='svg', axis_size=12,
-    fitted_coefficients_method='fixedWL',useLogAxis=F) {
+    fitted_coefficients_method='fixedWL',useLogAxis=F,
+    xLegend=1,yLegend=1,showTitle=T) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -417,7 +432,7 @@ plot_unfolding_fitting <- function(
         showlegend = FALSE 
       )
       
-      name <- ifelse(svd_or_pca_based,paste("k = ", group_value),paste("WL", group_value))
+      name <- ifelse(svd_or_pca_based,paste0("k = ", group_value),paste0(group_value))
       
       fig <- add_trace(
         fig,
@@ -433,13 +448,26 @@ plot_unfolding_fitting <- function(
     
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
     
+    legend_title <- ifelse(svd_or_pca_based,"Basis spectra","Wavelength (nm)")
+
+    # Remove legend title to handle signal of unknown origin
+    if (workingUnits == 'yOligomer') legend_title <- 'N-mer concentration'
+    if (workingUnits == 'yMonomer')  legend_title <- 'Curve'
+
+    fig <- fig %>% layout(legend = list(title = list(text = legend_title,
+                                                     font = list(size = axis_size-1)),
+                                        x = xLegend,y = yLegend))
+    
     plot_list[[i]] <- fig
     
   }
   
+  titleText <- unique(unfolding_exp_data$legend)
+  if (!showTitle) titleText <- ''
+  
   fig <- plot_list_to_fig(
     paste0('unfolding_fitted_curves_',Sys.Date()),
-    plot_list,unique(unfolding_exp_data$legend),
+    plot_list,titleText,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -460,7 +488,9 @@ plot_unfolding_exp_spectra <- function(
     plot_width=12, 
     plot_height=8, plot_type='svg', axis_size=12,
     unfolding_fitted_data = NULL,
-    plot_mode='markers') {
+    plot_mode='markers',
+    xLegend=1,yLegend=1,
+    showTitle=T) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -486,8 +516,8 @@ plot_unfolding_exp_spectra <- function(
   
   unfolding_exp_data$color <- get_colors_from_numeric_values(unfolding_exp_data$measurement_factor)
   
-  temperatureBased <- any( grepl('temperature',colnames(df),  ignore.case = T) )
-  chemBased        <- any( grepl('chem_conc',  colnames(df),  ignore.case = T) )
+  temperatureBased <- any( grepl('temperature',colnames(unfolding_exp_data),  ignore.case = T) )
+  chemBased        <- any( grepl('chem_conc',  colnames(unfolding_exp_data),  ignore.case = T) )
   
   i <- 0
   for (leg in unique(unfolding_exp_data$legend)) {
@@ -512,15 +542,11 @@ plot_unfolding_exp_spectra <- function(
       
       if (temperatureBased) {
         current_factor <- round(unique(subset_df$measurement_factor),1)
-        name           <- paste0(current_factor, ' (M)')
-      } else if (chemBased) {
-        current_factor <- round(unique(subset_df$measurement_factor),2)
-        name           <- paste0(current_factor, ' °C')
       } else {
         current_factor <- signif(unique(subset_df$measurement_factor),2)
-        name           <- paste0(current_factor)
       }
-      
+      name           <- paste0(current_factor)
+
       fig <- add_trace(
         fig,
         x = subset_df$wavelength,
@@ -558,14 +584,16 @@ plot_unfolding_exp_spectra <- function(
           )
           
         }
-        
-
-        
       }
     }
     
-
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
+    
+    legend_title <- ifelse(chemBased,"[Denaturant agent] (M)","Temperature (°C)")
+    
+    fig <- fig %>% layout(legend = list(title = list(text = legend_title,
+                                                     font = list(size = axis_size-1)),
+                                        x = xLegend,y = yLegend))
     
     plot_list[[i]] <- fig
     
@@ -575,9 +603,12 @@ plot_unfolding_exp_spectra <- function(
                       paste0('unfolding_fitted_spectra_',Sys.Date()),
                       paste0('unfolding_spectra_',Sys.Date()))
   
+  titleTxt <- unique(unfolding_exp_data$legend)
+  if (!showTitle) titleTxt <- ''
+  
   fig <- plot_list_to_fig(
     plot_name,
-    plot_list,unique(unfolding_exp_data$legend),
+    plot_list,titleTxt,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -624,7 +655,8 @@ plot_residuals <- function(res_df,
 }
 
 plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12, 
-                               plot_height=8, plot_type='svg', axis_size=12) {
+                               plot_height=8, plot_type='svg', axis_size=12,
+                               xLegend=1,yLegend=1,showTitle=T) {
   
   minWL <- min(basis_spectra_df$wavelength) - 5
   maxWL <- max(basis_spectra_df$wavelength) + 5
@@ -662,13 +694,20 @@ plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12,
 
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
     
+    fig <- fig %>% layout(legend = list(title = list(text = "Basis spectra",
+                                                     font = list(size = axis_size-1)),
+                                        x = xLegend,y = yLegend))
+    
     plot_list[[i]] <- fig
     
   }
   
+  titleTxt <- unique(basis_spectra_df$legend)
+  if(!showTitle) titleTxt <- '' 
+    
   fig <- plot_list_to_fig(
     paste0('basis_spectra_',Sys.Date()),
-    plot_list,unique(basis_spectra_df$legend),
+    plot_list,titleTxt,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -682,7 +721,8 @@ plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12,
 # Returns the plot of the dataframe, one subplot per unique legend
 
 plot_explained_variance <- function(df,plot_width=12,plot_height=8,
-                                    plot_type='svg',axis_size=12) {
+                                    plot_type='svg',axis_size=12,
+                                    xLegend=1,yLegend=1,showTitle=T) {
   
   xaxis <- list(title = 'k',titlefont = list(size = axis_size), 
                 tickfont = list(size = axis_size),showgrid = F)
@@ -716,13 +756,22 @@ plot_explained_variance <- function(df,plot_width=12,plot_height=8,
     
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
 
+    legend_title <- "Dataset"
+    
+    fig <- fig %>% layout(legend = list(title = list(text = legend_title,
+                                                     font = list(size = axis_size-1)),
+                                        x = xLegend,y = yLegend))
+    
     plot_list[[i]] <- fig
     
   }
   
+  titleTxt <- unique(df$legend)
+  if(!showTitle) titleTxt <- '' 
+  
   fig <- plot_list_to_fig(
     paste0('explained_variance_',Sys.Date()),
-    plot_list,unique(df$legend),
+    plot_list,titleTxt,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -782,7 +831,7 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
-                        legend = list(font = list(size = axis_size-3)))
+                        legend = list(font = list(size = axis_size-1)))
   
   fig <- configFig(fig,paste0("CD_spectra_fitted_delta_epsilon_",strsplit(as.character(Sys.time())," ")[[1]][1]),
                    plot_type,plot_width,plot_height)
@@ -802,7 +851,8 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
 plot_unfolding_fractions <- function(unfolding_fractions,
                                plot_width=12,plot_height=8,
                                plot_type='svg', axis_size=12,
-                               xAxisLabel='Set') {
+                               xAxisLabel='Set',
+                               xLegend=1,yLegend=1,showTitle=T) {
   
   # Return null if there is no data
   if (is.null(unfolding_fractions)) return(NULL)
@@ -837,6 +887,8 @@ plot_unfolding_fractions <- function(unfolding_fractions,
       
       subset_df <- df_temp[df_temp$variable == group_value, ]
       
+      subset_df <- subset_df[order(subset_df[,1]), ]
+      
       fig <- add_trace(
         fig,
         x = subset_df[,1],
@@ -849,13 +901,20 @@ plot_unfolding_fractions <- function(unfolding_fractions,
     
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
     
+    fig <- fig %>% layout(legend = list(
+      title = list(text = "",font = list(size = axis_size-1)),
+      x = xLegend,y = yLegend))
+    
     plot_list[[i]] <- fig
     
   }
   
+  titleTxt <- unique(unfolding_fractions$legend)
+  if (!showTitle) titleTxt <- ''
+  
   fig <- plot_list_to_fig(
     paste0('unfolding_fractions_',Sys.Date()),plot_list,
-    unique(unfolding_fractions$legend),
+    titleTxt,
     axis_size,plot_type,plot_width,plot_height)
   
   return( fig )
@@ -918,7 +977,7 @@ plot_gQuadruplexReferences <- function(wavelength,signal_matrix,sample_names,
             titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
-                        legend = list(font = list(size = axis_size-3)))
+                        legend = list(font = list(size = axis_size-1)))
   
   fig <- configFig(fig,paste0("CDspectra_G-Quadruplex_references_",strsplit(as.character(Sys.time())," ")[[1]][1]),
                    plot_type,plot_width,plot_height)

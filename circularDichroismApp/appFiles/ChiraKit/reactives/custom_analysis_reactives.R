@@ -30,7 +30,7 @@ observeEvent(list(input$legendInfo,input$workingUnits,input$numberOfExpParams),{
   
   # Remove experiments with non-matching units
   id_to_keep         <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-  internalID_all     <- cdAnalyzer$getExperimentProperties('internalID')
+  internalID_all     <- cdAnalyzer$get_experiment_properties('internalID')
   internalID_to_keep <- unlist(internalID_all[id_to_keep])
   
   df <- df[df$CD_curve %in% internalID_to_keep,]
@@ -105,7 +105,7 @@ observeEvent(input$btn_create_custom_dataset,{
     sorted_signal   <- as.matrix(merged[,-1][,sorted_indexes],drop = FALSE)
     
     # Assign the signal and temperature data to the new thermal unfolding experiment
-    cdAnalyzer$experimentsCustom[[group]]                    <- cd_experiment_custom_analysis()
+    cdAnalyzer$experimentsCustom[[group]]                    <- CdExperimentCustomAnalysis()
     
     cdObj <- cdAnalyzer$experimentsCustom[[group]]
     

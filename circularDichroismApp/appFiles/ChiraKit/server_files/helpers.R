@@ -23,6 +23,10 @@ get_hour_minute_sec <- function() {
   return(time_str)
 }
 
+popUpWarning <- function(string) shinyalert(text = string,type = "warning",closeOnEsc = T,closeOnClickOutside = T,html=T)
+popUpInfo    <- function(string) shinyalert(text = string,type = "info",   closeOnEsc = T,closeOnClickOutside = T,html=T)
+popUpSuccess <- function(string) shinyalert(text = string,type = "success",closeOnEsc = T,closeOnClickOutside = T,html=T)
+
 ## Count folders in the current directory
 count_folders <- function(dir) {
   
@@ -143,7 +147,7 @@ replace0valuesWithNAs <- function(vector) {
 generateDTtable <- function(cdAnalyzer) {
   
   exps              <- cdAnalyzer$experimentNames
-  trueExperiments   <- !unlist(cdAnalyzer$getExperimentProperties('isFakeExperiment'))
+  trueExperiments   <- !unlist(cdAnalyzer$get_experiment_properties('isFakeExperiment'))
   
   if (sum(trueExperiments) == 0) {
     df   <- data.frame(col1= character(),col2= numeric()  ,col3= numeric(),
@@ -151,12 +155,12 @@ generateDTtable <- function(cdAnalyzer) {
   } else {
     
     # Generate table data
-    molWeights       <- (unlist(cdAnalyzer$getExperimentProperties('molecularWeight')))
-    pathLengths      <- (unlist(cdAnalyzer$getExperimentProperties('pathLength')))*10
-    concs            <- (unlist(cdAnalyzer$getExperimentProperties('concentration')))
-    numberOfCroms <- (unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')))
+    molWeights       <- (unlist(cdAnalyzer$get_experiment_properties('molecularWeight')))
+    pathLengths      <- (unlist(cdAnalyzer$get_experiment_properties('pathLength')))*10
+    concs            <- (unlist(cdAnalyzer$get_experiment_properties('concentration')))
+    numberOfCroms <- (unlist(cdAnalyzer$get_experiment_properties('numberOfCroms')))
     
-    iUnits           <- unlist(cdAnalyzer$getExperimentProperties('units'))
+    iUnits           <- unlist(cdAnalyzer$get_experiment_properties('units'))
     
     # Subset data
     exps                <- exps[trueExperiments]
@@ -185,7 +189,7 @@ generateDTtable <- function(cdAnalyzer) {
 # Auxiliary function to render the DT Table on the server
 renderDTtable <- function(df) {
   
-  scrollY = FALSE
+  scrollY <- FALSE
 
   columns2disable <- which(colnames(df) %in% c("File name","Input units")) - 1
   
@@ -244,7 +248,7 @@ getPalette <- function(nColors) {
 ## Generate Internal IDs
 getInternalIDs <- function(cdAnalyzer) {
 
-  ID <- cdAnalyzer$getExperimentProperties('internalID')
+  ID <- cdAnalyzer$get_experiment_properties('internalID')
   ID <- unlist(ID)
   
   return(ID)
@@ -254,7 +258,7 @@ getInternalIDs <- function(cdAnalyzer) {
 ## Generate a boolean vector to known which are 'fake' experiments
 getFakeIDs <- function(cdAnalyzer) {
   
-  fakeIDs <- cdAnalyzer$getExperimentProperties('isFakeExperiment')
+  fakeIDs <- cdAnalyzer$get_experiment_properties('isFakeExperiment')
   fakeIDs <- unlist(fakeIDs)
   
   return(fakeIDs)
@@ -264,7 +268,7 @@ getFakeIDs <- function(cdAnalyzer) {
 ## Generate spectra names
 getSpectraNames <- function(cdAnalyzer) {
   
-  spectraNames <- cdAnalyzer$getExperimentProperties('spectraNames')
+  spectraNames <- cdAnalyzer$get_experiment_properties('spectraNames')
   spectraNames <- unlist(spectraNames)
   
   return(spectraNames)
@@ -616,10 +620,25 @@ full_join_df_lst <- function(dfs,by_column = 'wavelength') {
 ## Output
 ##  - the ids of the non matching experiments
 find_non_matching_units_experiments <- function(cdAnalyzer,workingUnits) {
-  
-  signalsType   <- unlist(cdAnalyzer$getExperimentProperties('fakeExperimentSignal'))
-  ids           <- signalsType != 'unknown' & signalsType != workingUnits
-  
+
+  signalsAll             <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')
+  isFake                 <- unlist(cdAnalyzer$get_experiment_properties_modif('isFakeExperiment'))
+  fakeExperimentSignal   <- unlist(cdAnalyzer$get_experiment_properties_modif('fakeExperimentSignal'))
+
+  ids <- c()
+  i   <- 0
+  for (expName in cdAnalyzer$experimentNames) {
+
+    i   <- i + 1
+    signals     <- signalsAll[[i]]
+
+    c1 <- all(is.na(signals))
+    c2 <- isFake[i] & (fakeExperimentSignal[i] != workingUnits)
+
+    ids <- c(ids,c1 | c2)
+
+  }
+
   return(ids)
 }
 

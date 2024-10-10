@@ -8,14 +8,14 @@ output$download_cd_data_row_wise        <-   downloadHandler(
     # Filter experiments where the signalDesiredUnit matrix units does not match the working units
     id_to_keep <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
     
-    signalsAll   <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')[id_to_keep]
-    wlsAll       <- cdAnalyzer$getExperimentPropertiesModif('wavelength')[id_to_keep]
-    spectraNames <- cdAnalyzer$getExperimentProperties('spectraNames')[id_to_keep]
+    signalsAll   <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')[id_to_keep]
+    wlsAll       <- cdAnalyzer$get_experiment_properties_modif('wavelength')[id_to_keep]
+    spectraNames <- cdAnalyzer$get_experiment_properties('spectraNames')[id_to_keep]
 
-    concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep])
-    pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep])
-    molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep])
-    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep])
+    concentration  <- unlist(cdAnalyzer$get_experiment_properties('concentration')[id_to_keep])
+    pathLength     <- unlist(cdAnalyzer$get_experiment_properties('pathLength')[id_to_keep])
+    molWeight      <- unlist(cdAnalyzer$get_experiment_properties('molecularWeight')[id_to_keep])
+    numberOfCroms  <- unlist(cdAnalyzer$get_experiment_properties('numberOfCroms')[id_to_keep])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {
@@ -49,14 +49,14 @@ output$download_cd_data_col_wise        <-   downloadHandler(
     # Filter experiments where the signalDesiredUnit matrix units does not match the working units
     id_to_keep <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
     
-    signalsAll   <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')[id_to_keep]
-    wlsAll       <- cdAnalyzer$getExperimentPropertiesModif('wavelength')[id_to_keep]
-    spectraNames <- cdAnalyzer$getExperimentProperties('spectraNames')[id_to_keep]
+    signalsAll   <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')[id_to_keep]
+    wlsAll       <- cdAnalyzer$get_experiment_properties_modif('wavelength')[id_to_keep]
+    spectraNames <- cdAnalyzer$get_experiment_properties('spectraNames')[id_to_keep]
 
-    concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep])
-    pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep])
-    molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep])
-    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep])
+    concentration  <- unlist(cdAnalyzer$get_experiment_properties('concentration')[id_to_keep])
+    pathLength     <- unlist(cdAnalyzer$get_experiment_properties('pathLength')[id_to_keep])
+    molWeight      <- unlist(cdAnalyzer$get_experiment_properties('molecularWeight')[id_to_keep])
+    numberOfCroms  <- unlist(cdAnalyzer$get_experiment_properties('numberOfCroms')[id_to_keep])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {
@@ -85,16 +85,16 @@ output$download_generated_cd_data_row_wise        <-   downloadHandler(
     
     # Filter experiments where the signalDesiredUnit matrix units does not match the working units
     id_to_keep   <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-    isGenerated  <- unlist(cdAnalyzer$getExperimentProperties('isGenerated')[id_to_keep])
+    isGenerated  <- unlist(cdAnalyzer$get_experiment_properties('isGenerated')[id_to_keep])
     
-    signalsAll   <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')[id_to_keep][isGenerated]
-    wlsAll       <- cdAnalyzer$getExperimentPropertiesModif('wavelength')[id_to_keep][isGenerated]
-    spectraNames <- cdAnalyzer$getExperimentProperties('spectraNames')[id_to_keep][isGenerated]
+    signalsAll   <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')[id_to_keep][isGenerated]
+    wlsAll       <- cdAnalyzer$get_experiment_properties_modif('wavelength')[id_to_keep][isGenerated]
+    spectraNames <- cdAnalyzer$get_experiment_properties('spectraNames')[id_to_keep][isGenerated]
     
-    concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep][isGenerated])
-    pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep][isGenerated])
-    molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep][isGenerated])
-    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep][isGenerated])
+    concentration  <- unlist(cdAnalyzer$get_experiment_properties('concentration')[id_to_keep][isGenerated])
+    pathLength     <- unlist(cdAnalyzer$get_experiment_properties('pathLength')[id_to_keep][isGenerated])
+    molWeight      <- unlist(cdAnalyzer$get_experiment_properties('molecularWeight')[id_to_keep][isGenerated])
+    numberOfCroms  <- unlist(cdAnalyzer$get_experiment_properties('numberOfCroms')[id_to_keep][isGenerated])
     
     dfs <- list()
 
@@ -127,16 +127,16 @@ output$download_generated_cd_data_col_wise        <-   downloadHandler(
     
     # Filter experiments where the signalDesiredUnit matrix units does not match the working units
     id_to_keep   <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-    isGenerated  <- unlist(cdAnalyzer$getExperimentProperties('isGenerated')[id_to_keep])
+    isGenerated  <- unlist(cdAnalyzer$get_experiment_properties('isGenerated')[id_to_keep])
     
-    signalsAll   <- cdAnalyzer$getExperimentPropertiesModif('signalDesiredUnit')[id_to_keep][isGenerated]
-    wlsAll       <- cdAnalyzer$getExperimentPropertiesModif('wavelength')[id_to_keep][isGenerated]
-    spectraNames <- cdAnalyzer$getExperimentProperties('spectraNames')[id_to_keep][isGenerated]
+    signalsAll   <- cdAnalyzer$get_experiment_properties_modif('signalDesiredUnit')[id_to_keep][isGenerated]
+    wlsAll       <- cdAnalyzer$get_experiment_properties_modif('wavelength')[id_to_keep][isGenerated]
+    spectraNames <- cdAnalyzer$get_experiment_properties('spectraNames')[id_to_keep][isGenerated]
 
-    concentration  <- unlist(cdAnalyzer$getExperimentProperties('concentration')[id_to_keep][isGenerated])
-    pathLength     <- unlist(cdAnalyzer$getExperimentProperties('pathLength')[id_to_keep][isGenerated])
-    molWeight      <- unlist(cdAnalyzer$getExperimentProperties('molecularWeight')[id_to_keep][isGenerated])
-    numberOfCroms  <- unlist(cdAnalyzer$getExperimentProperties('numberOfCroms')[id_to_keep][isGenerated])
+    concentration  <- unlist(cdAnalyzer$get_experiment_properties('concentration')[id_to_keep][isGenerated])
+    pathLength     <- unlist(cdAnalyzer$get_experiment_properties('pathLength')[id_to_keep][isGenerated])
+    molWeight      <- unlist(cdAnalyzer$get_experiment_properties('molecularWeight')[id_to_keep][isGenerated])
+    numberOfCroms  <- unlist(cdAnalyzer$get_experiment_properties('numberOfCroms')[id_to_keep][isGenerated])
     
     dfs <- list()
     for (i in 1:length(wlsAll)) {

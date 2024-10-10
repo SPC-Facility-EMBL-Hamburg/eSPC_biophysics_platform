@@ -1,25 +1,49 @@
 # Fit a certain chemical experiment using the unfolding model selected by the user
 fitChemicalExperiment <- function(exp) {
   
-  chem_conc <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
-  cdAnalyzer$experimentsChemical[[exp]]$estimate_baselines_parameters(chem_conc,2)
+  append_record_to_logbook(paste0("Fitting the chemical unfolding curves",
+                                  '. Fit native slope mode: '  ,input$fitSlopeNative_chemical,
+                                  '. Fit unfolded slope mode: ',input$fitSlopeUnfolded_chemical))
   
-  if (input$chemical_unfolding_model == 'twoState') {
-    cdAnalyzer$experimentsChemical[[exp]]$fit_signal(
-      input$fitSlopeNative_chemical,input$fitSlopeUnfolded_chemical)
+  user_sel_model <- input$chemical_unfolding_model
+  py_chem_exp    <- cdAnalyzer$experimentsChemical[[exp]]
+  
+  fitSlopeN <- input$fitSlopeNative_chemical
+  fitSlopeU <- input$fitSlopeUnfolded_chemical
+  
+  if (grepl('two',user_sel_model)) {
+    
+    selModel <- switch(user_sel_model,
+                       'twoStateDimer'    = 'Dimer',
+                       'twoStateTrimer'   = 'Trimer',
+                       'twoStateTetramer' = 'Tetramer',
+                       'Monomer'  # Default value if none of the cases match
+    )
+
+    py_chem_exp$fit_signal(fitSlopeN,fitSlopeU,selModel)
   } 
-  
-  if (input$chemical_unfolding_model == 'threeState') {
-    cdAnalyzer$experimentsChemical[[exp]]$fit_signal_three_state(
-      input$fitSlopeNative_chemical,input$fitSlopeUnfolded_chemical,
-      input$D50v1_init,input$D50v2_init)
-  }
+
+  if (grepl('three',user_sel_model)) {
+    
+    selModel <- switch(user_sel_model,
+                       'threeStateDimerMI'    = 'Dimer_monomeric_intermediate',
+                       'threeStateDimerDI'    = 'Dimer_dimeric_intermediate',
+                       'threeStateTrimerMI'   = 'Trimer_monomeric_intermediate',
+                       'threeStateTrimerTI'   = 'Trimer_trimeric_intermediate',
+                       'threeStateTetramerMI' = 'Tetramer_monomeric_intermediate',
+                       'Monomer'  # Default value if none of the cases match
+    )
+    
+    py_chem_exp$fit_signal_three_state(fitSlopeN,fitSlopeU,input$D50v1_init,input$D50v2_init,selModel)
+    append_record_to_logbook(paste0('  D1 init: ',input$D50v1_init,'. D2 init: ',input$D50v2_init))
+    
+  } 
   
   return(NULL)
 }
 
 # Create the Table to fill with the concentration of the chemical denaturation agent
-observeEvent(list(input$legendInfo,input$workingUnits),{
+observeEvent(list(input$legendInfo,input$workingUnits,input$oligomeric_state_chem),{
   
   req(reactives$data_loaded)
   
@@ -27,16 +51,27 @@ observeEvent(list(input$legendInfo,input$workingUnits),{
   legendDf <- getLegendDF(input$legendInfo)
   id  <- legendDf$Internal.ID
   
-  # Initialize the dataframe with the CD curves and the denaturant agent concentration
-  df           <- data.frame(id,0,'A',0)
-  colnames(df) <- c('CD_curve','[Denaturant agent] (M)','Dataset_name','Temperature (°C or K)')
+  oligo_state <- input$oligomeric_state_chem
+  
+  if (oligo_state == 'monomer') {
+    df           <- data.frame(id,0,25,'A')
+    colnames(df) <- c('CD_curve','[Denaturant agent] (M)','Temperature (°C/K)','Dataset')
+  } else {
+    df           <- data.frame(id,0,0,25,'A')
+    
+    oligoColumnName <- '[Dimer] (μM)'
+    if (oligo_state == 'trimer')   oligoColumnName <- '[Trimer] (μM)'
+    if (oligo_state == 'tetramer') oligoColumnName <- '[Tetramer] (μM)'
+    
+    colnames(df) <- c('CD_curve','[Denaturant] (M)',oligoColumnName,'Temperature (°C/K)','Dataset')
+  }
   
   # Remove non-selected CD curves
   df <- df[legendDf$Show,]
   
   # Remove experiments with non-matching units
   id_to_keep         <- !find_non_matching_units_experiments(cdAnalyzer,input$workingUnits)
-  internalID_all     <- cdAnalyzer$getExperimentProperties('internalID')
+  internalID_all     <- cdAnalyzer$get_experiment_properties('internalID')
   internalID_to_keep <- unlist(internalID_all[id_to_keep])
   
   df <- df[df$CD_curve %in% internalID_to_keep,]
@@ -62,37 +97,47 @@ observeEvent(input$btn_create_chemical_dataset,{
   # Retrieve which CD experiments should be used to build a new dataset for chemical denaturation
   df_ids2find        <- hot_to_r(input$chemical_denaturation_conc)
  
-  # Replace column name
-  colnames(df_ids2find)[4] <- 'Temperature'
+  we_have_nas1 <- sum(is.na(as.numeric(df_ids2find[,2]))) > 0
+  we_have_nas2 <- sum(is.na(as.numeric(df_ids2find[,3]))) > 0
+  
+  if (we_have_nas1 || we_have_nas2) {
+    popUpWarning("Please check the Table data. It seems there is missing data or non numeric values.")
+    return(NULL)
+  }  
   
   # Remove CD curves with denaturant concentration equal to zero
   df_ids2find        <- df_ids2find[df_ids2find[,2] > 0,]
-  groups             <- unique(df_ids2find$Dataset_name)
   
-  # Stop if there are no CD curves of interest  
-  if (nrow(df_ids2find) == 0 ) return(NULL)
+  if (nrow(df_ids2find) < 2) {
+    popUpWarning("Please load more than one CD spectrum.")
+    return(NULL)
+  }  
   
-  append_record_to_logbook(c('Creating a chemical dataset with the following data',df_to_lines(df_ids2find)))
+  # Reassign the column name
+  idx <- which(grepl('Temperature',colnames(df_ids2find)))
+  colnames(df_ids2find)[idx] <- 'Temperature'
+  
+  groups             <- unique(df_ids2find$Dataset)
+  
+  append_record_to_logbook(c('Creating a chemical dataset with the following data',
+                             df_to_lines(df_ids2find)))
   
   # Check that there is only one temperature per group
   nested_df <- df_ids2find %>% 
-    group_by(Dataset_name) %>% 
+    group_by(Dataset) %>% 
     summarize(unique_count = n_distinct(Temperature))
   
   if (any(nested_df$unique_count > 1)) {
     
-    shinyalert(text = "Please verify that all the CD curves sharing the same dataset name
-               have also the same temperature.",
-               type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-               html=T)
+    popUpWarning("Please verify that all the CD curves sharing the same dataset name have also the same temperature.")
     
     return(NULL)
   }
   
-  # Create one thermal dataset per group
+  # Create one chemical dataset per group
   for (group in groups) {
     
-    df_temp <- df_ids2find[df_ids2find$Dataset_name == group,]
+    df_temp <- df_ids2find[df_ids2find$Dataset == group,]
     
     relevantSpectra    <- df_temp$CD_curve 
     relevantDenatConc  <- df_temp[,2]
@@ -105,23 +150,118 @@ observeEvent(input$btn_create_chemical_dataset,{
     sorted_signal   <- as.matrix(merged[,-1][,sorted_indexes],drop = FALSE)
     
     # Assign the signal and temperature data to the new chemical unfolding experiment
-    cdAnalyzer$experimentsChemical[[group]]                    <- cd_experiment_chemical_unfolding()
+    cdAnalyzer$experimentsChemical[[group]]                    <- CdExperimentChemicalUnfolding()
     cdAnalyzer$experimentsChemical[[group]]$wavelength         <- np_array(merged[,1])
     cdAnalyzer$experimentsChemical[[group]]$signalDesiredUnit  <- np_array(sorted_signal)
     cdAnalyzer$experimentsChemical[[group]]$temperature        <- mean(df_temp$Temperature)
     cdAnalyzer$experimentsChemical[[group]]$name               <- group
     cdAnalyzer$experimentsChemical[[group]]$chem_concentration <- np_array(relevantDenatConc)
+    cdAnalyzer$experimentsChemical[[group]]$chem_concentration_ori <- np_array(relevantDenatConc)
     
     # Convert the string of selected wavelengths to a numeric vector
-    selected_wl <- parse_selected_wavelengths(input$selected_wavelength_thermal_unfolding)
-    
+    selected_wl <- parse_selected_wavelengths(input$selected_wavelength_chemical_unfolding)
+
     cdAnalyzer$experimentsChemical[[group]]$assign_useful_signal(selected_wl)
+    
+    if (input$oligomeric_state_chem != 'monomer') {
+      relevantOligoConc  <- df_temp[,3]
+      relevantOligoConc  <- relevantOligoConc[sorted_indexes]/1e6 # Transform micromolar (user input) to molar
+      cdAnalyzer$experimentsChemical[[group]]$oligo_conc_molar <- np_array(relevantOligoConc)
+      
+    } else {
+      
+      updateSelectInput(session,'chemical_unfolding_model',NULL,
+                        choices = c('N ⇌ U'      = 'twoState',
+                                    'N ⇌ I ⇌ U'  = 'threeState'))
+      
+    }
+    
+    if (input$oligomeric_state_chem == 'dimer') {
+      updateSelectInput(session,'chemical_unfolding_model',NULL,
+                        choices = c('N2 ⇌ 2U'      = 'twoStateDimer',
+                                    'N2 ⇌ 2I ⇌ 2I' = 'threeStateDimerMI',
+                                    'N2 ⇌ I2 ⇌ 2I' = 'threeStateDimerDI'))
+    }
+    
+    if (input$oligomeric_state_chem == 'trimer') {
+      updateSelectInput(session,'chemical_unfolding_model',NULL,
+                        choices = c(
+                          'N3 ⇌ 3U'       = 'twoStateTrimer',
+                          'N3 ⇌ 3I ⇌ 3U'  = 'threeStateTrimerMI',
+                          'N3 ⇌ I3 ⇌ 3U'  = 'threeStateTrimerTI'))
+    }
+    
+    if (input$oligomeric_state_chem == 'tetramer') {
+      updateSelectInput(session,'chemical_unfolding_model',NULL,
+                        choices = c(
+                          'N4 ⇌ 4U'       = 'twoStateTetramer',
+                          'N4 ⇌ 4I ⇌ 4I'  = 'threeStateTetramerMI'))
+    }
+    
+    cdAnalyzer$experimentsChemical[[group]]$reshape_signal_oligomer('Chemical')
     
   }
   
   cdAnalyzer$experimentNamesChemical <- groups
   
   reactives$chemicalWorkingUnits   <- input$workingUnits
+  reactives$chemicalDatasetCreated <- TRUE
+  
+})
+
+observeEvent(input$chemicalUnfoldingFile,{
+  
+  req(input$chemicalUnfoldingFile)
+  
+  reactives$chemicalDatasetCreated          <- NULL
+  reactives$spectra_was_decomposed_chemical <- NULL
+  
+  cdAnalyzer$clean_experiments('chemical')
+  group <- 'A'
+  # Assign the signal and data to the new chemical unfolding experiment
+  cdAnalyzer$experimentsChemical[[group]]                    <- CdExperimentChemicalUnfolding()
+  cdAnalyzer$experimentsChemical[[group]]$name               <- group
+
+  is_monomer <- !are_headers_numeric(input$chemicalUnfoldingFile$datapath)
+
+  if (is_monomer) {
+
+    loadState <- cdAnalyzer$experimentsChemical[[group]]$load_unfolding_data_monomer(input$chemicalUnfoldingFile$datapath)
+    updateSelectInput(session,'chemical_unfolding_model',NULL,
+              choices = c(
+                'N ⇌ U'             = 'twoState',
+                'N ⇌ I ⇌ U'         = 'threeState'))
+
+      reactives$chemicalWorkingUnits   <- 'yMonomer'
+
+  } else {
+    loadState <- cdAnalyzer$experimentsChemical[[group]]$load_unfolding_data_oligomer(input$chemicalUnfoldingFile$datapath)
+
+      updateSelectInput(session,'chemical_unfolding_model',NULL,
+                    choices = c(
+                      'N2 ⇌ 2U'           = 'twoStateDimer',
+                      'N2 ⇌ 2I ⇌ 2U'      = 'threeStateDimerMI',
+                      'N2 ⇌ I2 ⇌ 2U'      = 'threeStateDimerDI',
+                      'N3 ⇌ 3U'           = 'twoStateTrimer',
+                      'N3 ⇌ 3I ⇌ 3U'      = 'threeStateTrimerMI',
+                      'N3 ⇌ I3 ⇌ 3U'      = 'threeStateTrimerTI',
+                      'N4 ⇌ 4U'           = 'twoStateTetramer',
+                      'N4 ⇌ 4I ⇌ 4U'      = 'threeStateTetramerMI'))
+
+      reactives$chemicalWorkingUnits   <- 'yOligomer'
+
+  }
+
+  cdAnalyzer$experimentNamesChemical <- c(group)
+  cdAnalyzer$experimentsChemical[[group]]$reshape_signal_oligomer('Chemical')
+
+    if (!loadState) {
+      popUpWarning("The file could not be loaded. Please check the format.")
+      return(NULL)
+    } else {
+      popUpSuccess("The file was loaded successfully. Navigate to the Chemical unfolding panel")
+    }
+
   reactives$chemicalDatasetCreated <- TRUE
   
 })
@@ -145,10 +285,7 @@ observeEvent(input$btn_find_wl_chemical,{
   
   wavelength_filtered_common <- Reduce(intersect, wavelength_filtered_all)
   if (length(wavelength_filtered_common) == 0) {
-    shinyalert(text = "The automatic selection algorithm didn't work. 
-               Please select the wavelength manually.",
-               type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-               html=T)
+    popUpWarning("The automatic selection algorithm didn't work. Please select the wavelength manually.")
     wavelength_filtered_common <- 220
   }
   
@@ -171,7 +308,7 @@ observeEvent(list(input$selected_wavelength_chemical_unfolding,input$analysis_mo
     
   }
   
-  reactives$data_loaded <- FALSE
+  reactives$chemicalDatasetCreated <- FALSE
   # Convert the string of selected wavelengths to a numeric vector
   selected_wl   <- parse_selected_wavelengths(input$selected_wavelength_chemical_unfolding)
   
@@ -180,16 +317,16 @@ observeEvent(list(input$selected_wavelength_chemical_unfolding,input$analysis_mo
   for (exp in chemical_exps) {
     
     cdAnalyzer$experimentsChemical[[exp]]$assign_useful_signal(selected_wl)
+    cdAnalyzer$experimentsChemical[[exp]]$reshape_signal_oligomer('Chemical')
     
   }
   
-  reactives$data_loaded <- TRUE
+  reactives$chemicalDatasetCreated <- TRUE
   
 })
  
 output$chemicalCurves <- renderPlotly({
   
-  req(reactives$data_loaded)
   req(reactives$chemicalDatasetCreated)
 
   df <- generate_chemical_unfolding_df(cdAnalyzer)
@@ -226,19 +363,13 @@ observeEvent(input$btn_fit_chemical_data,{
     
     reactives$fitted_coefficients_method_chemical <- 'fixedWL'
     
-    append_record_to_logbook(paste0("Fitting the CD signal versus chemical agent concentration curve",
-                                    '. Fit native slope mode: ',input$fitSlopeNative_chemical,
-                                    '. Fit unfolded slope mode: ',input$fitSlopeUnfolded_chemical))
-    
     # Set SVD / PCA fit to FALSE
     reactives$chemical_data_was_fitted_svd_or_pca <- FALSE
     Sys.sleep(0.5)
     
   })
   
-  shinyalert(text = paste("<b>Fitting done!</b>"),
-             type = "success",closeOnEsc = T,closeOnClickOutside = T,
-             html=T)
+  popUpSuccess("<b>Fitting done!</b>")
   
 })
 
@@ -276,6 +407,14 @@ output$fittedChemicalCurves <- renderPlotly({
     input$plot_type_chem, input$plot_axis_size_chem)
   
   return(fig)
+})
+
+output$fittingBounds_chemical <- renderTable({
+  
+  req(reactives$chemical_data_was_fitted)
+  df <- get_fitting_bounds_unfolding(cdAnalyzer,'Chemical')
+  
+  return(df)
 })
 
 output$fractions_chemical <- renderPlotly({
@@ -355,11 +494,7 @@ observeEvent(input$btn_decompose_spectra_chemical,{
     
     if (!cdAnalyzer$experimentsChemical[[exp]]$decompositionDone) {
       
-      shinyalert(text = 
-                   paste("<b>The spectra decomposition algorithm did
-                   not converge. Please remove noisy data."),
-                 type = "warning",closeOnEsc = T,closeOnClickOutside = T,
-                 html=T)
+      popUpWarning("<b>The spectra decomposition algorithm did not converge. Please remove noisy data.")
       return(NULL)
       
     }
@@ -462,9 +597,8 @@ observeEvent(input$submitInversionChemical,{
   exp <- input$experiment_to_flip_spectrum_chemical
   k   <- as.numeric(input$selected_k_spectrum_chemical) 
   
-  append_record_to_logbook(paste0("Inverting the  ",
-                                  k,"th basis spectrum of the dataset ",
-                                  exp))
+  append_record_to_logbook(
+    paste0("Inverting the ",k,"th basis spectrum of the dataset ",exp))
   
   cdAnalyzer$experimentsChemical[[exp]]$invert_selected_spectrum(k-1) # python index starts at 0
   
@@ -546,6 +680,8 @@ observeEvent(input$btn_fit_chemical_data_svd,{
     for (exp in chemical_exps) {
       
       cdAnalyzer$experimentsChemical[[exp]]$assign_useful_signal_svd(input$selectedK_chemical)
+      cdAnalyzer$experimentsChemical[[exp]]$reshape_signal_oligomer('Chemical')
+      
       fitChemicalExperiment(exp)
       
     }
@@ -555,10 +691,7 @@ observeEvent(input$btn_fit_chemical_data_svd,{
     
     reactives$fitted_coefficients_method_chemical <- reactives$spectra_decomposition_method_chemical
     
-    append_record_to_logbook(paste0("Fitting the CD coefficients versus chemical agent concentration curve",
-                                    '. Coefficients of interest: ',input$selectedK_chemical,
-                                    '. Fit native slope mode: ',input$fitSlopeNative_chemical,
-                                    '. Fit unfolded slope mode: ',input$fitSlopeUnfolded_chemical))
+    append_record_to_logbook(paste0('Coefficients of interest: ',input$selectedK_chemical))
     
     # Set fixed wavelength fit to FALSE
     reactives$chemical_data_was_fitted_    <- FALSE
@@ -566,9 +699,7 @@ observeEvent(input$btn_fit_chemical_data_svd,{
     
   })
   
-  shinyalert(text = paste("<b>Fitting done!</b>"),
-             type = "success",closeOnEsc = T,closeOnClickOutside = T,
-             html=T)
+  popUpSuccess("<b>Fitting done!</b>")
   
 })
 
@@ -587,6 +718,14 @@ output$chemFittedSVDCoefficients <- renderPlotly({
   
   return(fig)
   
+})
+
+output$fittingBounds_chemicalSVD <- renderTable({
+  
+  req(reactives$chemical_data_was_fitted_svd_or_pca)
+  df <- get_fitting_bounds_unfolding(cdAnalyzer,'Chemical')
+  
+  return(df)
 })
 
 output$fractions_SVDchemical <- renderPlotly({

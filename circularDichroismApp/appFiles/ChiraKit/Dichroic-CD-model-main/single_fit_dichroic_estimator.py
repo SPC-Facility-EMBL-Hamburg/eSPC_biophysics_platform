@@ -4,7 +4,8 @@ Created on Wed Sep 27 13:23:05 2023
 
 @author: urosz
 
-This code was later edited by Osvaldo Burastero to allow integration in the ChiraKit online tool, European Molecular Biology Laboratory, Hamburg, 2024
+This code was later minimally edited by Osvaldo Burastero to allow integration in the ChiraKit online tool, 
+European Molecular Biology Laboratory, Hamburg, 2024z
 
 """
 
@@ -13,11 +14,9 @@ import re
 import os
 from scipy import optimize
 
-
 # Constant variables defined below!
 #  v**n x w**m MATRIX
-v_pow_max,w_pow_max = 5,30 #max powers of v, w for v**n x w**m matrix -SAME for all the polynomials
-
+v_pow_max,w_pow_max = 5,38 #max powers of v, w for v**n x w**m matrix -SAME for all the polynomials (max=38 for peptide with 40 units)
 
 #Extract powers of v and w from a given partition function polynomial term.
 def extract_powers(term): 
@@ -45,7 +44,7 @@ def extract_coefficient(term):
         return int(match.group(1))
     return 1
 
-#Counting of single and double H-bonded states in single-helix states (up to v**5)
+#Counting of single and double H-bonded microstates in single-helix states (up to v**5)
 def vw_powers(v_st,w_st,n):
     if (v_st==2 or v_st==3 or v_st==4 or v_st==5) and w_st > 0:
         if w_st >3:
@@ -61,7 +60,7 @@ def vw_powers(v_st,w_st,n):
         
     return (h1,h2,c)
 
-#Counting of single and double H-bonded states in double-helix states
+#Counting of single and double H-bonded states in double-helix microstates.
 def vw_powers_double(v_st,w_st,n):
     h1_d,h2_d,c_d=0,0,0
     
@@ -87,7 +86,7 @@ def vw_powers_double(v_st,w_st,n):
 SPECTROSCOPIC WEIGHTS matrix generator
 """
 
-def spectro_matrices(v_Pow_max,w_Pow_max): #RETURNS matrices to calculate contribution of each P term
+def spectro_matrices(v_Pow_max,w_Pow_max): #RETURNS matrices to calculate CD contribution of each partition function polynomial term
 
     matrix_h1 = np.zeros((v_pow_max+1 ,w_pow_max+1), dtype=int) # matrix of single-bonded helix 
     matrix_h2 = np.zeros((v_pow_max+1 ,w_pow_max+1), dtype=int)
@@ -149,19 +148,9 @@ def matrix_vw(v,w,v_pow_max,w_pow_max):
 
 def run_helicity_estimation(poly_double_all,poly_total_all,n_input,t_input,Y):
 
-    '''
-
-    n_input = int   # define number of peptide bonds -> N_res-1 for unblocked and N_res+1 for blocked (N- and C-) peptides
-    t_input = float # experimental temperature in degrees Celsius / Kelvin
-    Y       = float # measured MRE (molar residue ellipticity)  [deg cm2 dmol-1 per peptide bond] 
-
-    Careful, MRE is here normalised by the number of peptide bonds, not by the number of residues! 
-
-    '''
-
     n_input = int(n_input)
     
-    # convert to Celsius if input was in Kelvin
+    # Convert to Celsius if input was in Kelvin
     if t_input > 273.15:
 
         t_input = t_input - 273.15
@@ -172,16 +161,16 @@ def run_helicity_estimation(poly_double_all,poly_total_all,n_input,t_input,Y):
     t_C = np.array([t_input])
     Ns  = [n_input]
 
-    coef_matrix_polys_total  = [polynomial_to_matrix(poly_total,v_pow_max,w_pow_max).transpose().flatten()] #overall coeficients
-    coef_matrix_polys_double = [polynomial_to_matrix(poly_double,v_pow_max,w_pow_max).transpose().flatten()]#double helices
-    coef_matrix_polys_single = [coef_matrix_polys_total[0]-coef_matrix_polys_double[0] ] #single helices
+    coef_matrix_polys_total =[polynomial_to_matrix(poly_total,v_pow_max,w_pow_max).transpose().flatten()]   # Overall coeficients
+    coef_matrix_polys_double=[polynomial_to_matrix(poly_double,v_pow_max,w_pow_max).transpose().flatten()] # Double  helices
+    coef_matrix_polys_single=[coef_matrix_polys_total[0]-coef_matrix_polys_double[0] ]                     # Single  helices
 
     M_H2,M_H1,M_double_H2,M_double_H1 = spectro_matrices(v_pow_max, w_pow_max)
 
-
     MH_matrices = M_H2,M_H1,M_double_H2,M_double_H1
-    temps       = t_C
-    data_cd     = Y
+
+    temps   = t_C
+    data_cd = Y
 
     ################
     #
@@ -192,27 +181,26 @@ def run_helicity_estimation(poly_double_all,poly_total_all,n_input,t_input,Y):
     DICHROIC_MODEL_FIT_PARAMS=[0.07,-41000,100,3.4,2100,-45] # v, H2_inf, dH2/dT, k, Coil_T0, dCoil/dT
 
     def MODEL_CD(ww): # fitting function -> returns difference between input ellipticity (Y) and model-calculated value
-        
         w= np.array([ww])
         v,H2,dH2,k,C,dC=DICHROIC_MODEL_FIT_PARAMS
-
+        
         M_H2,M_H1,M_double_H2,M_double_H1 = MH_matrices
-
+        
         VW = matrix_vw(v,w,v_pow_max,w_pow_max)
-
+        
         #VSI
         matrix_polys_tot = [coef_matrix_polys_total[i]*VW for i in range(len(Ns))]
         P_matrixs_tot = [matrix_poly_tot/np.sum(matrix_poly_tot,axis=1)[:,None] for matrix_poly_tot in matrix_polys_tot] # each term divided by total sum of polynomial- normalization -> PROBABILITIES
-
+        
         matrix_polys_2 = [coef_matrix_polys_double[i]*VW for i in range(len(Ns))]
         P_matrixs_2 = [matrix_poly_2/np.sum(matrix_poly_tot,axis=1)[:,None] for matrix_poly_2,matrix_poly_tot in zip(matrix_polys_2,matrix_polys_tot)] # each term divided by total sum of polynomial- normalization -> PROBABILITIES
 
         cd = [((P_matrix_tot-P_matrix_2)*( M_H2[None,:]*(H2 + dH2*temps)[:,None] +M_H1[None,:]*((H2 + dH2*temps)*(1-k/6))[:,None] +(np.full(M_H2.shape, ii+1, dtype=int)-(M_H2+M_H1))[None,:] *(C  + dC *temps)[:,None])+
-               
+                   
                (P_matrix_2)*( M_double_H2[None,:]*(H2 + dH2*temps)[:,None] + M_double_H1[None,:]*((H2 + dH2*temps)*(1-k/6))[:,None] +(np.full(M_double_H2.shape, ii+1, dtype=int)-(M_double_H2+M_double_H1))[None,:] *(C  + dC *temps)[:,None])).sum(axis=1)/(ii+1) for P_matrix_tot,P_matrix_2,ii in zip(P_matrixs_tot,P_matrixs_2,Ns)]
-        
+            
         fh = [((P_matrix_tot-P_matrix_2)*(M_H2[None,:] + M_H1[None,:]) +(P_matrix_2)*(M_double_H2[None,:] + M_double_H1[None,:])).sum(axis=1)/(ii+1) for P_matrix_tot,P_matrix_2,ii in zip(P_matrixs_tot,P_matrixs_2,Ns)]
-
+        
         return (cd[0][0]-data_cd, fh[0][0])
 
     def CD_opt(w_opt):
@@ -230,5 +218,4 @@ def run_helicity_estimation(poly_double_all,poly_total_all,n_input,t_input,Y):
     except:
         
         #print("Input values of ellipticity out of reasonable range.")
-        
         return {"Helicity_fraction":np.nan,"Propagation_parameter_w":np.nan}

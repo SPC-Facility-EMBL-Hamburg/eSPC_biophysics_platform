@@ -6,7 +6,9 @@ box(title = "1. Input", width = 3, solidHeader = T, status = "primary",
                   span(shiny::icon("info-circle"), id = "info_uu-inputMode"),
                   selectInput("inputMode", NULL,
                               c('Custom'  = 'custom',
-                                'Automatic baseline subtraction'  = 'automaticBaselineSub')),
+                                'Automatic baseline subtraction'      = 'automaticBaselineSub',
+                                'Proccesed data (thermal)'  = 'thermalUnfolding',
+                                'Proccesed data (chemical)' = 'chemicalUnfolding')),
                   tippy::tippy_this(
                     elementId = "info_uu-inputMode",
                     tooltip = "Select custom if you want to process the spectra manually.
@@ -71,7 +73,35 @@ box(title = "1. Input", width = 3, solidHeader = T, status = "primary",
                        
                      )
     ),
-          
+
+    conditionalPanel("input.inputMode == 'thermalUnfolding'",
+                     fluidRow(
+
+        column(12,p(
+          HTML("<b>Thermal unfolding data</b>"),
+          span(shiny::icon("info-circle"), id = "info_uu_createThermalDataset2"),
+          fileInput("thermalUnfoldingFile", NULL,multiple = FALSE,accept=c('.csv')),
+          tippy::tippy_this(
+            elementId = "info_uu_createThermalDataset2",
+            tooltip = "Useful to combine data acquired by many techniques.
+            Check the User Guide for more information about the file format.",placement = "right")
+        ))
+
+)),
+     conditionalPanel("input.inputMode == 'chemicalUnfolding'",
+                 fluidRow(
+
+        column(12,p(
+          HTML("<b>Chemical unfolding data</b>"),
+          span(shiny::icon("info-circle"), id = "info_uu_createChemicalDataset2"),
+          fileInput("chemicalUnfoldingFile", NULL,multiple = FALSE,accept=c('.csv')),
+          tippy::tippy_this(
+            elementId = "info_uu_createChemicalDataset2",
+            tooltip = "Useful to combine data acquired by many techniques.
+            Check the User Guide for more information about the file format.",placement = "right")
+        ))
+)),
+
     fluidRow(
     
       column(7, p(HTML("<b>Select experiment to remove</b>"),

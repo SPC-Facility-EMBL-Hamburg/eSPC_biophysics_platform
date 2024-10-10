@@ -4,7 +4,7 @@ observeEvent(input$wavelengthRange,{
   
   reactives$data_loaded <- FALSE
   wlRange <- input$wavelengthRange
-  cdAnalyzer$filterDataByWavelength(wlRange[1], wlRange[2])
+  cdAnalyzer$filter_data_by_wavelength(wlRange[1], wlRange[2])
   
   append_record_to_logbook(paste0('Setting wavelength range (nm) to ',wlRange[1],' - ',wlRange[2]))
   
@@ -31,7 +31,7 @@ output$cdSpectra <- renderPlotly({
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
   
-  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  df_list       <- cdAnalyzer$get_experiment_properties('spectraNames')
   total_columns <- sum(sapply(df_list, length))
   
   req(length(legends) == total_columns)
@@ -53,7 +53,7 @@ output$htSpectra <- renderPlotly({
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
   
-  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  df_list       <- cdAnalyzer$get_experiment_properties('spectraNames')
   total_columns <- sum(sapply(df_list, length))
   
   req(length(legends) == total_columns)
@@ -74,7 +74,7 @@ output$cd_ht_spectra <- renderPlotly({
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
   
-  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  df_list       <- cdAnalyzer$get_experiment_properties('spectraNames')
   total_columns <- sum(sapply(df_list, length))
   
   req(length(legends) == total_columns)
@@ -96,7 +96,7 @@ output$cdSpectraMiliDeg <- renderPlotly({
   colorPalette <- get_colors_from_rhandTable(input$legendInfo)
   sels         <- get_sel_from_rhandTable(input$legendInfo)
   
-  df_list       <- cdAnalyzer$getExperimentProperties('spectraNames')
+  df_list       <- cdAnalyzer$get_experiment_properties('spectraNames')
   total_columns <- sum(sapply(df_list, length))
   
   req(length(legends) == total_columns)

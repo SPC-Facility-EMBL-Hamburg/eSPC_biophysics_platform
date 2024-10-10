@@ -1,6 +1,9 @@
 box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary", 
     fluidRow(
 
+      conditionalPanel(
+        "input.inputMode != 'thermalUnfolding'",
+        
       column(3,p(
         HTML("<b><br></b>"),
         span(shiny::icon("info-circle"), id = "info_uu_createThermalDataset"),
@@ -43,9 +46,12 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         
         )
       
-      ),
+      )),
     
     fluidRow(
+      
+      conditionalPanel(
+        "input.inputMode != 'thermalUnfolding'",
       
       conditionalPanel(
         "input.analysis_model_thermal != 'fixedWL'",
@@ -135,21 +141,18 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         placement = "right")
       )),
     
-    )),
+    ))),
     
     fluidRow(
     
       column(3,p(
         HTML("<b>Unfolding model</b>"),
         span(shiny::icon("info-circle"), id = "info_uu_unfolding_model"),
-        selectInput('thermal_unfolding_model',NULL,
-                    choices = c('Reversible two-state'     = 'twoState',
-                                'Reversible three-state'   = 'threeState')),
-                                #'Reversible four-state'    = 'fourState')),
+        selectInput('thermal_unfolding_model',NULL,choices = c('Create dataset first')),
         tippy::tippy_this(
           elementId = "info_uu_unfolding_model",
-          tooltip = "Apply an unfolding model where the protein unfolds in one step (reversible two-state), or 
-          an unfolding model where where the proteins unfolds via an intermediate (reversible three-state).",
+          tooltip = "Apply an unfolding model where the protein unfolds in one or two step(s).
+          For monomers, irreversible unfolding models are also available.",
           placement = "right")
         
       )),
@@ -215,39 +218,100 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
   ),
   
   conditionalPanel(
-    "input.thermal_unfolding_model != 'twoState'",
+    "input.thermal_unfolding_model == 'twoState'            ||
+     input.thermal_unfolding_model == 'twoStateDimer'       ||
+     input.thermal_unfolding_model == 'twoStateTrimer'      ||
+     input.thermal_unfolding_model == 'twoStateTetramer'    ||
+     input.thermal_unfolding_model == 'threeStateCp'        || 
+     input.thermal_unfolding_model == 'threeStateDimerMICp' ||
+     input.thermal_unfolding_model == 'threeStateDimerDICp'
+    ",
     
     fluidRow(
-      
-      column(3, p(HTML("<b>T1 Initial value (F <-> I)</b>"),
+    
+      column(3, p(HTML("<b>Global Delta Cp (kcal/K/mol)</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uu_DeltaCp"),
+                  textInput('Cp',NULL, value = "0"),
+                  tippy::tippy_this(
+                    elementId = "info_uu_DeltaCp",
+                    tooltip = "Heat capacity change upon unfolding. For proteins,
+                    two proposed approximations are 0.0142*nres+0.0025 (Jeffrey K. Myers, et al., 1995), 
+                    or 0.0148*nres-0.1267 (Andrew D. Robertson, et al., 1997), 
+                    where 'nres' is the total number of residues. Otherwise, assume it is zero.
+                    For n-mers, use the total number of residues of the n-mer.",
+                    placement = "right")))
+    )),
+  
+  conditionalPanel(
+    "input.thermal_unfolding_model == 'threeState'           || 
+     input.thermal_unfolding_model == 'threeStateCp'         ||
+     input.thermal_unfolding_model == 'threeStateDimerMI'    ||
+     input.thermal_unfolding_model == 'threeStateDimerDI'    ||
+     input.thermal_unfolding_model == 'threeStateTrimerMI'   ||
+     input.thermal_unfolding_model == 'threeStateTrimerTI'   ||
+     input.thermal_unfolding_model == 'threeStateDimerMICp'  ||
+     input.thermal_unfolding_model == 'threeStateDimerDICp'  ||
+     input.thermal_unfolding_model == 'threeStateTetramerMI'
+    ",
+    
+    fluidRow(
+    
+      column(4, p(HTML("<b>T1 Initial guess (DG1 = 0)</b>"),
                   span(shiny::icon("info-circle"), id = "info_uuT1_init"),
                   numericInput('T1_init',NULL, 0,min = 0, max = 10),
                   tippy::tippy_this(
                     elementId = "info_uuT1_init",
-                    tooltip = "Initial value for the parameter T1. 
-                      If zero, the parameter is constrained
-                      within [minT + 4, maxT-7], where minT and maxT are 
-                      respectively the minimum and maximum temperatures.
-                      If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15],
-                      Note: Ensure the fitted parameter is not too close to the boundaries 
-                      after fitting.",
+                    tooltip = "
+                    Initial value for the parameter T1. If zero, ChiraKit will try to find a good initial guess.
+                    If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15].
+                    Note: Ensure the fitted parameter is not too close to the boundaries after fitting.",
                     placement = "right"))),
       
-      column(3, p(HTML("<b>T2 Initial value (I <-> U)</b>"),
+      column(4, p(HTML("<b>T2 Initial guess (DG2 = 0)</b>"),
                   span(shiny::icon("info-circle"), id = "info_uuT2_init"),
                   numericInput('T2_init',NULL, 0,min = 0, max = 10),
                   tippy::tippy_this(
                     elementId = "info_uuT2_init",
-                    tooltip = "Initial value for the parameter T2. 
-                      If zero, the parameter is constrained
-                      within [minT + 4, maxT], where minT and maxT are 
-                      respectively the minimum and maximum temperatures.
-                      If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15],
-                      Note: Ensure the fitted parameter is not too close to the boundaries 
-                      after fitting.",
+                    tooltip = "
+                    Initial value for the parameter T2. If zero, ChiraKit will try to find a good initial guess.
+                    If non-zero, the parameter is constrained between [initial_guess - 15, initial_guess + 15].
+                    Note: Ensure the fitted parameter is not too close to the boundaries after fitting.",
                     placement = "right")))
       
     )),
+
+  conditionalPanel(
+    "input.thermal_unfolding_model == 'threeState_rev_irrev' || 
+     input.thermal_unfolding_model == 'twoState_irrev'",
+    
+    fluidRow(
+      
+      column(3, p(HTML("<b>Scan rate (°C/minute)</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uu_scan_rate"),
+                  textInput('scan_rate',NULL, value = "0"),
+                  tippy::tippy_this(
+                    elementId = "info_uu_scan_rate",
+                    tooltip = "Scan rate in degrees per minute. 
+                    For example, if the sample was heated 60 degrees in 30 minutes, 
+                    the scan rate is 2.",
+                    placement = "right"))),
+      
+      conditionalPanel(
+        "input.thermal_unfolding_model == 'threeState_rev_irrev'",
+      
+      column(4, p(HTML("<b>T1 Initial guess (DG1 = 0)</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uuT1_init2"),
+                  numericInput('T1_init_irrev',NULL, 0,min = 0, max = 10),
+                  tippy::tippy_this(
+                    elementId = "info_uuT1_init2",
+                    tooltip = "
+                    Initial value for the parameter T1. Can not be zero. The parameter is constrained between 
+                      [initial_guess - 15, initial_guess + 15]. Note: Ensure the fitted parameter 
+                      is not too close to the boundaries after fitting.",
+                    placement = "right")))
+      )
+      
+    )),  
   
   fluidRow(
     
@@ -284,13 +348,26 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
       column(3, p(HTML("<b>Text size</b>"),
                   numericInput('plot_axis_size_melt',NULL, 16,min = 4, max = 40)))),
     
-    conditionalPanel(
+    fluidRow(
+    
+      column(3, p(HTML("<b>Legend x-axis position</b>"),
+                  sliderInput('x_legend_pos',NULL, 1,min = 0, max = 1,step = 0.1))),
+      
+      column(3, p(HTML("<b>Legend y-axis position</b>"),
+                  sliderInput('y_legend_pos',NULL, 1,min = 0, max = 1,step = 0.1))),
+    
+      column(3, p(HTML("<b>Show plot title</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uuShowTitle"),
+                  checkboxInput('show_title',NULL, TRUE),
+                  tippy::tippy_this(elementId = "info_uuShowTitle",
+                                    tooltip = "Only useful in case that we have one dataset.",
+                                    placement = "right"))),
+      
+      conditionalPanel(
       
       "input.analysis_model_thermal != 'fixedWL'",
       
-    fluidRow(
-      
-      column(4, p(HTML("<b>Plot style (melting spectra)</b>"),
+      column(3, p(HTML("<b>Plot style (spectra)</b>"),
                   selectInput("plot_style_melt", NULL,
                               c("markers",
                                 "lines"

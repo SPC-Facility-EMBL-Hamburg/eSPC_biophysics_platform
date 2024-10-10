@@ -25,7 +25,7 @@ shinyUI(dashboardPage(
       
         menuSubItem("2d. Custom  analysis",              icon = icon("chart-line"),     tabName = "menu_custom"),
         menuSubItem("2e. Spectra comparison",            icon = icon("scale-balanced"), tabName = "menu_spectra_comparison"),
-        menuSubItem("2f. Helix/coil content of peptides",icon = icon("percent"),        tabName = "menu_peptide")#,
+        menuSubItem("2f. Peptide helicity",              icon = icon("percent"),        tabName = "menu_peptide")#,
         #menuSubItem("2g. G-Quadruplex structure",        icon = icon("dna"),            tabName = "menu_gQuadruplex")
       
       ),
@@ -113,6 +113,7 @@ shinyUI(dashboardPage(
                           tabPanel("Residuals",                           plotOutput("residualsMeltingCurves")),
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_melting")),
                           tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_melting")),
+                          tabPanel("Fitting bounds",                      tableOutput("fittingBounds_melting")),
                           tabPanel("Fractions",                           plotlyOutput("fractions_melting"))
                           
                           )
@@ -146,8 +147,9 @@ shinyUI(dashboardPage(
                           tabPanel("Fractions",              plotlyOutput("fractions_melting_svd")),
                           
                           tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_meltingSVD")),
-                          tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_meltingSVD"))
-                             
+                          tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_meltingSVD")),
+                          tabPanel("Fitting bounds",                      tableOutput("fittingBoundsSVD_melting"))
+                          
                       )))
 
             )),
@@ -177,10 +179,10 @@ shinyUI(dashboardPage(
                                 tabPanel("Chemical unfolding curves",plotlyOutput("chemicalCurves")),
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemical")),
                                 tabPanel("Relative errors (%)",tableOutput("fittedErrors_chemical")),
+                                tabPanel("Fitting bounds",     tableOutput("fittingBounds_chemical")),
                                 tabPanel("Fitted curves",plotlyOutput("fittedChemicalCurves")),
                                 tabPanel("Residuals",    plotOutput("residualsChemicalCurves")),
                                 tabPanel("Fractions",    plotlyOutput("fractions_chemical"))
-                                
                                 
                                 )),
                        
@@ -200,7 +202,7 @@ shinyUI(dashboardPage(
                                               
                                               )),
                          
-                         tabBox(title = "", width = 12,id = "tabBoxcdSpectraChem",
+                         tabBox(title = "", width = 12,id = "tabBoxcdSpectraChemSVD",
                                 tabPanel("Unfolding spectra",       plotlyOutput("chemUnfoldingSpectra")),
                                 tabPanel("Basis spectra",         plotlyOutput("chemBasisSpectra")),
                                 tabPanel("Reconstructed spectra", plotlyOutput("chemFittedSpectra")),
@@ -211,7 +213,9 @@ shinyUI(dashboardPage(
                                 tabPanel("Fractions",             plotlyOutput("fractions_SVDchemical")),
                                 
                                 tabPanel("Fitted parameters (kcal Celsius mol)",tableOutput("fittedParams_chemicalSVD")),
-                                tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_chemicalSVD"))
+                                tabPanel("Relative errors (%)",                 tableOutput("fittedErrors_chemicalSVD")),
+                                tabPanel("Fitting bounds",                      tableOutput("fittingBounds_chemicalSVD"))
+                                
                                 ))
                 )
                 
@@ -286,7 +290,7 @@ shinyUI(dashboardPage(
                          #customResidualsSVDCoefficients{height:600px !important;}"
                    )),
                    
-                   tabBox(title = "", width = 12,id = "tabBoxcdSpectraCustom",
+                   tabBox(title = "", width = 12,id = "tabBoxcdSpectraCustomSVD",
                           tabPanel("Custom analysis spectra", plotlyOutput("customSpectra")),
                           tabPanel("Basis spectra",         plotlyOutput("customBasisSpectra")),
                           tabPanel("Reconstructed spectra", plotlyOutput("customFittedSpectra")),
@@ -363,14 +367,14 @@ shinyUI(dashboardPage(
                         
                         #Custom CSS to increase plot height
                         tags$head(tags$style("
-                        #cdSpectraGQ{height:570px !important;}
-                        #pca_results_GQ{height:570px !important;}
-                        #pca_clustering_GQ{height:570px !important;}
+                        #cdSpectraGQ{height:470px !important;}
+                        #pca_results_GQ{height:470px !important;}
+                        #pca_clustering_GQ{height:470px !important;}
                         "
                         )),
                         
                         # TabBox to plot the CD spectra and the associated voltage
-                        tabBox(title = "", width = 12,id = "tabBoxRefSpectraGQuadruplex",
+                        tabBox(title = "", width = 12,id = "tabBoxRefSpectraGQuadruplex1",
                                tabPanel("Spectra - Ref",     plotlyOutput("cdSpectraGQ")),
                                tabPanel("PCA - Ref",         plotOutput("pca_results_GQ")),
                                tabPanel("Clusters - Ref",    plotOutput("pca_clustering_GQ")),
@@ -392,16 +396,16 @@ shinyUI(dashboardPage(
                         
                         #Custom CSS to increase plot height
                         tags$head(tags$style("
-                        #cdSpectraGQ_samples{height:570px !important;}
-                        #pca_results_GQ_samples{height:570px !important;}
-                        #pca_results_GQ_combined{height:570px !important;}
-                        #pca_clustering_GQ_samples{height:570px !important;}
-                        #pca_clustering_GQ_combined{height:570px !important;}
+                        #cdSpectraGQ_samples{height:470px !important;}
+                        #pca_results_GQ_samples{height:470px !important;}
+                        #pca_results_GQ_combined{height:470px !important;}
+                        #pca_clustering_GQ_samples{height:470px !important;}
+                        #pca_clustering_GQ_combined{height:470px !important;}
                         "
                         )),
                         
                         # TabBox to plot the CD spectra and the associated voltage
-                        tabBox(title = "", width = 12,id = "tabBoxRefSpectraGQuadruplex",
+                        tabBox(title = "", width = 12,id = "tabBoxRefSpectraGQuadruplex2",
                                tabPanel("Spectra - Samples",      plotlyOutput("cdSpectraGQ_samples")),
                                tabPanel("PCA - Samples",          plotOutput("pca_results_GQ_samples")),
                                tabPanel("Clusters - Samples",     plotOutput("pca_clustering_GQ_samples")),

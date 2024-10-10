@@ -29,7 +29,6 @@
     document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
 //]]></script>
 
-
 <section class="vf-intro" id="an-id-for-anchor">
 
   <div class="vf-stack">
@@ -57,19 +56,19 @@
   
   <br>
   
-      <p class="vf-intro__text">1) A <a href="../example_files/test.csv" download>csv file</a> with a header, and two or three columns: wavelength, sample name  (optional) and the CD signal. The first column must be called 'wavelength'.</p>
+      <p class="vf-intro__text">1) A <a href="test.csv" download>csv file</a> with a header, and two or three columns: wavelength, sample name  (optional) and the CD signal. The first column must be called 'wavelength'.</p>
   
-        <p class="vf-intro__text">2) A <a href="../example_files/test2.csv" download>csv file</a> with a header and more than three columns: wavelength, CD signal of the first sample , ..., CD signal of the n-th sample.The first column must be called 'wavelength' or 'xydata'.</p>
+        <p class="vf-intro__text">2) A <a href="test2.csv" download>csv file</a> with a header and more than three columns: wavelength, CD signal of the first sample , ..., CD signal of the n-th sample.The first column must be called 'wavelength' or 'xydata'.</p>
   
-    <p class="vf-intro__text">3) A <a href="../example_files/Pkng_WT_0.7mgperml_12.11.2019.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data should start three lines after a line with the word 'CircularDichroism' and two lines after a line with the word 'Wavelength'.  The CD data is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (e.g., scan repeats). This type of file is exported by the ProData software from AppliedPhotophysics&#8482;.</p>
+    <p class="vf-intro__text">3) A <a href="Pkng_WT_0.7mgperml_12.11.2019.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data should start three lines after a line with the word 'CircularDichroism' and two lines after a line with the word 'Wavelength'.  The CD data is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (e.g., scan repeats). This type of file is exported by the ProData software from AppliedPhotophysics&#8482;.</p>
 
-    <p class="vf-intro__text">4) A <a href="../example_files/CD0000003000.pcd" download>PCDDB file</a> (.pcd, Protein Circular Dichroism Data Bank format) with header lines containing the metadata. The metadata keys and values are organized into two columns, with the second column starting after the 60th character. The CD data starts after the first line containing 'DATA' and 'wavelength', and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectra data (e.g., 1. Wavelength. 2. Final. 3. HT. 4.Smoothed. 5. Avg. Sample. 6. Avg. Baseline.).</p>
+    <p class="vf-intro__text">4) A <a href="CD0000003000.pcd" download>PCDDB file</a> (.pcd, Protein Circular Dichroism Data Bank format) with header lines containing the metadata. The metadata keys and values are organized into two columns, with the second column starting after the 60th character. The CD data starts after the first line containing 'DATA' and 'wavelength', and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectra data (e.g., 1. Wavelength. 2. Final. 3. HT. 4.Smoothed. 5. Avg. Sample. 6. Avg. Baseline.).</p>
 
-    <p class="vf-intro__text">5) A <a href="../example_files/CD0000002000.gen" download>'generic' file</a> (.gen, CDTool format) with header lines containing the metadata. The metadata keys and values are organized into two columns, separated by tabs. The CD data starts after the first line with more than three tab divided columns. The first column has the wavelength data (in nm), and the subsequent columns have the  spectral data (e.g., 'Final Processed Spectrum', 'HT values (from raw spectrum 1)'). Duplicated or missing data is removed.</p>
+    <p class="vf-intro__text">5) A <a href="CD0000002000.gen" download>'generic' file</a> (.gen, CDTool format) with header lines containing the metadata. The metadata keys and values are organized into two columns, separated by tabs. The CD data starts after the first line with more than three tab divided columns. The first column has the wavelength data (in nm), and the subsequent columns have the  spectral data (e.g., 'Final Processed Spectrum', 'HT values (from raw spectrum 1)'). Duplicated or missing data is removed.</p>
 
-    <p class="vf-intro__text">6) A <a href="../example_files/three-aviv-baseline.dat" download>text file (.dat)</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'MDCDATA' in it and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data. There could be one or more scans separated in blocks. The voltage data is read from the column called 'CD_Dynode'.</p>
+    <p class="vf-intro__text">6) A <a href="three-aviv-baseline.dat" download>text file (.dat)</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'MDCDATA' in it and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data. There could be one or more scans separated in blocks. The voltage data is read from the column called 'CD_Dynode'.</p>
 
-    <p class="vf-intro__text">7) <a href="../example_files/R78906.d01" download>Aarhus synchrotron data file</a> (.dx, where x means any number) with header lines containing the metadata. The metadata keys and values are separated into two columns where the second column starts after the 32th character (or the character ':'). The CD data starts after the first line containing 'Lambda' and 'CD', and is arranged in columns. The first column has the wavelength data (in nm), the second column has the spectral data ('CD/mdeg'), the fifth column the voltage data ('Servo_Volts'), and the eighth column the temperature data ('temperature').</p>
+    <p class="vf-intro__text">7) <a href="R78906.d01" download>Aarhus synchrotron data file</a> (.dx, where x means any number) with header lines containing the metadata. The metadata keys and values are separated into two columns where the second column starts after the 32th character (or the character ':'). The CD data starts after the first line containing 'Lambda' and 'CD', and is arranged in columns. The first column has the wavelength data (in nm), the second column has the spectral data ('CD/mdeg'), the fifth column the voltage data ('Servo_Volts'), and the eighth column the temperature data ('temperature').</p>
 
     <p class="vf-intro__text">8) A csv file containing a line with the words 'ORIGIN'and 'JASCO'. The CD data is arranged in columns and the column names are defined between the lines 'XUNITS' and 'FIRSTX'. This type of file is exported by Jasco&#8482; circular dichroism instruments.
     </p>
@@ -84,7 +83,7 @@
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('thermalRamp')"
  style="padding-left: 20px;">
-  Thermal ramp <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Thermal unfolding <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
@@ -92,13 +91,44 @@
 
 <br>
 
-    <p class="vf-intro__text">1) A <a href="../example_files/thermalRampChirascan.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'Wavelength' and 'Temperature' in it and is ordered in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (one column per temperature). The associated temperature data is available one line before the CD data starts.</p>
+    <p class="vf-intro__text">1) A <a href="thermalRampChirascan.csv" download>csv file</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'Wavelength' and 'Temperature' in it and is ordered in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data (one column per temperature). The associated temperature data is available one line before the CD data starts.</p>
 
-    <p class="vf-intro__text">2) Import multiple files and assign the temperature manually.</p>
+    <p class="vf-intro__text">2) Import multiple files and assign the temperature manually in the 'Thermal unfolding' panel.</p>
 
-    <p class="vf-intro__text">3) Send us your input file and we'll add a parser.</p>
+    <p class="vf-intro__text">3) For processed data of monomers, you can import a <a href="temp_mm.csv" download>csv file</a> by selecting the 
+    'Proccesed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
+
+    <p class="vf-intro__text">4) For processed data of oligomers, you can import a <a href="arc_temp.csv" download>csv file</a> by selecting the 
+    'Proccesed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="temp_oligo_multiple.csv" download>csv file</a>.</p>
+
+    <p class="vf-intro__text">5) Send us your input file and we'll add a parser.</p>
 
 </div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('chemicalRamp')"
+ style="padding-left: 20px;">
+  Chemical unfolding <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="chemicalRamp" style="display:none">
+
+<br>
+
+    <p class="vf-intro__text">1) Import multiple files and assign the denaturant concentration manually in the 'Chemical unfolding' panel.</p>
+
+    <p class="vf-intro__text">2) For processed data of monomers, you can import a <a href="urea_mm.csv" download>csv file</a> by selecting the 
+    'Proccesed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
+
+    <p class="vf-intro__text">3) For processed data of oligomers, you can import a <a href="arc_urea.csv" download>csv file</a> by selecting the 
+    'Proccesed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="urea_oligo_multiple.csv" download>csv file</a>.</p>
+
+    <p class="vf-intro__text">4) Send us your input file and we'll add a parser.</p>
+
+</div>
+
 </div>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('unitsCD')">CD Units<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +149,7 @@ $$
 </p>
 
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-  <img src="../user_guide_images/ellipticity_explained.png" alt="Degree of ellipticity explained" width="700" loading="lazy"/>
+  <img src="ellipticity_explained.png" alt="Degree of ellipticity explained" width="700" loading="lazy"/>
   <figcaption>Taken from 
   <a href="https://www.mosbri.eu/training/end-user-short-courses/esc1/" target="_blank" rel="noopener noreferrer"> ESC1: Circular Dichroism: best practice and data analysis</a>
   </figcaption>
@@ -329,35 +359,263 @@ $$
   
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsGeneral')"
  style="padding-left: 20px;">
-  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Unfolding models (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
 <div id="fittingModelsGeneral" style="display:none">  
   
-<br>
-<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied by certain factors. 
+<p class="vf-intro__text">
+  The available models are:
 </p>
-  
- $$
-\large{ 
-    Signal  = \sum_{i=1}^{n} [X_i]*factor_i
-   }
-$$  
-  
-<p class="vf-intro__text"> where \( n \) corresponds to the total number of 
-species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
-</p>  
+
+<ul class="vf-intro__text">
+    <li>Reversible two-state: $$\large{F_n \rightleftharpoons nU}$$ 
+    with \(1 \le n \le 4\) (from monomer to homotetramer)</li>
+    <br>
+    <li>Reversible three-state (monomeric intermediate): $$\large{F_n \rightleftharpoons nI \rightleftharpoons nU}$$
+    with \(1 \le n \le 4\) (from monomer to homotetramer). \( I \) is a monomeric intermediate.</li>
+    <br>
+    <li>Reversible three-state (n-meric intermediate): $$\large{F_n \rightleftharpoons I_n \rightleftharpoons nU}$$
+    with \(1 \le n \le 3\) (from monomer to homotrimer). \( I_n \) is a n-meric intermediate (e.g., dimeric intermediate).</li>
+    <br>
+    <li>Irreversible two-state (only monomers): $$\large{F \rightarrow U}$$</li>
+    <li>Irreversible three-state (only monomers): $$\large{F \rightleftharpoons I \rightarrow U}$$</li>
+</ul>
+
+<p class="vf-intro__text"> 
+
+For additional information, we recommend the following references:
+</p>
+
+ <ul class="vf-intro__text">
+   <li class="vf-list__item "> Sanchez-Ruiz, Jose M. "Protein kinetic stability." Biophysical chemistry 148.1-3 (2010): 1-15.</li>
+   <li class="vf-list__item "> Bedouelle, Hugues. "Principles and equations for measuring and interpreting protein stability: From monomer to tetramer." Biochimie 121 (2016): 29-37.</li>
+   <li class="vf-list__item ">Rumfeldt, Jessica AO, et al. "Conformational stability and folding mechanisms of dimeric proteins." Progress in biophysics and molecular biology 98.1 (2008): 61-84.</li>
+   <li class="vf-list__item ">Esperante, Sebastián A., et al. "Mechanism of Tetramer Dissociation, Unfolding, and Oligomer Assembly of Pneumovirus M2-1 Transcription Antiterminators." ACS omega 3.11 (2018): 14732-14745.</li>
+ </ul> 
+
+
+<p class="vf-intro__text"> 
+If you need that we implement a new model, please contact us: spc@embl-hamburg.de.
+</p>
+
 </div>  
 <br>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsTwoState')"
  style="padding-left: 20px;">
-  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Reversible two-state <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
 <div id="fittingModelsTwoState" style="display:none">  
+  
+<br>
+
+<p class="vf-intro__text">For a two-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons nU \)), the equation of the signal is:
+</p>
+  
+$$
+\large{ 
+  Signal(T) = f_N(T) (k_N T + b_N) + f_U(T) (k_U T + b_U) n
+   }
+$$
+  
+<p class="vf-intro__text"> where \( f_N \) and \( f_U \) are the folded and unfolded fractions, \( T \) is the temperature in Kelvin units,
+  \( b_N \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the temperature dependence. 
+</p>
+
+<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \) and \( [F] \) depend on the equilibrium unfolding constant \( K_u \):
+</p>
+  
+$$
+\large{ 
+    K_u(T)  = \frac{[U]^n}{[F_n]}   
+   }
+$$ 
+  
+<p class="vf-intro__text"> where \( K_u(T) \) is a function of the thermodynamic parameters \( T_m \) (temperature at which \( K_u(T) \) equals one), 
+   \( \Delta H \) (enthalpy of unfolding), and  \( \Delta C_p \) (heat capacity of unfolding):
+</p>
+  
+$$
+\large{ 
+    K_u(T) = \exp(-\frac{\Delta G}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G(T) = \Delta H (1 - \frac{T}{T_m}) - \Delta C_p (T_m - T + T \ln(\frac{T}{T_m}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant. For monomers, \( f_N \) and \( f_U \) can be calculated solely from \( K_u(T) \),
+ while for oligomers, the protein concentration is also required.   
+</p> 
+
+<p class="vf-intro__text"> The parameters \( T_m \) and \( \Delta H \) are fitted globally, while the value of \( \Delta Cp \) must be given by the user 
+  (or assumed to be zero). The parameters \( b_N \), \( b_U \), \( k_N \) and \( k_U \) are fitted locally. Last, the slope terms \( k_N \) and \( k_U \) can be fixed to zero.
+</p>
+
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeState')"
+ style="padding-left: 20px;">
+  Reversible three-state (monomeric intermediate) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsThreeState" style="display:none">  
+  
+<br>
+
+<p class="vf-intro__text">For a three-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons nI \rightleftharpoons nU \)), with 
+a monomeric intermediate, the equation of the signal is:
+</p>
+  
+$$
+\large{ 
+  Signal(T) = f_N(T) (k_N T + b_N) + f_I(T) (b_I) n + f_U(T) (k_U T + b_U) n
+   }
+$$
+  
+<p class="vf-intro__text"> where \( f_N \), \( f_I \) and \( f_U \) are the fraction of protein in the folded, intermediate and unfolded states, 
+  \( T \) is the temperature in Kelvin units, \( b_N \), \( b_I \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the temperature dependence (of the folded and unfolded states). 
+</p>
+
+<p class="vf-intro__text"> If we assume that the unfolding is reversible (\( F_n \rightleftharpoons nI \rightleftharpoons nU  \)), then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = \frac{[I]^n}{[F_n]}
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = \frac{[U]}{[I]}
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( K_x(T) \) (\( x = 1 \text{ or } 2  \)) is a function of the thermodynamic parameters \( T_x \) (temperature at which \( K_x(T) \) equals one), \( \Delta H_x \) (enthalpy of unfolding), and  \( \Delta C_{p,x} \) (heat capacity of unfolding):
+</p>
+  
+$$
+\large{ 
+    K_{x}(T) = \exp(-\frac{\Delta G_{x}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{x} = \Delta H_{x} (1 - \frac{T}{T_{x}}) - \Delta C_{p,x} (T_{x} - T + T \ln(\frac{T}{T_{x}}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant. For monomers, \( f_N \), \( f_I \) and \( f_U \) can be calculated solely from \( K_1(T) \),
+and \( K_2(T) \), while for oligomers, the protein concentration is also required.   
+</p> 
+
+<p class="vf-intro__text"> The parameters \( T_x \) and \( \Delta H_x \) are fitted globally. The baseline terms \( b_N \), \( b_I \) and \( b_U \) are fitted locally. The slope terms \( k_N \) and \( k_U \) are fitted locally, or set to zero. 
+</p>
+
+
+<p class="vf-intro__text"> For monomers, \( \Delta C_{p,x} \) are assumed to be zero, or 
+  \( \Delta C_{p,1} \) is fitted globally based on the total \( \Delta C_{p,th} \) given by the user (\( \Delta C_{p,th} =  \Delta C_{p,1} + 
+  \Delta C_{p,2}\)). For dimers, \( \Delta C_{p,x} \) are assumed to be zero, or 
+  \( \Delta C_{p,1} \) is fitted globally based on the total \( \Delta C_{p,th} \) given by the user (\( \Delta C_{p,th} =  \Delta C_{p,1} + 
+  2\Delta C_{p,2}\)). For trimers and tetramers, \( \Delta C_{p,x} \) are assumed to be zero.
+</p>
+
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeStateNI')"
+ style="padding-left: 20px;">
+  Reversible three-state (n-meric intermediate) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsThreeStateNI" style="display:none">  
+  
+<br>
+
+<p class="vf-intro__text">For a three-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons I_n \rightleftharpoons nU \)), with 
+a n-meric intermediate, the equation of the signal is:
+</p>
+  
+$$
+\large{ 
+  Signal(T) = f_N(T) (k_N T + b_N) + f_I(T) (b_I) + f_U(T) (k_U T + b_U) n
+   }
+$$
+  
+<p class="vf-intro__text"> where \( f_N \), \( f_I \) and \( f_U \) are the fraction of protein in the folded, intermediate and unfolded states, 
+  \( T \) is the temperature in Kelvin units, \( b_N \), \( b_I \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the temperature dependence (of the folded and unfolded states). 
+</p>
+
+<p class="vf-intro__text"> If we assume that the unfolding is reversible (\( F_n \rightleftharpoons I_n \rightleftharpoons nU  \)), then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
+$$
+\large{ 
+    K_1(T)  = \frac{[I_n]}{[F_n]}
+   }
+$$ 
+  
+$$
+\large{ 
+    K_2(T)  = \frac{[U]^n}{[I_n]}
+   }
+$$  
+  
+<p class="vf-intro__text"> where \( K_x(T) \) (\( x = 1 \text{ or } 2  \)) is a function of the thermodynamic parameters \( T_x \) (temperature at which \( K_x(T) \) equals one), \( \Delta H_x \) (enthalpy of unfolding), and  \( \Delta C_{p,x} \) (heat capacity of unfolding):
+</p>
+  
+$$
+\large{ 
+    K_{x}(T) = \exp(-\frac{\Delta G_{x}}{R_{gas} T})
+   }
+$$    
+  
+$$
+\large{ 
+    \Delta G_{x} = \Delta H_{x} (1 - \frac{T}{T_{x}}) - \Delta C_{p,x} (T_{x} - T + T \ln(\frac{T}{T_{x}}))
+   }
+$$   
+  
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant. For monomers, \( f_N \), \( f_I \) and \( f_U \) can be calculated solely from \( K_1(T) \),
+and \( K_2(T) \), while for oligomers, the protein concentration is also required.   
+</p> 
+
+<p class="vf-intro__text"> The parameters \( T_x \) and \( \Delta H_x \) are fitted globally. The baseline terms \( b_N \), \( b_I \) and \( b_U \) are fitted locally. The slope terms \( k_N \) and \( k_U \) are fitted locally, or set to zero. 
+</p>
+
+
+<p class="vf-intro__text"> For monomers, \( \Delta C_{p,x} \) are assumed to be zero, or 
+  \( \Delta C_{p,1} \) is fitted globally based on the total \( \Delta C_{p,th} \) given by the user (\( \Delta C_{p,th} =  \Delta C_{p,1} + 
+  \Delta C_{p,2}\)). For dimers, \( \Delta C_{p,x} \) are assumed to be zero, or 
+  \( \Delta C_{p,1} \) is fitted globally based on the total \( \Delta C_{p,th} \) given by the user (\( \Delta C_{p,th} =  \Delta C_{p,1} + 
+  \Delta C_{p,2}\)). For trimers and tetramers, \( \Delta C_{p,x} \) are assumed to be zero.
+</p>
+
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsTwoStateIrrev')"
+ style="padding-left: 20px;">
+  Irreversible two-state <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsTwoStateIrrev" style="display:none">  
   
 <br>
 
@@ -374,56 +632,55 @@ $$
 and \( factorF \) determine how much each of the species contributes to the signal.
 </p>
   
-<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \) and \( [F] \) depend on the equilibrium unfolding constant \( K_u \):
+<p class="vf-intro__text"> If we assume that the unfolding is irreversible, then the fraction of natively folded molecules 
+\( f_n \) as a function of temperature (\( T \)) is given by the following differential equation:
 </p>
   
 $$
 \large{ 
-    K_u(T)  = [U] / [F]
+    \frac{f_n}{dt} = \frac{-k(T)f_n}{v}
    }
 $$ 
   
-<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_u(T) \)  depends on the temperature of melting (Tm), enthalpy of unfolding ( \( \Delta H \) ), and heat capacity of unfolding ( \( \Delta Cp \) ):
+<p class="vf-intro__text"> where \( v \) is the scan rate (in degrees per minute), and \( k(T) \) is the
+rate constant (\( min^{-1} \)) which can be calculated from the Arrhenius equation:
 </p>
   
 $$
 \large{ 
-    K_u = \exp(-\frac{\Delta G}{R_{gas} T})
+    k(T) = e^{-\frac{E_a}{R_{gas}} \left(\frac{1}{T} - \frac{1}{T_f}\right)}
    }
 $$    
   
-$$
-\large{ 
-    \Delta G = \Delta H (1 - \frac{T}{T_m}) - \Delta C_p (T_m - T + T \ln(\frac{T}{T_m}))
-   }
-$$   
-  
-<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant. Last,  the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a two-state reversible unfolding model can be written as follows,
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant, \( Ea \) is the activation energy, and 
+\( Tf \) is the temperature where \( k(T) \) equals one (to discard the pre-exponential constant in the Arrhenius formula). 
+\( f_n \) is assumed to be one at the lowest measured temperature.
+</p>
+
+<p class="vf-intro__text">
+Last,  the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a two-state irreversible unfolding model can be written as follows,
 </p> 
 
 $$
 \large{ 
-Signal = \frac{K_u}{1 + K_u} (k_U \cdot T + b_U) + \frac{1}{1 + K_u} (k_N \cdot T + b_N)
+Signal = (1 - f_n) (k_U \cdot T + b_U) + f_n (k_N \cdot T + b_N)
    }
 $$
 
 <p class="vf-intro__text"> where \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states. And \( b_U \) and \( b_N \) represent the intercept of the linear dependence.
 </p>
 
-<p class="vf-intro__text"> For simplicity, \( \Delta Cp \) is assumed to be zero, which does not affect significantly the estimation of the parameters  \( \Delta H \)  and \( Tm \).
-</p> 
- 
 </div>
 
 <br>
 
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeState')"
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsThreeStateIrrev')"
  style="padding-left: 20px;">
-  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Irreversible three-state <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
-<div id="fittingModelsThreeState" style="display:none">  
+<div id="fittingModelsThreeStateIrrev" style="display:none">  
   
 <br>
 
@@ -440,38 +697,52 @@ $$
 and \( factorI \) determine how much each of the species contributes to the signal.
 </p>
   
-<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+<p class="vf-intro__text"> If we assume a first reversible equilibrium followed by irreversible unfolding, then
+the fraction of irreversibly unfolded molecules \( f_u \) as a function of temperature (\( T \)) is given by the following differential equation:  
 </p>
   
 $$
 \large{ 
-    K_1(T)  = [I] / [F]
+    \frac{f_u}{dt} = \frac{k(T) \cdot K(T) \cdot (1 - f_u)}{v \cdot (K(T) + 1)}
    }
 $$ 
   
-$$
-\large{ 
-    K_2(T)  = [U] / [I]
-   }
-$$  
-  
-<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \):
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin, \( v \) is the scan rate (in degrees per minute), \( k(T) \) is the rate constant (\( min^{-1} \)), and \( K(T) \) is the first equilibrium unfolding constant:
 </p>
   
 $$
 \large{ 
-    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+    k(T) = e^{-\frac{E_a}{R_{gas}} \left(\frac{1}{T} - \frac{1}{T_f}\right)}
    }
 $$    
   
 $$
 \large{ 
-    \Delta G_{1/2} = \Delta H_{1/2} (1 - \frac{T}{T_{1/2}}) - \Delta C_{p1/2} (T_{1/2} - T + T \ln(\frac{T}{T_{1/2}}))
+    K(T) = e^{-\frac{\Delta H}{R_{gas}} \left(\frac{1}{T} - \frac{1}{T_1}\right)}
    }
-$$   
+$$    
   
-<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant,  \( \Delta H \) is the enthalpy,
-\( T_{1/2} \) is the temperature where \( \Delta G_{1/2} \) equals zero and \( \Delta C_{p1/2} \) is the heat capacity change (for simplicity, assumed to be zero). Last, the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
+<p class="vf-intro__text"> where \( R_{gas} \) is the gas constant, \( Ea \) is the activation energy, and 
+\( Tf \) is the temperature where \( k(T) \) equals one (to discard the pre-exponential constant in the Arrhenius formula). 
+\( f_u \) is assumed to be zero at the lowest measured temperature. \( \Delta Cp \) is assumed to be zero. 
+</p>  
+  
+<p class="vf-intro__text"> The native (\( f_n \)) and intermediate (\( f_i \)) fractions are defined as follows:
+</p> 
+
+$$
+\large{ 
+    f_n = (1 - f_u) / (1 + K(T))
+   }
+$$    
+  
+$$
+\large{ 
+    f_i = 1 - f_n - f_u
+   }
+$$ 
+
+<p class="vf-intro__text">Last, the CD signal contribution normally shows a linear dependence on temperature, implying that the final signal of the equation for a three-state irreversible unfolding model can be written as follows,
 </p> 
 
 $$
@@ -480,28 +751,8 @@ Signal = f_u (k_U \cdot T + b_U) + f_n (k_N \cdot T + b_N) + f_i (b_I)
    }
 $$
 
-
-$$
-\large{ 
-f_n = \frac{1}{1 + K_1 + K_1 K_2}
-   }
-$$
-
-$$
-\large{ 
-f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
-   }
-$$
-
-$$
-\large{ 
-f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
-   }
-$$
-
-<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+<p class="vf-intro__text"> where \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
 </p>
-
 
 </div>
 
@@ -540,33 +791,50 @@ $$
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalGeneral')"
  style="padding-left: 20px;">
-  Unfolding model (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Unfolding models (general) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
 <div id="fittingModelsChemicalGeneral" style="display:none"> 
-
-<p class="vf-intro__text"> Briefly, we start by considering that the CD signal, at a certain wavelength, is a linear combination of the species concentration multiplied 
-by certain factors. 
+<br>
+<p class="vf-intro__text">
+    The available models are:
 </p>
-  
- $$
-\large{ 
-    Signal  = \sum_{i=1}^{n} [X_i]*factor_i
-   }
-$$  
-  
-<p class="vf-intro__text"> where \( n \) corresponds to the total number of 
-species contributing to the signal, \( [X_i] \) is the concentration of the ith-species, and \( factor_i \) determines the amplitude of the ith-species contribution.
+
+<ul class="vf-intro__text">
+    <li>Reversible two-state: $$\large{F_n \rightleftharpoons nU}$$ 
+    with \(1 \le n \le 4\) (from monomer to homotetramer)</li>
+    <br>
+    <li>Reversible three-state (monomeric intermediate): $$\large{F_n \rightleftharpoons nI \rightleftharpoons nU}$$
+    with \(1 \le n \le 4\) (from monomer to homotetramer). \( I \) is a monomeric intermediate.</li>
+    <br>
+    <li>Reversible three-state (n-meric intermediate): $$\large{F_n \rightleftharpoons I_n \rightleftharpoons nU}$$
+    with \(1 \le n \le 3\) (from monomer to homotrimer). \( I_n \) is a n-meric intermediate (e.g., dimeric intermediate).</li>
+    <br>
+</ul>
+
+<p class="vf-intro__text"> 
+For additional information, we recommend the following references:
+</p>
+
+ <ul class="vf-intro__text">
+      <li class="vf-list__item "> Sanchez-Ruiz, Jose M. "Theoretical analysis of Lumry-Eyring models in differential scanning calorimetry." Biophysical journal 61.4 (1992): 921-935.</li>
+   <li class="vf-list__item "> Sanchez-Ruiz, Jose M. "Protein kinetic stability." Biophysical chemistry 148.1-3 (2010): 1-15.</li>
+   <li class="vf-list__item "> Bedouelle, Hugues. "Principles and equations for measuring and interpreting protein stability: From monomer to tetramer." Biochimie 121 (2016): 29-37.</li>
+      <li class="vf-list__item "> Mazurenko, Stanislav, et al. "Exploration of protein unfolding by modelling calorimetry data from reheating." Scientific reports 7.1 (2017): 16321.</li>
+ </ul> 
+
+<p class="vf-intro__text"> 
+If you need that we implement a new model, please contact us: spc@embl-hamburg.de.
 </p>
 
 </div>  
   
-  <br>
+<br>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemical')"
  style="padding-left: 20px;">
-  Unfolding model (reversible two-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Reversible two-state <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
@@ -574,151 +842,178 @@ species contributing to the signal, \( [X_i] \) is the concentration of the ith-
   
 <br>
 
-  <p class="vf-intro__text">For a two-state unfolding model, the total signal is given by,
+<p class="vf-intro__text">For a two-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons nU \)), the equation of the signal is:
 </p>
   
 $$
 \large{ 
-    Signal  = [U]*factorU + [F]*factorF
+  Signal(D) = f_N(D) (k_N D + b_N) + f_U(D) (k_U D + b_U) n
    }
-$$ 
+$$
   
-<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded and folded species; and  \( factorU \)
-and \( factorF \) determine how much each of the species contributes to the signal.
+<p class="vf-intro__text"> where \( f_N \) and \( f_U \) are the folded and unfolded fractions, \( D \) is the concentration 
+of the denaturant agent in molar units,
+  \( b_N \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the linear dependence of the signal on \( D \). 
 </p>
-  
+
 <p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \) and \( [F] \) depend on the equilibrium unfolding constant \( K_u \):
 </p>
   
 $$
 \large{ 
-    K_u  = [U] / [F]
+    K_u(D)  = \frac{[U]^n}{[F_n]}   
    }
-$$ 
+$$
 
 $$
 \large{ 
-    K_u = \exp(-\frac{\Delta G}{R_{gas} T})
+    K_u(D) = \exp(-\frac{\Delta G (D)}{R_{gas} T})
    }
 $$ 
 
-<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin and \( R_{gas} \) is the gas constant. Assuming a linear dependence of stability on the denaturant concentration, \( \Delta G \)
-can be expressed as 
+<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin units and \( R_{gas} \) is the gas constant. Assuming a linear dependence of stability on the denaturant concentration, \( \Delta G(D) \) can be expressed as 
 </p>
 
-
 $$
 \large{ 
-    \Delta G = M * (D50 - D)
+    \Delta G(D) = M * (D50 - D)
    }
 $$   
   
 <p class="vf-intro__text">
-where \( D \) is the denaturant concentration in molar, \( D50 \) is the denaturant concentration at which 50% of the molecules are folded and \( M \) the slope \( \frac{\partial \Delta G(D)}{\partial D} \).
-</p>  
-  
-<p class="vf-intro__text">  Last, the CD signal contribution may show a linear dependence on the denaturant concentration, implying that the final signal of the equation for a two-state reversible unfolding model can be written as follows,
-</p> 
-
-$$
-\large{ 
-Signal = \frac{K_u}{1 + K_u} (k_U \cdot D + b_U) + \frac{1}{1 + K_u} (k_N \cdot D + b_N)
-   }
-$$
-
-<p class="vf-intro__text"> where \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states. And \( b_U \) and \( b_N \) represent the intercept of the linear dependence.
+where \( D50 \) is the denaturant concentration at which \( K_u \) equals one and \( M \) the slope \( \frac{\partial \Delta G(D)}{\partial D} \).
 </p>
+
+<p class="vf-intro__text"> For monomers, \( f_N \) and \( f_U \) can be calculated solely from \( K_u(D) \), while for oligomers, the protein concentration is also required.   
+</p>   
+  
+<p class="vf-intro__text"> The parameters \( D50 \) and \( M \) are fitted globally. 
+  The baseline terms \( b_N \) and \( b_U \) are fitted locally. 
+  Last, the slope terms \( k_N \) and \( k_U \) are fitted locally, or fixed to zero.
+</p>  
 
 </div> 
 
-  <br>
+<br>
 
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalThreeState')"
  style="padding-left: 20px;">
-  Unfolding model (reversible three-state) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  Reversible three-state (monomeric intermediate)<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
     
 <div id="fittingModelsChemicalThreeState" style="display:none">  
   
 <br>
+  
+<p class="vf-intro__text">For a three-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons nI \rightleftharpoons nU \)), with 
+a monomeric intermediate, the equation of the signal is:
+</p>
+  
+$$
+\large{ 
+  Signal(D) = f_N(D) (k_N D + b_N) + f_I(D) (b_I) n + f_U(D) (k_U D + b_U) n
+   }
+$$
+  
+<p class="vf-intro__text"> where \( f_N \), \( f_I \) and \( f_U \) are the fraction of protein in the folded, intermediate and unfolded states, 
+  \( D \) is the denaturant agent concentration in molar units, \( b_N \), \( b_I \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the linear dependence of the signal on \( D \) (of the folded and unfolded states). 
+</p>
 
-  <p class="vf-intro__text">For a three-state unfolding model, the total signal is given by,
+<p class="vf-intro__text"> If we assume that the unfolding is reversible (\( F_n \rightleftharpoons nI \rightleftharpoons nU  \)), then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
 </p>
   
 $$
 \large{ 
-    Signal  = [U]*factorU + [F]*factorF + [I]*factorI
-   }
-$$ 
-  
-<p class="vf-intro__text"> where \( [U] \) and \( [F] \) are respectively the concentration of the unfolded, folded 
-and intermediate species; and  \( factorU \), \( factorF \)
-and \( factorI \) determine how much each of the species contributes to the signal.
-</p>
-  
-<p class="vf-intro__text"> If we assume that the unfolding is reversible, then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
-</p>
-  
-$$
-\large{ 
-    K_1(T)  = [I] / [F]
+    K_1(D)  = \frac{[I]^n}{[F_n]}
    }
 $$ 
   
 $$
 \large{ 
-    K_2(T)  = [U] / [I]
+    K_2(D)  = \frac{[U]}{[I]}
    }
 $$   
 
-<p class="vf-intro__text"> where \( T \) is the temperature in Kelvin. Furthermore,  \( K_{1/2}(T) \)  can be determined from \( \Delta G \), assuming a linear dependence of stability on the denaturant concentration:
+<p class="vf-intro__text"> where \( K_x(D) \) (\( x = 1 \text{ or } 2  \)) is a function of the 'thermodynamic' parameters \( D50_x \) (concentration at which \( K_x(D) \) equals one) and \( M_x \) (\( \frac{\partial \Delta G_{x}(D)}{\partial D} \)):
 </p>
   
 $$
 \large{ 
-    K_{1/2}(T) = \exp(-\frac{\Delta G_{1/2}}{R_{gas} T})
+    K_{x}(D) = \exp(-\frac{\Delta G_{x}(D)}{R_{gas} T})
    }
 $$    
-  
-$$
-\large{ 
-    \Delta G_{1/2} = M_{1/2} * (D50_{1/2} - D)
-   }
-$$   
-  
+   
 <p class="vf-intro__text">
-where \( D \) is the denaturant concentration in molar, \( D50_{1/2} \) is the denaturant concentration where \( \Delta G_{1/2}  \) equals zero,  and \( M_{1/2} \) the slope \( \frac{\partial \Delta G_{1/2}(D)}{\partial D} \).
+where \( T \) is the temperature in Kelvin units and \( R_{gas} \) the gas constant. 
 </p>  
   
-<p class="vf-intro__text">  Last, the CD signal contribution may show a linear dependence on the denaturant concentration, implying that the final signal of the equation for a three-state reversible unfolding model can be written as follows,
-</p> 
+<p class="vf-intro__text"> For monomers, \( f_N \), \( f_I \) and \( f_U \) can be calculated solely from \( K_1(D) \) and \( K_2(D) \), while for oligomers, the protein concentration is also required.   
+</p>
 
+<p class="vf-intro__text"> The parameters \( D50_x \) and \( M_x \) are fitted globally. The baseline terms \( b_N \), \( b_I \) and \( b_U \) are fitted locally. The slope terms \( k_N \) and \( k_U \) are fitted locally, or set to zero. 
+</p>
+
+</div>
+
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsChemicalThreeStateNI')"
+ style="padding-left: 20px;">
+  Reversible three-state (n-meric intermediate)<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+    
+<div id="fittingModelsChemicalThreeStateNI" style="display:none">  
+  
+<br>
+  
+<p class="vf-intro__text">For a three-state unfolding model of a homomeric n-mer (\( F_n \rightleftharpoons I_n \rightleftharpoons nU \)), with 
+a n-meric intermediate, the equation of the signal is:
+</p>
+  
 $$
 \large{ 
-Signal = f_u (k_U \cdot D + b_U) + f_n (k_N \cdot D + b_N) + f_i (b_I)
+  Signal(D) = f_N(D) (k_N D + b_N) + f_I(D) (b_I) + f_U(D) (k_U D + b_U) n
    }
 $$
+  
+<p class="vf-intro__text"> where \( f_N \), \( f_I \) and \( f_U \) are the fraction of protein in the folded, intermediate and unfolded states, 
+  \( D \) is the denaturant agent concentration in molar units, \( b_N \), \( b_I \) and \( b_U \) are the baseline terms, and \( k_N \) and \( k_U \) are the slopes to take into account the linear dependence of the signal on \( D \) (of the folded and unfolded states). 
+</p>
 
+<p class="vf-intro__text"> If we assume that the unfolding is reversible (\( F_n \rightleftharpoons nI \rightleftharpoons nU  \)), then the concentration of \( [U] \), \( [F] \) and \( [I] \) depend on the unfolding constant \( K_1 \) and \( K_2 \):
+</p>
+  
 $$
 \large{ 
-f_n = \frac{1}{1 + K_1 + K_1 K_2}
+    K_1(D)  = \frac{[I_n]}{[F_n]}
    }
-$$
-
+$$ 
+  
 $$
 \large{ 
-f_i = \frac{K_1}{1 + K_1 + K_1 K_2}
+    K_2(D)  = \frac{[U]^n}{[I_n]}
    }
-$$
+$$   
 
+<p class="vf-intro__text"> where \( K_x(D) \) (\( x = 1 \text{ or } 2  \)) is a function of the 'thermodynamic' parameters \( D50_x \) (concentration at which \( K_x(D) \) equals one) and \( M_x \) (\( \frac{\partial \Delta G_{x}(D)}{\partial D} \)):
+</p>
+  
 $$
 \large{ 
-f_u = \frac{K_1 K_2}{1 + K_1 + K_1 K_2}
+    K_{x}(D) = \exp(-\frac{\Delta G_{x}(D)}{R_{gas} T})
    }
-$$
+$$    
+   
+<p class="vf-intro__text">
+where \( T \) is the temperature in Kelvin units and \( R_{gas} \) the gas constant. 
+</p>  
+  
+<p class="vf-intro__text"> For monomers, \( f_N \), \( f_I \) and \( f_U \) can be calculated solely from \( K_1(D) \) and \( K_2(D) \), while for oligomers, the protein concentration is also required.   
+</p>
 
-<p class="vf-intro__text"> where \( f_u \), \( f_n \) and \( f_i \) are the unfolded, folded and intermediate fractions. \( k_U \) and \( k_N \) represent the slope of the linear dependence for the unfolded and folded (native) states.  \( b_U \), \( b_N \), and \( b_I \) represent the baselines of the unfolded, folded and intermediate states.
+<p class="vf-intro__text"> The parameters \( D50_x \) and \( M_x \) are fitted globally. The baseline terms \( b_N \), \( b_I \) and \( b_U \) are fitted locally. The slope terms \( k_N \) and \( k_U \) are fitted locally, or set to zero. 
 </p>
 
 </div>
@@ -1067,7 +1362,7 @@ Proteins containing different amounts of secondary structure elements, such as a
 </p>
 
 <figure class="vf-figure vf-figure--align vf-figure--align-centered">
-  <img src="../user_guide_images/CD_spectra_secondary_structure.png" alt="CD spectra of Myglobin, OpcA and Wheat germ agglutinin" width="800" loading="lazy"/>
+  <img src="CD_spectra_secondary_structure.png" alt="CD spectra of Myglobin, OpcA and Wheat germ agglutinin" width="800" loading="lazy"/>
   <figcaption>
     <p class="vf-intro__text">
 <b>CD spectra of Myglobin, OpcA and Wheat germ agglutinin.</b> 
@@ -1291,16 +1586,16 @@ The Human Serum Albumin CD spectrum was replaced with an in-house measured spect
 
 <ul class="vf-intro__text">
 
-<li>AU_SP175: <a href="../example_files/AU_SP175_F.csv" download>Matrix F</a>  and <a href="../example_files/AU_SP175_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix regular, alpha-helix distorded, beta-sheet regular, beta-sheet distorded, turns and other.</li>
+<li>AU_SP175: <a href="AU_SP175_F.csv" download>Matrix F</a>  and <a href="AU_SP175_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix regular, alpha-helix distorded, beta-sheet regular, beta-sheet distorded, turns and other.</li>
 <br>
-<li>AU_SMP180: <a href="../example_files/AU_SMP180_F.csv" download>Matrix F</a>  and <a href="../example_files/AU_SMP180_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix, beta-sheet, turns and other.</li>
+<li>AU_SMP180: <a href="AU_SMP180_F.csv" download>Matrix F</a>  and <a href="AU_SMP180_C.csv" download>Matrix C</a>. Secondary structure elements: alpha-helix, beta-sheet, turns and other.</li>
 <br>
 
 </ul> 
 
 <p class="vf-intro__text">
 Custom reference sets can be imported too. For instance, you can load the IDP175 reference dataset from
-<a href="https://www.nature.com/articles/s42003-023-05178-2" target="_blank" rel="noopener noreferrer">Miles, Andrew J. <i>et al.</i>, 2023</a> by using the <a href="../example_files/F_IDP175.txt" download>Matrix F</a>  and <a href="../example_files/A_IDP175.txt" download>Matrix C</a>. The secondary structure elements are: alpha-helix, beta-sheet, turns and other. 
+<a href="https://www.nature.com/articles/s42003-023-05178-2" target="_blank" rel="noopener noreferrer">Miles, Andrew J. <i>et al.</i>, 2023</a> by using the <a href="F_IDP175.txt" download>Matrix F</a>  and <a href="A_IDP175.txt" download>Matrix C</a>. The secondary structure elements are: alpha-helix, beta-sheet, turns and other. 
 </p>
 
 <p class="vf-intro__text">

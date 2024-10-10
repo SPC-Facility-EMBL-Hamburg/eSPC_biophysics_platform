@@ -1,19 +1,20 @@
 options(shiny.maxRequestSize=100*1024^2)
 options(stringsAsFactors = F)
 
-source_python("./cdAnalyzer.py")
-source_python("./cdUnitsConverter.py")
-source_python("./helpers.py")
-source_python('./loadCDfilesHelpers.py')
-source_python("./get_dssp_summary.py")
-source_python("./read_references_to_matrices.py")
+# List of Python script files to source
+py_scripts <- c("cdAnalyzer.py","helpers.py","decomposition_helpers.py",
+                "fitting_helpers.py","get_dssp_summary.py")
 
-source("server_files/helpers.R")
-source("server_files/helpers_unfolding.R")
-source("server_files/helpers_plotting.R")
-source("server_files/helpers_G-Quadruplex.R")
-source("server_files/plotFunctions.R")
-source("server_files/plotFunctionsSpectraComparison.R")
+# Source the Python helper functions 
+for (script in py_scripts) {source_python(paste0('python_src/', script))}
+
+# List of R script files to source
+r_scripts <- c("helpers.R","helpers_unfolding.R","helpers_plotting.R",
+  "helpers_G-Quadruplex.R","plotFunctions.R","plotFunctionsSpectraComparison.R")
+
+# Source the R helper functions 
+for (script in r_scripts) {source(paste0('server_files/', script))}
+
 ### End of variables to change
 
 function(input, output, session) {
@@ -22,14 +23,14 @@ function(input, output, session) {
   
   # To handle the general processing, the unfolding models, 
   # the secondary structure calculation, and the custom models
-  cdAnalyzer                <- cdAnalyzer()     
+  cdAnalyzer                <- CdAnalyzer()
   
   # To handle the spectra comparison module
-  compareSpectraPyClass     <- cd_experiment_comparison()
+  compareSpectraPyClass     <- CdExperimentComparison()
   
   # To handle the G-Quadruplex module
-  gQuadRefPyClass     <- cd_experiment_general()
-  gQuadSamplePyClass  <- cd_experiment_general()
+  gQuadRefPyClass     <- CdExperimentGeneral()
+  gQuadSamplePyClass  <- CdExperimentGeneral()
   
   source(paste0(base_dir,"reactives/reactives_values.R"                 ), local = T)
   source(paste0(base_dir,"reactives/reactives.R"                        ), local = T)
