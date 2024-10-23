@@ -1,3 +1,6 @@
+histogram_palette <- c('#AEC6CF','#FFB347','#77DD77','#CFCFC4','#e02b35')
+
+
 configFig <- function(fig,plot_width, plot_height, plot_type,plot_title_for_download) {
  
   fig %>%  config(
@@ -16,222 +19,223 @@ configFig <- function(fig,plot_width, plot_height, plot_type,plot_title_for_down
    
 }
 
-plotRefeynFitNormalized <- function(refeyn,baseline,plot_width, plot_height, plot_type, axis_size,
-                                    legends,colorPalette,sels,addMassesToLegend){
-  
-  dfMass <- data.frame("mass"=refeyn$masses_kDa)
-  dfMass <- dfMass %>% 
-    filter(mass >= refeyn$hist_window[1]) %>% 
-    filter(mass <= refeyn$hist_window[2])
-  
-  # refeynFit is a matrix with n columns whose 1st column is the x axis, 
-  # the 2nd to (n-1) column are the predicted values using the individual gaussians
-  # the n column is the predicted value from the gaussian sum
-  
-  refeynFit  <- as.data.frame(refeyn$fit)
-  prevNames  <- colnames(refeynFit)[-ncol(refeynFit)]
-  colnames(refeynFit) <- c("x",prevNames[-1],"y")
-  
-  fig       <- plot_ly()
-  baseline <- baseline / nrow(dfMass)# normalize
-  
-  # Only plot sum if we have more than one gaussian
-  counterColorPalette <- 0
-  if (ncol(refeynFit) > 3) {
-    
-    counterColorPalette <- counterColorPalette+1
-    if (sels[counterColorPalette]) {
-      gaussianSum   <- refeynFit[,c(1,ncol(refeynFit))] %>% filter(y > baseline+0.05 | y == 0)
-      gaussianSum$y <- gaussianSum$y / nrow(dfMass) # Normalize
-      
-      fig <- fig %>% add_trace(data=gaussianSum,color=I(colorPalette[1]),x=~x,y=~y,
-                               type = 'scatter', mode = 'lines',
-                               name=legends[1],list(width = 3))
-      
-      
-    }
-    legends <- legends[-1]
-    
-  }
-  
-  fitted_means <- refeyn$fit_table[,1]
-  
-  if (addMassesToLegend)   legends <- paste0(legends," : ",round(fitted_means))
-  legends <- paste0(legends," kDa")
-  
-  gaussianInd <- refeynFit[,-ncol(refeynFit)]
-  colnames(gaussianInd) <- c("x",legends)
-  
-  gaussianInd <- reshape2::melt(gaussianInd,id.vars="x") %>% filter(value > baseline+0.05)
-  gaussianInd$variable <- as.factor(gaussianInd$variable)
-  
-  for (var in unique(gaussianInd$variable)) {
-    
-    counterColorPalette <- counterColorPalette + 1
-    
-    if (sels[counterColorPalette]) {
-      hexColor            <- colorPalette[counterColorPalette]
-      
-      tempDf <- gaussianInd[gaussianInd$variable == var,]
-      
-      tempDf$value <- tempDf$value / nrow(dfMass)# normalize
-      
-      fig    <- fig %>% add_trace(data=tempDf,x=~x,y=~value,
-                                  color=I(hexColor),
-                                  type = 'scatter', mode = 'lines',
-                                  name=var,
-                                  line = list(width = 3))
-    }
-    
-  }
-  
-  start <- refeyn$hist_window[1]
-  end   <- refeyn$hist_window[2]
-  size  <- refeyn$bin_width
-  
-  fig <- fig %>% add_histogram(data=dfMass,x=~mass, color = I("#389196"),
-                               alpha = 0.4, xbins=list(start=start,
-                                                       end=end,
-                                                       size=size),
-                               histnorm = "probability",
-                               showlegend=FALSE)
-  
-  y <- list(title = "Normalized counts",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size))
-  
-  xtitle <- "Mass (kDa)"
+add_mass_histogram <- function(fig,dfMass,bin_info,normalize,hex_color) {
 
-  x <- list(title = xtitle,titlefont = list(size = axis_size),
-            tickfont = list(size = axis_size))
-  
-  fig <- fig %>% layout(xaxis = x, yaxis = y,showlegend = TRUE,
-                        font="Roboto",legend = list(font = list(size = axis_size)))
-  
+  histnorm <- ifelse(normalize,"probability","count")
 
-  fig <- configFig(fig,plot_width, plot_height, plot_type,paste0("refeynPlotNormalized-",Sys.Date()))
-  
+  xbins_lst <- list(start=bin_info$start, end=bin_info$end, size=bin_info$size)
+
+  fig <- fig %>% add_trace(type="histogram",x=dfMass$mass, color = I(hex_color),alpha = 0.5, xbins = xbins_lst, histnorm = histnorm,showlegend=FALSE)
+
   return(fig)
-  
+
 }
 
-plotRefeynFit <- function(refeyn,baseline,plot_width, plot_height, plot_type, axis_size,
-                          legends,colorPalette,sels,addMassesToLegend,contrasts=FALSE) {
+add_gaussian_sum_trace <- function(fig,refeynFit,baseline,scaling_factor,colorPalette,legends) {
 
-  dfMass <- data.frame("mass"=refeyn$contrasts)
-  if (!contrasts) {
-    dfMass <- data.frame("mass"=refeyn$masses_kDa) 
-  } 
- 
-  dfMass <- dfMass %>% 
-    filter(mass >= refeyn$hist_window[1]) %>% 
-    filter(mass <= refeyn$hist_window[2])
-  
-  # Replace mass with contrasts
-  if (contrasts) {
-    dfMass$mass <- dfMass$mass*factorForContrast 
-  } 
-  
-  # refeynFit is a matrix with n columns whose 1st column is the x axis, 
-  # the 2nd to (n-1) column are the predicted values using the individual gaussians
-  # the n column is the predicted value from the gaussian sum
-  
-  refeynFit  <- as.data.frame(refeyn$fit)
-  prevNames  <- colnames(refeynFit)[-ncol(refeynFit)]
-  colnames(refeynFit) <- c("x",prevNames[-1],"y")
-  
-  if (contrasts) refeynFit$x <- refeynFit$x * factorForContrast
-  
-  fig <- plot_ly()
-  # Only plot sum if we have more than one gaussian
-  counterColorPalette <- 0
-  if (ncol(refeynFit) > 3) {
-    
-    counterColorPalette <- counterColorPalette+1
-    if (sels[counterColorPalette]) {
-      gaussianSum <- refeynFit[,c(1,ncol(refeynFit))] %>% filter(y > baseline+0.05 | y == 0)
-      
-      fig <- fig %>% add_trace(data=gaussianSum,color=I(colorPalette[1]),x=~x,y=~y,
-                               type = 'scatter', mode = 'lines',
-                               name=legends[1],list(width = 3))
-      
-      
-    }
-    legends <- legends[-1]
-    
+  gaussianSum <- refeynFit[,c(1,ncol(refeynFit))] %>% filter(y > baseline+0.05 | y == 0)
+  gaussianSum$y <- gaussianSum$y * scaling_factor
+
+  fig <- fig %>% add_trace(data=gaussianSum,color=I(colorPalette[1]),x=~x,y=~y,
+                           type = 'scatter', mode = 'lines',
+                           name=legends[1],list(width = 3))
+
+  return(fig)
+
+}
+
+add_labels_to_fig <- function(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked) {
+
+  fitted_means <- refeynFitTable[,1]
+
+  if (contrasts) fitted_means <- fitted_means * cstFactorForContrast
+  fitted_amp   <- refeynFitTable[,5] * scaling_factor
+
+  tf <- list(family = "Roboto", size = axis_size-2, color = toRGB("black"))
+
+  yShift <- max(fitted_amp)*0.02
+
+  dfLabel <- data.frame("means"=fitted_means,"amplitudes"=fitted_amp+yShift,"labels"=paste0(" ",round(fitted_means)))
+
+  dfLabel <- dfLabel[sels,]
+
+  if (!contrasts) dfLabel$labels <- paste0(dfLabel$labels," kDa")
+
+  fig <- fig %>% add_text(
+    data = dfLabel, x = ~means, y = ~amplitudes, text = ~labels,
+    textfont = tf, textposition = "top right", showlegend=FALSE)
+
+  if (stacked) {
+    fig <- fig %>% layout(yaxis = list(range=c(0,max(dfLabel$amplitudes)*1.3)))
   }
-  
-  fitted_means <- refeyn$fit_table[,1]
-  
-  if (contrasts) {
-    fitted_means <- fitted_means*factorForContrast
-  }
-  
-  if (addMassesToLegend)   legends <- paste0(legends," : ",round(fitted_means))
-  
+
+  return(fig)
+
+}
+
+add_masses_to_legend <- function(legends,refeynFitTable,contrasts) {
+
+  fitted_means <- refeynFitTable[,1]
+
+  if (contrasts) fitted_means <- fitted_means * cstFactorForContrast
+
+  legends <- paste0(legends," : ",round(fitted_means))
   if (!contrasts) legends <- paste0(legends," kDa")
-  
+
+  return(legends)
+}
+
+
+add_gaussian_traces <- function(fig,axis_size,refeynFit,refeynFitTable,legends,
+                                colorPalette,sels,baseline,scaling_factor,
+                                addMassesToLegend=TRUE,contrasts=FALSE,add_labels=TRUE,stacked=TRUE) {
+
+  if (contrasts) refeynFit$x <- refeynFit$x * cstFactorForContrast
+
+  if (ncol(refeynFit) > 3) {
+
+      if (sels[1]) fig <- add_gaussian_sum_trace(fig,refeynFit,baseline,scaling_factor,colorPalette,legends)
+
+      sels         <- sels[-1]
+
+      proceed <- sum(sels) > 0
+      if (proceed) {
+        legends      <- legends[-1]
+        colorPalette <- colorPalette[-1]
+      } else {
+        return(fig)
+      }
+  }
+
+  if (add_labels)        fig     <- add_labels_to_fig(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked)
+  if (addMassesToLegend) legends <- add_masses_to_legend(legends,refeynFitTable,contrasts)
+
   gaussianInd <- refeynFit[,-ncol(refeynFit)]
   colnames(gaussianInd) <- c("x",legends)
-  
+
   gaussianInd <- reshape2::melt(gaussianInd,id.vars="x") %>% filter(value > baseline+0.05)
   gaussianInd$variable <- as.factor(gaussianInd$variable)
-  
+
+  counterColorPalette <- 1
+
   for (var in unique(gaussianInd$variable)) {
-    
-    counterColorPalette <- counterColorPalette + 1
-    
+
     if (sels[counterColorPalette]) {
-      hexColor            <- colorPalette[counterColorPalette]
-      
-      tempDf <- gaussianInd[gaussianInd$variable == var,]
-      fig    <- fig %>% add_trace(data=tempDf,x=~x,y=~value,
-                                  color=I(hexColor),
-                                  type = 'scatter', mode = 'lines',
-                                  name=var,
-                                  line = list(width = 3))
+
+      hexColor  <- colorPalette[counterColorPalette]
+      tempDf    <- gaussianInd[gaussianInd$variable == var,]
+
+      tempDf$value <- tempDf$value * scaling_factor
+
+      fig    <- fig %>% add_trace(
+        data=tempDf,x=~x,y=~value,
+        color=I(hexColor),type = 'scatter', mode = 'lines',
+        name=var,line = list(width = 3))
     }
-    
+
+    counterColorPalette <- counterColorPalette + 1
+
   }
-    
-  
-  
-  start <- refeyn$hist_window[1]
-  end   <- refeyn$hist_window[2]
-  size  <- refeyn$bin_width
-  
-  if (contrasts) {
-    start <- start*factorForContrast
-    end   <- end*factorForContrast
-    size  <- size*factorForContrast
-  }
-  
-  fig <- fig %>% add_histogram(data=dfMass,x=~mass, color = I("#389196"),
-                               alpha = 0.4, xbins=list(start=start,
-                                                       end=end,
-                                                       size=size),
-                               showlegend=FALSE)
-  
-  y <- list(title = "Counts",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size))
-  
+
+  return(fig)
+
+}
+
+plotRefeynFit <- function(
+  photoMolModels,baseline_shared,plot_width, plot_height, plot_type, axis_size,
+  legendsAll,colorPaletteAll,selsAll,addMassesToLegend=TRUE,contrasts=FALSE,
+  normalize=FALSE,add_labels=TRUE,stacked=FALSE) {
+
+  yLabel <- ifelse(normalize,"Norm. counts","Counts")
+
+  y <- list(title = yLabel,titlefont = list(size = axis_size),
+            tickfont = list(size = axis_size),standoff = 20,automargin = TRUE)
+
   xtitle <- "Mass (kDa)"
   if (contrasts) xtitle <- "Ratiometric contrast * 1e3"
-  
+
   x <- list(title = xtitle,titlefont = list(size = axis_size),
             tickfont = list(size = axis_size))
-  
-  fig <- fig %>% layout(xaxis = x, yaxis = y,showlegend = TRUE,
-                        font="Roboto",legend = list(font = list(size = axis_size)))
-  
-  
-  fig <- configFig(fig,plot_width, plot_height, plot_type,paste0("refeynPlot-",Sys.Date()))
+
+  if (stacked) {
+    figs <- list()
+  } else {
+    fig <- plot_ly()
+  }
+
+  id_start  <- 1
+  model_cnt <- 0
+
+  for (refeyn in photoMolModels) {
+
+    model_cnt <- model_cnt + 1
+
+    if (stacked) {
+      figs[[model_cnt]] <- plot_ly()
+    }
+
+    dfMass <- get_df_mass(refeyn,contrasts)
+
+    scaling_factor <- ifelse(normalize,1/nrow(dfMass),1)
+    baseline       <- baseline_shared * scaling_factor
+
+    bin_info <- get_bin_info(refeyn,contrasts)
+
+    color_hst <- ifelse(stacked,'#AEC6CF',histogram_palette[model_cnt])
+
+    if (stacked) {
+        figs[[model_cnt]] <- add_mass_histogram(figs[[model_cnt]],dfMass,bin_info,normalize,color_hst)
+        figs[[model_cnt]] <- figs[[model_cnt]] %>% layout(xaxis = x, yaxis = y,showlegend = TRUE,font="Roboto",legend = list(font = list(size = axis_size)))
+
+    } else {
+        fig <- add_mass_histogram(fig,dfMass,bin_info,normalize,color_hst)
+    }
+
+    if (is.null(refeyn$fit)) next
+
+    refeynFit  <- as.data.frame(refeyn$fit)
+    prevNames  <- colnames(refeynFit)[-ncol(refeynFit)]
+
+    colnames(refeynFit) <- c("x",prevNames[-1],"y")
+
+    id_end <- ifelse(ncol(refeynFit) <= 3,id_start, id_start + ncol(refeynFit) - 2)
+
+    colorPalette <- colorPaletteAll[id_start:id_end]
+    legends      <- legendsAll[id_start:id_end]
+    sels         <- selsAll[id_start:id_end]
+
+    id_start     <- id_end + 1
+
+    if (sum(sels) == 0) next
+
+    if (stacked) {
+
+      figs[[model_cnt]] <- add_gaussian_traces(figs[[model_cnt]],axis_size,refeynFit,refeyn$fit_table,legends,colorPalette,sels,baseline,scaling_factor,addMassesToLegend,contrasts,add_labels,stacked)
+
+    } else {
+      fig <- add_gaussian_traces(fig,axis_size,refeynFit,refeyn$fit_table,legends,colorPalette,sels,baseline,scaling_factor,addMassesToLegend,contrasts,add_labels,stacked)
+    }
+
+    # refeynFit is a matrix with n columns whose 1st column is the x axis,
+    # the 2nd to (n-1) column are the predicted values using the individual gaussians
+    # the n column is the predicted value from the gaussian sum
+
+  }
+
+  if (!stacked) {
+    fig <- fig %>% layout(barmode = "overlay") %>%
+    layout(xaxis = x, yaxis = y,showlegend = TRUE,font="Roboto",legend = list(font = list(size = axis_size)))
+  } else {
+    fig <- subplot(figs,nrows = length(figs), shareY = TRUE, shareX = TRUE)
+  }
+
+  fig <- configFig(fig,plot_width, plot_height, plot_type,paste0("MP_plot-",Sys.Date()))
   
   return(fig)
   
 }
 
 truncatedGaussian <- function(x,mean,std,amplitude,leftBound) {
-  
   return( (x >= leftBound) * (amplitude * exp( - (x-mean)**2 / (2 * (std**2) ))))
 }
 
@@ -245,46 +249,6 @@ addSimulation2plotRefeynFit <- function(fig,mean,std,amplitude,leftBound) {
   fig %>% add_trace(data=df,color=I("black"),x=~xSeq,y=~y,
                            type = 'scatter', mode = 'lines',
                            name="Simulation",list(width = 3))
-  
-}
-
-addLabels2plotRefeynFit <- function(fig,means,amplitudes,selected,text_size,
-                                    contrasts=FALSE) {
-  
-  # means gives the x position of the labels and also the text
-  # amplitudes gives the y position of the labels
-  # selected is a boolean vector to select which labels to add
-  # text size controls the labels size
-
-  t <- list(
-    family = "Roboto",
-    size = text_size-2,
-    color = toRGB("black"))
-  
-  if (sum(selected) == 0) {return(fig)} # No labels
-  
-  if (length(selected) > 1) {
-    
-    if (sum(selected) == 1 && selected[1]) {return(fig)} # No labels
-    
-    selected <- selected[-1] # Remove gaussian sum from the selection
-  } 
-  
-  yShift <- max(amplitudes)*0.02
-
-  if (contrasts) means <- means * factorForContrast
-  
-  dfLabel <- data.frame("means"=means,"amplitudes"=amplitudes+yShift,
-                        "labels"=paste0("   ",round(means)))
-
-  dfLabel <- dfLabel[selected,]
-
-  if (!contrasts) dfLabel$labels <- paste0(dfLabel$labels," kDa")
-    
-  fig <- fig %>% add_text(data = dfLabel, x = ~means, y = ~amplitudes, 
-                          text = ~labels,
-                          textfont = t, textposition = "top right",
-                          showlegend=FALSE)
   
 }
 
@@ -327,15 +291,24 @@ plotMass_vs_contrast <- function(mass,contrast,slope,intercept,
   
 }
 
-plotRefeynMassHist <- function(refeyn,plot_width, plot_height, plot_type,axis_size) {
-  
-  dfMass <- data.frame("mass"=refeyn$masses_kDa) 
-  fig     <- plot_ly()
+plotRefeynMassHist <- function(models,plot_width, plot_height, plot_type,axis_size) {
 
-  fig <- fig %>% add_histogram(data=dfMass,x=~mass, color = I("#389196"),
-                               alpha = 0.4, xbins=list(size=refeyn$bin_width),
-                               showlegend=FALSE)
-  
+  fig     <- plot_ly()
+  model_cnt <- 0
+
+  for (refeyn in models) {
+
+    model_cnt <- model_cnt + 1
+
+    dfMass <- get_df_mass(refeyn,FALSE)
+
+    fig <- fig %>% add_trace(type="histogram",
+      x=dfMass$mass, color = I(histogram_palette[model_cnt]),
+      alpha = 0.4, xbins=list(size=refeyn$bin_width),
+      showlegend=FALSE)
+
+  }
+
   y <- list(title = "Counts",titlefont = list(size = axis_size), 
             tickfont = list(size = axis_size))
   
@@ -346,9 +319,10 @@ plotRefeynMassHist <- function(refeyn,plot_width, plot_height, plot_type,axis_si
   
   fig <- fig %>% layout(xaxis = x, yaxis = y,showlegend = TRUE,
                         font="Roboto",legend = list(font = list(size = axis_size)))
-  
-  
-  fig <- configFig(fig,plot_width, plot_height, plot_type,paste0("refeynPlotBindingAndUnbindingEvents-",Sys.Date()))
+
+  fig <- fig %>% layout(barmode = "overlay")
+
+  fig <- configFig(fig,plot_width, plot_height, plot_type,paste0("MP_Plot_Binding_Unbinding-",Sys.Date()))
   
   return(fig)
   

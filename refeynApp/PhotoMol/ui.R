@@ -24,22 +24,36 @@ shinyUI(dashboardPage(title = paste0(appName),
         fluidRow(
 
           source("ui_files/ui_load_input_box.R",local = TRUE)$value, 
-            
+
+                    #Custom CSS to increase plot height
+          tags$head(tags$style("
+          #counts_plot{height:600px !important;}
+          #counts_plotNormalized{height:600px !important;}
+          #binding_plot{height:600px !important;}
+          #counts_plot_stacked{height:700px !important;}
+          #counts_plotNormalized_stacked{height:700px !important;}
+          "
+                               )),
+
           tabBox(title = "", width = 9,id = "tabset_sim",
-                   tabPanel("Counts vs Mass (kDa)",plotlyOutput("counts_plot")),
-                   tabPanel("Counts vs Mass (kDa) - Normalized",plotlyOutput("counts_plotNormalized")),
-                   tabPanel("All (un)binding events",plotlyOutput("binding_plot"))),
-          
+                   tabPanel("Mass histogram",plotlyOutput("counts_plot")),
+                   tabPanel("Normalised mass histogram",plotlyOutput("counts_plotNormalized")),
+                   tabPanel("All (un)binding events",plotlyOutput("binding_plot")),
+                   tabPanel("Mass histogram (subplots)",plotlyOutput("counts_plot_stacked")),
+                   tabPanel("Normalised mass histogram (subplots)",plotlyOutput("counts_plotNormalized_stacked"))),
+
           conditionalPanel(condition = "output.dataLoaded", 
-                           source('ui_files/ui_load_input_legend.R',local=T)$value), 
-          
-          box(title = "Fitted parameters and counts", width = 4, solidHeader = T, status = "primary",
+                           source('ui_files/ui_load_input_legend.R',local=T)$value)),
+
+          fluidRow(
+
+          box(title = "Fitted parameters and counts", width = 5, solidHeader = T, status = "primary",
               fluidRow(
                 column(width = 12,tableOutput('fittedParams'))
                 
               )),
           
-          box(title = "Legends", width = 3, solidHeader = T, status = "primary",
+          box(title = "Legends", width = 4, solidHeader = T, status = "primary",
               fluidRow(
                 conditionalPanel(condition = "output.dataLoaded", 
                                  column(width = 8,rHandsontableOutput('legendInfo')),

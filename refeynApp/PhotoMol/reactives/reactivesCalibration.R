@@ -15,7 +15,7 @@ observeEvent(input$massPhotometryFileCalibration,{
       refeynCalib$load_data_csv(input$massPhotometryFileCalibration$datapath)
     }
     
-    pks_initial <- sapply(refeynCalib$pks_initial, function(x) signif(x*factorForContrast,2))
+    pks_initial <- sapply(refeynCalib$pks_initial, function(x) signif(x*cstFactorForContrast,2))
     maxNpeaks   <- min(6,length(pks_initial))
     pks_initial <- pks_initial[1:maxNpeaks]
     
@@ -23,7 +23,7 @@ observeEvent(input$massPhotometryFileCalibration,{
                     value = paste(pks_initial,collapse=" "))
     
     knownMassesInitial <- c(480,148,66,200,120,600,1000,300)[1:maxNpeaks] 
-    minLimit <- floor(min(refeynCalib$contrasts)*factorForContrast)
+    minLimit <- floor(min(refeynCalib$contrasts)*cstFactorForContrast)
     updateNumericInput(session,"leftLimitWindowRangeContrast",
                        value = minLimit, min = -1e6, max = 0, step = 1)
     updateSliderInput(session,"window_rangeContrast",NULL,min = minLimit, 
@@ -38,6 +38,26 @@ observeEvent(input$massPhotometryFileCalibration,{
 
 output$data_loadedCalibration <- reactive({reactives$data_loadedCalibration})
 outputOptions(output, "data_loadedCalibration", suspendWhenHidden = FALSE)
+
+
+updateModels <- function (slope,intercept) {
+
+  if (length(photoMolModels$models) > 0) {
+
+  reactives$data_loaded <- FALSE
+
+  for (model in photoMolModels$models) {
+    if (py_has_attr(model,'contrasts')) {
+      model$contrastsToMass(slope,intercept)
+    }
+  }
+
+  updateInputBox()
+  reactives$data_loaded <- TRUE
+
+  }
+  return(NULL)
+}
 
 observeEvent(list(input$leftLimitWindowRangeContrast,input$rightLimitWindowRangeContrast),{
   
@@ -56,23 +76,21 @@ observeEvent(list(input$leftLimitWindowRangeContrast,input$rightLimitWindowRange
   
 })
 
-
 modify_refeynCalibration_data <- reactive({
   
   if (!(reactives$data_loadedCalibration)) {return(NULL)}
   
   Sys.sleep(0.2)
   
-  lower_limit_histogram <- input$window_rangeContrast[1] / factorForContrast
-  upper_limit_histogram <- input$window_rangeContrast[2] / factorForContrast
+  lower_limit_histogram <- input$window_rangeContrast[1] / cstFactorForContrast
+  upper_limit_histogram <- input$window_rangeContrast[2] / cstFactorForContrast
   window                <- c(lower_limit_histogram,upper_limit_histogram)
     
-  refeynCalib$create_histo(window=window,bin_width=input$bin_widthContrast   / factorForContrast)
+  refeynCalib$create_histo(window=window,bin_width=input$bin_widthContrast   / cstFactorForContrast)
   
-  starting_values <- get_guess_positions(input$starting_valuesContrast,factorForContrast) 
+  starting_values <- get_guess_positions(input$starting_valuesContrast,cstFactorForContrast)
   
-  refeynCalib$fit_histo(guess_pos=starting_values,
-                   max_std=0.1)
+  refeynCalib$fit_histo(guess_pos=starting_values, max_std=0.1)
   
   knownMasses <- get_guess_positions(input$knownMasses)
   
@@ -85,15 +103,9 @@ modify_refeynCalibration_data <- reactive({
   } 
   
   refeynCalib$calibrate(knownMasses)
-  
-  if (py_has_attr(refeyn,'contrasts')) {
-    reactives$data_loaded <- FALSE
-    slope     <- refeynCalib$calib_params[1]
-    intercept <- refeynCalib$calib_params[2]
-    refeyn$contrastsToMass(slope,intercept)
-    updateInputBox()
-    reactives$data_loaded <- TRUE
-  }
+
+  updateModels(refeynCalib$calib_params[1],refeynCalib$calib_params[2])
+
   # We want to evaluate this expression everytime the user changes sth in the UI 
   return(refeynCalib) 
 })
@@ -102,14 +114,9 @@ observeEvent(list(input$interceptCustom,input$slopeCustom),{
   req(input$activateCalibration)
   req(input$interceptCustom != 0)
   req(input$slopeCustom != 0)
-  if (py_has_attr(refeyn,'contrasts')) {
-    reactives$data_loaded <- FALSE
-    slope     <- input$slopeCustom / 1e6
-    intercept <- input$interceptCustom / 1e6
-    refeyn$contrastsToMass(slope,intercept)
-    updateInputBox()
-    reactives$data_loaded <- TRUE
-  } 
+
+  updateModels(input$slopeCustom/1e6,input$interceptCustom/1e6)
+
 })
 
 observeEvent(length(get_guess_positions(input$starting_valuesContrast)),{
@@ -183,21 +190,14 @@ output$contrast_plot_calib <- renderPlotly({
   colors  <- isolate(get_colors_from_rhandTable(input$legendInfoCalibration))
   sels    <- isolate(get_sel_from_rhandTable(input$legendInfoCalibration))
   
-  plot <-   plotRefeynFit(refeynCalib,input$baseline,input$plot_widthCalibration, 
+  plot <-   plotRefeynFit(list(refeynCalib),input$baseline,input$plot_widthCalibration,
                           input$plot_heightCalibration, input$plot_typeCalibration,
                           input$plot_axis_sizeCalibration,legends,colors,sels,
-                          input$show_contrastLegend,TRUE)
-  
-  if (input$show_contrastPlot) {
-    plot <- addLabels2plotRefeynFit(plot,refeynCalib$fit_table[,1],
-                                    refeynCalib$fit_table[,5],
-                                    sels,input$plot_axis_sizeCalibration,TRUE)
-  }
-  
+                          input$show_contrastLegend,TRUE,FALSE,input$show_contrastPlot)
+
   return(plot)
   # defined in server_files/plot_functions.R
-}
-)
+})
 
 observeEvent(list(input$calibrationMethod,input$activateCalibration),{
   reactives$calibrationMethod <- isolate(input$calibrationMethod)
@@ -229,8 +229,8 @@ output$fittedParamsCalibration <- renderTable({
   if (is.null(modify_refeynCalibration_data())) {return(NULL)}
   
   table <- refeynCalib$fit_table
-  table[,1] <- table[,1]*factorForContrast
-  table[,2] <- table[,2]*factorForContrast
+  table[,1] <- table[,1]*cstFactorForContrast
+  table[,2] <- table[,2]*cstFactorForContrast
   table[,1] <- paste0(signif(table[,1],2), " / 1e3")
   table[,2] <- paste0(signif(table[,2],2), " / 1e3")
   

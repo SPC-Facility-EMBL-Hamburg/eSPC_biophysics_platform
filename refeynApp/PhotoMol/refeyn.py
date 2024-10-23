@@ -1,7 +1,8 @@
 from scipy.optimize import curve_fit
 import pandas as pd
-import numpy  as np
+import numpy as np
 import h5py
+import sys
 
 from helpers import * 
 
@@ -13,12 +14,12 @@ class Refeyn:
     to convert contrasts to masses.
     '''
 
-    def __init__(self):
+    def __init__(self,name='Refeyn'):
 
         self.massesLoaded = False
+        self.fit          = None
+        self.name         = name
 
-        return None
-    
     def load_data_h5(self,filename):
 
         self.fn           = filename
@@ -166,6 +167,7 @@ class Refeyn:
         return None
 
     def create_fit_table(self):
+
         '''
         Uses info in self.fit to generate a 
         pandas DataFrame that summarizes fit results
@@ -175,12 +177,20 @@ class Refeyn:
         list_pos, list_sigma, list_ampl, list_counts = [], [], [], []
         # Loop over entries in optimized parameters
         for i in range(int(len(self.popt)/3)):
+
             list_pos.append(round(self.popt[3*i]))
             list_ampl.append(round(self.popt[3*i+1]))
             list_sigma.append(round(self.popt[3*i+2]))
-            list_counts.append(round(np.trapezoid(self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_mass)[0]))
-        # Create Pandas Dataframe
 
+            # Check Python version
+            if sys.version_info >= (3, 8):
+                # Use np.trapezoid for Python 3.8 and above
+                list_counts.append(round(np.trapezoid(y=self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_mass)[0]))
+            else:
+                # Use np.trapz for Python versions below 3.8
+                list_counts.append(round(np.trapz(y=self.fit[:,i+1], x=self.fit[:,0]) / np.diff(self.hist_mass)[0]))
+
+        # Create Pandas Dataframe
         total_counts = self.n_binding
 
         ## Add the counts from the unbinding data, if necessary
@@ -194,7 +204,8 @@ class Refeyn:
                                             'Counts' : list_counts,
                                             'Counts / %': np.round(np.array(list_counts)/total_counts*100),
                                             'Amplitudes' : list_ampl}
-                                      ) 
+                                      )
+
         return None
     
     def fit_histo(self, guess_pos=[66,148,480], tol=100, max_std=200,min_observed_mass=40,baseline=0):
@@ -205,6 +216,7 @@ class Refeyn:
         # If no guess are taken, return None
 
         self.fit_table    = pd.DataFrame()
+        self.fit          = None
 
         if len(guess_pos) == 0:
             return None
@@ -253,6 +265,7 @@ class Refeyn:
             self.fit = np.column_stack((x, np.array(single_gauss).T, fit_sum))
             # Errors
             self.fit_error = np.sqrt(np.diag(self.pcov))
+
             # Create fit table
             self.create_fit_table()
 
@@ -261,3 +274,49 @@ class Refeyn:
             pass
 
         return None
+
+class PhotoMolModels:
+
+    def __init__(self):
+
+        self.models          = {}
+        self.allMassesLoaded = False
+
+    def load_models(self,model_names,files):
+
+        self.models          = {}
+        self.allMassesLoaded = False
+
+        masses_in_file = []
+
+        if isinstance(model_names,str):
+
+            model_names = [model_names]
+            files       = [files]
+
+        for model_name, file in zip(model_names,files):
+
+            model_name = model_name.replace(" ","_")
+            model_name = model_name.replace(".csv","")
+            model_name = model_name.replace(".h5","")
+
+            model         = Refeyn(model_name)
+            fileExtension = file.split(".")[-1]
+
+            if fileExtension == "h5":
+                model.load_data_h5(file)
+
+            if fileExtension == "csv":
+                model.load_data_csv(file)
+
+            masses_in_file.append(model.massesLoaded)
+
+            self.models[model_name] = model
+
+        self.allMassesLoaded = all(masses_in_file)
+
+        return None
+
+    def get_properties(self, variable):
+
+        return [getattr(self.models[name], variable) for name in self.models.keys()]

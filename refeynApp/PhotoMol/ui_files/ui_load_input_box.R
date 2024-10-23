@@ -1,11 +1,12 @@
 box(title = "Input", width = 3, solidHeader = T, status = "primary", 
     fluidRow(
       
-      column(10, p(HTML("<b>MassPhotometry file </b>"),
+      column(10, p(HTML("<b>Mass Photometry file(s) (up to five) </b>"),
                    span(shiny::icon("info-circle"), id = "info_uu1-1"),
-                   fileInput("massPhotometryFile", NULL,accept = c(".h5",".csv")),
+                   fileInput("massPhotometryFile", NULL,accept = c(".h5",".csv"),multiple=TRUE),
                    tippy::tippy_this(elementId = "info_uu1-1",
-                                     tooltip = ".h5 (Hierarchical Data Format) file with a 1D dataset called 'masses_kDa'"))),
+                                     tooltip = ".h5 (Hierarchical Data Format) file with a 1D dataset called 'masses_kDa'. You can load
+                                     up to 5 files simultaneously."))),
       
       # Little hack to use the withBusyIndicatorUI function (loading spinner)
       column(1, p(HTML("<b><br></b>")),
@@ -51,7 +52,7 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
         column(8, p(HTML("<b>Starting values</b>"),
                     span(shiny::icon("info-circle"), id = "info_uu1-5"),
                     
-                    textInput("starting_values", label=NULL,value=""),
+                    textInput("starting_values1", label=NULL,value=""),
                     tippy::tippy_this(elementId = "info_uu1-5",
                                  tooltip = "Input one starting value for each truncated gaussian that you want to fit. 
                                  The starting values should be separated by spaces, 
@@ -63,7 +64,51 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                     numericInput("baseline", label = NULL, 0, min = 0, max = 20)),
                tippy::tippy_this(elementId = "info_uu1-9",
                                  tooltip = "Useful when there is a constant background noise. More info in the User guide.",placement = "right")),
-        
+
+        conditionalPanel(condition = "output.nFiles > 1",
+
+        column(8, p(HTML("<b>Starting values (file 2)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St2"),
+
+                    textInput("starting_values2", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St2",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+        conditionalPanel(condition = "output.nFiles > 2",
+
+        column(8, p(HTML("<b>Starting values (file 3)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St3"),
+
+                    textInput("starting_values3", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St3",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+        conditionalPanel(condition = "output.nFiles > 3",
+
+        column(8, p(HTML("<b>Starting values (file 4)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St4"),
+
+                    textInput("starting_values4", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St4",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+        conditionalPanel(condition = "output.nFiles > 4",
+
+        column(8, p(HTML("<b>Starting values (file 5)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St5"),
+
+                    textInput("starting_values5", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St5",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
         column(12, p(HTML("<b>Window range</b>"),
                     span(shiny::icon("info-circle"), id = "info_uu1-7"),
                     
@@ -71,7 +116,7 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                tippy::tippy_this(elementId = "info_uu1-7",
                                  tooltip = "Set the limits to build the histogram. Units are kDa.",placement = "right")),
         
-        column(5, p(HTML("<b>Slider left limit</b>"),
+        column(4, p(HTML("<b>Slider left limit</b>"),
                     span(shiny::icon("info-circle"), id = "info_uu1-10"),
                     
                     numericInput("leftLimitWindowRange", label = NULL, value=0, min = -1e6, max = 0)),
@@ -79,14 +124,22 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
                                  tooltip = "Set the left limit for the window range slider. 
                                  Changing this value will automatically update the selected window range.",placement = "right")),
         
-        column(5, p(HTML("<b>Slider right limit</b>"),
+        column(4, p(HTML("<b>Slider right limit</b>"),
                     span(shiny::icon("info-circle"), id = "info_uu1-11"),
                     
                     numericInput("rightLimitWindowRange", label = NULL, value=0, min = 0, max = 1e6)),
                tippy::tippy_this(elementId = "info_uu1-11",
                                  tooltip = "Set the right limit for the window range slider. 
-                                 Changing this value will automatically update the selected window range.",placement = "right"))
-        
+                                 Changing this value will automatically update the selected window range.",placement = "right")),
+
+        column(4, p(HTML("<b>Automatic fitting</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-12"),
+
+                    checkboxInput("automaticFit", label = NULL, value = TRUE)),
+               tippy::tippy_this(
+               elementId = "info_uu1-12",
+               tooltip = "Re-fit the data automatically after changing any parameter (e.g., bin width, starting values, etc.).",
+               placement = "right"))
            
       )   
     ))

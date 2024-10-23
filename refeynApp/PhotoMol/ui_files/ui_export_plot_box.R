@@ -1,4 +1,4 @@
-box(title = "Plot download options", width = 2, solidHeader = T, status = "primary", 
+box(title = "Plot download options", width = 3, solidHeader = T, status = "primary",
     fluidRow(
       
       conditionalPanel(condition = "input.show_plot_download_options_input",
