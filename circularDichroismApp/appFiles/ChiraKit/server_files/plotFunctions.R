@@ -1,9 +1,10 @@
 plotCDexperiments <- function(cdAnalyzer,workingUnits,
                               plot_width,plot_height,plot_type,axis_size,
-                              legends,colorPalette,sels,useMilliDeg = FALSE) {
+                              legends,colorPalette,sels,useMilliDeg = FALSE,
+                              fig=NULL) {
   
-  # Initialize the plot 
-  fig         <- plot_ly() 
+  # Initialize the plot
+  if (is.null(fig)) fig <- plot_ly()
   
   if (useMilliDeg) {
     # Fetch the differential absorbance signal
@@ -98,6 +99,92 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
   
   return(fig)
 }
+
+sesca_plot <- function(sescaPyClass,plot_width,plot_height,plot_type,axis_size,
+    ref_wl=NULL,ref_signal=NULL,ref_name=NULL,average_ensemble=FALSE) {
+
+  fig <- plot_ly()
+
+  spectraNames <- as.character(sescaPyClass$spectraNames)
+  wl           <- sescaPyClass$wavelength
+  signals      <- sescaPyClass$CD_Spectra
+
+  idxContr <- grepl("BB contr.", spectraNames) | grepl("SC contr.", spectraNames)
+
+  # Remove names containing the pattern 'BB' and 'SC'
+  spectraNames_filt <- spectraNames[!idxContr]
+
+  if (average_ensemble) {
+
+    spectraNames <- c('Ensemble average')
+    signals_filtered <- signals[, !idxContr]
+
+    if (is.vector(signals_filtered)) {
+      signals_filtered <- matrix(signals_filtered, ncol = 1)
+    }
+
+    signals      <- rowMeans(signals_filtered,na.rm = T)
+    signals      <- data.frame(signals)
+  }
+
+  colorPalette <- getPalette(length(spectraNames_filt))
+
+  if (length(colorPalette) < length(spectraNames)) {
+    colorPalette <- rep(colorPalette, each = 3)
+  } else {
+    colorPalette <- colorPalette
+  }
+
+  for (i in 1:length(spectraNames)) {
+
+    signal <- signals[,i]
+
+    df <- data.frame('wl'=wl,'signal'=signal)
+
+    if (!is.null(ref_wl)) {
+      df <- df[df$wl >= min(ref_wl) & df$wl <= max(ref_wl),]
+    }
+
+    linetype <- ifelse(grepl("BB contr.|SC contr.", spectraNames[i]), "dash", "solid")
+
+    fig <- fig %>% add_trace(data=df,x=~wl,y=~signal,
+                             type = 'scatter', mode = 'lines',
+                             name = spectraNames[i],
+                             line = list(color = I(colorPalette[i]),opacity = 0.6,dash = linetype),
+                             showlegend = TRUE)
+
+  }
+
+  if (!is.null(ref_wl) & !is.null(ref_signal)) {
+     fig <- fig %>% add_trace(x=~ref_wl,y=~ref_signal,
+                             type = 'scatter', mode = 'markers',
+                             name = ref_name,
+                             showlegend = TRUE)
+
+    minWL <- min(ref_wl) - 5
+    maxWL <- max(ref_wl) + 5
+
+  } else {
+    minWL <- min(sescaPyClass$wavelength) - 5
+    maxWL <- max(sescaPyClass$wavelength) + 5
+  }
+
+  x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size),
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+
+  y <- list(title = workingUnits2ProperLabel('meanUnitMolarExtinction'),
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+
+  fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
+                        legend = list(font = list(size = axis_size-1)))
+
+  fig <- configFig(fig,paste0("CDspectra_sesca_",strsplit(as.character(Sys.time())," ")[[1]][1]),
+                   plot_type,plot_width,plot_height)
+
+  return(fig)
+}
+
+
 
 # Plot the voltage signal
 plotCDexperimentsHT <- function(cdAnalyzer,
@@ -940,6 +1027,57 @@ plot_helicity <- function(x,y,color) {
   
   return(fig)
   
+}
+
+plot_heatmap_bayes_posterior <- function(df,i=1,j=2,plot_width=12,plot_height=12,plot_type='svg',plot_axis_size=18) {
+
+    if (i+1 > ncol(df) || j+1 > ncol(df)) {
+      return(NULL)
+    }
+
+    df <- df[,c(i,j,ncol(df))]
+
+    ss_classes <- colnames(df)
+
+    df_grouped <- df %>%
+      group_by(across(1:2)) %>%
+      summarise(value = sum(across(everything()), na.rm = TRUE))
+
+    # Normalise bins to probabilities
+    df_grouped[,3] <- df_grouped[,3] / sum(df_grouped[,3]) * 100
+
+    colnames(df_grouped) <- c('x','y','Percentage')
+
+    bu_gn_palette <- c("#F7FCFD", "#E5F5F9", "#CCECE6", "#99D8C9", "#66C2A4", "#41AE76", "#238B45", "#006D2C", "#00441B")
+    color_ramp    <- colorRamp(bu_gn_palette)
+
+    df_grouped <- df_grouped[df_grouped$Percentage > 0.5,]
+
+    df_grouped <- na.omit(df_grouped)
+
+    fig <- plot_ly(
+      data = df_grouped,
+      x = ~x,
+      y = ~y,
+      z = ~Percentage,
+      type = "heatmap",
+      colors = color_ramp
+    ) %>%
+      layout(
+        font="Roboto",
+        xaxis = list(title = ss_classes[1], automargin = TRUE, showgrid = FALSE, range = c(0, 1),
+        tickfont = list(size = plot_axis_size), titlefont = list(size = plot_axis_size)),
+        yaxis = list(title = ss_classes[2], automargin = TRUE, showgrid = FALSE, range = c(0, 1),
+        tickfont = list(size = plot_axis_size), titlefont = list(size = plot_axis_size)),
+        legend = list(font = list(size = plot_axis_size-1)),
+        margin = list(l = 60, r = 50, b = 60, t = 50)
+      )
+
+      #fig <- configFig(fig,paste0("sesca_posterior_probability_proj_",strsplit(as.character(Sys.time())," ")[[1]][1]),
+     #              plot_type,plot_width,plot_height)
+
+    return(fig)
+
 }
 
 # Input: 

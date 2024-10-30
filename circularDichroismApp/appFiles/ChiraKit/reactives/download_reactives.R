@@ -696,6 +696,21 @@ output$download_distance_data        <-   downloadHandler(
     write.csv(df,file,row.names = F)
   })
 
+output$download_sesca_pred_data <- downloadHandler(
+  filename = function() {paste0("CD_sesca_predicted_",Sys.Date(),".csv")},
+  content  = function(file) {
+
+    spectraNames <- as.character(sescaPyClass$spectraNames)
+    wl           <- sescaPyClass$wavelength
+    signals      <- sescaPyClass$CD_Spectra
+
+    df <- as.data.frame(cbind(wl,signals))
+    colnames(df) <- c('wavelength',spectraNames)
+
+    write.csv(df,file,row.names = F)
+  })
+
+
 # G-Quadruplex download reactives.
 # Remember: the code is repetitive, but creating general functions for saving data / images
 # may result in the lost of reactivity

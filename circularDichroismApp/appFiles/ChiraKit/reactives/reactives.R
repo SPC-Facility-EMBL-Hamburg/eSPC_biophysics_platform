@@ -11,6 +11,15 @@ append_record_to_logbook <- function(record_str,include_time=FALSE) {
   return(NULL) 
 }
 
+updateSESCA_ref <- function(legendDf) {
+
+  spectraLegends        <- c('None',legendDf$Internal.ID)
+  names(spectraLegends) <- c('None',legendDf$Legend)
+
+  updateSelectInput(session,"sescaReference",NULL,choices=spectraLegends)
+  updateSelectInput(session,"sescaReferenceEstimation",NULL,choices=spectraLegends[-1])
+}
+
 updateProcessingTable <- function(
     operation = 'Sum',operationUnits='millidegrees') {
   
@@ -174,7 +183,8 @@ renderInputData <- function() {
   legendDf              <- getPlottingDF(cdAnalyzer)
   
   output$legendInfo     <- helperRenderRHandsontable(legendDf)
-  
+  updateSESCA_ref(legendDf)
+
   Sys.sleep(length(wls)*0.015)
   
 }
@@ -755,7 +765,8 @@ observeEvent(input$triggerDeletion,{
     # Create the legend table
     legendDf              <- getPlottingDF(cdAnalyzer)
     output$legendInfo     <- helperRenderRHandsontable(legendDf)
-    
+    updateSESCA_ref(legendDf)
+
     # If the parameters are not shared, then
     # update the Table with the parameters MW, #AA, etc.
     if (!cdAnalyzer$sharedParameters) {
@@ -810,7 +821,7 @@ convertExperimentToWorkingUnits <- function() {
   
   # Convert everything from absorbance units to selected units
   cdAnalyzer$all_experiments_absorbance_units_to_other_units(input[["workingUnits"]])
-  
+
   append_record_to_logbook(paste0('Converting CD units to: ',input[["workingUnits"]]))
   
   wlRange <- input$wavelengthRange
@@ -979,9 +990,12 @@ observeEvent(input$legendInfo$changes$changes, {
     
     cdAnalyzer$experimentsOri[[names(id)[1]]]$spectraNames[id[1]]   <- newSpectraName
     cdAnalyzer$experimentsModif[[names(id)[1]]]$spectraNames[id[1]] <- newSpectraName
-    
+
+    legendDf <- getLegendDF(input$legendInfo)
+    updateSESCA_ref(legendDf)
+
   }
-  
+
 })
 
 observeEvent(input$colorForLegend,{
@@ -1551,7 +1565,8 @@ observeEvent(input$triggerProcessing,{
   updateSelectInput(session,"selected_cd_exp",choices     = cdAnalyzer$experimentNames)
   
   output$legendInfo           <- helperRenderRHandsontable(legendDf)
-  
+  updateSESCA_ref(legendDf)
+
   updateProcessingTable(operation,operationUnits)
   
   # We need to use lapply instead of a for-loop to avoid R lazy evaluation!

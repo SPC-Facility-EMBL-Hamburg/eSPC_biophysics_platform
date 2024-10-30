@@ -1,0 +1,94 @@
+#Exercise 2: Advanced SESCA features, side chain corrections and spectrum manipulation using
+#Phenylethanolamine N-methyltransferase (pemt)
+
+#During this exercise we highlight a few features of the SESCA package, such as adding side chain
+#corrections to the predicted spectra, and manipulating the measured and calculated CD spectra. 
+
+#Step 1: Adding side chain corrections
+#In SESCA side chain contributions can be automatically taken into account by choosing a mixed
+#basis set with side chain specific basis spectra. This information is available in the Basis set
+#overview (SESCA/libs/Basis_sets.nfo). For this exercise we will use the DSSP-1SC3 basis set with
+#the following command:
+
+../../scripts/SESCA_main.py @pdb 1hnn.pdb  @lib DSSP-1SC3   @ref CD_pemt.dat   @write CD_comp_DSSP-1SC3.out
+#     SESCA main module     structure file     basis set     spectrum file      output file 
+
+#This command creates two secondary output files (BB_calc.out and SC_calc.out) containing the
+#backbone and side chain contributions, respectively, as well as required SS and sequence data
+#files (Dssp_1hnn.out and Seq_1hnn.out). The combined spectrum is compared to the measured
+#spectrum (CD_pemt.dat) as usual in the main output (CD_comp_DSSP-1SC3.out).
+
+#The backbone and side-chain contributions can also be calculated and combined manually using the
+#SESCA_pred module.
+
+#Step 2a: calculate backbone contributions
+
+../../scripts/SESCA_pred.py @tar Dssp_1hnn.out @lib ../../libs/Map_BB_DSSP-1SC3.dat  @write BB_cont.out    @mode 0
+# SESCA prediction module   target SS file      basis set                            output file       calculation mode (CD prediction only)
+
+#Note that in this step, we used a secondary structure file created in the previous step using the
+#main module, but it could also be manually produced using the SESCA_dssp module. When using the
+#SESCA_pred module the basis set also has to be provided manually with a full path. In this case
+#our basis set will be the backbone basis spectra of the DSSP-1SC3 basis set, found in SESCA/libs/
+#Map_BB_DSSP-1SC3.dat. Finally, the calculation mode for the module has to be set 0 using the @mode
+#flag to indicate that no comparison to measured is required (yet).
+
+#Step 2b: calculate side chain contributions
+
+../../scripts/SESCA_pred.py @tar Seq_1hnn.out      @lib ../../libs/Map_SC_DSSP-1SC3.dat  @write SC_cont.out  @mode 0
+#  SESCA prediction module    target sequence file      basis set                            output file     calculation mode
+
+#Similarly to step 2a, the side chain contributions are calculated separately from the sequence
+#information (Seq_1hnn.out) and the side chain basis spectra of the basis set. The input in this
+#case can be produced manually using the SESCA_seq module.
+
+#Step 2c: combine the predicted contributions
+#The two contributions can be combined using the spectrum manipulation mode (mode 3) of the
+#SESCA_pred module:
+
+../../scripts/SESCA_pred.py @ref BB_cont.out @tar SC_cont.out @write Comb_pred.out    @mode 3
+#SESCA prediction module    backbone file     side chain file  output file             calculation mode
+ 
+#Note that since we are just adding the spectra it does not matter which one is given using the @ref
+#or @tar flags. However, when a scaling factor is provided by the @scale flag, it will only be
+#applied to the target (@tar) spectrum.
+
+#Step 2d: spectrum comparison
+#The final step is comparing the measured CD spectrum (CD_pemt.dat) to our combined predicted one
+#(Comb_pred.out). This can be done by using the comparison mode (mode 2) of the SESCA_pred module:
+
+../../scripts/SESCA_pred.py @ref CD_pemt.dat   @tar Comb_pred.out  @write Compare_CD.out  @mode 2
+#SESCA prediction module    measured spectrum  predicted spectrum   output file           comparison mode
+
+#Note that no basis set is required for the comparison mode. 
+
+#Step 3: Spectrum manipulation
+#Opening the main output file with a text editor shows a good agreement between the measured and
+#predicted spectrum (RMSD: 1.264) but when the spectra are visualized (see Compare_CD.png), the
+#predicted spectrum intensity looks larger than that of the measured spectrum. In addition, as
+#there are no significant peaks in either spectra above 250 nm, the wavelengths between 250-270 nm
+#may be omitted from analysis, e.g. when SESCA predictions are compared to other methods with a
+#different wavelength range. These problems can be solved by modifying measured CD spectum before
+#comparison using the SESCA_pred module:
+
+../../scripts/SESCA_pred.py @tar CD_pemt.dat    @scale 1.1      @range 175,250      @mode 3       @write CD_pemt_edited.dat
+#SESCA prediction module    modified spectrum   scaling factor  wavelength limits   calc. mode    output file
+
+#This command increases the spectrum intensity by 10% using a scaling factor, and truncates the
+#measured spectrum above 250 nm. If we compare the edited spectrum to the predicted one by:
+
+../../scripts/SESCA_pred.py @ref CD_pemt_edited.dat   @tar Comb_pred.out  @write Compare_CD_edited.out  @mode 2
+#SESCA prediction module    measured spectrum         predicted spectrum   output file                  calculation mode
+
+#The comparison file shows that the agreement between the spectra improved (RMSD: 0.853). 
+
+#Step 4: Automatic editing
+#Because the experimental spectrum intensity is quite uncertain (up to 25%) due to normalization for
+#protein concentrations in the measurement cell, the intensity of the reference spectrum may be
+#automatically rescaled using either SESCA_scale module, or the @refscale auto flag using the
+#SESCA_main module. For example, the spectrum manipulation step with the main module is done by:
+
+../../scripts/SESCA_main.py @ref CD_pemt.dat @pdb 1hnn.pdb @lib DSSP-1SC3 @write Compare_CD_auto.out @refscale auto @range 175,250
+
+#which produces a very similar comparison (RMSD: 0.845) using the scaling factor 1.11 to match the
+#intensity of the predicted CD spectrum.

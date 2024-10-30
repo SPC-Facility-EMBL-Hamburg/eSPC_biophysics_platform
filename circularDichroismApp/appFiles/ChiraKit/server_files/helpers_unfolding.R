@@ -361,6 +361,7 @@ get_fitted_params_unfolding <- function(cdAnalyzer,type='Thermal',errors=FALSE) 
   for (numeric_col in numeric_cols) {
     df[,numeric_col] <- signif(as.numeric(df[,numeric_col]),5)
   }
+
   return(df)
 }
 
@@ -391,7 +392,7 @@ get_fitting_bounds_unfolding <- function(cdAnalyzer,type='Thermal') {
   numeric_cols      <- 2:4
   
   for (numeric_col in numeric_cols) {
-    df[,numeric_col] <- signif(as.numeric(df[,numeric_col]),3)
+    df[,numeric_col] <- signif(as.numeric(df[,numeric_col]),5)
   }
   
   return(df)

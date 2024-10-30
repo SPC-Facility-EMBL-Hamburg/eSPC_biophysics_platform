@@ -37,7 +37,10 @@ reactives <- reactiveValues(
   fitted_coefficients_method_thermal     = 'None',# can be 'svd' or 'pca' (thermal_ramp_reactives.R)
   fitted_coefficients_method_chemical    = 'None',# can be 'svd' or 'pca' (chemical_denaturation_reactives.R)
   fitted_coefficients_method_custom      = 'None',# can be 'svd' or 'pca' (custom_analysis_reactives.R)
-  
+
+  sesca_pred_was_run                     = FALSE,# to show sesca results (sesca_reactives.R)
+  sesca_est_was_run                      = FALSE,# to show sesca results (sesca_reactives.R)
+
   GQ_ref_load                            = FALSE, #(gQuadruplex_reactives.R)
   GQ_sample_load                         = FALSE, #(gQuadruplex_reactives.R)
   secondary_parameters                   = NULL,  #(gQuadruplex_reactives.R)
@@ -65,6 +68,10 @@ output$custom_data_was_fitted_svd_or_pca   <- reactive( { return( reactives$cust
 output$secStrFittingWasDone   <- reactive( { return( reactives$secStrFittingWasDone  ) } )
 output$secStrCalcWasDone      <- reactive( { return( reactives$secStrCalcWasDone     ) } )
 
+output$sesca_pred_was_run     <- reactive( { return( reactives$sesca_pred_was_run    ) } )
+output$sesca_est_was_run      <- reactive( { return( reactives$sesca_est_was_run     ) } )
+
+
 outputOptions(output, "show_basis_change_option" , suspendWhenHidden = FALSE)
 
 outputOptions(output, "melting_data_was_fitted" , suspendWhenHidden = FALSE)
@@ -82,3 +89,6 @@ outputOptions(output, "compareDatasetCreated",   suspendWhenHidden = FALSE)
 
 outputOptions(output, "secStrFittingWasDone" , suspendWhenHidden = FALSE)
 outputOptions(output, "secStrCalcWasDone"    , suspendWhenHidden = FALSE)
+
+outputOptions(output, "sesca_pred_was_run" , suspendWhenHidden = FALSE)
+outputOptions(output, "sesca_est_was_run"  , suspendWhenHidden = FALSE)

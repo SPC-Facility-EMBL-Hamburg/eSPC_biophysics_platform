@@ -185,7 +185,21 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         ))
         
         ),
-      
+
+    conditionalPanel("input.thermal_unfolding_model == 'peptide'",
+
+      column(4, p(HTML("<b>Number of peptide bonds</b>"),
+                  span(shiny::icon("info-circle"), id = "info_uuPepBonds"),
+                  numericInput('numberOfPeptideBonds',NULL, 10,min = 4, max = 40),
+                  tippy::tippy_this(
+                    elementId = "info_uuPepBonds",
+                    tooltip = "Number of peptide bonds in the peptide.",
+                    placement = "right")))
+
+    ),
+
+    conditionalPanel("input.thermal_unfolding_model != 'peptide'",
+
     column(2,p(
       HTML("<b>Fit native slope</b>"),
       span(shiny::icon("info-circle"), id = "info_uu-fitSlopeNativeTherm"),
@@ -207,7 +221,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
         between the CD signal (or PCA/SVD coefficients) and the temperature for the
         unfolded state.",placement = "right")
     
-    )),
+    ))),
     
     # Little hack to use the withBusyIndicatorUI function (loading spinner)
     column(1,p(

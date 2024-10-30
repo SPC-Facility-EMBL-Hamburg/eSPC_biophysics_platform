@@ -1,0 +1,83 @@
+# Exercise 4: Analysing the deviations between the predicted and measured spectra.
+
+#Step 1: Predict the spectrum (normally)
+#For this exercise we predict the CD spectrum of Subtilisin Carlsberg from its crystal structure
+#(1scd.pdb) using the basis set DS3-1 (5 SS classes, based on the simplified DISICL classification):
+
+../../scripts/SESCA_main.py @pdb 1scd.pdb     @ref CD_subc.dat     @lib DS3-1  @write CD_comp_0.out
+#     SESCA main module      structure file    reference spectrum   basis set   output file
+
+# As the large RMSD (12.1 kMRE), estimated model error (33.2%) and the visualized spectra show, the 
+#predicted spectrum is in poor agreement with the measured one. The source of this discrepancy may 
+#come from errors and inaccuracies in the model structure, the basis set, the measured spectrum, or 
+#the combination of all. Identifying the source of the problem(s) may yield new insights for the studied
+#system, and in this example we show a few tools included in SESCA that may help in troubleshooting.
+
+#Step 2: Check for basis set inaccuracies
+#If the predictions do not agree with the measured spectrum it is possible that the basis set cannot
+#accurately predict the CD spectrum, due to the size of its training set, or discretization errors
+#during its derivation. To evade these situations it is recommended to predict the CD spectrum using
+#different basis sets based on different SS classification methods, and possibly basis sets with and
+#without side chain contributions. For example, the following command predicts the CD spectrum using
+#the DS-dTSC3 basis set, which has only 3 SS classes, but includes side chain contributions:
+
+ ../../scripts/SESCA_main.py @pdb 1scd.pdb  @ref CD_subc.dat   @lib DS-dTSC3   @write CD_comp_alt.out
+
+#These results again suggest a large spectrum (RMSD= 13.0 kMRE) deviation and model error (dSS = 28.6%).
+#When in doubt, the user may also consider predicting the spectrum using additional basis sets, or even
+#using other algorithms such as DichroCalc or PDB2CD for the prediction. However, if all predictions
+#deviate considerably from the measured spectrum, the source of the discrepancy is likely the model or
+#the measured spectrum itself.
+
+#Step 3: Find the optimal structure 
+#If the basis set is not the major source of the deviation between the spectrum and the structure,
+#it is possible that the structural model does not represent the solution structure of the protein
+#accurately. This may happen even if the model was determined from an experimental crystallographic
+#structure, as the structure of protein may be different under the conditions the CD spectrum
+#was recorded. To estimate this solution structure, one can decompose the measured spectrum
+#using the SESCA deconvolution module (SESCA_deconv.py): 
+
+../../scripts/SESCA_deconv.py   @spect CD_subc.dat  @lib ../../libs/Map_DS3-1.dat    @write CD_deconv_1.out
+# SESCA deconvolution module    spectrum file       basis set                        output file
+
+#The output file shows that estimated SS composition agrees well with the model (crystal) structure 
+#(dSS = 5.6%), but a good fit to the CD spectrum requires re-scaling of the measured spectrum by
+#a factor of 0.363, suggesting that the reference spectrum may contain significant error.
+
+#The most common problem with CD measurements is the uncertainty of the protein concentration in the
+# measurement cell, which can lead to scaling errors in the processed CD spectrum, similar to our example.
+# To further test if the most likely error is a spectrum normalization, the deconvolution can be repeated
+#without spectrum rescaling. This can be done by disabling spectrum rescaling using the @mult1 flag:
+
+../../scripts/SESCA_deconv.py @spect CD_subc.dat  @lib ../../libs/Map_DS3-1.dat  @write CD_deconv_0.out  @mult1 1000
+# SESCA deconvolution module    spectrum file          basis set                   output file            rescaling off
+
+#The reulting SS estimate shows a poor agreement with the CD spectrum (6.6 kMRE) and large deviations from
+#both the the crystal structure (dSS 33.5%) and the previously estimated structure (27.9%), suggesting that
+#scaling errors are indeed the most likely source of error.
+
+
+#Step 4: Spectrum normalization during predicitions
+#To account for scaling errors, SESCA_main can fit the intensity of the measured spectrum to minimize
+#the deviation from its predictions. This is option is turned on using the @refscale auto flag:
+
+../../scripts/SESCA_main.py @pdb 1scd.pdb  @ref CD_subc.dat   @lib DS3-1   @write CD_comp_1.out @refscale auto
+# SESCA deconvolution module  model file    ref. spectrum       basis set    output file          ref. scaling 
+
+#This flag dramatically improves the agreement between the predicted and rescaled spectra (RMSD= 1.1 kMRE),
+#with an estimated scaling facor of 0.43 and estimated model error of dSS= 16.6 +/- 8.7 %.
+
+
+#Other potential problems:
+#In the case of Stubtilising Carlsberg, both steps 3 and 4 suggest that the deviation is mainly
+#due to the incorrect normalization of the measured spectrum. We note that, in case not even scaled
+#deconvolution can produce a good agreement with the measured spectrum (with any basis set), the
+#deviation may be caused by unaccounted contributions to the measured CD spectrum. These may
+#originate from side chain groups (for SS-only basis sets), post-translational modifications, 
+#coordination centers for metal ions, or other co-factors and contaminants in the sample with CD
+#signals of their own. An independent re-measurement of the CD spectrum may shed light on problems
+#related to intensity normalization and contamination, but chemically bound or coordinated
+#chromophores may not be eliminated without compromising the protein structure. In those cases,
+#the additional contributions can be taken into account by isolating and eliminating their
+#signals from the measured CD spectrum, or by accepting larger deviations between the measured and 
+#predicted spectra.

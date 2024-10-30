@@ -1,0 +1,32 @@
+Binaries and source code downloaded from:
+
+http://swift.cmbi.ru.nl/gv/dssp/
+
+DSSP v2.0.4 was tested to be compatible with dssp_reform.py and dssp_traj.py
+
+This version of DSSP was obtained under the Boost Software License verson 1 (see subdir). 
+We have not modified or own the DSSP code in any way.
+
+to use DSSP on a computer with linux operation system, you may need to give permission 
+for execution (chmod +x <filename> ) to one of the three binary files found in this directory.
+
+Use the win32 version on Windows operating systems, or one of the linux binaries
+approriate for your architecture. Alternatively you can compile a binary from the
+source code (in subdir dssp-2.0.4). See the website for further notes on that.
+
+Please be aware that this version of DSSP is not processing trajectories by default.
+The standard input files for DSSP are three-dimensional protein models in a protein
+databank (PDB) format.
+
+ 
+If you use this version of DSSP in your work, please cite:
+
+A series of PDB related databases for everyday needs.
+Wouter G Touw, Coos Baakman, Jon Black, Tim AH te Beek, E Krieger, Robbie P Joosten, Gert Vriend.
+Nucleic Acids Research 2015 January; 43(Database issue): D364-D368.
+(PDF).
+
+Dictionary of protein secondary structure: pattern recognition of hydrogen-bonded and geometrical features.
+Kabsch W, Sander C, 
+Biopolymers. 1983 22 2577-2637.
+PMID: 6667333; UI: 84128824.

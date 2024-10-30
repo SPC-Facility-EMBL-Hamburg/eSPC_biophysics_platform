@@ -1,0 +1,49 @@
+Installation Instructtions for DISICL - DIhedral based Segment Identification and CLassification
+
+Requirements: DISICL requires an operating pyhton (2.7 or 3.0) which is running on your operating system.
+
+DISICL was tested on Linux (Ubuntu 12.4 and 12.10 series), Unix and Windows 7 ans 10 systems. 
+
+How to install:
+	- Unpack the compressed DISICL package into  a directory of your choice
+          (for example: /home/nagnaat/programs/self/)
+        
+	- Open DISICL_main.py within the DISICL directory ( you can use vi, winword or other text editors). 
+
+	- Set the variable win (line 71) to 1 if you run DISICL on Windows (set it to 0 if you are installing on linux)
+
+	- Set the variable main (line 75), it should be equal to the absolute path of your DISICL directory
+	  (for example: main = "/home/nagnaat/programs/self/DISICL")
+
+	- Set the location of the library Directory only if you change it
+
+	- Save and close DISICL_main.py
+
+	- Open DISICL_prep.py
+
+	- Set the variable win (line 40) to 1 if you run DISICL on Windows (set it to 0 if you are installing on linux) 
+ 	
+	- Save and close DISICL_prep.py
+
+	- If you are running DISICL on Linux, give permission to execute for all python files in your DISICL directory
+	  (for example: chmod +rwx *.py) 
+
+Optional:
+	- You can define aliases for DISICL_main.py and the modules for easier usage (in linux, use .bashrc or .profile)
+	  (for example: alias DISICL_main="/home/nagnaat/programs/self/DISICL/DISICL_main.py")
+
+	- Source your modified .bashrc or .profile to enable the new alias
+	
+	- Under Windows you can use the command prompt to run DISICL, to define an alias there you have to start the prompt
+	  with a command as a target.
+
+	- Create a comand file (any text editor, example C:\Mycommands.cmd)
+
+	- You can define new system commands in this file with the DOSKEY
+	  (for example DOSKEY DISICL_main = "C:\programs\self\DISICL\DISICL_main.py" $*) 
+
+	- Create a shortcut on your desktop, your target for the prompt should be "c:\Windows\System32\cmd.exe /K C:\Mycommands.cmd"
+
+	- Alternatively you can also write the DOSKEY command in the prompt directly, but it is lost upon closing the prompt
+
+Program usage is provided for each module independently. call the program without arguments to view them.

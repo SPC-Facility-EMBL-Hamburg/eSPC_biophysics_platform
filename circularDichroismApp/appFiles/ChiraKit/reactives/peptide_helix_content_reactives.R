@@ -14,9 +14,9 @@ observeEvent(input$btn_create_peptide_dataset,{
     check <- cdExp$init_and_check_helicity_method()
     
     if (!check) next
-    
+
     cdExp$get_mre_222nm()
-    
+
     temperatures <- c(temperatures,cdExp$temperature)
     cd_curves    <- c(cd_curves,cdExp$internalID)
     mre222       <- c(mre222,cdExp$MRE_222nm)

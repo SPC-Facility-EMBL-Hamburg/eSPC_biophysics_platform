@@ -1,0 +1,33 @@
+#SESCA sequence module:
+#Workdir: /home/osvaldo/spc_shiny_servers/circularDichroismApp/appFiles/ChiraKit/SESCA_v097/examples/6-SESCA_modules
+#Source file: test.fasta
+
+#chain 0 starts:
+ ALA LYS LEU HIS ALA LEU LYS HIS GLY ALA 
+
+#List of histidines (2):
+4
+8
+
+#Standard Residue composition:
+# Total residues counted: 10
+# ALA: 30.0
+# ASP: 0.0
+# ASN: 0.0
+# ARG: 0.0
+# CYS: 0.0
+# GLY: 10.0
+# GLU: 0.0
+# GLN: 0.0
+# HIS: 20.0
+# ILE: 0.0
+# LEU: 20.0
+# LYS: 20.0
+# MET: 0.0
+# PHE: 0.0
+# PRO: 0.0
+# SER: 0.0
+# THR: 0.0
+# TRP: 0.0
+# TYR: 0.0
+# VAL: 0.0

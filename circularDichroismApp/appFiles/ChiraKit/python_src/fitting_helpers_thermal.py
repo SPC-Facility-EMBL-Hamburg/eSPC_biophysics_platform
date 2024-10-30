@@ -1,10 +1,7 @@
-import numpy  as np 
-
-from scipy.optimize  import curve_fit
 from scipy.integrate import solve_ivp
+from scipy.optimize  import curve_fit
 
 from constants       import *
-from helpers         import *
 from fitting_helpers import *
 
 '''

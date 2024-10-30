@@ -831,4 +831,17 @@ lst_of_cd_spectra_to_df <- function(list_of_signals,list_of_fitted_signals) {
   return(all_dfs)
 }
 
+fix_ss_labels <- function(ss_labels,lib) {
+
+  if (lib == 'DSSP-TSC1') {
+
+    ss_labels <- gsub('BS1','Helix',ss_labels)
+    ss_labels <- gsub('BS2','Sheet',ss_labels)
+    ss_labels <- gsub('BS3','Coil',ss_labels)
+
+  }
+
+  return(ss_labels)
+
+}
 

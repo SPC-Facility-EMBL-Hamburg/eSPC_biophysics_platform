@@ -1,0 +1,68 @@
+#Exercise 0: CD predictions and model validation using SESCA's automated mode
+
+#The SESCA package includes a main module (SESCA_main.py) for automatically calculating
+#the theoretical CD spectrum from a structural model, or to estimate the error of the calculated
+#CD spectrum / structural model based on a reference CD spectrum.
+
+#Step 1: Predicting a theoretical CD spectrum:
+#To predict a CD spectrum SESCA_main requires at least one argument to operate, a structural
+#model file in PDB format (provided using the @pdb flag). In this directory, we provided an
+#example structure file for hen egg lysozyme (193l.pdb). To compute its CD spectrum SESCA_main
+#can be called on the command line like any other program:
+
+../../scripts/SESCA_main.py @pdb 193l.pdb
+#   SESCA main module       input file (protein structure)
+
+#This generates a number output files as SESCA_main calls the DISICL algorithm to determine the
+#secondary structure composition of Lysozyme (summarized in the DISICL_pdet_193l.out file), then
+#further processes this information into a predicted CD spectrum printed in the file CD_comp.out
+#(which here was manually renamed CD_comp_0.out).
+
+#The printed outfile contains three blocks of data. The first block lists the main calculation
+#parameters including the work directory (Workdir:), the original secondary structure (SS) file
+#(Target file:), and the basis spectrum set (Basis set file:) that was used for the prediction.
+#Since no specific basis set was requested using the @lib flag, SESCA_main used the default DS-dT
+#basis set. This basis set contains three basis spectra (named Alpha, Beta, and Coil).
+#The second block lists the basis set coefficients (or weighting factors) for each basis spectrum,
+#calculated based on the SS composition of the model structure. The third and final block in the
+#output file is the predicted CD spectrum with the first column (wvlngth) giving the wavelength in
+#nanometers, and the second column (Icalc) giving the intensity of the predicted CD spectrum in
+#1000 mean residue ellipticity (deg*cm^2/dmol) units. The output file is formatted in such a way
+#that the calculated spectra can be easily read by graphical processors such as Grace or GNUplot.
+
+#Step 2: Estimating the model quality:
+#SESCA can estimate the error in a model's SS composition based on the deviation between the models
+#predicted CD spectrum and a measured reference spectrum of the protein. For this purpose, the user
+#can provide a reference spectrum file (wavelengths vs. CD intensity) using the @ref flag when
+#SESCA_main is called. In this directory we provided an example reference spectrum file
+#(CD_lysm.dat) which can be used to estimate the SS error in our model PDB file (193l.pdb) using
+#the following command:
+
+../../scripts/SESCA_main.py  @pdb 193l.pdb  @ref CD_lysm.dat  @lib DS-dT   @write CD_comp_1.out
+#   SESCA main module       structure file    spectrum file    basis set    output file 
+
+#Note that in this example we have now specified the basis set (DS-dT) with @lib, as well as the
+#output file name (CD_comp_1.out) using the @write flag. Providing a reference spectrum file
+#changes the data printed in the output. The first block now includes the file name of the
+#reference spectrum (Reference file:) and third block has 5 columns: 1 - wavelength (wvlgth),
+#2 - CD intensity of the reference spectrum (Iref), 3 - CD intensity of the calculated spectrum
+#(Icalc), 4 - the squared deviation (dev) between Iref and Icalc, and 5 - difference (diff)
+#(Iref - Icalc). In addition, the output file contains two extra blocks: the fourth block
+#summarizes the comparison between the reference and calculated spectra, giving 1 - the number of
+#compared wavelengths (matches), 2 - the average root-mean-squared deviation (RMSD), 3 - the mean
+#unsigned error (MUSE), and 4 - the Iref normalized RMSD (NRMSD) over all wavelengths. If the basis
+#set contains error estimation parameters, a fifth block is also printed based on the obtained RMSD
+#between the spectra. The first line of the block contains estimated error of the model (dSS-est)
+#and its average uncertainty (based on a calibration through synthetic data based on 71 globular
+#proteins). The second line in the block estimates the upper and lower bounds of dSS-est (dSS-up 
+#and dSS-low) within 95% confidence. Finally, if the reference spectrum contains wavelengths for 
+#which the specified basis set does not have parameters, the unmatched wavelengths will be printed 
+#in a sixth block at the end of the output file.
+
+#Keep in mind that large estimated errors in the SS composition of a model structure indicate that
+#the model structure is not in line with the measured CD spectrum. A small error however, does not
+#automatically mean that the model structure is correct, as several different models with the same
+#average SS composition are possible! In addition, the estimated error may also be influenced by
+#experimental error of the measured spectrum (most often intensity normalization). Accounting for
+#intensity scaling problems is discussed in exercise 3. 
+

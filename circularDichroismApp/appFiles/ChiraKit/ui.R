@@ -25,7 +25,8 @@ shinyUI(dashboardPage(
       
         menuSubItem("2d. Custom  analysis",              icon = icon("chart-line"),     tabName = "menu_custom"),
         menuSubItem("2e. Spectra comparison",            icon = icon("scale-balanced"), tabName = "menu_spectra_comparison"),
-        menuSubItem("2f. Peptide helicity",              icon = icon("percent"),        tabName = "menu_peptide")#,
+        menuSubItem("2f. Peptide helicity",              icon = icon("percent"),        tabName = "menu_peptide")
+
         #menuSubItem("2g. G-Quadruplex structure",        icon = icon("dna"),            tabName = "menu_gQuadruplex")
       
       ),
@@ -225,10 +226,11 @@ shinyUI(dashboardPage(
         tabName = "menu_sec_structure",
         fluidRow(
           
-          column(6,
+          column(5,
                  source("ui_files/2c_ui_fit_secondary_structure_box.R",local=T)$value,
+                 conditionalPanel('input.secStr_analysis_mode == "SELCON"',
                  tabBox(title = "", width = 12,id = "secondary_structure_tabBox",
-                        tabPanel("Secondary structure estimation",tableOutput("secondary_structure")))
+                        tabPanel("Secondary structure estimation",tableOutput("secondary_structure"))))
           ),
           
           #Custom CSS
@@ -236,13 +238,48 @@ shinyUI(dashboardPage(
                          #fitted_CD_spectra_Sec_Str{height:600px !important;}
                          "
           )),
-          
-          column(6,
+
+          conditionalPanel('input.secStr_analysis_mode == "SELCON"',
+
+          column(7,
                  tabBox(title = "", width = 12,id = "tabBoxcdSpectraSecStr",
-                        tabPanel("Fitted spectra", plotlyOutput("fitted_CD_spectra_Sec_Str"))),
+                        tabPanel("Fitted spectra / mean unit molar extinction", plotlyOutput("fitted_CD_spectra_Sec_Str"))),
                         
                  tabBox(title = "", width = 12,id = "secondary_structure_calc_tabBox")
-          )
+          )),
+
+          conditionalPanel('input.secStr_analysis_mode == "SESCA_pred" || input.secStr_analysis_mode == "SESCA_est"',
+
+                    column(7,
+
+          conditionalPanel('input.secStr_analysis_mode == "SESCA_pred"',
+
+          #Custom CSS to increase plot height
+          tags$head(tags$style("
+          #sesca_plot{height:600px !important;}"
+          )),
+
+          tabBox(title = "", width = 12,id = "sesca_results",
+          tabPanel("Spectra / mean unit molar extinction" ,    plotlyOutput("sesca_plot" )),
+          tabPanel("PDB Sec. Str.",                                tableOutput( "sesca_sec_str")),
+          tabPanel("Model stats",                              tableOutput( "sesca_comparison_stats"))
+          )),
+
+          conditionalPanel('input.secStr_analysis_mode == "SESCA_est"',
+
+          #Custom CSS to increase plot height
+          tags$head(tags$style("
+          #sesca_plot_bayes{height:600px !important;}"
+          )),
+
+          tabBox(title = "", width = 12,id = "sesca_results_est",
+          tabPanel("Estimated Sec. Str.",       tableOutput( "sesca_sec_str_est")),
+          tabPanel("Posterior probability" ,    plotlyOutput("sesca_plot_bayes" ))
+          )),
+
+          source("ui_files/2c_ui_sesca_plot_box.R",local=T)$value
+
+          ))
         
         )),
       
@@ -445,7 +482,14 @@ shinyUI(dashboardPage(
                   source("ui_files/ui_export_cd_spectra_sec_str_fit.R"  , local=T)$value
                   
                 ),
-                
+
+                conditionalPanel(
+                  "output.sesca_pred_was_run",
+                  source("ui_files/ui_export_sesca_pred.R"  , local=T)$value
+
+                ),
+
+
                 conditionalPanel(
                   "output.compareDatasetCreated",
                   source("ui_files/ui_export_cd_spectra_comparison.R"  , local=T)$value

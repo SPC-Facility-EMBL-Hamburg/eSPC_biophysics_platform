@@ -1,7 +1,10 @@
 import copy, sys, warnings
 
-from loadCDfilesHelpers import *
-from cdUnitsConverter import *
+import pandas as pd
+
+from loadCDfilesHelpers    import *
+from helpers               import *
+from cdUnitsConverter      import *
 from decomposition_helpers import *
 
 from fitting_helpers_thermal import *
@@ -13,7 +16,9 @@ from SelconsFunction import *
 
 sys.path.append('./Dichroic-CD-model-main')
 from single_fit_dichroic_estimator import *
+from HC_thermal_fit                import *
 
+from scipy.optimize  import minimize
 """
 Classes for the analysis of circular dichroism data
 Code written by Osvaldo Burastero 
@@ -47,7 +52,6 @@ for i_pep_bonds in range(4, 41):
     with open("./Dichroic-CD-model-main/Q_double_H/Q_doubleH_" + str(i_pep_bonds) + ".txt", 'r') as l:
         poly_double = l.readlines()[0]
         poly_double_all.append(poly_double)
-
 
 # F1 and A1 contain the AU-SP175 and AU-SMP180 reference datasets
 # Labels of the known CD spectra
@@ -311,35 +315,9 @@ class CdExperimentGeneral:
 
     def get_mre_222nm(self):
 
-        self.MRE_222nm = []
-
         self.experiment_from_abs_to_other_units('meanUnitMolarEllipticity')
 
-        signal_temp     = self.signalDesiredUnit[self.wavelength >= 221]
-        wavelength_temp = self.wavelength[self.wavelength >= 221]
-
-        signal_temp     = signal_temp[wavelength_temp <= 223]
-        wavelength_temp = wavelength_temp[wavelength_temp <= 223]
-
-        # Sort in increasing order, in case that the data  was not loaded with the self.load_data() function
-        # Get the indices that would sort the wavelength vector
-        sorted_indices = np.argsort(wavelength_temp)
-
-        # Use the sorted_indices to rearrange the rows of the matrix and vector
-        signal_temp     = signal_temp[sorted_indices]
-        wavelength_temp = wavelength_temp[sorted_indices]
-
-        # Total CD spectra of this experiment
-        n_spectra = self.signalDesiredUnit.shape[1]
-
-        # Iterate over the columns 
-        for j in range(n_spectra):
-            # Interpolate
-            mre = np.interp(222, wavelength_temp, signal_temp[:, j], left=None, right=None, period=None)
-
-            self.MRE_222nm.append(mre)
-
-        self.MRE_222nm = np.array(self.MRE_222nm)
+        self.MRE_222nm = signal_at_222nm(self.signalDesiredUnit, self.wavelength)
 
         self.experiment_from_abs_to_other_units(self.currentUnits)
 
@@ -2054,7 +2032,7 @@ class CdExperimentThermalRamp(CdExperimentFittingModel):
 
         self.baselines(model, fit_slope_native, fit_slope_unfolded, 'Thermal')
 
-        signal_fx = map_two_state_model_to_signal_fx(model)
+        signal_fx    = map_two_state_model_to_signal_fx(model)
         fractions_fx = map_two_state_model_to_fractions_fx(model)
 
         p0 = np.concatenate((((self.minX + self.maxX) / 2, 100), self.bNs, self.bUs, self.kNs, self.kUs))
@@ -2137,6 +2115,61 @@ class CdExperimentThermalRamp(CdExperimentFittingModel):
             shared_params_names, local_params_names, self.wavelength_useful, fit_slope_native, fit_slope_unfolded,
             low_bound, high_bound, params_splt, errors_splt,
             self.last_col_name, self.name, self.fit_params, self.fit_rel_errors)
+
+        return None
+
+    def fit_signal_helix_peptide(self,numberOfCroms=32):
+
+        # Caution! The method has sense only if self.signalDesiredUnit was created using mean unit molar ellipticity as working units
+
+        p0         =  np.array([-0.22, -1.3, 0.002]) # Initial guess for [dg, dh, dcp]
+        lowBounds  =  np.array([-5, -12, 0])
+        highBounds =  np.array([5, 12, 0.008])
+
+        if self.signalDesiredUnit is None:
+
+            mre = self.signal_useful[0,:]
+
+        else:
+
+            mre     = signal_at_222nm(self.signalDesiredUnit,self.wavelength)
+
+        fx_to_opt = get_objective_fx_peptide(numberOfCroms,poly_double_all,poly_total_all)
+
+        params, cov = curve_fit(fx_to_opt,self.temperature, mre/(10**3), p0=p0, bounds=(lowBounds,highBounds)) # Scaling / 10**3 required for fitting
+
+        self.fit_params = pd.DataFrame({
+            'dG (kcal/mol/peptide_bond)':[params[0]],
+            'dH (kcal/mol/peptide_bond)':[params[1]],
+            'dCp (kcal/(mol K)/peptide_bond)':[params[2]],
+            'Dataset':self.name})
+
+        errors = np.abs(np.sqrt(np.diag(cov)) * 100 / params)
+
+        self.fit_rel_errors = pd.DataFrame({
+            'dG_rel_error '    : [errors[0]],
+            'dH_rel_error '    : [errors[1]],
+            'dCp_rel_error '   : [errors[2]],
+            'Dataset':self.name})
+
+        fh = calculate_cd_signal(params[0], params[1], params[2], self.temperature, numberOfCroms,poly_double_all,poly_total_all)[1]
+
+        mre_pred = calculate_cd_signal(params[0], params[1], params[2], self.temperature, numberOfCroms,poly_double_all,poly_total_all)[0]
+        mre_pred = mre_pred * 10**3 # Scaling back to original units
+
+        self.signal_useful     = mre.reshape(1,-1)
+        self.signal_predicted  = mre_pred.reshape(1, -1)
+        self.wavelength_useful = ['222']
+
+        self.fractions = {'Helix':fh,'Disordered':1-fh},
+
+        self.bounds_df = pd.DataFrame({
+            'Param': ['dG_per_peptide_bond','dH_per_peptide_bond','dCp_per_peptide_bond'],
+            'Lower bound':lowBounds,
+            'Fitted value':params,
+            'Higher bound':highBounds,
+            'Wavelength (nm)':222,
+            'Dataset':self.name})
 
         return None
 
@@ -2752,6 +2785,7 @@ class CdAnalyzer:
             self.experimentsModif[expName].wavelength = filter_vector_by_values(wl, min_wl, max_wl)
 
         return None
+
 
 
 test4 = False

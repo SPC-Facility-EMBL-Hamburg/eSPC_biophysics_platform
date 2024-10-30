@@ -1,0 +1,258 @@
+#DISICL detailed nucleotide library:
+#angle definitions 
+@ang    EPS,C4',C3',O3',P,0,0,0,1
+@ang    ZET,C3',O3',P,O5',0,0,1,1
+@ang    CHI,O4',C1',N1/N9,C2/C4,0,0,0,0
+#
+#region definitions in 0-360 format (epsilon,xi,chi)
+#@reg	alfa1,175,225,250,310,170,235
+#@reg   alfa2,165,250,310,360,160,250
+#@reg   alfa2,145,230,0,40,180,270
+#@reg   alfa3,225,290,250,310,150,260
+#@reg   beta1,145,225,240,305,215,290
+#@reg   beta2,225,310,120,215,180,310
+#@reg   beta3,160,225,150,240,215,280
+#@reg   zeta1,150,260,230,330,20,100
+#@reg   zeta3,135,250,30,120,20,105
+#@reg   zeta2,170,320,40,120,160,290
+#@reg   delta1,20,100,25,135,170,290
+#@reg   delta2,20,120,155,340,190,290
+#@reg   delta3,20,100,25,100,30,100
+#subregions:
+#@reg   ab1,175,225,250,305,215,235
+#@reg   ab2,225,300,215,250,160,280
+#@reg	alfa1,225,250,250,285,170,215
+#@reg	beta3,180,225,240,250,215,270
+#
+#(in -180 - +180 format)
+@reg	alfa1,175,180,-110,-50,170,180
+@reg	alfa1,-180.1,-135,-110,-50,170,180
+@reg	alfa1,175,180,-110,-50,-180.01,-125
+@reg	alfa1,-180.01,-135,-110,-50,-180.01,-125
+@reg	alfa2,165,180,-50,-0.01,160,180
+@reg	alfa2,-180.01,-110,-50,-0.01,160,180
+@reg	alfa2,165,180,-50,-0.01,-180.01,-110
+@reg	alfa2,-180.01,-110,-50,-0.01,-180.01,-110
+@reg	alfa2,145,180,0,40,-180,-90
+@reg	alfa2,-180.01,-130,0,40,-180,-90
+@reg	alfa3,-135,-70,-110,-50,150,180
+@reg	alfa3,-135,-70,-110,-50,-180.01,-100
+@reg	beta1,145,180,-120,-55,-145,-70
+@reg	beta1,-180,-135,-120,-55,-145,-70
+@reg	beta2,-135,-50,120,180,-180,-50
+@reg	beta2,-135,-50,-180.01,-135,-180,-50
+@reg	beta3,160,180,150,180,-145,-80
+@reg	beta3,-180.01,-135,150,180,-145,-80
+@reg	beta3,160,180,-180.01,-120,-145,-80
+@reg	beta3,-180.01,-135,-180.01,-120,-145,-80
+@reg	zeta1,150,180,-130,-30,20,100
+@reg	zeta1,-180.01,-100,-130,-30,20,100
+@reg	zeta2,170,180,40,120,160,180
+@reg	zeta2,-180.01,-40,40,120,160,180
+@reg	zeta2,170,180,40,120,-180.01,-70
+@reg	zeta2,-180.01,-40,40,120,-180.01,-70
+@reg	zeta3,135,180,30,120,20,105
+@reg	zeta3,-180.0,-110,30,120,20,105
+@reg    delta1,20,100,25,135,170,180
+@reg    delta1,20,100,25,135,-180.01,-70
+@reg    delta2,20,120,155,180,-170,-70
+@reg    delta2,20,120,-180.01,-20,-170,-70
+@reg    delta3,20,100,25,100,30,100
+#subregions:
+@reg    ab1,175,180,-110,-55,-145,-125
+@reg    ab1,-180.1,-135,-110,-55,-145,-125
+@reg    ab2,-135,-60,-145,-110,160,180
+@reg    ab2,-135,-60,-145,-110,-180.01,-80
+@reg    alfa1,-135,-110,-110,-75,170,180
+@reg    alfa1,-135,-110,-110,-75,-180.01,-145
+@reg    beta3,-180,-135,-120,-110,-145,-90
+#
+#Segment definitions
+#B-helical definitions
+@sec	BI-helix,beta1,beta1,BI
+@sec	BI-helix,beta1,ab1,BI
+@sec	BII-helix,beta1,beta2,BII
+@sec	BII-helix,beta2,beta1,BII
+@sec	BIII-helix,beta3,beta3,BIII
+@sec	B-loop,beta1,beta3,BL
+@sec	B-loop,beta3,beta1,BL
+@sec	B-loop,beta2,beta2,BL
+@sec	B-loop,beta3,beta2,BL
+@sec	B-loop,beta2,beta3,BL
+@sec	B-loop,beta3,ab1,BL
+@sec	B-loop,ab1,beta3,BL
+@sec	B-loop,beta2,ab1,BL
+@sec	B-loop,ab1,beta2,BL
+#A-helical definitons
+@sec	A-helix,alfa1,alfa1,AH
+@sec	A-helix,alfa1,ab1,AH
+@sec	A-loop,ab1,alfa3,AL
+@sec	A-loop,alfa3,ab1,AL
+@sec	A-loop,alfa3,alfa3,AL
+@sec	A-loop,alfa1,alfa3,AL
+@sec	A-loop,alfa1,alfa2,AL
+#Z-helical definitions
+@sec	Z-helix,zeta1,zeta2,ZH
+@sec	Z-helix,zeta2,zeta1,ZH
+@sec	Z-helix,zeta2,zeta3,ZH
+@sec	Z-helix,zeta3,zeta2,ZH
+#Quadruplex definitions
+@sec	Quad-loop,zeta1,zeta1,QL
+@sec	Quad-loop,zeta1,zeta3,QL
+@sec	Quad-loop,zeta3,zeta1,QL
+@sec	Quad-loop,delta1,delta1,QL
+@sec	Quad-loop,delta3,delta3,QL
+@sec	Quad-loop,delta1,delta3,QL
+@sec	Quad-loop,delta3,delta1,QL
+@sec	Quad-loop,delta3,delta2,QL
+@sec	Quad-loop,delta2,delta3,QL
+@sec    Quad-loop,ab1,zeta1,QL
+@sec    Quad-loop,zeta1,ab1,QL
+@sec    Quad-loop,zeta1,beta1,QL
+@sec    Quad-loop,beta1,zeta1,QL
+@sec    Quad-loop,delta3,beta1,QL
+@sec    Quad-loop,zeta1,beta3,QL
+@sec    Quad-loop,beta3,zeta1,QL
+@sec    Quad-loop,beta1,zeta2,QL
+@sec    Quad-loop,zeta1,delta1,QL
+@sec    Quad-loop,zeta1,alfa3,QL
+@sec    Quad-loop,zeta1,beta2,QL
+#Sharp-turn definitions
+@sec	Sharp turn,zeta2,zeta2,ST
+@sec	Sharp turn,alfa3,beta3,ST
+@sec	Sharp turn,delta2,delta2,ST
+@sec	Sharp turn,delta2,delta1,ST
+@sec	Sharp turn,zeta2,alfa3,ST
+@sec	Sharp turn,alfa3,beta1,ST
+@sec	Sharp turn,delta2,beta2,ST
+@sec    Sharp turn,zeta2,ab1,ST
+@sec    Sharp turn,zeta2,beta3,ST
+@sec    Sharp turn,zeta2,alfa1,ST
+@sec	Sharp turn,ab2,beta2,ST
+@sec    Sharp turn,zeta2,alfa2,ST
+@sec    Sharp turn,zeta2,beta1,ST
+@sec    Sharp turn,zeta2,beta2,ST
+#Tetraloop definitions
+@sec	TL-bulge,alfa2,beta2,TL
+@sec	TL-bulge,delta1,delta2,TL
+@sec	TL-bulge,alfa3,alfa1,TL
+@sec	TL-bulge,alfa2,alfa2,TL
+@sec	TL-bulge,alfa2,alfa1,TL
+@sec	TL-bulge,alfa2,beta3,TL
+@sec	TL-bulge,alfa2,alfa3,TL
+@sec	TL-bulge,alfa3,alfa2,TL
+@sec	TL-bulge,alfa3,zeta2,TL
+@sec	TL-bulge,alfa3,beta2,TL
+@sec    TL-bulge,ab1,zeta2,TL
+@sec    TL-bulge,alfa1,zeta2,TL
+@sec    TL-bulge,delta1,zeta1,TL
+@sec	TL-bulge,alfa2,ab2,TL
+@sec    TL-bulge,alfa2,zeta2,TL
+#AB definitions
+@sec	AB trans,ab1,ab1,AB
+@sec	AB trans,ab1,alfa1,AB
+@sec	AB trans,ab1,beta1,AB
+@sec	AB trans,alfa1,beta1,AB
+@sec	AB trans,alfa1,beta3,AB
+@sec	AB trans,beta1,alfa1,AB
+@sec	AB,alfa1,ab2,AB
+@sec    AB,beta1,ab2,AB
+#AB2 definitions
+@sec    AB2 trans,beta2,alfa3,AB2
+@sec    AB2 trans,beta3,alfa1,AB2
+@sec    AB2 trans,beta3,alfa3,AB2
+@sec    AB2 trans,ab2,ab2,AB2
+@sec	AB2 trans,beta3,alfa2,AB2
+@sec    AB2 trans,alfa1,beta2,AB2
+@sec	AB2 trans,beta2,alfa1,AB2
+@sec	AB2 trans,ab2,alfa1,AB2
+@sec	AB2 trans,ab2,alfa3,AB2
+@sec	AB2 trans,ab2,beta1,AB2
+@sec	AB2 trans,ab2,delta1,AB2
+@sec	AB2 trans,delta1,ab2,AB2
+#AZ definitions
+@sec	AZ,alfa1,zeta1,AZ
+@sec	AZ,alfa1,zeta3,AZ
+@sec	AZ,zeta1,alfa1,AZ
+@sec	AZ,zeta3,alfa1,AZ
+@sec    AZ,alfa2,zeta1,AZ
+@sec    AZ,alfa2,zeta2,AZ
+@sec    AZ,alfa2,zeta3,AZ
+@sec    AZ,zeta1,alfa2,AZ
+@sec    AZ,zeta3,alfa2,AZ
+@sec	AZ,alfa3,zeta1,AZ
+@sec	AZ,alfa3,zeta3,AZ
+@sec	AZ,zeta3,alfa3,AZ
+#BZ definitions
+@sec    ZB,beta1,zeta3,ZB
+@sec    ZB,beta2,zeta1,ZB
+@sec    ZB,beta2,zeta2,ZB
+@sec    ZB,beta2,zeta3,ZB
+@sec    ZB,beta3,zeta2,ZB
+@sec    ZB,beta3,zeta3,ZB
+@sec    ZB,zeta3,beta1,ZB
+@sec    ZB,zeta3,beta2,ZB
+@sec    ZB,zeta3,beta3,ZB
+#AD definitions
+@sec	AD,alfa1,delta1,AD
+@sec	AD,alfa1,delta2,AD
+@sec    AD,alfa1,delta3,AD
+@sec	AD,alfa3,delta3,AD
+@sec	AD,delta1,alfa1,AD
+@sec	AD,delta2,alfa1,AD
+@sec	AD,delta3,alfa1,AD
+@sec	AD,delta3,alfa3,AD
+#BD definitions
+@sec    BD,beta1,delta1,BD
+@sec    BD,beta1,delta2,BD
+@sec    BD,beta1,delta3,BD
+@sec    BD,delta1,beta1,BD
+@sec    BD,delta2,beta1,BD
+@sec	BD,beta2,delta1,BD
+@sec    BD,beta2,delta3,BD
+@sec	BD,delta1,beta2,BD
+@sec    BD,delta3,beta2,BD
+@sec    BD,beta3,delta1,BD
+@sec    BD,beta3,delta2,BD
+@sec    BD,beta3,delta3,BD
+@sec    BD,delta1,beta3,BD
+@sec    BD,delta2,beta3,BD
+@sec    BD,delta3,beta3,BD
+@sec    BD,delta1,ab1,BD
+#ZD definitions
+@sec    ZD,zeta1,delta2,ZD
+@sec    ZD,zeta1,delta3,ZD
+@sec    ZD,delta2,zeta1,ZD
+@sec    ZD,delta3,zeta1,ZD
+@sec    ZD,zeta2,delta1,ZD
+@sec    ZD,zeta2,delta2,ZD
+@sec    ZD,zeta2,delta3,ZD
+@sec    ZD,delta1,zeta2,ZD
+@sec    ZD,delta2,zeta2,ZD
+@sec    ZD,delta3,zeta2,ZD
+@sec    ZD,zeta3,delta1,ZD
+@sec    ZD,zeta3,delta2,ZD
+@sec    ZD,zeta3,delta3,ZD
+@sec    ZD,delta1,zeta3,ZD
+@sec    ZD,delta2,zeta3,ZD
+@sec    ZD,delta3,zeta3,ZD
+#
+#Color scheme definitions
+@col    BI,green,2
+@col    BII,yellow,2
+@col    BIII,limon,2
+@col    BL,teal,2
+@col    AH,red,2
+@col    TL,yelloworange,2
+@col    AL,orange,2
+@col    ZH,skyblue,2
+@col    ST,cyan,2
+@col    QL,gray40,2
+@col    AB,deepolive,2
+@col    AB2,sand,2
+@col    AZ,magenta,2
+@col    ZB,purpleblue,2
+@col    AD,hotpink,2
+@col    BD,slate,2
+@col    ZD,lightblue,2
+#END

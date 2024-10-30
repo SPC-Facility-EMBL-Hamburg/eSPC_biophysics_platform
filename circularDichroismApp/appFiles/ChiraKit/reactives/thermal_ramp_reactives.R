@@ -116,7 +116,19 @@ fitThermalExperiment <- function(exp) {
     pyExp$fit_signal_three_state_irrev(v,input$fitSlopeNative,input$fitSlopeUnfolded,input$T1_init_irrev)
     append_record_to_logbook(paste0("T1 init: ", input$T1_init_irrev))
   } 
-  
+
+  if (user_sel_model == 'peptide') {
+
+    if (!(reactives$thermalWorkingUnits %in% c('yMonomer','meanUnitMolarEllipticity'))) {
+      popUpWarning("Please select the correct working units for the peptide unfolding model
+      (mean unit molar ellipticity). This step should be done in the '1. Import data' panel.")
+      return(F)
+    }
+
+    pyExp$fit_signal_helix_peptide(input$numberOfPeptideBonds)
+
+  }
+
   return(T)
 }
 
@@ -246,8 +258,16 @@ observeEvent(input$btn_create_thermal_dataset,{
                           'N ⇌ I ⇌ U'              = 'threeState',
                           'N ⇌ I ⇌ U (fit Cp1)'    = 'threeStateCp',
                           'N → U '                 = 'twoState_irrev',
-                          'N ⇌ I → U'              = 'threeState_rev_irrev'))
-      
+                          'N ⇌ I → U'              = 'threeState_rev_irrev',
+                          'Helix ⇌ Unfolded (Peptide)' = 'peptide'))
+
+
+      pepBonds <- unlist(cdAnalyzer$get_experiment_properties('numberOfCroms'))
+
+      pepBonds <- pepBonds[pepBonds > 3 & pepBonds < 41]
+
+      if (length(pepBonds) > 0) updateNumericInput(session,'numberOfPeptideBonds',NULL,max(pepBonds),min = 4, max = 40)
+
     }
     
     if (input$oligomeric_state_term == 'dimer') {
@@ -312,7 +332,10 @@ observeEvent(input$thermalUnfoldingFile,{
                       choices = c(
                         'N ⇌ U'                  = 'twoState',
                         'N ⇌ I ⇌ U'              = 'threeState',
-                        'N ⇌ I ⇌ U (fit Cp1)'    = 'threeStateCp'))
+                        'N ⇌ I ⇌ U (fit Cp1)'    = 'threeStateCp',
+                        'N → U '                 = 'twoState_irrev',
+                        'N ⇌ I → U'              = 'threeState_rev_irrev',
+                        'Helix ⇌ Unfolded (Peptide)' = 'peptide'))
 
     reactives$thermalWorkingUnits   <- 'yMonomer'
 
@@ -472,7 +495,7 @@ output$fittedParams_melting <- renderTable({
   df <- get_fitted_params_unfolding(cdAnalyzer,type='Thermal')
   
   return(df)
-})
+}, digits = 4)
 
 output$fittingBounds_melting <- renderTable({
   
@@ -480,7 +503,7 @@ output$fittingBounds_melting <- renderTable({
   df <- get_fitting_bounds_unfolding(cdAnalyzer,type='Thermal')
 
   return(df)
-})
+}, digits = 4)
 
 
 output$fittedErrors_melting <- renderTable({
@@ -857,7 +880,7 @@ output$fittedParams_meltingSVD <- renderTable({
   df <- get_fitted_params_unfolding(cdAnalyzer)
   
   return(df)
-})
+}, digits = 4)
 
 output$fittingBoundsSVD_melting <- renderTable({
   
@@ -865,7 +888,7 @@ output$fittingBoundsSVD_melting <- renderTable({
   df <- get_fitting_bounds_unfolding(cdAnalyzer)
   
   return(df)
-})
+}, digits = 4)
 
 output$fittedErrors_meltingSVD <- renderTable({
   

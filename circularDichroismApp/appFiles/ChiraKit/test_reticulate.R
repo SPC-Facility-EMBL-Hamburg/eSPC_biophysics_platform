@@ -11,7 +11,7 @@ user        <- Sys.info()['user']
 
 reticulate::use_python(paste0("/home/",user,"/myenv/bin/python"), required = TRUE)
 
-setwd('/home/osvaldo/spc_shiny_servers/circularDichroismApp/appFiles/ChiraKit/')
+setwd('/home/os/spc_shiny_servers/circularDichroismApp/appFiles/ChiraKit/')
 
 source("server_files/helpers.R")
 
@@ -22,19 +22,36 @@ source_python('python_src/loadCDfilesHelpers.py')
 
 source_python("python_src/cdAnalyzer.py")
 
-cdAnalyzer <- cdAnalyzer()
-group <- 'A'
-cdAnalyzer$clean_experiments('chemical')
-cdAnalyzer$experimentNamesChemical <- c(group)
+f <- read.csv('secondary_structure_estimation_files/AU-A128_PCDDB-Nov22.txt',sep='',header=FALSE)
+head(f)
+dim(f)
 
-cdAnalyzer$experimentsChemical[[group]]   <- cd_experiment_chemical_unfolding()
+lbl <- read_file('secondary_structure_estimation_files/Labels-SMP180_PCDDBOrder.txt')
 
-cdAnalyzer$experimentsChemical[[group]]$load_unfolding_data('/home/osvaldo/Downloads/test.csv')
-cdAnalyzer$experimentsChemical[[group]]$reshape_signal_oligomer('Chemical')
+lbl <- strsplit(lbl,split = '\t')[[1]]
 
-source("server_files/helpers_unfolding.R")
-df <- generate_chemical_unfolding_df(cdAnalyzer)
-nrow(df)
+length(lbl)
+
+colnames(f) <- lbl
+
+f$wl <- 240:175
+
+f2 <- reshape2::melt(f,id.vars = 'wl')
+
+
+fig <- ggplot(f2[f2$variable == "FepA",],aes(wl,value,color=variable)) +
+  geom_point() 
+
+ggplotly(fig)
+
+f3 <- (f2[f2$variable == "FepA",c(1,3)]) 
+  
+colnames(f3) <- c('wavelength','signal')
+f3 <- f3[f3$signal != 0,]
+
+
+write.csv(f3,'/home/os/Downloads/FepA.csv',row.names = FALSE)
+
 
 
 

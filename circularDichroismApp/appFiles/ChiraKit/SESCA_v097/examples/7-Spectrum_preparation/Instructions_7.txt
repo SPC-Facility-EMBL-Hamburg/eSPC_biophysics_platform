@@ -1,0 +1,55 @@
+#Excersize 7: Spectrum preprocessing
+#Here, we demonstrate basic useful functionalities of the SESCA_process.py utility tool.
+#For this example, we spectrum of 1S-(+)-10-camphorsulfonic acid (or (+)CSA) a widely used
+#calibration standard. SESCA_process was designed to work with white-space separated text files
+#where the columns indicate different signals of the measurement at a given wavelength.
+
+Step 1: spectrum averaging
+SESCA_process provides a convinient way to average over multiple spectra, either by providing the file paths
+of the various measurement files, or providing a file list. The data columns to be extracted is given by the
+@col command flag. 
+
+SESCA_process.py @inp CSAplus_01.dat CSAplus_02.dat CSAplus_03.dat @col 1,2,3 @write CD_CSAplus_av.dat @verb 2
+
+#processing module   input files from repeated measurements         data columns     output filename   verbosity
+
+#Note that by default SESCA process expects the first two columns to be the wavelength and signal intensity,
+#a third column can be optionally provided for the measurement uncertainties.
+#Similarly to the CD signals (column 2 and 3), the total UV absorbance (4) and photomultiplier tension (5) 
+#can be extracted from and averaged over the data files with the following commands:
+
+SESCA_process.py @inp CSAplus_01.dat CSAplus_02.dat CSAplus_03.dat @col 1,4 @write ABS_CSAplus_av.dat @verb 2
+SESCA_process.py @inp CSAplus_01.dat CSAplus_02.dat CSAplus_03.dat @col 1,5 @write HT_CSAplus_av.dat @verb 2
+
+#Step 2: background correction: 
+#Often it is necessary to perform background corrections on the measured spectra, files for the background
+#measurements can provided with the @corr flag. 
+
+SESCA_process.py @inp CD_CSAplus_av.dat @corr H2O_01.dat H2O_02.dat H2O_03.dat @write CD_CSAplus_corr.dat @col 1,2,3 @verb 2
+#processing module   averaged input file     background measurement files      corrected output            data columns
+
+The format for these files (and this column ID-s) are expected
+#to be the same as the main measurement files. Here we use three background spectra of milliQ water, that was
+#used to dissolve CSA. Note that background spectra are first extracted, averaged, and then subtracted from the
+#average of the measured spectra. If present, uncertainties are propagated through the averaging and background correction.
+
+SESCA_process.py @inp CSAplus_01.dat CSAplus_02.dat CSAplus_03.dat @corr H2O_01.dat H2O_02.dat H2O_03.dat @write ABS_CSAplus_corr.dat @col 1,4
+
+#Averaging and background corrections can be preformed in one step as well, porividing all six input files.
+
+#Step 3: Unit Conversion
+#SESCA_process also provides an easy way to convert signal intensity between typically used CD measurement units.
+#In many cases raw CD measurements are stored as wavelength (nm) vs. ellipticity (millidegree or mdeg). SESCA by default
+#uses 1000 mean residue ellipticty (kMRE) units, which is 3.298X larger than Delta-Epsilon (or dEps) units. To convert between
+#mdeg and kMRE units, the ellipticity is normalized for the number residues, protein concentraion, and measurement pathlength.
+#These parameters can be provided with the appropriate command falgs:
+
+SESCA_process.py @inp CD_CSAplus_corr.dat @Uinp mdeg @Uout kMRE  @conc 0.0032 @path 0.1   @res 1   @wl 185,300,1.0 @col 1,2,3 @write CD_CSAplus_kMRE.dat
+#processing module   corrected spectrum   input unit output unit concentraion pathlength  residues  wavelength range columns   output filename
+
+#Note that the concentration here (0.0032 mol/L) was detemined independently by gravimetric measurements. The concentration of CSA
+#can also be estimated from the total absorbance at 285 nm. Dividing abosrbance of 0.008 +/- 0.003 at 285 nm,
+#by the molar absorbtivity (Eps: 34.59 M^-1 cm^-1) and cuvette pathlength (l: 0.1 cm), the estimated concentration is 0.0023 +/- 0.0009 mol/L.
+#Also note that SESCA_process provides functionality to reorder and filter (or intrapolate) spectral data, by providing an approriate
+#wavelength range. In this example, the wavelengths below 185 nm-s were truncated due to high (500+ V) photomultiplier tension,
+#which can render The measured CD signals distorted.  

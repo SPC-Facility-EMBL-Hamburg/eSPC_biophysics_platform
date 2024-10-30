@@ -382,7 +382,7 @@ output$fittedParams_chemical <- renderTable({
   df <- get_fitted_params_unfolding(cdAnalyzer,'Chemical')
   
   return(df)
-})
+}, digits = 4)
 
 output$fittedErrors_chemical <- renderTable({
   
@@ -415,7 +415,7 @@ output$fittingBounds_chemical <- renderTable({
   df <- get_fitting_bounds_unfolding(cdAnalyzer,'Chemical')
   
   return(df)
-})
+}, digits = 4)
 
 output$fractions_chemical <- renderPlotly({
   
@@ -726,7 +726,7 @@ output$fittingBounds_chemicalSVD <- renderTable({
   df <- get_fitting_bounds_unfolding(cdAnalyzer,'Chemical')
   
   return(df)
-})
+}, digits = 4)
 
 output$fractions_SVDchemical <- renderPlotly({
   
@@ -771,7 +771,7 @@ output$fittedParams_chemicalSVD <- renderTable({
 
   return(df)
   
-})
+}, digits = 4)
 
 output$fittedErrors_chemicalSVD <- renderTable({
   

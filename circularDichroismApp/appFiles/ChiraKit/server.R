@@ -3,7 +3,7 @@ options(stringsAsFactors = F)
 
 # List of Python script files to source
 py_scripts <- c("cdAnalyzer.py","helpers.py","decomposition_helpers.py",
-                "fitting_helpers.py","get_dssp_summary.py")
+                "fitting_helpers.py","get_dssp_summary.py","sesca_helpers.py")
 
 # Source the Python helper functions 
 for (script in py_scripts) {source_python(paste0('python_src/', script))}
@@ -27,7 +27,10 @@ function(input, output, session) {
   
   # To handle the spectra comparison module
   compareSpectraPyClass     <- CdExperimentComparison()
-  
+
+  # To handle the SESCA module
+  sescaPyClass <- CdSpectraPredictor()
+
   # To handle the G-Quadruplex module
   gQuadRefPyClass     <- CdExperimentGeneral()
   gQuadSamplePyClass  <- CdExperimentGeneral()
@@ -41,6 +44,7 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/custom_analysis_reactives.R"        ), local = T)
   source(paste0(base_dir,"reactives/spectra_comparison_reactives.R"     ), local = T)
   source(paste0(base_dir,"reactives/peptide_helix_content_reactives.R"  ), local = T)
+  source(paste0(base_dir,"reactives/sesca_reactives.R"                  ), local = T)
   source(paste0(base_dir,"reactives/gQuadruplex_reactives.R"            ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"               ), local = T)
   

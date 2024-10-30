@@ -1,0 +1,38 @@
+#Bayesian error parameters for SS estimation (1D CD error,no side-chain corrections)
+#|SS Dist	dim 	mean	SD		min	max	step
+Uni_ND		3				0.0	1.0	0.05
+&
+#|SS change	dim	mean	SD		min	max	step
+Gauss			0.05	0.1		0.0	0.2	0.01
+&
+
+#|SS project	alpha		beta
+SS_map		1		2
+&
+#|Scale Dist	min	max	step
+Uniform		0.2	5.0	0.2
+&
+#|NonSS Dist	min	max	step		
+Custom_1D	0.0	6.0	0.3	
+# R0_j   P_j 
+ 0.150  6.829e-03 
+ 0.450  3.010e-02 
+ 0.750  9.683e-02 
+ 1.050  1.680e-01 
+ 1.350  2.244e-01 
+ 1.650  2.072e-01 
+ 1.950  1.356e-01 
+ 2.250  6.770e-02 
+ 2.550  3.104e-02 
+ 2.850  1.675e-02 
+ 3.150  9.606e-03 
+ 3.450  4.348e-03 
+ 3.750  1.340e-03 
+ 4.050  2.692e-04 
+ 4.350  3.480e-05 
+ 4.650  2.889e-06 
+ 4.950  1.549e-07 
+ 5.250  5.694e-09 
+ 5.550  2.217e-10 
+ 5.850  2.237e-11 
+&

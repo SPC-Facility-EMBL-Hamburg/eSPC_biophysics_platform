@@ -1,0 +1,137 @@
+#Reformatted DSSP classification:
+#DSSP program: /usr/local/bin/dssp
+#Structure File: 5cyt.pdb
+#Raw DSSP output: frame_1.dssp
+
+#Residue encoding (103 total residues):
+#      numbers        Chain       residues
+#      1   -    103 :  R        1   -    103
+
+#3-Helix
+&
+#4-Helix
+      1        3
+      1        4
+      1        5
+      1        6
+      1        7
+      1        8
+      1        9
+      1       10
+      1       11
+      1       12
+      1       13
+      1       50
+      1       51
+      1       52
+      1       53
+      1       61
+      1       62
+      1       63
+      1       64
+      1       65
+      1       66
+      1       67
+      1       68
+      1       69
+      1       71
+      1       72
+      1       73
+      1       74
+      1       88
+      1       89
+      1       90
+      1       91
+      1       92
+      1       93
+      1       94
+      1       95
+      1       96
+      1       97
+      1       98
+      1       99
+      1      100
+      1      101
+&
+#5-Helix
+&
+#Bend
+      1       21
+      1       27
+      1       28
+      1       29
+      1       43
+      1       55
+      1       60
+      1       75
+      1       79
+&
+#Beta-Bridge
+      1       39
+      1       58
+&
+#Beta-strand
+&
+#Turn
+      1       14
+      1       15
+      1       16
+      1       17
+      1       22
+      1       23
+      1       33
+      1       34
+      1       36
+      1       37
+      1       40
+      1       41
+      1       44
+      1       45
+      1       54
+      1       76
+      1       77
+&
+#Unclassified
+      1        1
+      1        2
+      1       18
+      1       19
+      1       20
+      1       24
+      1       25
+      1       26
+      1       30
+      1       31
+      1       32
+      1       35
+      1       38
+      1       42
+      1       46
+      1       47
+      1       48
+      1       49
+      1       56
+      1       57
+      1       59
+      1       70
+      1       78
+      1       80
+      1       81
+      1       82
+      1       83
+      1       84
+      1       85
+      1       86
+      1       87
+      1      102
+      1      103
+&
+#Secondary structure distribution by DSSP (%):
+# 3-Helix: 0.0
+# 4-Helix: 40.8
+# 5-Helix: 0.0
+# Bend: 8.7
+# Beta-Bridge: 1.9
+# Beta-strand: 0.0
+# Turn: 16.5
+# Unclassified: 32.0

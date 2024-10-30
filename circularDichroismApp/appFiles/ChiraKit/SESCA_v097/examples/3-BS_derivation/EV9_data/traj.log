@@ -1,0 +1,107 @@
+ 
+                           DSSP
+            by Wolfgang Kabsch and Chris Sander
+
+Defines secondary structure and solvent exposure of proteins from
+atomic coordinates as given in Protein Data Bank format.   
+
+_________________________________________________________________________
+This version licensed to WHAT IF at the EMBL               
+for academic purposes.                                                 
+Do not redistribute. 
+
+Commercial licenses available on request.                                
+
+Copyright by Wolfgang Kabsch and Chris Sander, 1983, 1985, 1988. 
+Fax: +49-6221-387 306
+
+Algorithm version October 1988. Refer to Biopolymers 22(1983) 2577-2637.
+Do report errors if you find any.
+
+Email: Sander@embl-heidelberg.de 
+       Kabsch@embl-heidelberg.de 
+
+_________________________________________________________________________
+Related databases and datasets available from the Protein
+Design Group at EMBL via anonymous ftp from embl-heidelberg.de:
+
+pdb_select   Representative set of protein structures.
+             By U. Hobohm, C. Sander, M. Scharf and R. Schneider.
+             See Protein Science 1, 409-417.
+DSSP         Dictionary of secondary structures of proteins. 
+HSSP         Database of sequence-homology derived protein families.
+             By C. Sander and R.Schneider.
+             See Proteins 9, 56-68 (1991).
+FSSP         Database of protein structure families with 
+             common folding motifs. 
+             L.Holm, C. Ouzounis, C. Sander, G.Tuparev, G. Vriend
+             See Protein Science, in the press (1992).
+In the XSSP databases, there is one dataset for each unique or
+             representative PDB protein, e.g., 1PPT.HSSP etc.
+
+Restrictions:Commercial users must apply for a license. 
+             Not to be used for classified research.
+ !!! RESIDUE LYS    3 A HAS  3 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS    9 A HAS  4 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   23 A HAS  1 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE GLN   53 A HAS  3 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   73 A HAS  2 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   89 A HAS  1 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! IN RESIDUE S E R   103 A ALTERNATE LOCATION INDICATOR IS B AND
+     NOT BLANK OR A. ATOM NAMED  OG  WILL BE IGNORED !!!
+
+ !!! RESIDUE LYS    3 B HAS  3 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE GLN   15 B HAS  1 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   23 B HAS  2 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   68 B HAS  2 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE GLU   75 B HAS  1 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS   89 B HAS  0 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE GLU  107 B HAS  0 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS  120 B HAS  4 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE ARG  126 B HAS  2 INSTEAD OF EXPECTED   7 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS  134 B HAS  3 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     CALCULATED SOLVENT ACCESSIBILITY REFERS TO INCOMPLETE SIDECHAIN !!!
+
+ !!! RESIDUE LYS  151 B HAS  6 INSTEAD OF EXPECTED   5 SIDECHAIN ATOMS.
+     LAST SIDECHAIN ATOM NAME IS  OXT
+     CALCULATED SOLVENT ACCESSIBILITY INCLUDES EXTRA ATOMS !!!
+
+ !!! POLYPEPTIDE CHAIN INTERRUPTED !!!
+INPUTCOORDINATES DONE         303
+FLAGSSBONDS DONE
+FLAGCHIRALITY DONE
+FLAGHYDROGENBONDS DONE
+FLAGBRIDGE DONE
+FLAGTURN DONE
+FLAGACCESS DONE
+PRINTOUT DONE

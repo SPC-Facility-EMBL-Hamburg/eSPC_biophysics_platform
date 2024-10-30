@@ -381,6 +381,8 @@ $$
     <br>
     <li>Irreversible two-state (only monomers): $$\large{F \rightarrow U}$$</li>
     <li>Irreversible three-state (only monomers): $$\large{F \rightleftharpoons I \rightarrow U}$$</li>
+    <li>Helix-coil transition (Lifson-Roig model for peptides)</li>
+
 </ul>
 
 <p class="vf-intro__text"> 
@@ -756,6 +758,65 @@ $$
 
 </div>
 
+<br>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('fittingModelsPeptide')"
+ style="padding-left: 20px;">
+  Helix-coil transition (peptides only) <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="fittingModelsPeptide" style="display:none">
+
+<br>
+
+<p class="vf-intro__text">
+    Use this model to analyse thermal unfolding curves of peptides that adopt only two states: helical or coiled.
+    It is based on the work done by Zavrtanik <i>et al.</i> (2024). A more detailed description is provided below.
+</p>
+
+<p class="vf-intro__text">
+    In the Lifson–Roig model, each amino acid is considered to be in one of two states: helical or coiled.
+    The different states result in M different conformers, each with a unique configuration of helical and coil units.
+    The measured mean unit molar ellipticity at 222 nm \( \theta_{222} \) is given by:
+</p>
+
+$$
+\large{
+  [\theta]_{222}  = \frac{1}{N_{pep}} \sum_{i=1}^{M} p_i (n_{H,i}[\theta]_H + n_{C,i}[\theta]_C)
+   }
+$$
+
+<p class="vf-intro__text">
+    where each i-th conformer has \( n_{H,i} \) helix and \( n_{C,i} \) coil peptide units. These contribute \( [\theta]_{H} \)  and
+    \( [\theta]_{C} \) to the total CD signal. \( p_i \) is the probability of the i-th conformer.
+    The probabilities can be calculated from the partition function \( Q \), which is
+    defined by two parameters: the nucleation parameter (\( \nu \)) and the propagation parameter (\( w \)).
+    \( \nu \) is assumed to be constant (equal to 0.07), while \( w \) is temperature-dependent and expressed as:
+</p>
+<br>
+$$
+\large{
+  w(T) = \exp\left(\frac{-1}{R} \left( \frac{\Delta G}{T_0} + \Delta H \left( \frac{1}{T} - \frac{1}{T_0} \right) + \Delta C_p \left( 1 - \frac{T_0}{T} - \log\left(\frac{T}{T_0}\right) \right) \right) \right)
+   }
+$$
+<br>
+
+<p class="vf-intro__text"> where the thermodynamic parameters \( \Delta G \), \( \Delta H \) and \( \Delta C_p \) are given at the reference temperature
+    \( T_0 = 0 °C \)  and \( R \) is the gas constant. \( \Delta C_p \) is assumed to be temperature-independent.
+</p>
+
+<p class="vf-intro__text">
+    To use this model, you can either a) import many spectra using the 'Custom' Input mode,
+    select mean unit molar ellipticity as working units, and create the dataset in the 'Thermal unfolding' panel; or b)
+    import a csv with two columns (temperature and mean unit molar ellipticity at 222 nm) using the 'Proccesed data (thermal)' Input mode.
+</p>
+
+<p class="vf-intro__text">
+    If you use this model you must cite both ChiraKit and the original manuscript <a href="https://pubs.acs.org/doi/full/10.1021/acs.jpcb.3c07511#_i30" target="_blank" rel="noopener noreferrer">(Zavrtanik, Uroš<i> et al.</i>, 2024)</a>.
+</p>
+
+</div>
 
 </div>
 
@@ -1351,7 +1412,7 @@ $$
 
 </div>
 
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_estimation')">Protein secondary structure estimation<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_estimation')">Protein secondary structure<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
 
@@ -1391,10 +1452,184 @@ and 9wga
 Several algorithms were developed to infer the secondary structure content from a given CD spectrum. Among them, Selcon <a href="https://fitzkee.chemistry.msstate.edu/sites/default/files/gradbpc/papers/09_woody_anal-biochem_1993.pdf" target="_blank" rel="noopener noreferrer">(Sreerama, Narasimha <i>et al.</i>, 1993</a>; 
 <a href="https://www.sciencedirect.com/science/article/abs/pii/S0003269700948796" target="_blank" rel="noopener noreferrer">Sreerama, Narasimha <i>et al.</i>, 2000)</a>
 and CDsstr <a href="https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0134(19990515)35:3%3C307::AID-PROT4%3E3.0.CO;2-3" target="_blank" rel="noopener noreferrer">(Johnson, W. Curtis<i>et al.</i>, 1999)</a> are two methods that 
-involve comparing the measured CD spectrum to a reference set of spectra. 
-</p> 
+involve comparing the measured CD spectrum to a reference set of spectra. Furthermore, the SESCA analysis package allows both predicting a CD spectrum
+    from a given PDB structure, and estimating the secondary structure content from a given CD spectrum
+    <a href="https://pubs.acs.org/doi/full/10.1021/acs.jctc.9b00203" target="_blank" rel="noopener noreferrer">(Gabor, Nagy <i>et al.</i>, 2019;</a>
+    <a href="https://www.sciencedirect.com/science/article/pii/S001046552100134X" target="_blank" rel="noopener noreferrer"> Gabor, Nagy <i>et al.</i>, 2021)</a>.
+</p>
+
+ <p class="vf-intro__text">
+     ChiraKit provides its own implementation of the SELCON method and a user-friendly interface for the SESCA package available at
+     <a href="https://www.mpinat.mpg.de/sesca" target="_blank" rel="noopener noreferrer">https://www.mpinat.mpg.de/sesca</a>.
+ </p>
+
 <br>
 
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('sesca')">The SESCA package<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+</svg></a></div>
+
+<div id="sesca" style="display:none">
+
+<br>
+
+<p class="vf-intro__subheading">
+Prediction a CD spectrum from a PDB file
+</p>
+
+<br>
+
+<p class="vf-intro__text">
+The method is explained in <a href="https://pubs.acs.org/doi/full/10.1021/acs.jctc.9b00203" target="_blank" rel="noopener noreferrer">Gabor, Nagy <i>et al.</i>, 2019</a>.
+It uses the secondary structure composition and a precalculated set of basis spectra to predict the CD spectrum of a given protein structure.
+The available basis spectra (in ChiraKit) are presented in the Table below.
+</p>
+
+  <br>
+
+<table class="vf-table">
+
+  <thead class="vf-table__header">
+    <tr class="vf-table__row">
+      <th class="vf-table__heading" scope="col">Name</th>
+      <th class="vf-table__heading" scope="col">Algorithm to compute the secondary structure elements</th>
+      <th class="vf-table__heading" scope="col">Number of secondary structure elements</th>
+        <th class="vf-table__heading" scope="col">Side chain contributions</th>
+    </tr>
+  </thead>
+
+  <tbody class="vf-table__body">
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DSSP-T</td>
+      <td class="vf-table__cell">DSSP</td>
+      <td class="vf-table__cell">3</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DSSP-1</td>
+      <td class="vf-table__cell">DSSP</td>
+      <td class="vf-table__cell">4</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS3-1</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">5</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS6-1</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS5-4</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS-dT</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">3</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">HBSS-3</td>
+      <td class="vf-table__cell">HBSS</td>
+      <td class="vf-table__cell">5</td>
+      <td class="vf-table__cell">No</td>
+    </tr>
+
+    <!-- With side chain contributions -->
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS-dTSC3</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">3</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS5-4SC1</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DS6-1SC1</td>
+      <td class="vf-table__cell">DISICL</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DSSP-TSC1</td>
+      <td class="vf-table__cell">DSSP</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">DSSP-1SC3</td>
+      <td class="vf-table__cell">DSSP</td>
+      <td class="vf-table__cell">6</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+
+    <tr class="vf-table__row">
+      <td class="vf-table__cell">HBSS-3SC1</td>
+      <td class="vf-table__cell">HBSS</td>
+      <td class="vf-table__cell">5</td>
+      <td class="vf-table__cell">Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+    <br>
+<p class="vf-intro__text">
+    The predicted spectra are in mean unit molar ellipticity (delta epsilon) units and
+    can be compared against an experimental CD spectrum.
+    In that case, the RMSD (root mean squared error), NMRSD (normalised RMSD) and total error in the secondary structure composition (\( dSS \)) of the structural models are calculated.
+    The last term is based on the averaged deviation between the predicted and experimentally measured CD spectra. \( dSS \) values up to 10 percent are considered a good agreement.
+    For beta-rich proteins, we recommend the HBSS (or HBSS-3SC1) basis set. For proteins with a high percentage of turns, we recommend the DS5-4 (or DS5-4SC1) basis set.
+</p>
+
+<p class="vf-intro__text">
+    If you use this method, you must cite both ChiraKit and the original SESCA publication:
+    Nagy, Gabor, <i>et al.</i> "SESCA: predicting circular dichroism spectra from protein molecular structures." Journal of chemical theory and computation 15.9 (2019): 5087-5102.
+</p>
+
+<p class="vf-intro__subheading">
+Bayesian estimation of the secondary structure composition from a CD spectrum
+</p>
+
+<br>
+
+<p class="vf-intro__text">
+    The method is explained in <a href="https://www.sciencedirect.com/science/article/pii/S001046552100134X" target="_blank" rel="noopener noreferrer">Gabor, Nagy <i>et al.</i>, 2021</a>.
+    It uses a Monte Carlo scheme to sample possible secondary structures composition and provides uncertainty estimates for each class.
+    It also considers scaling errors (due to the imprecise measurement of protein concentration) and non-secondary-structure contributions (if the protein structure is provided and the appropriate basis
+    set is selected). For alpha-rich proteins, we recommend the Ds-dT (or DS-dTSC3) basis set.
+    For beta-rich proteins, we recommend the HBSS (or HBSS-3SC1) basis set.
+    For proteins with a high percentage of turns, we recommend the DS5-4 (or DS5-4SC1) basis set.
+</p>
+
+ <p class="vf-intro__text">
+    If you use this method, you must cite both ChiraKit and the original SESCA publication:
+     Nagy, Gabor, and Helmut Grubmuller. "Implementation of a Bayesian secondary structure estimation method for the SESCA circular dichroism analysis package." Computer Physics Communications 266 (2021): 108022.
+</p>
+
+</div>
+
+<br>
 <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('selcon')">The Selcon method<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
     </svg></a></div>
@@ -1529,17 +1764,10 @@ $$
 Finally, the mean of the double filtered valid solutions is reported.
 </p>  
 
-</div>
-
+<p class="vf-intro__subheading">
+Protein secondary structure elements (SELCON)
+</p>
 <br>
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('secondary_structure_elements')">Protein secondary structure elements<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
-    </svg></a></div>
-
-<div id="secondary_structure_elements" style="display:none">
-
-<br>
-
 <p class="vf-intro__text">
 All secondary structures elements come from the DSSP routine <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/bip.360221211?casa_token=afBAV3v9mqcAAAAA:jv8LbugAhgajsISeg2h1flntJEtfxyNo_yM5I1Ox14BCZ9MDYiitwEw-C8TJCz43Sowtg4YxBmutyw" target="_blank" rel="noopener noreferrer">(Kabsch, Wolfgang, and Christian Sander, 1983)</a>.
 Following the method of <a href="https://onlinelibrary.wiley.com/doi/abs/10.1110/ps.8.2.370" target="_blank" rel="noopener noreferrer">Sreerama, Narasimha <i>et al.</i>, 1999</a>, the secondary structure elements are further categorized as regular or distorted alpha-helix, regular or distorted beta-sheet, turns and 'other'.
@@ -1550,20 +1778,14 @@ The same division is made for beta sheets, with the difference that only the fir
 </p> 
 
 <p class="vf-intro__text">
-For a given spectrum with an unkown associated secondary structure, 
+For a given spectrum with an unknown associated secondary structure,
 if the lower wavelength range value is below 180 nm, the six secondary 
 structure elements can be detected. If the lower limit is between 180 and 190 nm (inclusive), four different fractions will be estimated:  Alpha, Beta, Turns and Other (Alpha = Alpha_R + Alpha_D, Beta = Beta_R + Beta_D).  
 </p>   
   
-</div>
-
-<br>
-<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('reference_sets')">Reference sets<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
-    </svg></a></div>
-
-<div id="reference_sets" style="display:none">
-
+<p class="vf-intro__subheading">
+Reference sets (SELCON)
+</p>
 <br>
 <p class="vf-intro__text">
 ChiraKit provides two reference sets: 1) AU_SP175 and 2) AU_SM180. These sets contain CD spectra from the same group of proteins as the original SP175 <a href="https://academic.oup.com/bioinformatics/article/22/16/1955/208282" target="_blank" rel="noopener noreferrer">(Lees, Jonathan G. <i>et al.</i>, 2006)</a> 
@@ -1706,7 +1928,7 @@ In the case of peptides that undergo helix to coil transitions, it's possible to
 </p>
 
 <p class="vf-intro__text">
-This model is suitable only for helix-coil type peptides having between 4 and 32 peptide-bonds. Avoid using it for peptides that do not exhibit clear helix to coil transitions (e.g., peptides with beta-sheet structure).
+This model is suitable only for helix-coil type peptides having between 4 and 40 peptide-bonds. Avoid using it for peptides that do not exhibit clear helix to coil transitions (e.g., peptides with beta-sheet structure).
 </p>
 
 </div>

@@ -1,0 +1,4895 @@
+# DISICL_main.py logfile
+
+********** DISICL_prep  **********
+
+
+/home/gnagy/Programs/SESCA_dev/DISICL/DISICL_prep.py @type 1 @traj 1scd.pdb 
+
+DISICL_prep script starts:
+/home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis
+
+number of arguments: 4
+flags found:
+type
+traj
+[] 1 0
+
+Files to process:
+1scd.pdb
+
+destination directory found:
+/home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis
+
+Valid Files found:
+1scd
+
+Total number of files: 1
+
+Model 1 from 1scd
+[2-54,58-274] [] []
+
+1scd.pdb (1/1), number of counted residues: 274 (last frame)
+[2-54,58-274] [] [] 1 274 116 
+
+
+274 residues found in frame 1: [2-54,58-274] [] []
+
+DISICL     files     frames     residues     residue list
+DISICL       1          1          274     [2-54,58-274] [] []
+
+program runtime: 0.12  seconds (0.00 h)
+File list and/or refined files written in /home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis
+Preparation script finished successfully! (/home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis)
+********** Dihed program **********
+
+DISICL_dihed for proteins
+/home/gnagy/Programs/SESCA_dev/DISICL/DISICL_dihed.py 1scd_DISICL.pdb @type 1 @traj  >> DISICL_1scd.log
+
+DISICL_dihed program starts
+/home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis
+
+number of arguments: 4
+flags found:
+type
+traj
+
+Input file detected: 1scd_DISICL.pdb
+using deafult pdb format
+
+No @res flag was given! Attempting to read DISICL remarks from file:
+DISICL       1          1          274     [2-54,58-274] [] []
+protein remark information found: 2-54,58-274
+
+Residue list updated:
+2-54,58-274
+
+res0, resmax, resnum
+2 274 270
+
+No library definition is specified using hardcoded libararies
+PHI  dihedral defined by['C', 'N', 'CA', 'C'],[-1, 0, 0, 0]
+PSI  dihedral defined by['N', 'CA', 'C', 'N'],[0, 0, 0, 1]
+
+Starting Dihedral angle calculations:
+frame 1 found
+ PHI  for residue 2   is -92.8 deg, defined by atoms:
+3 6 7 8
+3 ALA 1 C
+6 GLN 2 N
+7 GLN 2 CA
+8 GLN 2 C
+ PHI  for residue 3   is -102.7 deg, defined by atoms:
+8 15 16 17
+8 GLN 2 C
+15 THR 3 N
+16 THR 3 CA
+17 THR 3 C
+ PHI  for residue 4   is -117.6 deg, defined by atoms:
+17 22 23 24
+17 THR 3 C
+22 VAL 4 N
+23 VAL 4 CA
+24 VAL 4 C
+ PHI  for residue 5   is -51.4 deg, defined by atoms:
+24 29 30 31
+24 VAL 4 C
+29 PRO 5 N
+30 PRO 5 CA
+31 PRO 5 C
+ PHI  for residue 6   is -52.0 deg, defined by atoms:
+31 36 37 38
+31 PRO 5 C
+36 TYR 6 N
+37 TYR 6 CA
+38 TYR 6 C
+ PHI  for residue 7   is -53.0 deg, defined by atoms:
+38 48 49 50
+38 TYR 6 C
+48 GLY 7 N
+49 GLY 7 CA
+50 GLY 7 C
+ PHI  for residue 8   is -56.7 deg, defined by atoms:
+50 52 53 54
+50 GLY 7 C
+52 ILE 8 N
+53 ILE 8 CA
+54 ILE 8 C
+ PHI  for residue 9   is -69.1 deg, defined by atoms:
+54 60 61 62
+54 ILE 8 C
+60 PRO 9 N
+61 PRO 9 CA
+62 PRO 9 C
+ PHI  for residue 10  is -60.8 deg, defined by atoms:
+62 67 68 69
+62 PRO 9 C
+67 LEU 10 N
+68 LEU 10 CA
+69 LEU 10 C
+ PHI  for residue 11  is -95.0 deg, defined by atoms:
+69 75 76 77
+69 LEU 10 C
+75 ILE 11 N
+76 ILE 11 CA
+77 ILE 11 C
+ PHI  for residue 12  is 61.0 deg, defined by atoms:
+77 83 84 85
+77 ILE 11 C
+83 LYS 12 N
+84 LYS 12 CA
+85 LYS 12 C
+ PHI  for residue 13  is -73.5 deg, defined by atoms:
+85 92 93 94
+85 LYS 12 C
+92 ALA 13 N
+93 ALA 13 CA
+94 ALA 13 C
+ PHI  for residue 14  is -69.1 deg, defined by atoms:
+94 97 98 99
+94 ALA 13 C
+97 ASP 14 N
+98 ASP 14 CA
+99 ASP 14 C
+ PHI  for residue 15  is -71.5 deg, defined by atoms:
+99 105 106 107
+99 ASP 14 C
+105 LYS 15 N
+106 LYS 15 CA
+107 LYS 15 C
+ PHI  for residue 16  is -71.7 deg, defined by atoms:
+107 114 115 116
+107 LYS 15 C
+114 VAL 16 N
+115 VAL 16 CA
+116 VAL 16 C
+ PHI  for residue 17  is -62.0 deg, defined by atoms:
+116 121 122 123
+116 VAL 16 C
+121 GLN 17 N
+122 GLN 17 CA
+123 GLN 17 C
+ PHI  for residue 18  is -62.1 deg, defined by atoms:
+123 130 131 132
+123 GLN 17 C
+130 ALA 18 N
+131 ALA 18 CA
+132 ALA 18 C
+ PHI  for residue 19  is -78.3 deg, defined by atoms:
+132 135 136 137
+132 ALA 18 C
+135 GLN 19 N
+136 GLN 19 CA
+137 GLN 19 C
+ PHI  for residue 20  is 103.5 deg, defined by atoms:
+137 144 145 146
+137 GLN 19 C
+144 GLY 20 N
+145 GLY 20 CA
+146 GLY 20 C
+ PHI  for residue 21  is -111.5 deg, defined by atoms:
+146 148 149 150
+146 GLY 20 C
+148 PHE 21 N
+149 PHE 21 CA
+150 PHE 21 C
+ PHI  for residue 22  is -129.2 deg, defined by atoms:
+150 159 160 161
+150 PHE 21 C
+159 LYS 22 N
+160 LYS 22 CA
+161 LYS 22 C
+ PHI  for residue 23  is 92.7 deg, defined by atoms:
+161 168 169 170
+161 LYS 22 C
+168 GLY 23 N
+169 GLY 23 CA
+170 GLY 23 C
+ PHI  for residue 24  is -62.5 deg, defined by atoms:
+170 172 173 174
+170 GLY 23 C
+172 ALA 24 N
+173 ALA 24 CA
+174 ALA 24 C
+ PHI  for residue 25  is 82.3 deg, defined by atoms:
+174 177 178 179
+174 ALA 24 C
+177 ASN 25 N
+178 ASN 25 CA
+179 ASN 25 C
+ PHI  for residue 26  is -99.2 deg, defined by atoms:
+179 185 186 187
+179 ASN 25 C
+185 VAL 26 N
+186 VAL 26 CA
+187 VAL 26 C
+ PHI  for residue 27  is -99.4 deg, defined by atoms:
+187 192 193 194
+187 VAL 26 C
+192 LYS 27 N
+193 LYS 27 CA
+194 LYS 27 C
+ PHI  for residue 28  is -117.3 deg, defined by atoms:
+194 201 202 203
+194 LYS 27 C
+201 VAL 28 N
+202 VAL 28 CA
+203 VAL 28 C
+ PHI  for residue 29  is -101.2 deg, defined by atoms:
+203 208 209 210
+203 VAL 28 C
+208 ALA 29 N
+209 ALA 29 CA
+210 ALA 29 C
+ PHI  for residue 30  is -111.2 deg, defined by atoms:
+210 213 214 215
+210 ALA 29 C
+213 VAL 30 N
+214 VAL 30 CA
+215 VAL 30 C
+ PHI  for residue 31  is -85.8 deg, defined by atoms:
+215 220 221 222
+215 VAL 30 C
+220 LEU 31 N
+221 LEU 31 CA
+222 LEU 31 C
+ PHI  for residue 32  is -155.7 deg, defined by atoms:
+222 228 229 230
+222 LEU 31 C
+228 ASP 32 N
+229 ASP 32 CA
+230 ASP 32 C
+ PHI  for residue 33  is -85.6 deg, defined by atoms:
+230 236 237 238
+230 ASP 32 C
+236 THR 33 N
+237 THR 33 CA
+238 THR 33 C
+ PHI  for residue 34  is 99.8 deg, defined by atoms:
+238 243 244 245
+238 THR 33 C
+243 GLY 34 N
+244 GLY 34 CA
+245 GLY 34 C
+ PHI  for residue 35  is -143.7 deg, defined by atoms:
+245 247 248 249
+245 GLY 34 C
+247 ILE 35 N
+248 ILE 35 CA
+249 ILE 35 C
+ PHI  for residue 36  is -74.0 deg, defined by atoms:
+249 255 256 257
+249 ILE 35 C
+255 GLN 36 N
+256 GLN 36 CA
+257 GLN 36 C
+ PHI  for residue 37  is -54.6 deg, defined by atoms:
+257 264 265 266
+257 GLN 36 C
+264 ALA 37 N
+265 ALA 37 CA
+266 ALA 37 C
+ PHI  for residue 38  is -72.9 deg, defined by atoms:
+266 269 270 271
+266 ALA 37 C
+269 SER 38 N
+270 SER 38 CA
+271 SER 38 C
+ PHI  for residue 39  is -59.3 deg, defined by atoms:
+271 275 276 277
+271 SER 38 C
+275 HIS 39 N
+276 HIS 39 CA
+277 HIS 39 C
+ PHI  for residue 40  is -63.0 deg, defined by atoms:
+277 285 286 287
+277 HIS 39 C
+285 PRO 40 N
+286 PRO 40 CA
+287 PRO 40 C
+ PHI  for residue 41  is -91.7 deg, defined by atoms:
+287 292 293 294
+287 PRO 40 C
+292 ASP 41 N
+293 ASP 41 CA
+294 ASP 41 C
+ PHI  for residue 42  is -139.3 deg, defined by atoms:
+294 300 301 302
+294 ASP 41 C
+300 LEU 42 N
+301 LEU 42 CA
+302 LEU 42 C
+ PHI  for residue 43  is -125.5 deg, defined by atoms:
+302 308 309 310
+302 LEU 42 C
+308 ASN 43 N
+309 ASN 43 CA
+310 ASN 43 C
+ PHI  for residue 44  is -91.6 deg, defined by atoms:
+310 316 317 318
+310 ASN 43 C
+316 VAL 44 N
+317 VAL 44 CA
+318 VAL 44 C
+ PHI  for residue 45  is -89.1 deg, defined by atoms:
+318 323 324 325
+318 VAL 44 C
+323 VAL 45 N
+324 VAL 45 CA
+325 VAL 45 C
+ PHI  for residue 46  is 176.7 deg, defined by atoms:
+325 330 331 332
+325 VAL 45 C
+330 GLY 46 N
+331 GLY 46 CA
+332 GLY 46 C
+ PHI  for residue 47  is 156.4 deg, defined by atoms:
+332 334 335 336
+332 GLY 46 C
+334 GLY 47 N
+335 GLY 47 CA
+336 GLY 47 C
+ PHI  for residue 48  is -144.1 deg, defined by atoms:
+336 338 339 340
+336 GLY 47 C
+338 ALA 48 N
+339 ALA 48 CA
+340 ALA 48 C
+ PHI  for residue 49  is -134.4 deg, defined by atoms:
+340 343 344 345
+340 ALA 48 C
+343 SER 49 N
+344 SER 49 CA
+345 SER 49 C
+ PHI  for residue 50  is -115.5 deg, defined by atoms:
+345 349 350 351
+345 SER 49 C
+349 PHE 50 N
+350 PHE 50 CA
+351 PHE 50 C
+ PHI  for residue 51  is -112.7 deg, defined by atoms:
+351 360 361 362
+351 PHE 50 C
+360 VAL 51 N
+361 VAL 51 CA
+362 VAL 51 C
+ PHI  for residue 52  is -59.0 deg, defined by atoms:
+362 367 368 369
+362 VAL 51 C
+367 ALA 52 N
+368 ALA 52 CA
+369 ALA 52 C
+ PHI  for residue 53  is 76.8 deg, defined by atoms:
+369 372 373 374
+369 ALA 52 C
+372 GLY 53 N
+373 GLY 53 CA
+374 GLY 53 C
+ PHI  for residue 54  is -124.4 deg, defined by atoms:
+374 376 377 378
+374 GLY 53 C
+376 GLU 54 N
+377 GLU 54 CA
+378 GLU 54 C
+ PHI  for residue 58  is -101.0 deg, defined by atoms:
+392 402 403 404
+392 TYR 57 C
+402 ASN 58 N
+403 ASN 58 CA
+404 ASN 58 C
+ PHI  for residue 59  is -139.1 deg, defined by atoms:
+404 410 411 412
+404 ASN 58 C
+410 THR 59 N
+411 THR 59 CA
+412 THR 59 C
+ PHI  for residue 60  is -137.4 deg, defined by atoms:
+412 417 418 419
+412 THR 59 C
+417 ASP 60 N
+418 ASP 60 CA
+419 ASP 60 C
+ PHI  for residue 61  is -90.7 deg, defined by atoms:
+419 425 426 427
+419 ASP 60 C
+425 GLY 61 N
+426 GLY 61 CA
+427 GLY 61 C
+ PHI  for residue 62  is -108.1 deg, defined by atoms:
+427 429 430 431
+427 GLY 61 C
+429 ASN 62 N
+430 ASN 62 CA
+431 ASN 62 C
+ PHI  for residue 63  is 114.6 deg, defined by atoms:
+431 437 438 439
+431 ASN 62 C
+437 GLY 63 N
+438 GLY 63 CA
+439 GLY 63 C
+ PHI  for residue 64  is -51.4 deg, defined by atoms:
+439 441 442 443
+439 GLY 63 C
+441 HIS 64 N
+442 HIS 64 CA
+443 HIS 64 C
+ PHI  for residue 65  is -58.4 deg, defined by atoms:
+443 451 452 453
+443 HIS 64 C
+451 GLY 65 N
+452 GLY 65 CA
+453 GLY 65 C
+ PHI  for residue 66  is -56.9 deg, defined by atoms:
+453 455 456 457
+453 GLY 65 C
+455 THR 66 N
+456 THR 66 CA
+457 THR 66 C
+ PHI  for residue 67  is -56.8 deg, defined by atoms:
+457 462 463 464
+457 THR 66 C
+462 HIS 67 N
+463 HIS 67 CA
+464 HIS 67 C
+ PHI  for residue 68  is -57.7 deg, defined by atoms:
+464 472 473 474
+464 HIS 67 C
+472 VAL 68 N
+473 VAL 68 CA
+474 VAL 68 C
+ PHI  for residue 69  is -53.0 deg, defined by atoms:
+474 479 480 481
+474 VAL 68 C
+479 ALA 69 N
+480 ALA 69 CA
+481 ALA 69 C
+ PHI  for residue 70  is -65.7 deg, defined by atoms:
+481 484 485 486
+481 ALA 69 C
+484 GLY 70 N
+485 GLY 70 CA
+486 GLY 70 C
+ PHI  for residue 71  is -69.1 deg, defined by atoms:
+486 488 489 490
+486 GLY 70 C
+488 THR 71 N
+489 THR 71 CA
+490 THR 71 C
+ PHI  for residue 72  is -69.6 deg, defined by atoms:
+490 495 496 497
+490 THR 71 C
+495 VAL 72 N
+496 VAL 72 CA
+497 VAL 72 C
+ PHI  for residue 73  is -134.1 deg, defined by atoms:
+497 502 503 504
+497 VAL 72 C
+502 ALA 73 N
+503 ALA 73 CA
+504 ALA 73 C
+ PHI  for residue 74  is -57.6 deg, defined by atoms:
+504 507 508 509
+504 ALA 73 C
+507 ALA 74 N
+508 ALA 74 CA
+509 ALA 74 C
+ PHI  for residue 75  is -53.3 deg, defined by atoms:
+509 512 513 514
+509 ALA 74 C
+512 LEU 75 N
+513 LEU 75 CA
+514 LEU 75 C
+ PHI  for residue 76  is -90.9 deg, defined by atoms:
+514 520 521 522
+514 LEU 75 C
+520 ASP 76 N
+521 ASP 76 CA
+522 ASP 76 C
+ PHI  for residue 77  is -157.6 deg, defined by atoms:
+522 528 529 530
+522 ASP 76 C
+528 ASN 77 N
+529 ASN 77 CA
+530 ASN 77 C
+ PHI  for residue 78  is -120.2 deg, defined by atoms:
+530 536 537 538
+530 ASN 77 C
+536 THR 78 N
+537 THR 78 CA
+538 THR 78 C
+ PHI  for residue 79  is -139.1 deg, defined by atoms:
+538 543 544 545
+538 THR 78 C
+543 THR 79 N
+544 THR 79 CA
+545 THR 79 C
+ PHI  for residue 80  is 50.4 deg, defined by atoms:
+545 550 551 552
+545 THR 79 C
+550 GLY 80 N
+551 GLY 80 CA
+552 GLY 80 C
+ PHI  for residue 81  is -114.7 deg, defined by atoms:
+552 554 555 556
+552 GLY 80 C
+554 VAL 81 N
+555 VAL 81 CA
+556 VAL 81 C
+ PHI  for residue 82  is -142.8 deg, defined by atoms:
+556 561 562 563
+556 VAL 81 C
+561 LEU 82 N
+562 LEU 82 CA
+563 LEU 82 C
+ PHI  for residue 83  is -83.8 deg, defined by atoms:
+563 569 570 571
+563 LEU 82 C
+569 GLY 83 N
+570 GLY 83 CA
+571 GLY 83 C
+ PHI  for residue 84  is -60.3 deg, defined by atoms:
+571 573 574 575
+571 GLY 83 C
+573 VAL 84 N
+574 VAL 84 CA
+575 VAL 84 C
+ PHI  for residue 85  is -136.3 deg, defined by atoms:
+575 580 581 582
+575 VAL 84 C
+580 ALA 85 N
+581 ALA 85 CA
+582 ALA 85 C
+ PHI  for residue 86  is -50.7 deg, defined by atoms:
+582 585 586 587
+582 ALA 85 C
+585 PRO 86 N
+586 PRO 86 CA
+587 PRO 86 C
+ PHI  for residue 87  is -91.9 deg, defined by atoms:
+587 592 593 594
+587 PRO 86 C
+592 SER 87 N
+593 SER 87 CA
+594 SER 87 C
+ PHI  for residue 88  is -66.9 deg, defined by atoms:
+594 598 599 600
+594 SER 87 C
+598 VAL 88 N
+599 VAL 88 CA
+600 VAL 88 C
+ PHI  for residue 89  is -92.2 deg, defined by atoms:
+600 605 606 607
+600 VAL 88 C
+605 SER 89 N
+606 SER 89 CA
+607 SER 89 C
+ PHI  for residue 90  is -102.0 deg, defined by atoms:
+607 611 612 613
+607 SER 89 C
+611 LEU 90 N
+612 LEU 90 CA
+613 LEU 90 C
+ PHI  for residue 91  is -110.9 deg, defined by atoms:
+613 619 620 621
+613 LEU 90 C
+619 TYR 91 N
+620 TYR 91 CA
+621 TYR 91 C
+ PHI  for residue 92  is -109.7 deg, defined by atoms:
+621 631 632 633
+621 TYR 91 C
+631 ALA 92 N
+632 ALA 92 CA
+633 ALA 92 C
+ PHI  for residue 93  is -113.2 deg, defined by atoms:
+633 636 637 638
+633 ALA 92 C
+636 VAL 93 N
+637 VAL 93 CA
+638 VAL 93 C
+ PHI  for residue 94  is -80.4 deg, defined by atoms:
+638 643 644 645
+638 VAL 93 C
+643 LYS 94 N
+644 LYS 94 CA
+645 LYS 94 C
+ PHI  for residue 95  is -122.3 deg, defined by atoms:
+645 652 653 654
+645 LYS 94 C
+652 VAL 95 N
+653 VAL 95 CA
+654 VAL 95 C
+ PHI  for residue 96  is -117.8 deg, defined by atoms:
+654 659 660 661
+654 VAL 95 C
+659 LEU 96 N
+660 LEU 96 CA
+661 LEU 96 C
+ PHI  for residue 97  is -89.7 deg, defined by atoms:
+661 667 668 669
+661 LEU 96 C
+667 ASN 97 N
+668 ASN 97 CA
+669 ASN 97 C
+ PHI  for residue 98  is -51.5 deg, defined by atoms:
+669 675 676 677
+669 ASN 97 C
+675 SER 98 N
+676 SER 98 CA
+677 SER 98 C
+ PHI  for residue 99  is -87.4 deg, defined by atoms:
+677 681 682 683
+677 SER 98 C
+681 SER 99 N
+682 SER 99 CA
+683 SER 99 C
+ PHI  for residue 100 is 87.6 deg, defined by atoms:
+683 687 688 689
+683 SER 99 C
+687 GLY 100 N
+688 GLY 100 CA
+689 GLY 100 C
+ PHI  for residue 101 is -128.3 deg, defined by atoms:
+689 691 692 693
+689 GLY 100 C
+691 SER 101 N
+692 SER 101 CA
+693 SER 101 C
+ PHI  for residue 102 is -138.4 deg, defined by atoms:
+693 697 698 699
+693 SER 101 C
+697 GLY 102 N
+698 GLY 102 CA
+699 GLY 102 C
+ PHI  for residue 103 is -98.5 deg, defined by atoms:
+699 701 702 703
+699 GLY 102 C
+701 SER 103 N
+702 SER 103 CA
+703 SER 103 C
+ PHI  for residue 104 is -56.5 deg, defined by atoms:
+703 707 708 709
+703 SER 103 C
+707 TYR 104 N
+708 TYR 104 CA
+709 TYR 104 C
+ PHI  for residue 105 is -66.4 deg, defined by atoms:
+709 719 720 721
+709 TYR 104 C
+719 SER 105 N
+720 SER 105 CA
+721 SER 105 C
+ PHI  for residue 106 is -64.1 deg, defined by atoms:
+721 725 726 727
+721 SER 105 C
+725 GLY 106 N
+726 GLY 106 CA
+727 GLY 106 C
+ PHI  for residue 107 is -57.5 deg, defined by atoms:
+727 729 730 731
+727 GLY 106 C
+729 ILE 107 N
+730 ILE 107 CA
+731 ILE 107 C
+ PHI  for residue 108 is -51.8 deg, defined by atoms:
+731 737 738 739
+731 ILE 107 C
+737 VAL 108 N
+738 VAL 108 CA
+739 VAL 108 C
+ PHI  for residue 109 is -60.9 deg, defined by atoms:
+739 744 745 746
+739 VAL 108 C
+744 SER 109 N
+745 SER 109 CA
+746 SER 109 C
+ PHI  for residue 110 is -59.9 deg, defined by atoms:
+746 750 751 752
+746 SER 109 C
+750 GLY 110 N
+751 GLY 110 CA
+752 GLY 110 C
+ PHI  for residue 111 is -66.9 deg, defined by atoms:
+752 754 755 756
+752 GLY 110 C
+754 ILE 111 N
+755 ILE 111 CA
+756 ILE 111 C
+ PHI  for residue 112 is -70.2 deg, defined by atoms:
+756 762 763 764
+756 ILE 111 C
+762 GLU 112 N
+763 GLU 112 CA
+764 GLU 112 C
+ PHI  for residue 113 is -63.1 deg, defined by atoms:
+764 771 772 773
+764 GLU 112 C
+771 TRP 113 N
+772 TRP 113 CA
+773 TRP 113 C
+ PHI  for residue 114 is -57.8 deg, defined by atoms:
+773 785 786 787
+773 TRP 113 C
+785 ALA 114 N
+786 ALA 114 CA
+787 ALA 114 C
+ PHI  for residue 115 is -75.7 deg, defined by atoms:
+787 790 791 792
+787 ALA 114 C
+790 THR 115 N
+791 THR 115 CA
+792 THR 115 C
+ PHI  for residue 116 is -64.3 deg, defined by atoms:
+792 797 798 799
+792 THR 115 C
+797 THR 116 N
+798 THR 116 CA
+799 THR 116 C
+ PHI  for residue 117 is -98.9 deg, defined by atoms:
+799 804 805 806
+799 THR 116 C
+804 ASN 117 N
+805 ASN 117 CA
+806 ASN 117 C
+ PHI  for residue 118 is 75.6 deg, defined by atoms:
+806 812 813 814
+806 ASN 117 C
+812 GLY 118 N
+813 GLY 118 CA
+814 GLY 118 C
+ PHI  for residue 119 is -67.0 deg, defined by atoms:
+814 816 817 818
+814 GLY 118 C
+816 MET 119 N
+817 MET 119 CA
+818 MET 119 C
+ PHI  for residue 120 is -84.1 deg, defined by atoms:
+818 824 825 826
+818 MET 119 C
+824 ASP 120 N
+825 ASP 120 CA
+826 ASP 120 C
+ PHI  for residue 121 is -132.9 deg, defined by atoms:
+826 832 833 834
+826 ASP 120 C
+832 VAL 121 N
+833 VAL 121 CA
+834 VAL 121 C
+ PHI  for residue 122 is -117.4 deg, defined by atoms:
+834 839 840 841
+834 VAL 121 C
+839 ILE 122 N
+840 ILE 122 CA
+841 ILE 122 C
+ PHI  for residue 123 is -102.6 deg, defined by atoms:
+841 847 848 849
+841 ILE 122 C
+847 ASN 123 N
+848 ASN 123 CA
+849 ASN 123 C
+ PHI  for residue 124 is -125.9 deg, defined by atoms:
+849 855 856 857
+849 ASN 123 C
+855 MET 124 N
+856 MET 124 CA
+857 MET 124 C
+ PHI  for residue 125 is -97.1 deg, defined by atoms:
+857 863 864 865
+857 MET 124 C
+863 SER 125 N
+864 SER 125 CA
+865 SER 125 C
+ PHI  for residue 126 is -166.0 deg, defined by atoms:
+865 869 870 871
+865 SER 125 C
+869 LEU 126 N
+870 LEU 126 CA
+871 LEU 126 C
+ PHI  for residue 127 is 178.7 deg, defined by atoms:
+871 877 878 879
+871 LEU 126 C
+877 GLY 127 N
+878 GLY 127 CA
+879 GLY 127 C
+ PHI  for residue 128 is -138.1 deg, defined by atoms:
+879 881 882 883
+879 GLY 127 C
+881 GLY 128 N
+882 GLY 128 CA
+883 GLY 128 C
+ PHI  for residue 129 is -65.5 deg, defined by atoms:
+883 885 886 887
+883 GLY 128 C
+885 ALA 129 N
+886 ALA 129 CA
+887 ALA 129 C
+ PHI  for residue 130 is -115.4 deg, defined by atoms:
+887 890 891 892
+887 ALA 129 C
+890 SER 130 N
+891 SER 130 CA
+892 SER 130 C
+ PHI  for residue 131 is -105.0 deg, defined by atoms:
+892 896 897 898
+892 SER 130 C
+896 GLY 131 N
+897 GLY 131 CA
+898 GLY 131 C
+ PHI  for residue 132 is -170.8 deg, defined by atoms:
+898 900 901 902
+898 GLY 131 C
+900 SER 132 N
+901 SER 132 CA
+902 SER 132 C
+ PHI  for residue 133 is -68.7 deg, defined by atoms:
+902 906 907 908
+902 SER 132 C
+906 THR 133 N
+907 THR 133 CA
+908 THR 133 C
+ PHI  for residue 134 is -66.3 deg, defined by atoms:
+908 913 914 915
+908 THR 133 C
+913 ALA 134 N
+914 ALA 134 CA
+915 ALA 134 C
+ PHI  for residue 135 is -60.7 deg, defined by atoms:
+915 918 919 920
+915 ALA 134 C
+918 MET 135 N
+919 MET 135 CA
+920 MET 135 C
+ PHI  for residue 136 is -66.2 deg, defined by atoms:
+920 926 927 928
+920 MET 135 C
+926 LYS 136 N
+927 LYS 136 CA
+928 LYS 136 C
+ PHI  for residue 137 is -64.1 deg, defined by atoms:
+928 935 936 937
+928 LYS 136 C
+935 GLN 137 N
+936 GLN 137 CA
+937 GLN 137 C
+ PHI  for residue 138 is -55.9 deg, defined by atoms:
+937 944 945 946
+937 GLN 137 C
+944 ALA 138 N
+945 ALA 138 CA
+946 ALA 138 C
+ PHI  for residue 139 is -77.3 deg, defined by atoms:
+946 949 950 951
+946 ALA 138 C
+949 VAL 139 N
+950 VAL 139 CA
+951 VAL 139 C
+ PHI  for residue 140 is -66.8 deg, defined by atoms:
+951 956 957 958
+951 VAL 139 C
+956 ASP 140 N
+957 ASP 140 CA
+958 ASP 140 C
+ PHI  for residue 141 is -69.1 deg, defined by atoms:
+958 964 965 966
+958 ASP 140 C
+964 ASN 141 N
+965 ASN 141 CA
+966 ASN 141 C
+ PHI  for residue 142 is -52.7 deg, defined by atoms:
+966 972 973 974
+966 ASN 141 C
+972 ALA 142 N
+973 ALA 142 CA
+974 ALA 142 C
+ PHI  for residue 143 is -71.2 deg, defined by atoms:
+974 977 978 979
+974 ALA 142 C
+977 TYR 143 N
+978 TYR 143 CA
+979 TYR 143 C
+ PHI  for residue 144 is -71.1 deg, defined by atoms:
+979 989 990 991
+979 TYR 143 C
+989 ALA 144 N
+990 ALA 144 CA
+991 ALA 144 C
+ PHI  for residue 145 is -83.2 deg, defined by atoms:
+991 994 995 996
+991 ALA 144 C
+994 ARG 145 N
+995 ARG 145 CA
+996 ARG 145 C
+ PHI  for residue 146 is 95.4 deg, defined by atoms:
+996 1005 1006 1007
+996 ARG 145 C
+1005 GLY 146 N
+1006 GLY 146 CA
+1007 GLY 146 C
+ PHI  for residue 147 is -87.5 deg, defined by atoms:
+1007 1009 1010 1011
+1007 GLY 146 C
+1009 VAL 147 N
+1010 VAL 147 CA
+1011 VAL 147 C
+ PHI  for residue 148 is -95.6 deg, defined by atoms:
+1011 1016 1017 1018
+1011 VAL 147 C
+1016 VAL 148 N
+1017 VAL 148 CA
+1018 VAL 148 C
+ PHI  for residue 149 is -111.1 deg, defined by atoms:
+1018 1023 1024 1025
+1018 VAL 148 C
+1023 VAL 149 N
+1024 VAL 149 CA
+1025 VAL 149 C
+ PHI  for residue 150 is -124.0 deg, defined by atoms:
+1025 1030 1031 1032
+1025 VAL 149 C
+1030 VAL 150 N
+1031 VAL 150 CA
+1032 VAL 150 C
+ PHI  for residue 151 is -138.1 deg, defined by atoms:
+1032 1037 1038 1039
+1032 VAL 150 C
+1037 ALA 151 N
+1038 ALA 151 CA
+1039 ALA 151 C
+ PHI  for residue 152 is -79.2 deg, defined by atoms:
+1039 1042 1043 1044
+1039 ALA 151 C
+1042 ALA 152 N
+1043 ALA 152 CA
+1044 ALA 152 C
+ PHI  for residue 153 is -66.2 deg, defined by atoms:
+1044 1047 1048 1049
+1044 ALA 152 C
+1047 ALA 153 N
+1048 ALA 153 CA
+1049 ALA 153 C
+ PHI  for residue 154 is 132.6 deg, defined by atoms:
+1049 1052 1053 1054
+1049 ALA 153 C
+1052 GLY 154 N
+1053 GLY 154 CA
+1054 GLY 154 C
+ PHI  for residue 155 is -113.8 deg, defined by atoms:
+1054 1056 1057 1058
+1054 GLY 154 C
+1056 ASN 155 N
+1057 ASN 155 CA
+1058 ASN 155 C
+ PHI  for residue 156 is -94.1 deg, defined by atoms:
+1058 1064 1065 1066
+1058 ASN 155 C
+1064 SER 156 N
+1065 SER 156 CA
+1066 SER 156 C
+ PHI  for residue 157 is 65.4 deg, defined by atoms:
+1066 1070 1071 1072
+1066 SER 156 C
+1070 GLY 157 N
+1071 GLY 157 CA
+1072 GLY 157 C
+ PHI  for residue 158 is -124.5 deg, defined by atoms:
+1072 1074 1075 1076
+1072 GLY 157 C
+1074 ASN 158 N
+1075 ASN 158 CA
+1076 ASN 158 C
+ PHI  for residue 159 is -159.5 deg, defined by atoms:
+1076 1082 1083 1084
+1076 ASN 158 C
+1082 SER 159 N
+1083 SER 159 CA
+1084 SER 159 C
+ PHI  for residue 160 is 76.8 deg, defined by atoms:
+1084 1088 1089 1090
+1084 SER 159 C
+1088 GLY 160 N
+1089 GLY 160 CA
+1090 GLY 160 C
+ PHI  for residue 161 is -83.8 deg, defined by atoms:
+1090 1092 1093 1094
+1090 GLY 160 C
+1092 SER 161 N
+1093 SER 161 CA
+1094 SER 161 C
+ PHI  for residue 162 is -71.1 deg, defined by atoms:
+1094 1098 1099 1100
+1094 SER 161 C
+1098 THR 162 N
+1099 THR 162 CA
+1100 THR 162 C
+ PHI  for residue 163 is -83.1 deg, defined by atoms:
+1100 1105 1106 1107
+1100 THR 162 C
+1105 ASN 163 N
+1106 ASN 163 CA
+1107 ASN 163 C
+ PHI  for residue 164 is -116.7 deg, defined by atoms:
+1107 1113 1114 1115
+1107 ASN 163 C
+1113 THR 164 N
+1114 THR 164 CA
+1115 THR 164 C
+ PHI  for residue 165 is -81.3 deg, defined by atoms:
+1115 1120 1121 1122
+1115 THR 164 C
+1120 ILE 165 N
+1121 ILE 165 CA
+1122 ILE 165 C
+ PHI  for residue 166 is -109.6 deg, defined by atoms:
+1122 1128 1129 1130
+1122 ILE 165 C
+1128 GLY 166 N
+1129 GLY 166 CA
+1130 GLY 166 C
+ PHI  for residue 167 is -96.0 deg, defined by atoms:
+1130 1132 1133 1134
+1130 GLY 166 C
+1132 TYR 167 N
+1133 TYR 167 CA
+1134 TYR 167 C
+ PHI  for residue 168 is -87.0 deg, defined by atoms:
+1134 1144 1145 1146
+1134 TYR 167 C
+1144 PRO 168 N
+1145 PRO 168 CA
+1146 PRO 168 C
+ PHI  for residue 169 is -47.7 deg, defined by atoms:
+1146 1151 1152 1153
+1146 PRO 168 C
+1151 ALA 169 N
+1152 ALA 169 CA
+1153 ALA 169 C
+ PHI  for residue 170 is -60.9 deg, defined by atoms:
+1153 1156 1157 1158
+1153 ALA 169 C
+1156 LYS 170 N
+1157 LYS 170 CA
+1158 LYS 170 C
+ PHI  for residue 171 is -62.3 deg, defined by atoms:
+1158 1165 1166 1167
+1158 LYS 170 C
+1165 TYR 171 N
+1166 TYR 171 CA
+1167 TYR 171 C
+ PHI  for residue 172 is -77.8 deg, defined by atoms:
+1167 1177 1178 1179
+1167 TYR 171 C
+1177 ASP 172 N
+1178 ASP 172 CA
+1179 ASP 172 C
+ PHI  for residue 173 is -92.1 deg, defined by atoms:
+1179 1185 1186 1187
+1179 ASP 172 C
+1185 SER 173 N
+1186 SER 173 CA
+1187 SER 173 C
+ PHI  for residue 174 is -123.5 deg, defined by atoms:
+1187 1191 1192 1193
+1187 SER 173 C
+1191 VAL 174 N
+1192 VAL 174 CA
+1193 VAL 174 C
+ PHI  for residue 175 is -90.1 deg, defined by atoms:
+1193 1198 1199 1200
+1193 VAL 174 C
+1198 ILE 175 N
+1199 ILE 175 CA
+1200 ILE 175 C
+ PHI  for residue 176 is -82.5 deg, defined by atoms:
+1200 1206 1207 1208
+1200 ILE 175 C
+1206 ALA 176 N
+1207 ALA 176 CA
+1208 ALA 176 C
+ PHI  for residue 177 is -117.7 deg, defined by atoms:
+1208 1211 1212 1213
+1208 ALA 176 C
+1211 VAL 177 N
+1212 VAL 177 CA
+1213 VAL 177 C
+ PHI  for residue 178 is -97.6 deg, defined by atoms:
+1213 1218 1219 1220
+1213 VAL 177 C
+1218 GLY 178 N
+1219 GLY 178 CA
+1220 GLY 178 C
+ PHI  for residue 179 is -120.3 deg, defined by atoms:
+1220 1222 1223 1224
+1220 GLY 178 C
+1222 ALA 179 N
+1223 ALA 179 CA
+1224 ALA 179 C
+ PHI  for residue 180 is -122.4 deg, defined by atoms:
+1224 1227 1228 1229
+1224 ALA 179 C
+1227 VAL 180 N
+1228 VAL 180 CA
+1229 VAL 180 C
+ PHI  for residue 181 is -99.8 deg, defined by atoms:
+1229 1234 1235 1236
+1229 VAL 180 C
+1234 ASP 181 N
+1235 ASP 181 CA
+1236 ASP 181 C
+ PHI  for residue 182 is -60.3 deg, defined by atoms:
+1236 1242 1243 1244
+1236 ASP 181 C
+1242 SER 182 N
+1243 SER 182 CA
+1244 SER 182 C
+ PHI  for residue 183 is -94.9 deg, defined by atoms:
+1244 1248 1249 1250
+1244 SER 182 C
+1248 ASN 183 N
+1249 ASN 183 CA
+1250 ASN 183 C
+ PHI  for residue 184 is 65.8 deg, defined by atoms:
+1250 1256 1257 1258
+1250 ASN 183 C
+1256 SER 184 N
+1257 SER 184 CA
+1258 SER 184 C
+ PHI  for residue 185 is -99.7 deg, defined by atoms:
+1258 1262 1263 1264
+1258 SER 184 C
+1262 ASN 185 N
+1263 ASN 185 CA
+1264 ASN 185 C
+ PHI  for residue 186 is -60.7 deg, defined by atoms:
+1264 1270 1271 1272
+1264 ASN 185 C
+1270 ARG 186 N
+1271 ARG 186 CA
+1272 ARG 186 C
+ PHI  for residue 187 is -72.9 deg, defined by atoms:
+1272 1281 1282 1283
+1272 ARG 186 C
+1281 ALA 187 N
+1282 ALA 187 CA
+1283 ALA 187 C
+ PHI  for residue 188 is -60.1 deg, defined by atoms:
+1283 1286 1287 1288
+1283 ALA 187 C
+1286 SER 188 N
+1287 SER 188 CA
+1288 SER 188 C
+ PHI  for residue 189 is -79.1 deg, defined by atoms:
+1288 1292 1293 1294
+1288 SER 188 C
+1292 PHE 189 N
+1293 PHE 189 CA
+1294 PHE 189 C
+ PHI  for residue 190 is -59.4 deg, defined by atoms:
+1294 1303 1304 1305
+1294 PHE 189 C
+1303 SER 190 N
+1304 SER 190 CA
+1305 SER 190 C
+ PHI  for residue 191 is -61.8 deg, defined by atoms:
+1305 1309 1310 1311
+1305 SER 190 C
+1309 SER 191 N
+1310 SER 191 CA
+1311 SER 191 C
+ PHI  for residue 192 is -131.8 deg, defined by atoms:
+1311 1315 1316 1317
+1311 SER 191 C
+1315 VAL 192 N
+1316 VAL 192 CA
+1317 VAL 192 C
+ PHI  for residue 193 is 151.5 deg, defined by atoms:
+1317 1322 1323 1324
+1317 VAL 192 C
+1322 GLY 193 N
+1323 GLY 193 CA
+1324 GLY 193 C
+ PHI  for residue 194 is -59.3 deg, defined by atoms:
+1324 1326 1327 1328
+1324 GLY 193 C
+1326 ALA 194 N
+1327 ALA 194 CA
+1328 ALA 194 C
+ PHI  for residue 195 is -79.2 deg, defined by atoms:
+1328 1331 1332 1333
+1328 ALA 194 C
+1331 GLU 195 N
+1332 GLU 195 CA
+1333 GLU 195 C
+ PHI  for residue 196 is -63.9 deg, defined by atoms:
+1333 1340 1341 1342
+1333 GLU 195 C
+1340 LEU 196 N
+1341 LEU 196 CA
+1342 LEU 196 C
+ PHI  for residue 197 is -109.7 deg, defined by atoms:
+1342 1348 1349 1350
+1342 LEU 196 C
+1348 GLU 197 N
+1349 GLU 197 CA
+1350 GLU 197 C
+ PHI  for residue 198 is -143.9 deg, defined by atoms:
+1350 1357 1358 1359
+1350 GLU 197 C
+1357 VAL 198 N
+1358 VAL 198 CA
+1359 VAL 198 C
+ PHI  for residue 199 is -119.5 deg, defined by atoms:
+1359 1364 1365 1366
+1359 VAL 198 C
+1364 MET 199 N
+1365 MET 199 CA
+1366 MET 199 C
+ PHI  for residue 200 is -157.6 deg, defined by atoms:
+1366 1372 1373 1374
+1366 MET 199 C
+1372 ALA 200 N
+1373 ALA 200 CA
+1374 ALA 200 C
+ PHI  for residue 201 is -62.6 deg, defined by atoms:
+1374 1377 1378 1379
+1374 ALA 200 C
+1377 PRO 201 N
+1378 PRO 201 CA
+1379 PRO 201 C
+ PHI  for residue 202 is -144.1 deg, defined by atoms:
+1379 1384 1385 1386
+1379 PRO 201 C
+1384 GLY 202 N
+1385 GLY 202 CA
+1386 GLY 202 C
+ PHI  for residue 203 is -107.2 deg, defined by atoms:
+1386 1388 1389 1390
+1386 GLY 202 C
+1388 ALA 203 N
+1389 ALA 203 CA
+1390 ALA 203 C
+ PHI  for residue 204 is 58.6 deg, defined by atoms:
+1390 1393 1394 1395
+1390 ALA 203 C
+1393 GLY 204 N
+1394 GLY 204 CA
+1395 GLY 204 C
+ PHI  for residue 205 is -93.3 deg, defined by atoms:
+1395 1397 1398 1399
+1395 GLY 204 C
+1397 VAL 205 N
+1398 VAL 205 CA
+1399 VAL 205 C
+ PHI  for residue 206 is -88.6 deg, defined by atoms:
+1399 1404 1405 1406
+1399 VAL 205 C
+1404 TYR 206 N
+1405 TYR 206 CA
+1406 TYR 206 C
+ PHI  for residue 207 is -152.8 deg, defined by atoms:
+1406 1416 1417 1418
+1406 TYR 206 C
+1416 SER 207 N
+1417 SER 207 CA
+1418 SER 207 C
+ PHI  for residue 208 is -58.2 deg, defined by atoms:
+1418 1422 1423 1424
+1418 SER 207 C
+1422 THR 208 N
+1423 THR 208 CA
+1424 THR 208 C
+ PHI  for residue 209 is -155.1 deg, defined by atoms:
+1424 1429 1430 1431
+1424 THR 208 C
+1429 TYR 209 N
+1430 TYR 209 CA
+1431 TYR 209 C
+ PHI  for residue 210 is -56.0 deg, defined by atoms:
+1431 1441 1442 1443
+1431 TYR 209 C
+1441 PRO 210 N
+1442 PRO 210 CA
+1443 PRO 210 C
+ PHI  for residue 211 is 48.4 deg, defined by atoms:
+1443 1448 1449 1450
+1443 PRO 210 C
+1448 THR 211 N
+1449 THR 211 CA
+1450 THR 211 C
+ PHI  for residue 212 is 50.0 deg, defined by atoms:
+1450 1455 1456 1457
+1450 THR 211 C
+1455 ASN 212 N
+1456 ASN 212 CA
+1457 ASN 212 C
+ PHI  for residue 213 is -135.4 deg, defined by atoms:
+1457 1463 1464 1465
+1457 ASN 212 C
+1463 THR 213 N
+1464 THR 213 CA
+1465 THR 213 C
+ PHI  for residue 214 is -142.1 deg, defined by atoms:
+1465 1470 1471 1472
+1465 THR 213 C
+1470 TYR 214 N
+1471 TYR 214 CA
+1472 TYR 214 C
+ PHI  for residue 215 is -148.5 deg, defined by atoms:
+1472 1482 1483 1484
+1472 TYR 214 C
+1482 ALA 215 N
+1483 ALA 215 CA
+1484 ALA 215 C
+ PHI  for residue 216 is -107.0 deg, defined by atoms:
+1484 1487 1488 1489
+1484 ALA 215 C
+1487 THR 216 N
+1488 THR 216 CA
+1489 THR 216 C
+ PHI  for residue 217 is -140.0 deg, defined by atoms:
+1489 1494 1495 1496
+1489 THR 216 C
+1494 LEU 217 N
+1495 LEU 217 CA
+1496 LEU 217 C
+ PHI  for residue 218 is -114.4 deg, defined by atoms:
+1496 1502 1503 1504
+1496 LEU 217 C
+1502 ASN 218 N
+1503 ASN 218 CA
+1504 ASN 218 C
+ PHI  for residue 219 is 150.1 deg, defined by atoms:
+1504 1510 1511 1512
+1504 ASN 218 C
+1510 GLY 219 N
+1511 GLY 219 CA
+1512 GLY 219 C
+ PHI  for residue 220 is -71.9 deg, defined by atoms:
+1512 1514 1515 1516
+1512 GLY 219 C
+1514 THR 220 N
+1515 THR 220 CA
+1516 THR 220 C
+ PHI  for residue 221 is -66.4 deg, defined by atoms:
+1516 1521 1522 1523
+1516 THR 220 C
+1521 SER 221 N
+1522 SER 221 CA
+1523 SER 221 C
+ PHI  for residue 222 is -80.0 deg, defined by atoms:
+1523 1527 1528 1529
+1523 SER 221 C
+1527 MET 222 N
+1528 MET 222 CA
+1529 MET 222 C
+ PHI  for residue 223 is -78.1 deg, defined by atoms:
+1529 1535 1536 1537
+1529 MET 222 C
+1535 ALA 223 N
+1536 ALA 223 CA
+1537 ALA 223 C
+ PHI  for residue 224 is -49.3 deg, defined by atoms:
+1537 1540 1541 1542
+1537 ALA 223 C
+1540 SER 224 N
+1541 SER 224 CA
+1542 SER 224 C
+ PHI  for residue 225 is -57.2 deg, defined by atoms:
+1542 1546 1547 1548
+1542 SER 224 C
+1546 PRO 225 N
+1547 PRO 225 CA
+1548 PRO 225 C
+ PHI  for residue 226 is -67.8 deg, defined by atoms:
+1548 1553 1554 1555
+1548 PRO 225 C
+1553 HIS 226 N
+1554 HIS 226 CA
+1555 HIS 226 C
+ PHI  for residue 227 is -83.9 deg, defined by atoms:
+1555 1563 1564 1565
+1555 HIS 226 C
+1563 VAL 227 N
+1564 VAL 227 CA
+1565 VAL 227 C
+ PHI  for residue 228 is -56.6 deg, defined by atoms:
+1565 1570 1571 1572
+1565 VAL 227 C
+1570 ALA 228 N
+1571 ALA 228 CA
+1572 ALA 228 C
+ PHI  for residue 229 is -68.1 deg, defined by atoms:
+1572 1575 1576 1577
+1572 ALA 228 C
+1575 GLY 229 N
+1576 GLY 229 CA
+1577 GLY 229 C
+ PHI  for residue 230 is -64.3 deg, defined by atoms:
+1577 1579 1580 1581
+1577 GLY 229 C
+1579 ALA 230 N
+1580 ALA 230 CA
+1581 ALA 230 C
+ PHI  for residue 231 is -52.8 deg, defined by atoms:
+1581 1584 1585 1586
+1581 ALA 230 C
+1584 ALA 231 N
+1585 ALA 231 CA
+1586 ALA 231 C
+ PHI  for residue 232 is -66.9 deg, defined by atoms:
+1586 1589 1590 1591
+1586 ALA 231 C
+1589 ALA 232 N
+1590 ALA 232 CA
+1591 ALA 232 C
+ PHI  for residue 233 is -58.9 deg, defined by atoms:
+1591 1594 1595 1596
+1591 ALA 232 C
+1594 LEU 233 N
+1595 LEU 233 CA
+1596 LEU 233 C
+ PHI  for residue 234 is -55.7 deg, defined by atoms:
+1596 1602 1603 1604
+1596 LEU 233 C
+1602 ILE 234 N
+1603 ILE 234 CA
+1604 ILE 234 C
+ PHI  for residue 235 is -64.7 deg, defined by atoms:
+1604 1610 1611 1612
+1604 ILE 234 C
+1610 LEU 235 N
+1611 LEU 235 CA
+1612 LEU 235 C
+ PHI  for residue 236 is -68.6 deg, defined by atoms:
+1612 1618 1619 1620
+1612 LEU 235 C
+1618 SER 236 N
+1619 SER 236 CA
+1620 SER 236 C
+ PHI  for residue 237 is -87.8 deg, defined by atoms:
+1620 1624 1625 1626
+1620 SER 236 C
+1624 LYS 237 N
+1625 LYS 237 CA
+1626 LYS 237 C
+ PHI  for residue 238 is -125.7 deg, defined by atoms:
+1626 1633 1634 1635
+1626 LYS 237 C
+1633 HIS 238 N
+1634 HIS 238 CA
+1635 HIS 238 C
+ PHI  for residue 239 is -56.9 deg, defined by atoms:
+1635 1643 1644 1645
+1635 HIS 238 C
+1643 PRO 239 N
+1644 PRO 239 CA
+1645 PRO 239 C
+ PHI  for residue 240 is -65.0 deg, defined by atoms:
+1645 1650 1651 1652
+1645 PRO 239 C
+1650 ASN 240 N
+1651 ASN 240 CA
+1652 ASN 240 C
+ PHI  for residue 241 is -66.4 deg, defined by atoms:
+1652 1658 1659 1660
+1652 ASN 240 C
+1658 LEU 241 N
+1659 LEU 241 CA
+1660 LEU 241 C
+ PHI  for residue 242 is -99.9 deg, defined by atoms:
+1660 1666 1667 1668
+1660 LEU 241 C
+1666 SER 242 N
+1667 SER 242 CA
+1668 SER 242 C
+ PHI  for residue 243 is -48.0 deg, defined by atoms:
+1668 1672 1673 1674
+1668 SER 242 C
+1672 ALA 243 N
+1673 ALA 243 CA
+1674 ALA 243 C
+ PHI  for residue 244 is -76.8 deg, defined by atoms:
+1674 1677 1678 1679
+1674 ALA 243 C
+1677 SER 244 N
+1678 SER 244 CA
+1679 SER 244 C
+ PHI  for residue 245 is -76.4 deg, defined by atoms:
+1679 1683 1684 1685
+1679 SER 244 C
+1683 GLN 245 N
+1684 GLN 245 CA
+1685 GLN 245 C
+ PHI  for residue 246 is -71.3 deg, defined by atoms:
+1685 1692 1693 1694
+1685 GLN 245 C
+1692 VAL 246 N
+1693 VAL 246 CA
+1694 VAL 246 C
+ PHI  for residue 247 is -55.7 deg, defined by atoms:
+1694 1699 1700 1701
+1694 VAL 246 C
+1699 ARG 247 N
+1700 ARG 247 CA
+1701 ARG 247 C
+ PHI  for residue 248 is -60.4 deg, defined by atoms:
+1701 1710 1711 1712
+1701 ARG 247 C
+1710 ASN 248 N
+1711 ASN 248 CA
+1712 ASN 248 C
+ PHI  for residue 249 is -70.2 deg, defined by atoms:
+1712 1718 1719 1720
+1712 ASN 248 C
+1718 ARG 249 N
+1719 ARG 249 CA
+1720 ARG 249 C
+ PHI  for residue 250 is -62.9 deg, defined by atoms:
+1720 1729 1730 1731
+1720 ARG 249 C
+1729 LEU 250 N
+1730 LEU 250 CA
+1731 LEU 250 C
+ PHI  for residue 251 is -77.4 deg, defined by atoms:
+1731 1737 1738 1739
+1731 LEU 250 C
+1737 SER 251 N
+1738 SER 251 CA
+1739 SER 251 C
+ PHI  for residue 252 is -69.0 deg, defined by atoms:
+1739 1743 1744 1745
+1739 SER 251 C
+1743 SER 252 N
+1744 SER 252 CA
+1745 SER 252 C
+ PHI  for residue 253 is -98.7 deg, defined by atoms:
+1745 1749 1750 1751
+1745 SER 252 C
+1749 THR 253 N
+1750 THR 253 CA
+1751 THR 253 C
+ PHI  for residue 254 is -69.7 deg, defined by atoms:
+1751 1756 1757 1758
+1751 THR 253 C
+1756 ALA 254 N
+1757 ALA 254 CA
+1758 ALA 254 C
+ PHI  for residue 255 is -76.2 deg, defined by atoms:
+1758 1761 1762 1763
+1758 ALA 254 C
+1761 THR 255 N
+1762 THR 255 CA
+1763 THR 255 C
+ PHI  for residue 256 is -61.5 deg, defined by atoms:
+1763 1768 1769 1770
+1763 THR 255 C
+1768 TYR 256 N
+1769 TYR 256 CA
+1770 TYR 256 C
+ PHI  for residue 257 is -121.4 deg, defined by atoms:
+1770 1780 1781 1782
+1770 TYR 256 C
+1780 LEU 257 N
+1781 LEU 257 CA
+1782 LEU 257 C
+ PHI  for residue 258 is 148.1 deg, defined by atoms:
+1782 1788 1789 1790
+1782 LEU 257 C
+1788 GLY 258 N
+1789 GLY 258 CA
+1790 GLY 258 C
+ PHI  for residue 259 is -51.5 deg, defined by atoms:
+1790 1792 1793 1794
+1790 GLY 258 C
+1792 SER 259 N
+1793 SER 259 CA
+1794 SER 259 C
+ PHI  for residue 260 is -69.0 deg, defined by atoms:
+1794 1798 1799 1800
+1794 SER 259 C
+1798 SER 260 N
+1799 SER 260 CA
+1800 SER 260 C
+ PHI  for residue 261 is -67.3 deg, defined by atoms:
+1800 1804 1805 1806
+1800 SER 260 C
+1804 PHE 261 N
+1805 PHE 261 CA
+1806 PHE 261 C
+ PHI  for residue 262 is -109.6 deg, defined by atoms:
+1806 1815 1816 1817
+1806 PHE 261 C
+1815 TYR 262 N
+1816 TYR 262 CA
+1817 TYR 262 C
+ PHI  for residue 263 is -128.8 deg, defined by atoms:
+1817 1827 1828 1829
+1817 TYR 262 C
+1827 TYR 263 N
+1828 TYR 263 CA
+1829 TYR 263 C
+ PHI  for residue 264 is 55.5 deg, defined by atoms:
+1829 1839 1840 1841
+1829 TYR 263 C
+1839 GLY 264 N
+1840 GLY 264 CA
+1841 GLY 264 C
+ PHI  for residue 265 is -79.2 deg, defined by atoms:
+1841 1843 1844 1845
+1841 GLY 264 C
+1843 LYS 265 N
+1844 LYS 265 CA
+1845 LYS 265 C
+ PHI  for residue 266 is 121.5 deg, defined by atoms:
+1845 1852 1853 1854
+1845 LYS 265 C
+1852 GLY 266 N
+1853 GLY 266 CA
+1854 GLY 266 C
+ PHI  for residue 267 is -76.1 deg, defined by atoms:
+1854 1856 1857 1858
+1854 GLY 266 C
+1856 LEU 267 N
+1857 LEU 267 CA
+1858 LEU 267 C
+ PHI  for residue 268 is -70.7 deg, defined by atoms:
+1858 1864 1865 1866
+1858 LEU 267 C
+1864 ILE 268 N
+1865 ILE 268 CA
+1866 ILE 268 C
+ PHI  for residue 269 is -136.8 deg, defined by atoms:
+1866 1872 1873 1874
+1866 ILE 268 C
+1872 ASN 269 N
+1873 ASN 269 CA
+1874 ASN 269 C
+ PHI  for residue 270 is -73.1 deg, defined by atoms:
+1874 1880 1881 1882
+1874 ASN 269 C
+1880 VAL 270 N
+1881 VAL 270 CA
+1882 VAL 270 C
+ PHI  for residue 271 is -62.7 deg, defined by atoms:
+1882 1887 1888 1889
+1882 VAL 270 C
+1887 GLU 271 N
+1888 GLU 271 CA
+1889 GLU 271 C
+ PHI  for residue 272 is -67.7 deg, defined by atoms:
+1889 1896 1897 1898
+1889 GLU 271 C
+1896 ALA 272 N
+1897 ALA 272 CA
+1898 ALA 272 C
+ PHI  for residue 273 is -69.1 deg, defined by atoms:
+1898 1901 1902 1903
+1898 ALA 272 C
+1901 ALA 273 N
+1902 ALA 273 CA
+1903 ALA 273 C
+ PHI  for residue 274 is -94.8 deg, defined by atoms:
+1903 1906 1907 1908
+1903 ALA 273 C
+1906 ALA 274 N
+1907 ALA 274 CA
+1908 ALA 274 C
+ PSI  for residue 2   is 136.2 deg, defined by atoms:
+6 7 8 15
+6 GLN 2 N
+7 GLN 2 CA
+8 GLN 2 C
+15 THR 3 N
+ PSI  for residue 3   is 143.0 deg, defined by atoms:
+15 16 17 22
+15 THR 3 N
+16 THR 3 CA
+17 THR 3 C
+22 VAL 4 N
+ PSI  for residue 4   is 98.3 deg, defined by atoms:
+22 23 24 29
+22 VAL 4 N
+23 VAL 4 CA
+24 VAL 4 C
+29 PRO 5 N
+ PSI  for residue 5   is 135.1 deg, defined by atoms:
+29 30 31 36
+29 PRO 5 N
+30 PRO 5 CA
+31 PRO 5 C
+36 TYR 6 N
+ PSI  for residue 6   is -29.8 deg, defined by atoms:
+36 37 38 48
+36 TYR 6 N
+37 TYR 6 CA
+38 TYR 6 C
+48 GLY 7 N
+ PSI  for residue 7   is -43.6 deg, defined by atoms:
+48 49 50 52
+48 GLY 7 N
+49 GLY 7 CA
+50 GLY 7 C
+52 ILE 8 N
+ PSI  for residue 8   is -50.8 deg, defined by atoms:
+52 53 54 60
+52 ILE 8 N
+53 ILE 8 CA
+54 ILE 8 C
+60 PRO 9 N
+ PSI  for residue 9   is -35.9 deg, defined by atoms:
+60 61 62 67
+60 PRO 9 N
+61 PRO 9 CA
+62 PRO 9 C
+67 LEU 10 N
+ PSI  for residue 10  is -37.3 deg, defined by atoms:
+67 68 69 75
+67 LEU 10 N
+68 LEU 10 CA
+69 LEU 10 C
+75 ILE 11 N
+ PSI  for residue 11  is -0.3 deg, defined by atoms:
+75 76 77 83
+75 ILE 11 N
+76 ILE 11 CA
+77 ILE 11 C
+83 LYS 12 N
+ PSI  for residue 12  is 39.0 deg, defined by atoms:
+83 84 85 92
+83 LYS 12 N
+84 LYS 12 CA
+85 LYS 12 C
+92 ALA 13 N
+ PSI  for residue 13  is -23.2 deg, defined by atoms:
+92 93 94 97
+92 ALA 13 N
+93 ALA 13 CA
+94 ALA 13 C
+97 ASP 14 N
+ PSI  for residue 14  is -33.6 deg, defined by atoms:
+97 98 99 105
+97 ASP 14 N
+98 ASP 14 CA
+99 ASP 14 C
+105 LYS 15 N
+ PSI  for residue 15  is -37.3 deg, defined by atoms:
+105 106 107 114
+105 LYS 15 N
+106 LYS 15 CA
+107 LYS 15 C
+114 VAL 16 N
+ PSI  for residue 16  is -37.4 deg, defined by atoms:
+114 115 116 121
+114 VAL 16 N
+115 VAL 16 CA
+116 VAL 16 C
+121 GLN 17 N
+ PSI  for residue 17  is -40.9 deg, defined by atoms:
+121 122 123 130
+121 GLN 17 N
+122 GLN 17 CA
+123 GLN 17 C
+130 ALA 18 N
+ PSI  for residue 18  is -28.5 deg, defined by atoms:
+130 131 132 135
+130 ALA 18 N
+131 ALA 18 CA
+132 ALA 18 C
+135 GLN 19 N
+ PSI  for residue 19  is -10.9 deg, defined by atoms:
+135 136 137 144
+135 GLN 19 N
+136 GLN 19 CA
+137 GLN 19 C
+144 GLY 20 N
+ PSI  for residue 20  is 12.7 deg, defined by atoms:
+144 145 146 148
+144 GLY 20 N
+145 GLY 20 CA
+146 GLY 20 C
+148 PHE 21 N
+ PSI  for residue 21  is 118.0 deg, defined by atoms:
+148 149 150 159
+148 PHE 21 N
+149 PHE 21 CA
+150 PHE 21 C
+159 LYS 22 N
+ PSI  for residue 22  is 6.3 deg, defined by atoms:
+159 160 161 168
+159 LYS 22 N
+160 LYS 22 CA
+161 LYS 22 C
+168 GLY 23 N
+ PSI  for residue 23  is 18.4 deg, defined by atoms:
+168 169 170 172
+168 GLY 23 N
+169 GLY 23 CA
+170 GLY 23 C
+172 ALA 24 N
+ PSI  for residue 24  is 130.2 deg, defined by atoms:
+172 173 174 177
+172 ALA 24 N
+173 ALA 24 CA
+174 ALA 24 C
+177 ASN 25 N
+ PSI  for residue 25  is 5.2 deg, defined by atoms:
+177 178 179 185
+177 ASN 25 N
+178 ASN 25 CA
+179 ASN 25 C
+185 VAL 26 N
+ PSI  for residue 26  is 133.5 deg, defined by atoms:
+185 186 187 192
+185 VAL 26 N
+186 VAL 26 CA
+187 VAL 26 C
+192 LYS 27 N
+ PSI  for residue 27  is 118.7 deg, defined by atoms:
+192 193 194 201
+192 LYS 27 N
+193 LYS 27 CA
+194 LYS 27 C
+201 VAL 28 N
+ PSI  for residue 28  is 127.9 deg, defined by atoms:
+201 202 203 208
+201 VAL 28 N
+202 VAL 28 CA
+203 VAL 28 C
+208 ALA 29 N
+ PSI  for residue 29  is 134.0 deg, defined by atoms:
+208 209 210 213
+208 ALA 29 N
+209 ALA 29 CA
+210 ALA 29 C
+213 VAL 30 N
+ PSI  for residue 30  is 106.5 deg, defined by atoms:
+213 214 215 220
+213 VAL 30 N
+214 VAL 30 CA
+215 VAL 30 C
+220 LEU 31 N
+ PSI  for residue 31  is 102.1 deg, defined by atoms:
+220 221 222 228
+220 LEU 31 N
+221 LEU 31 CA
+222 LEU 31 C
+228 ASP 32 N
+ PSI  for residue 32  is -146.3 deg, defined by atoms:
+228 229 230 236
+228 ASP 32 N
+229 ASP 32 CA
+230 ASP 32 C
+236 THR 33 N
+ PSI  for residue 33  is 7.7 deg, defined by atoms:
+236 237 238 243
+236 THR 33 N
+237 THR 33 CA
+238 THR 33 C
+243 GLY 34 N
+ PSI  for residue 34  is -171.0 deg, defined by atoms:
+243 244 245 247
+243 GLY 34 N
+244 GLY 34 CA
+245 GLY 34 C
+247 ILE 35 N
+ PSI  for residue 35  is 136.7 deg, defined by atoms:
+247 248 249 255
+247 ILE 35 N
+248 ILE 35 CA
+249 ILE 35 C
+255 GLN 36 N
+ PSI  for residue 36  is 90.3 deg, defined by atoms:
+255 256 257 264
+255 GLN 36 N
+256 GLN 36 CA
+257 GLN 36 C
+264 ALA 37 N
+ PSI  for residue 37  is -32.7 deg, defined by atoms:
+264 265 266 269
+264 ALA 37 N
+265 ALA 37 CA
+266 ALA 37 C
+269 SER 38 N
+ PSI  for residue 38  is -10.5 deg, defined by atoms:
+269 270 271 275
+269 SER 38 N
+270 SER 38 CA
+271 SER 38 C
+275 HIS 39 N
+ PSI  for residue 39  is 130.3 deg, defined by atoms:
+275 276 277 285
+275 HIS 39 N
+276 HIS 39 CA
+277 HIS 39 C
+285 PRO 40 N
+ PSI  for residue 40  is -23.9 deg, defined by atoms:
+285 286 287 292
+285 PRO 40 N
+286 PRO 40 CA
+287 PRO 40 C
+292 ASP 41 N
+ PSI  for residue 41  is 14.4 deg, defined by atoms:
+292 293 294 300
+292 ASP 41 N
+293 ASP 41 CA
+294 ASP 41 C
+300 LEU 42 N
+ PSI  for residue 42  is 146.7 deg, defined by atoms:
+300 301 302 308
+300 LEU 42 N
+301 LEU 42 CA
+302 LEU 42 C
+308 ASN 43 N
+ PSI  for residue 43  is 92.8 deg, defined by atoms:
+308 309 310 316
+308 ASN 43 N
+309 ASN 43 CA
+310 ASN 43 C
+316 VAL 44 N
+ PSI  for residue 44  is 122.4 deg, defined by atoms:
+316 317 318 323
+316 VAL 44 N
+317 VAL 44 CA
+318 VAL 44 C
+323 VAL 45 N
+ PSI  for residue 45  is -27.1 deg, defined by atoms:
+323 324 325 330
+323 VAL 45 N
+324 VAL 45 CA
+325 VAL 45 C
+330 GLY 46 N
+ PSI  for residue 46  is -163.4 deg, defined by atoms:
+330 331 332 334
+330 GLY 46 N
+331 GLY 46 CA
+332 GLY 46 C
+334 GLY 47 N
+ PSI  for residue 47  is -166.4 deg, defined by atoms:
+334 335 336 338
+334 GLY 47 N
+335 GLY 47 CA
+336 GLY 47 C
+338 ALA 48 N
+ PSI  for residue 48  is 164.8 deg, defined by atoms:
+338 339 340 343
+338 ALA 48 N
+339 ALA 48 CA
+340 ALA 48 C
+343 SER 49 N
+ PSI  for residue 49  is 127.8 deg, defined by atoms:
+343 344 345 349
+343 SER 49 N
+344 SER 49 CA
+345 SER 49 C
+349 PHE 50 N
+ PSI  for residue 50  is 14.4 deg, defined by atoms:
+349 350 351 360
+349 PHE 50 N
+350 PHE 50 CA
+351 PHE 50 C
+360 VAL 51 N
+ PSI  for residue 51  is 128.2 deg, defined by atoms:
+360 361 362 367
+360 VAL 51 N
+361 VAL 51 CA
+362 VAL 51 C
+367 ALA 52 N
+ PSI  for residue 52  is 132.8 deg, defined by atoms:
+367 368 369 372
+367 ALA 52 N
+368 ALA 52 CA
+369 ALA 52 C
+372 GLY 53 N
+ PSI  for residue 53  is -2.6 deg, defined by atoms:
+372 373 374 376
+372 GLY 53 N
+373 GLY 53 CA
+374 GLY 53 C
+376 GLU 54 N
+ PSI  for residue 54  is 129.3 deg, defined by atoms:
+376 377 378 385
+376 GLU 54 N
+377 GLU 54 CA
+378 GLU 54 C
+385 ALA 55 N
+ PSI  for residue 58  is 24.1 deg, defined by atoms:
+402 403 404 410
+402 ASN 58 N
+403 ASN 58 CA
+404 ASN 58 C
+410 THR 59 N
+ PSI  for residue 59  is 147.7 deg, defined by atoms:
+410 411 412 417
+410 THR 59 N
+411 THR 59 CA
+412 THR 59 C
+417 ASP 60 N
+ PSI  for residue 60  is 106.9 deg, defined by atoms:
+417 418 419 425
+417 ASP 60 N
+418 ASP 60 CA
+419 ASP 60 C
+425 GLY 61 N
+ PSI  for residue 61  is 5.1 deg, defined by atoms:
+425 426 427 429
+425 GLY 61 N
+426 GLY 61 CA
+427 GLY 61 C
+429 ASN 62 N
+ PSI  for residue 62  is -52.8 deg, defined by atoms:
+429 430 431 437
+429 ASN 62 N
+430 ASN 62 CA
+431 ASN 62 C
+437 GLY 63 N
+ PSI  for residue 63  is -27.2 deg, defined by atoms:
+437 438 439 441
+437 GLY 63 N
+438 GLY 63 CA
+439 GLY 63 C
+441 HIS 64 N
+ PSI  for residue 64  is -52.3 deg, defined by atoms:
+441 442 443 451
+441 HIS 64 N
+442 HIS 64 CA
+443 HIS 64 C
+451 GLY 65 N
+ PSI  for residue 65  is -46.0 deg, defined by atoms:
+451 452 453 455
+451 GLY 65 N
+452 GLY 65 CA
+453 GLY 65 C
+455 THR 66 N
+ PSI  for residue 66  is -47.5 deg, defined by atoms:
+455 456 457 462
+455 THR 66 N
+456 THR 66 CA
+457 THR 66 C
+462 HIS 67 N
+ PSI  for residue 67  is -54.0 deg, defined by atoms:
+462 463 464 472
+462 HIS 67 N
+463 HIS 67 CA
+464 HIS 67 C
+472 VAL 68 N
+ PSI  for residue 68  is -49.4 deg, defined by atoms:
+472 473 474 479
+472 VAL 68 N
+473 VAL 68 CA
+474 VAL 68 C
+479 ALA 69 N
+ PSI  for residue 69  is -37.7 deg, defined by atoms:
+479 480 481 484
+479 ALA 69 N
+480 ALA 69 CA
+481 ALA 69 C
+484 GLY 70 N
+ PSI  for residue 70  is -37.1 deg, defined by atoms:
+484 485 486 488
+484 GLY 70 N
+485 GLY 70 CA
+486 GLY 70 C
+488 THR 71 N
+ PSI  for residue 71  is -37.2 deg, defined by atoms:
+488 489 490 495
+488 THR 71 N
+489 THR 71 CA
+490 THR 71 C
+495 VAL 72 N
+ PSI  for residue 72  is -54.4 deg, defined by atoms:
+495 496 497 502
+495 VAL 72 N
+496 VAL 72 CA
+497 VAL 72 C
+502 ALA 73 N
+ PSI  for residue 73  is 32.2 deg, defined by atoms:
+502 503 504 507
+502 ALA 73 N
+503 ALA 73 CA
+504 ALA 73 C
+507 ALA 74 N
+ PSI  for residue 74  is 132.5 deg, defined by atoms:
+507 508 509 512
+507 ALA 74 N
+508 ALA 74 CA
+509 ALA 74 C
+512 LEU 75 N
+ PSI  for residue 75  is 144.0 deg, defined by atoms:
+512 513 514 520
+512 LEU 75 N
+513 LEU 75 CA
+514 LEU 75 C
+520 ASP 76 N
+ PSI  for residue 76  is 105.5 deg, defined by atoms:
+520 521 522 528
+520 ASP 76 N
+521 ASP 76 CA
+522 ASP 76 C
+528 ASN 77 N
+ PSI  for residue 77  is -143.3 deg, defined by atoms:
+528 529 530 536
+528 ASN 77 N
+529 ASN 77 CA
+530 ASN 77 C
+536 THR 78 N
+ PSI  for residue 78  is 17.6 deg, defined by atoms:
+536 537 538 543
+536 THR 78 N
+537 THR 78 CA
+538 THR 78 C
+543 THR 79 N
+ PSI  for residue 79  is 170.6 deg, defined by atoms:
+543 544 545 550
+543 THR 79 N
+544 THR 79 CA
+545 THR 79 C
+550 GLY 80 N
+ PSI  for residue 80  is -125.3 deg, defined by atoms:
+550 551 552 554
+550 GLY 80 N
+551 GLY 80 CA
+552 GLY 80 C
+554 VAL 81 N
+ PSI  for residue 81  is -164.9 deg, defined by atoms:
+554 555 556 561
+554 VAL 81 N
+555 VAL 81 CA
+556 VAL 81 C
+561 LEU 82 N
+ PSI  for residue 82  is 133.5 deg, defined by atoms:
+561 562 563 569
+561 LEU 82 N
+562 LEU 82 CA
+563 LEU 82 C
+569 GLY 83 N
+ PSI  for residue 83  is 161.7 deg, defined by atoms:
+569 570 571 573
+569 GLY 83 N
+570 GLY 83 CA
+571 GLY 83 C
+573 VAL 84 N
+ PSI  for residue 84  is -41.2 deg, defined by atoms:
+573 574 575 580
+573 VAL 84 N
+574 VAL 84 CA
+575 VAL 84 C
+580 ALA 85 N
+ PSI  for residue 85  is 68.8 deg, defined by atoms:
+580 581 582 585
+580 ALA 85 N
+581 ALA 85 CA
+582 ALA 85 C
+585 PRO 86 N
+ PSI  for residue 86  is -30.7 deg, defined by atoms:
+585 586 587 592
+585 PRO 86 N
+586 PRO 86 CA
+587 PRO 86 C
+592 SER 87 N
+ PSI  for residue 87  is 7.1 deg, defined by atoms:
+592 593 594 598
+592 SER 87 N
+593 SER 87 CA
+594 SER 87 C
+598 VAL 88 N
+ PSI  for residue 88  is 161.5 deg, defined by atoms:
+598 599 600 605
+598 VAL 88 N
+599 VAL 88 CA
+600 VAL 88 C
+605 SER 89 N
+ PSI  for residue 89  is 110.1 deg, defined by atoms:
+605 606 607 611
+605 SER 89 N
+606 SER 89 CA
+607 SER 89 C
+611 LEU 90 N
+ PSI  for residue 90  is 122.9 deg, defined by atoms:
+611 612 613 619
+611 LEU 90 N
+612 LEU 90 CA
+613 LEU 90 C
+619 TYR 91 N
+ PSI  for residue 91  is 140.3 deg, defined by atoms:
+619 620 621 631
+619 TYR 91 N
+620 TYR 91 CA
+621 TYR 91 C
+631 ALA 92 N
+ PSI  for residue 92  is 113.4 deg, defined by atoms:
+631 632 633 636
+631 ALA 92 N
+632 ALA 92 CA
+633 ALA 92 C
+636 VAL 93 N
+ PSI  for residue 93  is 106.4 deg, defined by atoms:
+636 637 638 643
+636 VAL 93 N
+637 VAL 93 CA
+638 VAL 93 C
+643 LYS 94 N
+ PSI  for residue 94  is 113.0 deg, defined by atoms:
+643 644 645 652
+643 LYS 94 N
+644 LYS 94 CA
+645 LYS 94 C
+652 VAL 95 N
+ PSI  for residue 95  is -12.7 deg, defined by atoms:
+652 653 654 659
+652 VAL 95 N
+653 VAL 95 CA
+654 VAL 95 C
+659 LEU 96 N
+ PSI  for residue 96  is 151.8 deg, defined by atoms:
+659 660 661 667
+659 LEU 96 N
+660 LEU 96 CA
+661 LEU 96 C
+667 ASN 97 N
+ PSI  for residue 97  is 179.2 deg, defined by atoms:
+667 668 669 675
+667 ASN 97 N
+668 ASN 97 CA
+669 ASN 97 C
+675 SER 98 N
+ PSI  for residue 98  is -36.2 deg, defined by atoms:
+675 676 677 681
+675 SER 98 N
+676 SER 98 CA
+677 SER 98 C
+681 SER 99 N
+ PSI  for residue 99  is -1.9 deg, defined by atoms:
+681 682 683 687
+681 SER 99 N
+682 SER 99 CA
+683 SER 99 C
+687 GLY 100 N
+ PSI  for residue 100 is 13.1 deg, defined by atoms:
+687 688 689 691
+687 GLY 100 N
+688 GLY 100 CA
+689 GLY 100 C
+691 SER 101 N
+ PSI  for residue 101 is 155.5 deg, defined by atoms:
+691 692 693 697
+691 SER 101 N
+692 SER 101 CA
+693 SER 101 C
+697 GLY 102 N
+ PSI  for residue 102 is 175.8 deg, defined by atoms:
+697 698 699 701
+697 GLY 102 N
+698 GLY 102 CA
+699 GLY 102 C
+701 SER 103 N
+ PSI  for residue 103 is 149.1 deg, defined by atoms:
+701 702 703 707
+701 SER 103 N
+702 SER 103 CA
+703 SER 103 C
+707 TYR 104 N
+ PSI  for residue 104 is -41.8 deg, defined by atoms:
+707 708 709 719
+707 TYR 104 N
+708 TYR 104 CA
+709 TYR 104 C
+719 SER 105 N
+ PSI  for residue 105 is -31.0 deg, defined by atoms:
+719 720 721 725
+719 SER 105 N
+720 SER 105 CA
+721 SER 105 C
+725 GLY 106 N
+ PSI  for residue 106 is -49.5 deg, defined by atoms:
+725 726 727 729
+725 GLY 106 N
+726 GLY 106 CA
+727 GLY 106 C
+729 ILE 107 N
+ PSI  for residue 107 is -55.6 deg, defined by atoms:
+729 730 731 737
+729 ILE 107 N
+730 ILE 107 CA
+731 ILE 107 C
+737 VAL 108 N
+ PSI  for residue 108 is -42.4 deg, defined by atoms:
+737 738 739 744
+737 VAL 108 N
+738 VAL 108 CA
+739 VAL 108 C
+744 SER 109 N
+ PSI  for residue 109 is -48.1 deg, defined by atoms:
+744 745 746 750
+744 SER 109 N
+745 SER 109 CA
+746 SER 109 C
+750 GLY 110 N
+ PSI  for residue 110 is -39.1 deg, defined by atoms:
+750 751 752 754
+750 GLY 110 N
+751 GLY 110 CA
+752 GLY 110 C
+754 ILE 111 N
+ PSI  for residue 111 is -43.6 deg, defined by atoms:
+754 755 756 762
+754 ILE 111 N
+755 ILE 111 CA
+756 ILE 111 C
+762 GLU 112 N
+ PSI  for residue 112 is -28.3 deg, defined by atoms:
+762 763 764 771
+762 GLU 112 N
+763 GLU 112 CA
+764 GLU 112 C
+771 TRP 113 N
+ PSI  for residue 113 is -51.8 deg, defined by atoms:
+771 772 773 785
+771 TRP 113 N
+772 TRP 113 CA
+773 TRP 113 C
+785 ALA 114 N
+ PSI  for residue 114 is -32.7 deg, defined by atoms:
+785 786 787 790
+785 ALA 114 N
+786 ALA 114 CA
+787 ALA 114 C
+790 THR 115 N
+ PSI  for residue 115 is -42.6 deg, defined by atoms:
+790 791 792 797
+790 THR 115 N
+791 THR 115 CA
+792 THR 115 C
+797 THR 116 N
+ PSI  for residue 116 is -27.7 deg, defined by atoms:
+797 798 799 804
+797 THR 116 N
+798 THR 116 CA
+799 THR 116 C
+804 ASN 117 N
+ PSI  for residue 117 is 8.1 deg, defined by atoms:
+804 805 806 812
+804 ASN 117 N
+805 ASN 117 CA
+806 ASN 117 C
+812 GLY 118 N
+ PSI  for residue 118 is 30.6 deg, defined by atoms:
+812 813 814 816
+812 GLY 118 N
+813 GLY 118 CA
+814 GLY 118 C
+816 MET 119 N
+ PSI  for residue 119 is 138.7 deg, defined by atoms:
+816 817 818 824
+816 MET 119 N
+817 MET 119 CA
+818 MET 119 C
+824 ASP 120 N
+ PSI  for residue 120 is -39.2 deg, defined by atoms:
+824 825 826 832
+824 ASP 120 N
+825 ASP 120 CA
+826 ASP 120 C
+832 VAL 121 N
+ PSI  for residue 121 is 134.8 deg, defined by atoms:
+832 833 834 839
+832 VAL 121 N
+833 VAL 121 CA
+834 VAL 121 C
+839 ILE 122 N
+ PSI  for residue 122 is 123.8 deg, defined by atoms:
+839 840 841 847
+839 ILE 122 N
+840 ILE 122 CA
+841 ILE 122 C
+847 ASN 123 N
+ PSI  for residue 123 is 130.8 deg, defined by atoms:
+847 848 849 855
+847 ASN 123 N
+848 ASN 123 CA
+849 ASN 123 C
+855 MET 124 N
+ PSI  for residue 124 is 97.2 deg, defined by atoms:
+855 856 857 863
+855 MET 124 N
+856 MET 124 CA
+857 MET 124 C
+863 SER 125 N
+ PSI  for residue 125 is 70.3 deg, defined by atoms:
+863 864 865 869
+863 SER 125 N
+864 SER 125 CA
+865 SER 125 C
+869 LEU 126 N
+ PSI  for residue 126 is 166.3 deg, defined by atoms:
+869 870 871 877
+869 LEU 126 N
+870 LEU 126 CA
+871 LEU 126 C
+877 GLY 127 N
+ PSI  for residue 127 is 152.9 deg, defined by atoms:
+877 878 879 881
+877 GLY 127 N
+878 GLY 127 CA
+879 GLY 127 C
+881 GLY 128 N
+ PSI  for residue 128 is 164.5 deg, defined by atoms:
+881 882 883 885
+881 GLY 128 N
+882 GLY 128 CA
+883 GLY 128 C
+885 ALA 129 N
+ PSI  for residue 129 is -35.1 deg, defined by atoms:
+885 886 887 890
+885 ALA 129 N
+886 ALA 129 CA
+887 ALA 129 C
+890 SER 130 N
+ PSI  for residue 130 is 152.6 deg, defined by atoms:
+890 891 892 896
+890 SER 130 N
+891 SER 130 CA
+892 SER 130 C
+896 GLY 131 N
+ PSI  for residue 131 is -140.1 deg, defined by atoms:
+896 897 898 900
+896 GLY 131 N
+897 GLY 131 CA
+898 GLY 131 C
+900 SER 132 N
+ PSI  for residue 132 is 166.0 deg, defined by atoms:
+900 901 902 906
+900 SER 132 N
+901 SER 132 CA
+902 SER 132 C
+906 THR 133 N
+ PSI  for residue 133 is -38.8 deg, defined by atoms:
+906 907 908 913
+906 THR 133 N
+907 THR 133 CA
+908 THR 133 C
+913 ALA 134 N
+ PSI  for residue 134 is -43.3 deg, defined by atoms:
+913 914 915 918
+913 ALA 134 N
+914 ALA 134 CA
+915 ALA 134 C
+918 MET 135 N
+ PSI  for residue 135 is -42.8 deg, defined by atoms:
+918 919 920 926
+918 MET 135 N
+919 MET 135 CA
+920 MET 135 C
+926 LYS 136 N
+ PSI  for residue 136 is -40.9 deg, defined by atoms:
+926 927 928 935
+926 LYS 136 N
+927 LYS 136 CA
+928 LYS 136 C
+935 GLN 137 N
+ PSI  for residue 137 is -48.3 deg, defined by atoms:
+935 936 937 944
+935 GLN 137 N
+936 GLN 137 CA
+937 GLN 137 C
+944 ALA 138 N
+ PSI  for residue 138 is -44.2 deg, defined by atoms:
+944 945 946 949
+944 ALA 138 N
+945 ALA 138 CA
+946 ALA 138 C
+949 VAL 139 N
+ PSI  for residue 139 is -30.7 deg, defined by atoms:
+949 950 951 956
+949 VAL 139 N
+950 VAL 139 CA
+951 VAL 139 C
+956 ASP 140 N
+ PSI  for residue 140 is -45.0 deg, defined by atoms:
+956 957 958 964
+956 ASP 140 N
+957 ASP 140 CA
+958 ASP 140 C
+964 ASN 141 N
+ PSI  for residue 141 is -46.1 deg, defined by atoms:
+964 965 966 972
+964 ASN 141 N
+965 ASN 141 CA
+966 ASN 141 C
+972 ALA 142 N
+ PSI  for residue 142 is -49.9 deg, defined by atoms:
+972 973 974 977
+972 ALA 142 N
+973 ALA 142 CA
+974 ALA 142 C
+977 TYR 143 N
+ PSI  for residue 143 is -34.1 deg, defined by atoms:
+977 978 979 989
+977 TYR 143 N
+978 TYR 143 CA
+979 TYR 143 C
+989 ALA 144 N
+ PSI  for residue 144 is -30.9 deg, defined by atoms:
+989 990 991 994
+989 ALA 144 N
+990 ALA 144 CA
+991 ALA 144 C
+994 ARG 145 N
+ PSI  for residue 145 is 0.7 deg, defined by atoms:
+994 995 996 1005
+994 ARG 145 N
+995 ARG 145 CA
+996 ARG 145 C
+1005 GLY 146 N
+ PSI  for residue 146 is 12.5 deg, defined by atoms:
+1005 1006 1007 1009
+1005 GLY 146 N
+1006 GLY 146 CA
+1007 GLY 146 C
+1009 VAL 147 N
+ PSI  for residue 147 is 148.0 deg, defined by atoms:
+1009 1010 1011 1016
+1009 VAL 147 N
+1010 VAL 147 CA
+1011 VAL 147 C
+1016 VAL 148 N
+ PSI  for residue 148 is 116.4 deg, defined by atoms:
+1016 1017 1018 1023
+1016 VAL 148 N
+1017 VAL 148 CA
+1018 VAL 148 C
+1023 VAL 149 N
+ PSI  for residue 149 is 119.3 deg, defined by atoms:
+1023 1024 1025 1030
+1023 VAL 149 N
+1024 VAL 149 CA
+1025 VAL 149 C
+1030 VAL 150 N
+ PSI  for residue 150 is 135.3 deg, defined by atoms:
+1030 1031 1032 1037
+1030 VAL 150 N
+1031 VAL 150 CA
+1032 VAL 150 C
+1037 ALA 151 N
+ PSI  for residue 151 is 155.3 deg, defined by atoms:
+1037 1038 1039 1042
+1037 ALA 151 N
+1038 ALA 151 CA
+1039 ALA 151 C
+1042 ALA 152 N
+ PSI  for residue 152 is 132.2 deg, defined by atoms:
+1042 1043 1044 1047
+1042 ALA 152 N
+1043 ALA 152 CA
+1044 ALA 152 C
+1047 ALA 153 N
+ PSI  for residue 153 is -27.1 deg, defined by atoms:
+1047 1048 1049 1052
+1047 ALA 153 N
+1048 ALA 153 CA
+1049 ALA 153 C
+1052 GLY 154 N
+ PSI  for residue 154 is 147.7 deg, defined by atoms:
+1052 1053 1054 1056
+1052 GLY 154 N
+1053 GLY 154 CA
+1054 GLY 154 C
+1056 ASN 155 N
+ PSI  for residue 155 is 42.2 deg, defined by atoms:
+1056 1057 1058 1064
+1056 ASN 155 N
+1057 ASN 155 CA
+1058 ASN 155 C
+1064 SER 156 N
+ PSI  for residue 156 is -10.1 deg, defined by atoms:
+1064 1065 1066 1070
+1064 SER 156 N
+1065 SER 156 CA
+1066 SER 156 C
+1070 GLY 157 N
+ PSI  for residue 157 is -163.4 deg, defined by atoms:
+1070 1071 1072 1074
+1070 GLY 157 N
+1071 GLY 157 CA
+1072 GLY 157 C
+1074 ASN 158 N
+ PSI  for residue 158 is 151.0 deg, defined by atoms:
+1074 1075 1076 1082
+1074 ASN 158 N
+1075 ASN 158 CA
+1076 ASN 158 C
+1082 SER 159 N
+ PSI  for residue 159 is 96.2 deg, defined by atoms:
+1082 1083 1084 1088
+1082 SER 159 N
+1083 SER 159 CA
+1084 SER 159 C
+1088 GLY 160 N
+ PSI  for residue 160 is -149.3 deg, defined by atoms:
+1088 1089 1090 1092
+1088 GLY 160 N
+1089 GLY 160 CA
+1090 GLY 160 C
+1092 SER 161 N
+ PSI  for residue 161 is 4.6 deg, defined by atoms:
+1092 1093 1094 1098
+1092 SER 161 N
+1093 SER 161 CA
+1094 SER 161 C
+1098 THR 162 N
+ PSI  for residue 162 is 137.6 deg, defined by atoms:
+1098 1099 1100 1105
+1098 THR 162 N
+1099 THR 162 CA
+1100 THR 162 C
+1105 ASN 163 N
+ PSI  for residue 163 is 122.8 deg, defined by atoms:
+1105 1106 1107 1113
+1105 ASN 163 N
+1106 ASN 163 CA
+1107 ASN 163 C
+1113 THR 164 N
+ PSI  for residue 164 is 21.5 deg, defined by atoms:
+1113 1114 1115 1120
+1113 THR 164 N
+1114 THR 164 CA
+1115 THR 164 C
+1120 ILE 165 N
+ PSI  for residue 165 is 140.5 deg, defined by atoms:
+1120 1121 1122 1128
+1120 ILE 165 N
+1121 ILE 165 CA
+1122 ILE 165 C
+1128 GLY 166 N
+ PSI  for residue 166 is -174.7 deg, defined by atoms:
+1128 1129 1130 1132
+1128 GLY 166 N
+1129 GLY 166 CA
+1130 GLY 166 C
+1132 TYR 167 N
+ PSI  for residue 167 is 141.7 deg, defined by atoms:
+1132 1133 1134 1144
+1132 TYR 167 N
+1133 TYR 167 CA
+1134 TYR 167 C
+1144 PRO 168 N
+ PSI  for residue 168 is 1.3 deg, defined by atoms:
+1144 1145 1146 1151
+1144 PRO 168 N
+1145 PRO 168 CA
+1146 PRO 168 C
+1151 ALA 169 N
+ PSI  for residue 169 is -44.5 deg, defined by atoms:
+1151 1152 1153 1156
+1151 ALA 169 N
+1152 ALA 169 CA
+1153 ALA 169 C
+1156 LYS 170 N
+ PSI  for residue 170 is -27.0 deg, defined by atoms:
+1156 1157 1158 1165
+1156 LYS 170 N
+1157 LYS 170 CA
+1158 LYS 170 C
+1165 TYR 171 N
+ PSI  for residue 171 is 137.7 deg, defined by atoms:
+1165 1166 1167 1177
+1165 TYR 171 N
+1166 TYR 171 CA
+1167 TYR 171 C
+1177 ASP 172 N
+ PSI  for residue 172 is 1.8 deg, defined by atoms:
+1177 1178 1179 1185
+1177 ASP 172 N
+1178 ASP 172 CA
+1179 ASP 172 C
+1185 SER 173 N
+ PSI  for residue 173 is -0.4 deg, defined by atoms:
+1185 1186 1187 1191
+1185 SER 173 N
+1186 SER 173 CA
+1187 SER 173 C
+1191 VAL 174 N
+ PSI  for residue 174 is 143.5 deg, defined by atoms:
+1191 1192 1193 1198
+1191 VAL 174 N
+1192 VAL 174 CA
+1193 VAL 174 C
+1198 ILE 175 N
+ PSI  for residue 175 is 112.5 deg, defined by atoms:
+1198 1199 1200 1206
+1198 ILE 175 N
+1199 ILE 175 CA
+1200 ILE 175 C
+1206 ALA 176 N
+ PSI  for residue 176 is 125.7 deg, defined by atoms:
+1206 1207 1208 1211
+1206 ALA 176 N
+1207 ALA 176 CA
+1208 ALA 176 C
+1211 VAL 177 N
+ PSI  for residue 177 is 128.1 deg, defined by atoms:
+1211 1212 1213 1218
+1211 VAL 177 N
+1212 VAL 177 CA
+1213 VAL 177 C
+1218 GLY 178 N
+ PSI  for residue 178 is 170.0 deg, defined by atoms:
+1218 1219 1220 1222
+1218 GLY 178 N
+1219 GLY 178 CA
+1220 GLY 178 C
+1222 ALA 179 N
+ PSI  for residue 179 is 145.1 deg, defined by atoms:
+1222 1223 1224 1227
+1222 ALA 179 N
+1223 ALA 179 CA
+1224 ALA 179 C
+1227 VAL 180 N
+ PSI  for residue 180 is 162.3 deg, defined by atoms:
+1227 1228 1229 1234
+1227 VAL 180 N
+1228 VAL 180 CA
+1229 VAL 180 C
+1234 ASP 181 N
+ PSI  for residue 181 is 179.7 deg, defined by atoms:
+1234 1235 1236 1242
+1234 ASP 181 N
+1235 ASP 181 CA
+1236 ASP 181 C
+1242 SER 182 N
+ PSI  for residue 182 is -17.4 deg, defined by atoms:
+1242 1243 1244 1248
+1242 SER 182 N
+1243 SER 182 CA
+1244 SER 182 C
+1248 ASN 183 N
+ PSI  for residue 183 is 5.1 deg, defined by atoms:
+1248 1249 1250 1256
+1248 ASN 183 N
+1249 ASN 183 CA
+1250 ASN 183 C
+1256 SER 184 N
+ PSI  for residue 184 is 28.5 deg, defined by atoms:
+1256 1257 1258 1262
+1256 SER 184 N
+1257 SER 184 CA
+1258 SER 184 C
+1262 ASN 185 N
+ PSI  for residue 185 is 146.9 deg, defined by atoms:
+1262 1263 1264 1270
+1262 ASN 185 N
+1263 ASN 185 CA
+1264 ASN 185 C
+1270 ARG 186 N
+ PSI  for residue 186 is 131.2 deg, defined by atoms:
+1270 1271 1272 1281
+1270 ARG 186 N
+1271 ARG 186 CA
+1272 ARG 186 C
+1281 ALA 187 N
+ PSI  for residue 187 is 150.1 deg, defined by atoms:
+1281 1282 1283 1286
+1281 ALA 187 N
+1282 ALA 187 CA
+1283 ALA 187 C
+1286 SER 188 N
+ PSI  for residue 188 is -31.6 deg, defined by atoms:
+1286 1287 1288 1292
+1286 SER 188 N
+1287 SER 188 CA
+1288 SER 188 C
+1292 PHE 189 N
+ PSI  for residue 189 is -19.3 deg, defined by atoms:
+1292 1293 1294 1303
+1292 PHE 189 N
+1293 PHE 189 CA
+1294 PHE 189 C
+1303 SER 190 N
+ PSI  for residue 190 is 121.8 deg, defined by atoms:
+1303 1304 1305 1309
+1303 SER 190 N
+1304 SER 190 CA
+1305 SER 190 C
+1309 SER 191 N
+ PSI  for residue 191 is 158.2 deg, defined by atoms:
+1309 1310 1311 1315
+1309 SER 191 N
+1310 SER 191 CA
+1311 SER 191 C
+1315 VAL 192 N
+ PSI  for residue 192 is 159.1 deg, defined by atoms:
+1315 1316 1317 1322
+1315 VAL 192 N
+1316 VAL 192 CA
+1317 VAL 192 C
+1322 GLY 193 N
+ PSI  for residue 193 is 167.6 deg, defined by atoms:
+1322 1323 1324 1326
+1322 GLY 193 N
+1323 GLY 193 CA
+1324 GLY 193 C
+1326 ALA 194 N
+ PSI  for residue 194 is -31.2 deg, defined by atoms:
+1326 1327 1328 1331
+1326 ALA 194 N
+1327 ALA 194 CA
+1328 ALA 194 C
+1331 GLU 195 N
+ PSI  for residue 195 is -3.5 deg, defined by atoms:
+1331 1332 1333 1340
+1331 GLU 195 N
+1332 GLU 195 CA
+1333 GLU 195 C
+1340 LEU 196 N
+ PSI  for residue 196 is 128.2 deg, defined by atoms:
+1340 1341 1342 1348
+1340 LEU 196 N
+1341 LEU 196 CA
+1342 LEU 196 C
+1348 GLU 197 N
+ PSI  for residue 197 is -50.3 deg, defined by atoms:
+1348 1349 1350 1357
+1348 GLU 197 N
+1349 GLU 197 CA
+1350 GLU 197 C
+1357 VAL 198 N
+ PSI  for residue 198 is 163.0 deg, defined by atoms:
+1357 1358 1359 1364
+1357 VAL 198 N
+1358 VAL 198 CA
+1359 VAL 198 C
+1364 MET 199 N
+ PSI  for residue 199 is 147.7 deg, defined by atoms:
+1364 1365 1366 1372
+1364 MET 199 N
+1365 MET 199 CA
+1366 MET 199 C
+1372 ALA 200 N
+ PSI  for residue 200 is 168.3 deg, defined by atoms:
+1372 1373 1374 1377
+1372 ALA 200 N
+1373 ALA 200 CA
+1374 ALA 200 C
+1377 PRO 201 N
+ PSI  for residue 201 is 123.1 deg, defined by atoms:
+1377 1378 1379 1384
+1377 PRO 201 N
+1378 PRO 201 CA
+1379 PRO 201 C
+1384 GLY 202 N
+ PSI  for residue 202 is -3.5 deg, defined by atoms:
+1384 1385 1386 1388
+1384 GLY 202 N
+1385 GLY 202 CA
+1386 GLY 202 C
+1388 ALA 203 N
+ PSI  for residue 203 is 128.6 deg, defined by atoms:
+1388 1389 1390 1393
+1388 ALA 203 N
+1389 ALA 203 CA
+1390 ALA 203 C
+1393 GLY 204 N
+ PSI  for residue 204 is 51.3 deg, defined by atoms:
+1393 1394 1395 1397
+1393 GLY 204 N
+1394 GLY 204 CA
+1395 GLY 204 C
+1397 VAL 205 N
+ PSI  for residue 205 is 120.4 deg, defined by atoms:
+1397 1398 1399 1404
+1397 VAL 205 N
+1398 VAL 205 CA
+1399 VAL 205 C
+1404 TYR 206 N
+ PSI  for residue 206 is 129.5 deg, defined by atoms:
+1404 1405 1406 1416
+1404 TYR 206 N
+1405 TYR 206 CA
+1406 TYR 206 C
+1416 SER 207 N
+ PSI  for residue 207 is -175.1 deg, defined by atoms:
+1416 1417 1418 1422
+1416 SER 207 N
+1417 SER 207 CA
+1418 SER 207 C
+1422 THR 208 N
+ PSI  for residue 208 is 150.9 deg, defined by atoms:
+1422 1423 1424 1429
+1422 THR 208 N
+1423 THR 208 CA
+1424 THR 208 C
+1429 TYR 209 N
+ PSI  for residue 209 is 140.8 deg, defined by atoms:
+1429 1430 1431 1441
+1429 TYR 209 N
+1430 TYR 209 CA
+1431 TYR 209 C
+1441 PRO 210 N
+ PSI  for residue 210 is 133.8 deg, defined by atoms:
+1441 1442 1443 1448
+1441 PRO 210 N
+1442 PRO 210 CA
+1443 PRO 210 C
+1448 THR 211 N
+ PSI  for residue 211 is 77.0 deg, defined by atoms:
+1448 1449 1450 1455
+1448 THR 211 N
+1449 THR 211 CA
+1450 THR 211 C
+1455 ASN 212 N
+ PSI  for residue 212 is 41.9 deg, defined by atoms:
+1455 1456 1457 1463
+1455 ASN 212 N
+1456 ASN 212 CA
+1457 ASN 212 C
+1463 THR 213 N
+ PSI  for residue 213 is -162.5 deg, defined by atoms:
+1463 1464 1465 1470
+1463 THR 213 N
+1464 THR 213 CA
+1465 THR 213 C
+1470 TYR 214 N
+ PSI  for residue 214 is 144.8 deg, defined by atoms:
+1470 1471 1472 1482
+1470 TYR 214 N
+1471 TYR 214 CA
+1472 TYR 214 C
+1482 ALA 215 N
+ PSI  for residue 215 is 161.5 deg, defined by atoms:
+1482 1483 1484 1487
+1482 ALA 215 N
+1483 ALA 215 CA
+1484 ALA 215 C
+1487 THR 216 N
+ PSI  for residue 216 is 134.9 deg, defined by atoms:
+1487 1488 1489 1494
+1487 THR 216 N
+1488 THR 216 CA
+1489 THR 216 C
+1494 LEU 217 N
+ PSI  for residue 217 is 154.6 deg, defined by atoms:
+1494 1495 1496 1502
+1494 LEU 217 N
+1495 LEU 217 CA
+1496 LEU 217 C
+1502 ASN 218 N
+ PSI  for residue 218 is 139.2 deg, defined by atoms:
+1502 1503 1504 1510
+1502 ASN 218 N
+1503 ASN 218 CA
+1504 ASN 218 C
+1510 GLY 219 N
+ PSI  for residue 219 is 164.1 deg, defined by atoms:
+1510 1511 1512 1514
+1510 GLY 219 N
+1511 GLY 219 CA
+1512 GLY 219 C
+1514 THR 220 N
+ PSI  for residue 220 is -15.9 deg, defined by atoms:
+1514 1515 1516 1521
+1514 THR 220 N
+1515 THR 220 CA
+1516 THR 220 C
+1521 SER 221 N
+ PSI  for residue 221 is -31.6 deg, defined by atoms:
+1521 1522 1523 1527
+1521 SER 221 N
+1522 SER 221 CA
+1523 SER 221 C
+1527 MET 222 N
+ PSI  for residue 222 is -28.1 deg, defined by atoms:
+1527 1528 1529 1535
+1527 MET 222 N
+1528 MET 222 CA
+1529 MET 222 C
+1535 ALA 223 N
+ PSI  for residue 223 is -47.4 deg, defined by atoms:
+1535 1536 1537 1540
+1535 ALA 223 N
+1536 ALA 223 CA
+1537 ALA 223 C
+1540 SER 224 N
+ PSI  for residue 224 is -48.1 deg, defined by atoms:
+1540 1541 1542 1546
+1540 SER 224 N
+1541 SER 224 CA
+1542 SER 224 C
+1546 PRO 225 N
+ PSI  for residue 225 is -28.2 deg, defined by atoms:
+1546 1547 1548 1553
+1546 PRO 225 N
+1547 PRO 225 CA
+1548 PRO 225 C
+1553 HIS 226 N
+ PSI  for residue 226 is -31.8 deg, defined by atoms:
+1553 1554 1555 1563
+1553 HIS 226 N
+1554 HIS 226 CA
+1555 HIS 226 C
+1563 VAL 227 N
+ PSI  for residue 227 is -40.5 deg, defined by atoms:
+1563 1564 1565 1570
+1563 VAL 227 N
+1564 VAL 227 CA
+1565 VAL 227 C
+1570 ALA 228 N
+ PSI  for residue 228 is -44.1 deg, defined by atoms:
+1570 1571 1572 1575
+1570 ALA 228 N
+1571 ALA 228 CA
+1572 ALA 228 C
+1575 GLY 229 N
+ PSI  for residue 229 is -39.4 deg, defined by atoms:
+1575 1576 1577 1579
+1575 GLY 229 N
+1576 GLY 229 CA
+1577 GLY 229 C
+1579 ALA 230 N
+ PSI  for residue 230 is -42.8 deg, defined by atoms:
+1579 1580 1581 1584
+1579 ALA 230 N
+1580 ALA 230 CA
+1581 ALA 230 C
+1584 ALA 231 N
+ PSI  for residue 231 is -45.7 deg, defined by atoms:
+1584 1585 1586 1589
+1584 ALA 231 N
+1585 ALA 231 CA
+1586 ALA 231 C
+1589 ALA 232 N
+ PSI  for residue 232 is -38.0 deg, defined by atoms:
+1589 1590 1591 1594
+1589 ALA 232 N
+1590 ALA 232 CA
+1591 ALA 232 C
+1594 LEU 233 N
+ PSI  for residue 233 is -49.1 deg, defined by atoms:
+1594 1595 1596 1602
+1594 LEU 233 N
+1595 LEU 233 CA
+1596 LEU 233 C
+1602 ILE 234 N
+ PSI  for residue 234 is -46.9 deg, defined by atoms:
+1602 1603 1604 1610
+1602 ILE 234 N
+1603 ILE 234 CA
+1604 ILE 234 C
+1610 LEU 235 N
+ PSI  for residue 235 is -37.0 deg, defined by atoms:
+1610 1611 1612 1618
+1610 LEU 235 N
+1611 LEU 235 CA
+1612 LEU 235 C
+1618 SER 236 N
+ PSI  for residue 236 is -25.6 deg, defined by atoms:
+1618 1619 1620 1624
+1618 SER 236 N
+1619 SER 236 CA
+1620 SER 236 C
+1624 LYS 237 N
+ PSI  for residue 237 is -43.7 deg, defined by atoms:
+1624 1625 1626 1633
+1624 LYS 237 N
+1625 LYS 237 CA
+1626 LYS 237 C
+1633 HIS 238 N
+ PSI  for residue 238 is 81.3 deg, defined by atoms:
+1633 1634 1635 1643
+1633 HIS 238 N
+1634 HIS 238 CA
+1635 HIS 238 C
+1643 PRO 239 N
+ PSI  for residue 239 is -28.9 deg, defined by atoms:
+1643 1644 1645 1650
+1643 PRO 239 N
+1644 PRO 239 CA
+1645 PRO 239 C
+1650 ASN 240 N
+ PSI  for residue 240 is -23.5 deg, defined by atoms:
+1650 1651 1652 1658
+1650 ASN 240 N
+1651 ASN 240 CA
+1652 ASN 240 C
+1658 LEU 241 N
+ PSI  for residue 241 is 147.8 deg, defined by atoms:
+1658 1659 1660 1666
+1658 LEU 241 N
+1659 LEU 241 CA
+1660 LEU 241 C
+1666 SER 242 N
+ PSI  for residue 242 is 156.9 deg, defined by atoms:
+1666 1667 1668 1672
+1666 SER 242 N
+1667 SER 242 CA
+1668 SER 242 C
+1672 ALA 243 N
+ PSI  for residue 243 is -47.3 deg, defined by atoms:
+1672 1673 1674 1677
+1672 ALA 243 N
+1673 ALA 243 CA
+1674 ALA 243 C
+1677 SER 244 N
+ PSI  for residue 244 is -16.8 deg, defined by atoms:
+1677 1678 1679 1683
+1677 SER 244 N
+1678 SER 244 CA
+1679 SER 244 C
+1683 GLN 245 N
+ PSI  for residue 245 is -36.3 deg, defined by atoms:
+1683 1684 1685 1692
+1683 GLN 245 N
+1684 GLN 245 CA
+1685 GLN 245 C
+1692 VAL 246 N
+ PSI  for residue 246 is -46.1 deg, defined by atoms:
+1692 1693 1694 1699
+1692 VAL 246 N
+1693 VAL 246 CA
+1694 VAL 246 C
+1699 ARG 247 N
+ PSI  for residue 247 is -54.4 deg, defined by atoms:
+1699 1700 1701 1710
+1699 ARG 247 N
+1700 ARG 247 CA
+1701 ARG 247 C
+1710 ASN 248 N
+ PSI  for residue 248 is -30.2 deg, defined by atoms:
+1710 1711 1712 1718
+1710 ASN 248 N
+1711 ASN 248 CA
+1712 ASN 248 C
+1718 ARG 249 N
+ PSI  for residue 249 is -38.2 deg, defined by atoms:
+1718 1719 1720 1729
+1718 ARG 249 N
+1719 ARG 249 CA
+1720 ARG 249 C
+1729 LEU 250 N
+ PSI  for residue 250 is -46.9 deg, defined by atoms:
+1729 1730 1731 1737
+1729 LEU 250 N
+1730 LEU 250 CA
+1731 LEU 250 C
+1737 SER 251 N
+ PSI  for residue 251 is -34.3 deg, defined by atoms:
+1737 1738 1739 1743
+1737 SER 251 N
+1738 SER 251 CA
+1739 SER 251 C
+1743 SER 252 N
+ PSI  for residue 252 is -38.9 deg, defined by atoms:
+1743 1744 1745 1749
+1743 SER 252 N
+1744 SER 252 CA
+1745 SER 252 C
+1749 THR 253 N
+ PSI  for residue 253 is 10.1 deg, defined by atoms:
+1749 1750 1751 1756
+1749 THR 253 N
+1750 THR 253 CA
+1751 THR 253 C
+1756 ALA 254 N
+ PSI  for residue 254 is 151.0 deg, defined by atoms:
+1756 1757 1758 1761
+1756 ALA 254 N
+1757 ALA 254 CA
+1758 ALA 254 C
+1761 THR 255 N
+ PSI  for residue 255 is 118.9 deg, defined by atoms:
+1761 1762 1763 1768
+1761 THR 255 N
+1762 THR 255 CA
+1763 THR 255 C
+1768 TYR 256 N
+ PSI  for residue 256 is 125.3 deg, defined by atoms:
+1768 1769 1770 1780
+1768 TYR 256 N
+1769 TYR 256 CA
+1770 TYR 256 C
+1780 LEU 257 N
+ PSI  for residue 257 is -12.2 deg, defined by atoms:
+1780 1781 1782 1788
+1780 LEU 257 N
+1781 LEU 257 CA
+1782 LEU 257 C
+1788 GLY 258 N
+ PSI  for residue 258 is -163.7 deg, defined by atoms:
+1788 1789 1790 1792
+1788 GLY 258 N
+1789 GLY 258 CA
+1790 GLY 258 C
+1792 SER 259 N
+ PSI  for residue 259 is 137.7 deg, defined by atoms:
+1792 1793 1794 1798
+1792 SER 259 N
+1793 SER 259 CA
+1794 SER 259 C
+1798 SER 260 N
+ PSI  for residue 260 is -19.7 deg, defined by atoms:
+1798 1799 1800 1804
+1798 SER 260 N
+1799 SER 260 CA
+1800 SER 260 C
+1804 PHE 261 N
+ PSI  for residue 261 is -28.2 deg, defined by atoms:
+1804 1805 1806 1815
+1804 PHE 261 N
+1805 PHE 261 CA
+1806 PHE 261 C
+1815 TYR 262 N
+ PSI  for residue 262 is -23.8 deg, defined by atoms:
+1815 1816 1817 1827
+1815 TYR 262 N
+1816 TYR 262 CA
+1817 TYR 262 C
+1827 TYR 263 N
+ PSI  for residue 263 is 6.2 deg, defined by atoms:
+1827 1828 1829 1839
+1827 TYR 263 N
+1828 TYR 263 CA
+1829 TYR 263 C
+1839 GLY 264 N
+ PSI  for residue 264 is -138.5 deg, defined by atoms:
+1839 1840 1841 1843
+1839 GLY 264 N
+1840 GLY 264 CA
+1841 GLY 264 C
+1843 LYS 265 N
+ PSI  for residue 265 is -10.8 deg, defined by atoms:
+1843 1844 1845 1852
+1843 LYS 265 N
+1844 LYS 265 CA
+1845 LYS 265 C
+1852 GLY 266 N
+ PSI  for residue 266 is -168.6 deg, defined by atoms:
+1852 1853 1854 1856
+1852 GLY 266 N
+1853 GLY 266 CA
+1854 GLY 266 C
+1856 LEU 267 N
+ PSI  for residue 267 is 136.2 deg, defined by atoms:
+1856 1857 1858 1864
+1856 LEU 267 N
+1857 LEU 267 CA
+1858 LEU 267 C
+1864 ILE 268 N
+ PSI  for residue 268 is 148.9 deg, defined by atoms:
+1864 1865 1866 1872
+1864 ILE 268 N
+1865 ILE 268 CA
+1866 ILE 268 C
+1872 ASN 269 N
+ PSI  for residue 269 is 100.6 deg, defined by atoms:
+1872 1873 1874 1880
+1872 ASN 269 N
+1873 ASN 269 CA
+1874 ASN 269 C
+1880 VAL 270 N
+ PSI  for residue 270 is -28.9 deg, defined by atoms:
+1880 1881 1882 1887
+1880 VAL 270 N
+1881 VAL 270 CA
+1882 VAL 270 C
+1887 GLU 271 N
+ PSI  for residue 271 is -45.3 deg, defined by atoms:
+1887 1888 1889 1896
+1887 GLU 271 N
+1888 GLU 271 CA
+1889 GLU 271 C
+1896 ALA 272 N
+ PSI  for residue 272 is -40.0 deg, defined by atoms:
+1896 1897 1898 1901
+1896 ALA 272 N
+1897 ALA 272 CA
+1898 ALA 272 C
+1901 ALA 273 N
+ PSI  for residue 273 is -32.5 deg, defined by atoms:
+1901 1902 1903 1906
+1901 ALA 273 N
+1902 ALA 273 CA
+1903 ALA 273 C
+1906 ALA 274 N
+ PSI  for residue 274 is 6.7 deg, defined by atoms:
+1906 1907 1908 1911
+1906 ALA 274 N
+1907 ALA 274 CA
+1908 ALA 274 C
+1911 GLN 275 N
+frame 1   processed with 270 PHI ,270 PSI , for requested 270 residues
+file read in, 1 frame(s) found
+
+DISICL   time0   timestep   frames   residues   residue list
+DISICL    0      1       1        270       [2-54,58-274]
+
+program runtime: 2.60  seconds (0.00 h)
+Results are written in: 1scd_DISICL.out
+Dihedral program (protein) finished successfully! (1scd_DISICL.pdb)
+renaming 1scd_DISICL.out to 1scd_prot.dih
+******* DISICL classification program *******
+
+
+DISICL_dbssp for protein - detailed
+
+/home/gnagy/Programs/SESCA_dev/DISICL/DISICL_dbssp.py 1scd_prot.dih @lib /home/gnagy/Programs/SESCA_dev/DISICL/libs/DISICL_prot_det.lib  >> DISICL_1scd.log
+DISICL_dbssp program starts
+/home/gnagy/Programs/SESCA_dev/examples/4-Error_analysis
+
+number of arguments: 3
+flags found:
+lib
+
+Checking input file and path:
+
+Input file detected: 1scd_prot.dih
+
+No @res flag was given! Attempting to read DISICL remarks from file:
+#DISICL    0      1       1        270       [2-54,58-274]
+
+Residue list updated to:  2-54,58-274
+Timestamp information updated to: time0= 0.0 timestep= 1.0
+
+Library file found:
+/home/gnagy/Programs/SESCA_dev/DISICL/libs/DISICL_prot_det.lib
+
+Reading in library definitions:
+
+region definition with 5 arguments:
+alfa1 region with 2 dimensions detected
+alfa1 added to class: __main__.Regions
+
+region definition with 5 arguments:
+alfa2 region with 2 dimensions detected
+alfa2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+beta1 region with 2 dimensions detected
+beta1 added to class: __main__.Regions
+
+region definition with 5 arguments:
+beta2 region with 2 dimensions detected
+beta2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+beta2 region with 2 dimensions detected
+beta2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+beta2 region with 2 dimensions detected
+beta2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+beta2 region with 2 dimensions detected
+beta2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+delta region with 2 dimensions detected
+delta added to class: __main__.Regions
+
+region definition with 5 arguments:
+delta region with 2 dimensions detected
+delta added to class: __main__.Regions
+
+region definition with 5 arguments:
+delta2 region with 2 dimensions detected
+delta2 added to class: __main__.Regions
+
+region definition with 5 arguments:
+delta1 region with 2 dimensions detected
+delta1 added to class: __main__.Regions
+
+region definition with 5 arguments:
+deltax region with 2 dimensions detected
+deltax added to class: __main__.Regions
+
+region definition with 5 arguments:
+gamma region with 2 dimensions detected
+gamma added to class: __main__.Regions
+
+region definition with 5 arguments:
+gammax region with 2 dimensions detected
+gammax added to class: __main__.Regions
+
+region definition with 5 arguments:
+pi region with 2 dimensions detected
+pi added to class: __main__.Regions
+
+region definition with 5 arguments:
+pi region with 2 dimensions detected
+pi added to class: __main__.Regions
+
+region definition with 5 arguments:
+pix region with 2 dimensions detected
+pix added to class: __main__.Regions
+
+region definition with 5 arguments:
+pix region with 2 dimensions detected
+pix added to class: __main__.Regions
+
+region definition with 5 arguments:
+zeta region with 2 dimensions detected
+zeta added to class: __main__.Regions
+
+segment definition with 2  residue length detected
+3/10-helix ( 3H ) class received segment: (alfa1,delta1)
+3/10-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+3/10-helix ( 3H ) class received segment: (alfa2,alfa2)
+3/10-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+3/10-helix ( 3H ) class received segment: (alfa2,delta)
+3/10-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Alpha-helix ( ALH ) class received segment: (alfa1,alfa1)
+Alpha-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Alpha-helix ( ALH ) class received segment: (alfa1,alfa2)
+Alpha-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Alpha-helix ( ALH ) class received segment: (alfa2,alfa1)
+Alpha-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Pi-helix ( PIH ) class received segment: (alfa1,delta2)
+Pi-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Pi-helix ( PIH ) class received segment: (delta2,delta2)
+Pi-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Pi-helix ( PIH ) class received segment: (delta2,alfa1)
+Pi-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Pi-helix ( PIH ) class received segment: (alfa2,delta2)
+Pi-helix added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Ext.beta-strand ( EBS ) class received segment: (beta2,beta2)
+Ext.beta-strand added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Normal beta-strand ( NBS ) class received segment: (beta1,beta1)
+Normal beta-strand added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Normal beta-strand ( NBS ) class received segment: (beta1,beta2)
+Normal beta-strand added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Mormal beta-strand ( NBS ) class received segment: (beta2,beta1)
+Mormal beta-strand added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+PP-helical ( PP ) class received segment: (pi,pi)
+PP-helical added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (alfa1,delta)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (alfa2,delta1)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (delta,delta)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (delta1,delta)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (delta1,delta1)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 1 ( TI ) class received segment: (delta1,alfa2)
+Turn type 1 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 2 ( TII ) class received segment: (pi,deltax)
+Turn type 2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 8 ( TVIII ) class received segment: (delta,zeta)
+Turn type 8 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 8 ( TVIII ) class received segment: (delta1,zeta)
+Turn type 8 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 8 ( TVIII ) class received segment: (alfa2,zeta)
+Turn type 8 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 8 ( TVIII ) class received segment: (alfa2,beta1)
+Turn type 8 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn type 8 ( TVIII ) class received segment: (delta,gammax)
+Turn type 8 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gammax,alfa2)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gammax,delta)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gammax,delta1)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gammax,pi)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (pi,gammax)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (pix,gamma)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gamma,pix)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Gamma-turn ( GXT ) class received segment: (gamma,deltax)
+Gamma-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Schellman-turn ( SCH ) class received segment: (delta,deltax)
+Schellman-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Schellman-turn ( SCH ) class received segment: (delta1,deltax)
+Schellman-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Schellman-turn ( SCH ) class received segment: (deltax,beta2)
+Schellman-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Schellman-turn ( SCH ) class received segment: (deltax,pi)
+Schellman-turn added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Hairpin 2:2 ( HP ) class received segment: (beta1,deltax)
+Hairpin 2:2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Hairpin 2:2 ( HP ) class received segment: (beta1,pix)
+Hairpin 2:2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Hairpin 2:2 ( HP ) class received segment: (deltax,beta1)
+Hairpin 2:2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (beta1,alfa2)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta,alfa1)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta,delta1)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta,alfa2)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta1,alfa1)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta2,alfa2)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (delta2,delta1)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (deltax,alfa1)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (deltax,alfa2)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Turn-cap ( TC ) class received segment: (zeta,alfa2)
+Turn-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (alfa2,delta2)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (delta,delta2)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (delta1,delta2)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (delta2,delta)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (beta1,alfa1)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (beta2,alfa1)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (beta2,alfa2)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (pi,alfa1)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Helix-cap ( HC ) class received segment: (pi,alfa2)
+Helix-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-cap ( BC ) class received segment: (beta1,pi)
+Beta-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-cap ( BC ) class received segment: (beta2,pi)
+Beta-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-cap ( BC ) class received segment: (pi,beta1)
+Beta-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-cap ( BC ) class received segment: (pi,beta2)
+Beta-cap added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-bulge ( BU ) class received segment: (pi,delta)
+Beta-bulge added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-bulge ( BU ) class received segment: (alfa1,beta2)
+Beta-bulge added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-bulge ( BU ) class received segment: (delta,beta2)
+Beta-bulge added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Beta-bulge ( BU ) class received segment: (beta2,deltax)
+Beta-bulge added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Left turn 2 ( LTII ) class received segment: (pix,alfa2)
+Left turn 2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Left turn 2 ( LTII ) class received segment: (pix,delta)
+Left turn 2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Left turn 2 ( LTII ) class received segment: (pix,delta1)
+Left turn 2 added to class: __main__.Segments
+
+segment definition with 2  residue length detected
+Left-handed helix ( LHH ) class received segment: (deltax,deltax)
+Left-handed helix added to class: __main__.Segments
+unclassified added to class: __main__.Segments
+
+Secondary structure elements:
+['3H', 'ALH', 'PIH', 'EBS', 'NBS', 'PP', 'TI', 'TII', 'TVIII', 'GXT', 'SCH', 'HP', 'TC', 'HC', 'BC', 'BU', 'LTII', 'LHH', 'UC'] 19
+
+Starting segment classification based on dihedrals:
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   0     |  0.0   2   beta1  |     [-92.82, 136.23]
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   2   beta1  |  0.0   3   beta1  |     [-102.7, 143.03]
+Segment  2  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   3   beta1  |  0.0   4   beta1  |     [-117.61, 98.32]
+Segment  3  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   4   beta1  |  0.0   5   pi  |     [-51.45, 135.1]
+Segment  4  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   5   pi  |  0.0   6   alfa2  |     [-51.97, -29.78]
+Segment  5  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   6   alfa2  |  0.0   7   alfa1  |     [-53.0, -43.59]
+Segment  6  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   7   alfa1  |  0.0   8   alfa1  |     [-56.7, -50.79]
+Segment  7  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   8   alfa1  |  0.0   9   alfa1  |     [-69.14, -35.87]
+Segment  8  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   9   alfa1  |  0.0   10   alfa1  |     [-60.78, -37.32]
+Segment  9  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   10   alfa1  |  0.0   11   delta1  |     [-94.99, -0.28]
+Segment  10  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   11   delta1  |  0.0   12   deltax  |     [61.0, 38.96]
+Segment  11  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   12   deltax  |  0.0   13   alfa2  |     [-73.49, -23.18]
+Segment  12  assigned to class: TC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   13   alfa2  |  0.0   14   alfa1  |     [-69.1, -33.59]
+Segment  13  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   14   alfa1  |  0.0   15   alfa1  |     [-71.5, -37.31]
+Segment  14  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   15   alfa1  |  0.0   16   alfa1  |     [-71.69, -37.38]
+Segment  15  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   16   alfa1  |  0.0   17   alfa1  |     [-62.05, -40.88]
+Segment  16  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   17   alfa1  |  0.0   18   alfa2  |     [-62.15, -28.45]
+Segment  17  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   18   alfa2  |  0.0   19   delta1  |     [-78.26, -10.92]
+Segment  18  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   19   delta1  |  0.0   20   deltax  |     [103.51, 12.71]
+Segment  19  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   20   deltax  |  0.0   21   beta1  |     [-111.46, 117.98]
+Segment  20  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   21   beta1  |  0.0   22   delta  |     [-129.25, 6.26]
+Segment  21  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   22   delta  |  0.0   23   deltax  |     [92.7, 18.39]
+Segment  22  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   23   deltax  |  0.0   24   pi  |     [-62.5, 130.19]
+Segment  23  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   24   pi  |  0.0   25   deltax  |     [82.34, 5.17]
+Segment  24  assigned to class: TII 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   25   deltax  |  0.0   26   beta1  |     [-99.19, 133.53]
+Segment  25  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   26   beta1  |  0.0   27   beta1  |     [-99.42, 118.69]
+Segment  26  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   27   beta1  |  0.0   28   beta1  |     [-117.27, 127.91]
+Segment  27  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   28   beta1  |  0.0   29   beta1  |     [-101.18, 133.98]
+Segment  28  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   29   beta1  |  0.0   30   beta1  |     [-111.19, 106.52]
+Segment  29  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   30   beta1  |  0.0   31   pi  |     [-85.75, 102.1]
+Segment  30  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   31   pi  |  0.0   32   X  |     [-155.74, -146.28]
+Segment  31  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   32   X  |  0.0   33   delta1  |     [-85.64, 7.66]
+Segment  32  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   33   delta1  |  0.0   34   pix  |     [99.77, -171.03]
+Segment  33  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   34   pix  |  0.0   35   beta2  |     [-143.67, 136.75]
+Segment  34  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   35   beta2  |  0.0   36   gammax  |     [-73.98, 90.3]
+Segment  35  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   36   gammax  |  0.0   37   alfa1  |     [-54.62, -32.72]
+Segment  36  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   37   alfa1  |  0.0   38   delta1  |     [-72.86, -10.55]
+Segment  37  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   38   delta1  |  0.0   39   pi  |     [-59.26, 130.33]
+Segment  38  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   39   pi  |  0.0   40   alfa2  |     [-62.97, -23.92]
+Segment  39  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   40   alfa2  |  0.0   41   delta  |     [-91.74, 14.4]
+Segment  40  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   41   delta  |  0.0   42   beta2  |     [-139.32, 146.72]
+Segment  41  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   42   beta2  |  0.0   43   zeta  |     [-125.54, 92.84]
+Segment  42  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   43   zeta  |  0.0   44   beta1  |     [-91.65, 122.43]
+Segment  43  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   44   beta1  |  0.0   45   alfa2  |     [-89.05, -27.15]
+Segment  44  assigned to class: TC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   45   alfa2  |  0.0   46   X  |     [176.68, -163.43]
+Segment  45  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   46   X  |  0.0   47   X  |     [156.37, -166.35]
+Segment  46  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   47   X  |  0.0   48   beta2  |     [-144.12, 164.8]
+Segment  47  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   48   beta2  |  0.0   49   beta1  |     [-134.35, 127.83]
+Segment  48  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   49   beta1  |  0.0   50   delta  |     [-115.49, 14.41]
+Segment  49  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   50   delta  |  0.0   51   beta1  |     [-112.68, 128.19]
+Segment  50  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   51   beta1  |  0.0   52   pi  |     [-58.97, 132.77]
+Segment  51  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   52   pi  |  0.0   53   deltax  |     [76.81, -2.62]
+Segment  52  assigned to class: TII 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   53   deltax  |  0.0   54   beta1  |     [-124.43, 129.35]
+Segment  53  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   54   beta1  |  0.0   58   delta  |     [-100.98, 24.12]
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   58   delta  |  0.0   59   beta2  |     [-139.1, 147.73]
+Segment  58  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   59   beta2  |  0.0   60   beta2  |     [-137.41, 106.94]
+Segment  59  assigned to class: EBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   60   beta2  |  0.0   61   delta1  |     [-90.68, 5.07]
+Segment  60  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   61   delta1  |  0.0   62   delta2  |     [-108.09, -52.84]
+Segment  61  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   62   delta2  |  0.0   63   X  |     [114.63, -27.17]
+Segment  62  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   63   X  |  0.0   64   alfa1  |     [-51.36, -52.29]
+Segment  63  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   64   alfa1  |  0.0   65   alfa1  |     [-58.35, -46.03]
+Segment  64  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   65   alfa1  |  0.0   66   alfa1  |     [-56.91, -47.46]
+Segment  65  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   66   alfa1  |  0.0   67   alfa1  |     [-56.84, -54.0]
+Segment  66  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   67   alfa1  |  0.0   68   alfa1  |     [-57.7, -49.41]
+Segment  67  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   68   alfa1  |  0.0   69   alfa1  |     [-52.95, -37.72]
+Segment  68  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   69   alfa1  |  0.0   70   alfa1  |     [-65.72, -37.12]
+Segment  69  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   70   alfa1  |  0.0   71   alfa1  |     [-69.06, -37.22]
+Segment  70  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   71   alfa1  |  0.0   72   alfa1  |     [-69.64, -54.44]
+Segment  71  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   72   alfa1  |  0.0   73   delta  |     [-134.1, 32.17]
+Segment  72  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   73   delta  |  0.0   74   pi  |     [-57.63, 132.54]
+Segment  73  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   74   pi  |  0.0   75   pi  |     [-53.33, 144.04]
+Segment  74  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   75   pi  |  0.0   76   beta1  |     [-90.93, 105.53]
+Segment  75  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   76   beta1  |  0.0   77   X  |     [-157.55, -143.32]
+Segment  76  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   77   X  |  0.0   78   delta  |     [-120.23, 17.58]
+Segment  77  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   78   delta  |  0.0   79   beta2  |     [-139.15, 170.58]
+Segment  78  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   79   beta2  |  0.0   80   pix  |     [50.44, -125.31]
+Segment  79  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   80   pix  |  0.0   81   X  |     [-114.69, -164.87]
+Segment  80  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   81   X  |  0.0   82   beta2  |     [-142.79, 133.47]
+Segment  81  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   82   beta2  |  0.0   83   pi  |     [-83.84, 161.72]
+Segment  82  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   83   pi  |  0.0   84   alfa1  |     [-60.28, -41.2]
+Segment  83  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   84   alfa1  |  0.0   85   zeta  |     [-136.3, 68.79]
+Segment  84  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   85   zeta  |  0.0   86   alfa2  |     [-50.73, -30.72]
+Segment  85  assigned to class: TC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   86   alfa2  |  0.0   87   delta1  |     [-91.89, 7.1]
+Segment  86  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   87   delta1  |  0.0   88   pi  |     [-66.89, 161.45]
+Segment  87  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   88   pi  |  0.0   89   beta1  |     [-92.19, 110.15]
+Segment  88  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   89   beta1  |  0.0   90   beta1  |     [-102.0, 122.95]
+Segment  89  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   90   beta1  |  0.0   91   beta1  |     [-110.86, 140.28]
+Segment  90  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   91   beta1  |  0.0   92   beta1  |     [-109.75, 113.43]
+Segment  91  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   92   beta1  |  0.0   93   beta1  |     [-113.23, 106.41]
+Segment  92  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   93   beta1  |  0.0   94   pi  |     [-80.43, 112.96]
+Segment  93  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   94   pi  |  0.0   95   delta  |     [-122.34, -12.71]
+Segment  94  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   95   delta  |  0.0   96   beta2  |     [-117.82, 151.82]
+Segment  95  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   96   beta2  |  0.0   97   X  |     [-89.65, 179.24]
+Segment  96  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   97   X  |  0.0   98   alfa1  |     [-51.52, -36.16]
+Segment  97  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   98   alfa1  |  0.0   99   delta1  |     [-87.37, -1.85]
+Segment  98  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   99   delta1  |  0.0   100   deltax  |     [87.63, 13.09]
+Segment  99  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   100   deltax  |  0.0   101   beta2  |     [-128.34, 155.48]
+Segment  100  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   101   beta2  |  0.0   102   beta2  |     [-138.37, 175.83]
+Segment  101  assigned to class: EBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   102   beta2  |  0.0   103   beta1  |     [-98.46, 149.14]
+Segment  102  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   103   beta1  |  0.0   104   alfa1  |     [-56.47, -41.83]
+Segment  103  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   104   alfa1  |  0.0   105   alfa2  |     [-66.38, -30.98]
+Segment  104  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   105   alfa2  |  0.0   106   alfa1  |     [-64.13, -49.48]
+Segment  105  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   106   alfa1  |  0.0   107   alfa1  |     [-57.47, -55.62]
+Segment  106  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   107   alfa1  |  0.0   108   alfa1  |     [-51.82, -42.41]
+Segment  107  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   108   alfa1  |  0.0   109   alfa1  |     [-60.92, -48.11]
+Segment  108  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   109   alfa1  |  0.0   110   alfa1  |     [-59.94, -39.11]
+Segment  109  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   110   alfa1  |  0.0   111   alfa1  |     [-66.86, -43.56]
+Segment  110  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   111   alfa1  |  0.0   112   alfa2  |     [-70.16, -28.34]
+Segment  111  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   112   alfa2  |  0.0   113   alfa1  |     [-63.12, -51.76]
+Segment  112  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   113   alfa1  |  0.0   114   alfa1  |     [-57.84, -32.72]
+Segment  113  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   114   alfa1  |  0.0   115   alfa1  |     [-75.72, -42.62]
+Segment  114  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   115   alfa1  |  0.0   116   alfa2  |     [-64.33, -27.73]
+Segment  115  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   116   alfa2  |  0.0   117   delta  |     [-98.85, 8.08]
+Segment  116  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   117   delta  |  0.0   118   deltax  |     [75.57, 30.6]
+Segment  117  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   118   deltax  |  0.0   119   pi  |     [-66.97, 138.73]
+Segment  118  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   119   pi  |  0.0   120   alfa1  |     [-84.08, -39.22]
+Segment  119  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   120   alfa1  |  0.0   121   beta1  |     [-132.91, 134.79]
+Segment  120  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   121   beta1  |  0.0   122   beta1  |     [-117.35, 123.78]
+Segment  121  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   122   beta1  |  0.0   123   beta1  |     [-102.59, 130.82]
+Segment  122  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   123   beta1  |  0.0   124   beta1  |     [-125.89, 97.24]
+Segment  123  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   124   beta1  |  0.0   125   gammax  |     [-97.05, 70.31]
+Segment  124  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   125   gammax  |  0.0   126   beta2  |     [-165.97, 166.28]
+Segment  125  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   126   beta2  |  0.0   127   X  |     [178.74, 152.92]
+Segment  126  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   127   X  |  0.0   128   beta2  |     [-138.06, 164.51]
+Segment  127  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   128   beta2  |  0.0   129   alfa1  |     [-65.52, -35.13]
+Segment  128  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   129   alfa1  |  0.0   130   beta2  |     [-115.41, 152.56]
+Segment  129  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   130   beta2  |  0.0   131   X  |     [-104.96, -140.08]
+Segment  130  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   131   X  |  0.0   132   beta2  |     [-170.83, 165.95]
+Segment  131  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   132   beta2  |  0.0   133   alfa1  |     [-68.7, -38.83]
+Segment  132  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   133   alfa1  |  0.0   134   alfa1  |     [-66.27, -43.27]
+Segment  133  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   134   alfa1  |  0.0   135   alfa1  |     [-60.71, -42.84]
+Segment  134  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   135   alfa1  |  0.0   136   alfa1  |     [-66.19, -40.87]
+Segment  135  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   136   alfa1  |  0.0   137   alfa1  |     [-64.08, -48.29]
+Segment  136  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   137   alfa1  |  0.0   138   alfa1  |     [-55.94, -44.17]
+Segment  137  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   138   alfa1  |  0.0   139   alfa2  |     [-77.33, -30.66]
+Segment  138  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   139   alfa2  |  0.0   140   alfa1  |     [-66.79, -44.97]
+Segment  139  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   140   alfa1  |  0.0   141   alfa1  |     [-69.13, -46.14]
+Segment  140  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   141   alfa1  |  0.0   142   alfa1  |     [-52.75, -49.94]
+Segment  141  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   142   alfa1  |  0.0   143   alfa1  |     [-71.24, -34.09]
+Segment  142  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   143   alfa1  |  0.0   144   alfa2  |     [-71.12, -30.91]
+Segment  143  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   144   alfa2  |  0.0   145   delta1  |     [-83.18, 0.74]
+Segment  144  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   145   delta1  |  0.0   146   deltax  |     [95.42, 12.46]
+Segment  145  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   146   deltax  |  0.0   147   beta1  |     [-87.47, 147.96]
+Segment  146  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   147   beta1  |  0.0   148   beta1  |     [-95.62, 116.43]
+Segment  147  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   148   beta1  |  0.0   149   beta1  |     [-111.06, 119.31]
+Segment  148  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   149   beta1  |  0.0   150   beta1  |     [-123.95, 135.27]
+Segment  149  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   150   beta1  |  0.0   151   beta2  |     [-138.12, 155.29]
+Segment  150  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   151   beta2  |  0.0   152   pi  |     [-79.19, 132.21]
+Segment  151  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   152   pi  |  0.0   153   alfa2  |     [-66.22, -27.06]
+Segment  152  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   153   alfa2  |  0.0   154   X  |     [132.56, 147.7]
+Segment  153  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   154   X  |  0.0   155   X  |     [-113.8, 42.23]
+Segment  154  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   155   X  |  0.0   156   delta1  |     [-94.14, -10.09]
+Segment  155  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   156   delta1  |  0.0   157   pix  |     [65.41, -163.4]
+Segment  156  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   157   pix  |  0.0   158   beta2  |     [-124.5, 151.0]
+Segment  157  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   158   beta2  |  0.0   159   beta2  |     [-159.5, 96.17]
+Segment  158  assigned to class: EBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   159   beta2  |  0.0   160   pix  |     [76.76, -149.27]
+Segment  159  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   160   pix  |  0.0   161   delta1  |     [-83.77, 4.56]
+Segment  160  assigned to class: LTII 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   161   delta1  |  0.0   162   pi  |     [-71.14, 137.65]
+Segment  161  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   162   pi  |  0.0   163   pi  |     [-83.11, 122.85]
+Segment  162  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   163   pi  |  0.0   164   delta  |     [-116.73, 21.55]
+Segment  163  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   164   delta  |  0.0   165   pi  |     [-81.29, 140.51]
+Segment  164  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   165   pi  |  0.0   166   X  |     [-109.57, -174.68]
+Segment  165  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   166   X  |  0.0   167   beta1  |     [-96.02, 141.68]
+Segment  166  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   167   beta1  |  0.0   168   delta1  |     [-87.03, 1.3]
+Segment  167  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   168   delta1  |  0.0   169   alfa1  |     [-47.67, -44.53]
+Segment  168  assigned to class: TC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   169   alfa1  |  0.0   170   alfa2  |     [-60.91, -27.01]
+Segment  169  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   170   alfa2  |  0.0   171   pi  |     [-62.28, 137.71]
+Segment  170  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   171   pi  |  0.0   172   delta1  |     [-77.83, 1.76]
+Segment  171  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   172   delta1  |  0.0   173   delta1  |     [-92.09, -0.37]
+Segment  172  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   173   delta1  |  0.0   174   beta1  |     [-123.51, 143.49]
+Segment  173  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   174   beta1  |  0.0   175   beta1  |     [-90.13, 112.52]
+Segment  174  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   175   beta1  |  0.0   176   pi  |     [-82.5, 125.7]
+Segment  175  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   176   pi  |  0.0   177   beta1  |     [-117.67, 128.09]
+Segment  176  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   177   beta1  |  0.0   178   X  |     [-97.58, 170.01]
+Segment  177  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   178   X  |  0.0   179   beta1  |     [-120.34, 145.11]
+Segment  178  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   179   beta1  |  0.0   180   beta2  |     [-122.45, 162.31]
+Segment  179  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   180   beta2  |  0.0   181   X  |     [-99.8, 179.67]
+Segment  180  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   181   X  |  0.0   182   alfa2  |     [-60.3, -17.43]
+Segment  181  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   182   alfa2  |  0.0   183   delta1  |     [-94.89, 5.14]
+Segment  182  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   183   delta1  |  0.0   184   deltax  |     [65.75, 28.54]
+Segment  183  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   184   deltax  |  0.0   185   beta1  |     [-99.69, 146.95]
+Segment  184  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   185   beta1  |  0.0   186   pi  |     [-60.73, 131.21]
+Segment  185  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   186   pi  |  0.0   187   pi  |     [-72.94, 150.09]
+Segment  186  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   187   pi  |  0.0   188   alfa2  |     [-60.09, -31.58]
+Segment  187  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   188   alfa2  |  0.0   189   alfa2  |     [-79.11, -19.33]
+Segment  188  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   189   alfa2  |  0.0   190   pi  |     [-59.44, 121.79]
+Segment  189  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   190   pi  |  0.0   191   pi  |     [-61.75, 158.22]
+Segment  190  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   191   pi  |  0.0   192   beta2  |     [-131.78, 159.08]
+Segment  191  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   192   beta2  |  0.0   193   X  |     [151.45, 167.56]
+Segment  192  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   193   X  |  0.0   194   alfa2  |     [-59.32, -31.24]
+Segment  193  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   194   alfa2  |  0.0   195   delta1  |     [-79.24, -3.48]
+Segment  194  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   195   delta1  |  0.0   196   pi  |     [-63.94, 128.15]
+Segment  195  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   196   pi  |  0.0   197   delta2  |     [-109.68, -50.28]
+Segment  196  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   197   delta2  |  0.0   198   beta2  |     [-143.89, 163.02]
+Segment  197  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   198   beta2  |  0.0   199   beta1  |     [-119.46, 147.74]
+Segment  198  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   199   beta1  |  0.0   200   beta2  |     [-157.55, 168.32]
+Segment  199  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   200   beta2  |  0.0   201   pi  |     [-62.6, 123.1]
+Segment  200  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   201   pi  |  0.0   202   delta  |     [-144.06, -3.47]
+Segment  201  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   202   delta  |  0.0   203   beta1  |     [-107.17, 128.56]
+Segment  202  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   203   beta1  |  0.0   204   deltax  |     [58.62, 51.32]
+Segment  203  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   204   deltax  |  0.0   205   beta1  |     [-93.32, 120.37]
+Segment  204  assigned to class: HP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   205   beta1  |  0.0   206   beta1  |     [-88.64, 129.51]
+Segment  205  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   206   beta1  |  0.0   207   beta2  |     [-152.8, -175.07]
+Segment  206  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   207   beta2  |  0.0   208   pi  |     [-58.22, 150.9]
+Segment  207  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   208   pi  |  0.0   209   beta2  |     [-155.06, 140.81]
+Segment  208  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   209   beta2  |  0.0   210   pi  |     [-55.99, 133.79]
+Segment  209  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   210   pi  |  0.0   211   X  |     [48.43, 76.97]
+Segment  210  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   211   X  |  0.0   212   deltax  |     [50.0, 41.92]
+Segment  211  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   212   deltax  |  0.0   213   beta2  |     [-135.41, -162.54]
+Segment  212  assigned to class: SCH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   213   beta2  |  0.0   214   beta2  |     [-142.11, 144.76]
+Segment  213  assigned to class: EBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   214   beta2  |  0.0   215   beta2  |     [-148.48, 161.5]
+Segment  214  assigned to class: EBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   215   beta2  |  0.0   216   beta1  |     [-106.98, 134.9]
+Segment  215  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   216   beta1  |  0.0   217   beta2  |     [-140.05, 154.62]
+Segment  216  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   217   beta2  |  0.0   218   beta1  |     [-114.43, 139.23]
+Segment  217  assigned to class: NBS 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   218   beta1  |  0.0   219   X  |     [150.14, 164.09]
+Segment  218  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   219   X  |  0.0   220   alfa2  |     [-71.88, -15.95]
+Segment  219  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   220   alfa2  |  0.0   221   alfa2  |     [-66.43, -31.61]
+Segment  220  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   221   alfa2  |  0.0   222   alfa2  |     [-79.96, -28.14]
+Segment  221  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   222   alfa2  |  0.0   223   alfa1  |     [-78.05, -47.39]
+Segment  222  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   223   alfa1  |  0.0   224   alfa1  |     [-49.28, -48.07]
+Segment  223  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   224   alfa1  |  0.0   225   alfa2  |     [-57.17, -28.22]
+Segment  224  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   225   alfa2  |  0.0   226   alfa2  |     [-67.84, -31.83]
+Segment  225  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   226   alfa2  |  0.0   227   alfa1  |     [-83.91, -40.46]
+Segment  226  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   227   alfa1  |  0.0   228   alfa1  |     [-56.59, -44.11]
+Segment  227  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   228   alfa1  |  0.0   229   alfa1  |     [-68.1, -39.44]
+Segment  228  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   229   alfa1  |  0.0   230   alfa1  |     [-64.34, -42.75]
+Segment  229  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   230   alfa1  |  0.0   231   alfa1  |     [-52.84, -45.65]
+Segment  230  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   231   alfa1  |  0.0   232   alfa1  |     [-66.86, -37.96]
+Segment  231  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   232   alfa1  |  0.0   233   alfa1  |     [-58.94, -49.09]
+Segment  232  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   233   alfa1  |  0.0   234   alfa1  |     [-55.73, -46.91]
+Segment  233  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   234   alfa1  |  0.0   235   alfa1  |     [-64.7, -37.04]
+Segment  234  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   235   alfa1  |  0.0   236   alfa2  |     [-68.55, -25.56]
+Segment  235  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   236   alfa2  |  0.0   237   alfa1  |     [-87.77, -43.73]
+Segment  236  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   237   alfa1  |  0.0   238   zeta  |     [-125.67, 81.25]
+Segment  237  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   238   zeta  |  0.0   239   alfa2  |     [-56.85, -28.92]
+Segment  238  assigned to class: TC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   239   alfa2  |  0.0   240   alfa2  |     [-65.0, -23.51]
+Segment  239  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   240   alfa2  |  0.0   241   pi  |     [-66.36, 147.8]
+Segment  240  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   241   pi  |  0.0   242   X  |     [-99.87, 156.94]
+Segment  241  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   242   X  |  0.0   243   alfa1  |     [-48.03, -47.31]
+Segment  242  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   243   alfa1  |  0.0   244   alfa2  |     [-76.78, -16.81]
+Segment  243  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   244   alfa2  |  0.0   245   alfa1  |     [-76.39, -36.28]
+Segment  244  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   245   alfa1  |  0.0   246   alfa1  |     [-71.31, -46.06]
+Segment  245  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   246   alfa1  |  0.0   247   alfa1  |     [-55.73, -54.45]
+Segment  246  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   247   alfa1  |  0.0   248   alfa2  |     [-60.41, -30.17]
+Segment  247  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   248   alfa2  |  0.0   249   alfa1  |     [-70.16, -38.24]
+Segment  248  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   249   alfa1  |  0.0   250   alfa1  |     [-62.92, -46.94]
+Segment  249  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   250   alfa1  |  0.0   251   alfa1  |     [-77.39, -34.27]
+Segment  250  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   251   alfa1  |  0.0   252   alfa1  |     [-68.98, -38.9]
+Segment  251  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   252   alfa1  |  0.0   253   delta  |     [-98.68, 10.15]
+Segment  252  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   253   delta  |  0.0   254   pi  |     [-69.71, 151.05]
+Segment  253  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   254   pi  |  0.0   255   pi  |     [-76.25, 118.92]
+Segment  254  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   255   pi  |  0.0   256   pi  |     [-61.46, 125.33]
+Segment  255  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   256   pi  |  0.0   257   delta  |     [-121.4, -12.23]
+Segment  256  assigned to class: BU 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   257   delta  |  0.0   258   X  |     [148.13, -163.73]
+Segment  257  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   258   X  |  0.0   259   pi  |     [-51.48, 137.75]
+Segment  258  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   259   pi  |  0.0   260   alfa2  |     [-68.97, -19.72]
+Segment  259  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   260   alfa2  |  0.0   261   alfa2  |     [-67.31, -28.23]
+Segment  260  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   261   alfa2  |  0.0   262   delta  |     [-109.56, -23.8]
+Segment  261  assigned to class: 3H 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   262   delta  |  0.0   263   delta  |     [-128.78, 6.18]
+Segment  262  assigned to class: TI 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   263   delta  |  0.0   264   pix  |     [55.45, -138.5]
+Segment  263  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   264   pix  |  0.0   265   delta1  |     [-79.2, -10.79]
+Segment  264  assigned to class: LTII 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   265   delta1  |  0.0   266   X  |     [121.5, -168.64]
+Segment  265  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   266   X  |  0.0   267   pi  |     [-76.14, 136.16]
+Segment  266  assigned to class: UC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   267   pi  |  0.0   268   pi  |     [-70.69, 148.91]
+Segment  267  assigned to class: PP 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   268   pi  |  0.0   269   beta2  |     [-136.83, 100.57]
+Segment  268  assigned to class: BC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   269   beta2  |  0.0   270   alfa2  |     [-73.15, -28.91]
+Segment  269  assigned to class: HC 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   270   alfa2  |  0.0   271   alfa1  |     [-62.7, -45.3]
+Segment  270  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   271   alfa1  |  0.0   272   alfa1  |     [-67.66, -39.99]
+Segment  271  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   272   alfa1  |  0.0   273   alfa1  |     [-69.08, -32.52]
+Segment  272  assigned to class: ALH 
+
+time0, res0, region0 | time1, res1, region1 |       [ANGLES for res1]
+  0.0   273   alfa1  |  0.0   274   delta1  |     [-94.81, 6.73]
+Segment  273  assigned to class: 3H 
+
+
+
+Frame 1 was found with 268 classified residues
+Total number of frames found: 1
+268 applicable segments in the first frame
+
+DISICL  time0  timestep  frames  segment0   reslist
+DISICL   0.0     1.0       1       268      [2-54,58-274]
+
+ writing DISICL input for:
+#3/10-helix (3H) residues
+#       time	residue
+
+ writing DISICL input for:
+#Alpha-helix (ALH) residues
+#       time	residue
+
+ writing DISICL input for:
+#Pi-helix (PIH) residues
+#       time	residue
+
+ writing DISICL input for:
+#Ext.beta-strand (EBS) residues
+#       time	residue
+
+ writing DISICL input for:
+#Normal beta-strand (NBS) residues
+#       time	residue
+
+ writing DISICL input for:
+#PP-helical (PP) residues
+#       time	residue
+
+ writing DISICL input for:
+#Turn type 1 (TI) residues
+#       time	residue
+
+ writing DISICL input for:
+#Turn type 2 (TII) residues
+#       time	residue
+
+ writing DISICL input for:
+#Turn type 8 (TVIII) residues
+#       time	residue
+
+ writing DISICL input for:
+#Gamma-turn (GXT) residues
+#       time	residue
+
+ writing DISICL input for:
+#Schellman-turn (SCH) residues
+#       time	residue
+
+ writing DISICL input for:
+#Hairpin 2:2 (HP) residues
+#       time	residue
+
+ writing DISICL input for:
+#Turn-cap (TC) residues
+#       time	residue
+
+ writing DISICL input for:
+#Helix-cap (HC) residues
+#       time	residue
+
+ writing DISICL input for:
+#Beta-cap (BC) residues
+#       time	residue
+
+ writing DISICL input for:
+#Beta-bulge (BU) residues
+#       time	residue
+
+ writing DISICL input for:
+#Left turn 2 (LTII) residues
+#       time	residue
+
+ writing DISICL input for:
+#Left-handed helix (LHH) residues
+#       time	residue
+
+ writing DISICL input for:
+#unclassified (UC) residues
+#       time	residue
+
+Segment analysis complete
+writing classification time series to DISICL_2-274.out
+calculating residue statistics
+writing statistics to DISICL_2-274.stat
+program runtime: 0.07  seconds (0.00 h)
+Classification program finished successfully! (1scd_prot.dih)
+renaming DISICL_2-274.out to DISICL_pdet_1scd.out
+renaming DISICL_2-274.stat to DISICL_pdet_1scd.stat
+

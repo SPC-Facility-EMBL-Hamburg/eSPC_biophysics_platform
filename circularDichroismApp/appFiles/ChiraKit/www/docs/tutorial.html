@@ -51,6 +51,9 @@
 <li class="vf-list__item "> Estimation of DNA-ligand binding affinities
 </li>   
 
+<li class="vf-list__item "> Calculation of secondary structure with SESCA
+</li>
+
  </ol>    
    
 <p class="vf-intro__text"></p>
@@ -360,7 +363,10 @@ The CD spectra of OpcA and Wheat germ agglutinin was published in
 </figure>
 <br>
 
-<li class="vf-list__item "> Navigate to the 'Secondary structure estimation' panel (Section '2. Analysis'). Adjust the 'Lower WL' parameter to 180. As a result, the AU-SMP18 reference dataset, comprising soluble and membrane proteins, will be used. Press on 'Run estimation!'.
+<li class="vf-list__item ">
+    Navigate to the 'Secondary structure estimation' panel (Section '2. Analysis').
+    Set the 'Analysis mode' to 'SELCON'.
+    Adjust the 'Lower WL' parameter to 180. As a result, the AU-SMP18 reference dataset, comprising soluble and membrane proteins, will be used. Press on 'Run estimation!'.
 </li>    
 
 <li class="vf-list__item "> You should be able to see the percentage of each secondary structure elements and the fitted spectra.
@@ -478,6 +484,68 @@ activate the 'Log scale for the x-axis' option.
 1) If the compound concentration were 22 micromolar, the string for the fitting equation would be: '0.5 * (ABsignalPos - freeAsignalPos) * ((10**logTenOfKd+22+DNA_micromolar) - sqrt((10**logTenOfKd+22+DNA_micromolar)**2 - 4*22*DNA_micromolar)) + freeAsignalPos*22' <br> 
 2) If the baseline for the complex had negative values, then replace 'ABsignalPos' with 'ABsignalNeg' <br>
 3) If the fitting did not work, try changing the initial values of the parameter estimates manually.
+</li>
+
+</ol>
+
+</div>
+
+<div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="JavaScript:Void(0);" id="section-link" onclick="myFunction('tutorial7')">7) Calculation of secondary structure with SESCA<svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a></div>
+
+<div id="tutorial7" style="display:none">
+
+ <ol class="vf-intro__text">
+
+     <li class="vf-list__item ">Download the file <a href="Myoglobin.csv" download>Myoglobin.csv</a>. This file contains the spectra in delta epsilon units of Myoglobin.
+         The data was downloaded from the Protein Circular Dichroism Data Bank
+<a href="https://www.sciencedirect.com/science/article/pii/S0022283622000018" target="_blank" rel="noopener noreferrer">(Ramalli, Sergio Gomes <i>et al.</i>, 2022)</a>.
+The CD spectrum of Myoglobin was published in
+<a href="https://academic.oup.com/bioinformatics/article/22/16/1955/208282" target="_blank" rel="noopener noreferrer">Lees, Jonathan G. <i>et al.</i>, 2006</a>.
+</li>
+
+<li class="vf-list__item "> Import the file. Set the 'Input units' and the 'Working units' to mean unit molar extinction'.
+</li>
+
+<li class="vf-list__item ">
+    Navigate to the 'Secondary structure estimation' panel (Section '2. Analysis').
+    Set the 'Analysis mode' to 'SESCA (estimation)'. The default basis set is 'DS-dT', which
+    contains three different structural elements and does not consider side-chain contributions.
+    Set 'Myoglobin' as the reference spectrum and 250 as the number of iterations. Press on 'Run estimation!'.
+</li>
+
+<li class="vf-list__item ">
+    After some minutes, you should be able to see the percentage of each secondary structure elements and
+    posterior probabilities of the different structural elements. The percentage of alpha-helix
+    should be around 70-80%.
+</li>
+
+     <br>
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+<img src="tuto7.1.png" alt="" width="1000" loading="lazy"/>
+</figure>
+<br>
+
+<li class="vf-list__item ">
+    We can compare the estimated secondary structure components with the actual secondary structure composition
+    present in the protein structure, and with the predicted spectrum.
+    Set the 'Analysis mode' to 'SESCA (prediction)'. Download the PDB file 1a6m (https://www.rcsb.org/structure/1a6m)
+    and import it. Set Myoglobin as the reference spectrum. Press on 'Run prediction!'.
+    In this case, the almost perfect match is probably explained by the facts that 1) the reference spectrum
+    was part of the SESCA training set, and 2) the secondary structure content is mainly alpha.
+</li>
+
+<br>
+<figure class="vf-figure vf-figure--align vf-figure--align-centered">
+<img src="tuto7.2.png" alt="" width="1000" loading="lazy"/>
+</figure>
+<br>
+
+<li class="vf-list__item ">
+    Congratulations: you have successfully estimated the percentage of secondary structure elements using the SESCA algorithm.
+    Some extra tips: For beta-rich proteins, we recommend the HBSS (or HBSS-3SC1) basis set.
+    For proteins with a high percentage of turns, we recommend the DS5-4 (or DS5-4SC1) basis set.<br>
 </li>
 
 </ol>

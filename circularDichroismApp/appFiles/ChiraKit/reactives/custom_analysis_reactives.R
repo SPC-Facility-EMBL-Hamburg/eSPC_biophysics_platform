@@ -481,7 +481,7 @@ output$fittedParams_custom <- renderTable({
   df <- get_fitted_params_unfolding(cdAnalyzer,type = 'Custom')
 
   return(df)
-})
+}, digits = 4)
 
 output$fittedErrors_custom <- renderTable({
   
@@ -870,7 +870,7 @@ output$fittedParams_customSVD <- renderTable({
   
   return(df)
   
-})
+}, digits = 4)
 
 output$fittedErrors_customSVD <- renderTable({
   

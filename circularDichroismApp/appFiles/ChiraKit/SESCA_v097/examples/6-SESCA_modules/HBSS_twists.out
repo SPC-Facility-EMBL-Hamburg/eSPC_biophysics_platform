@@ -1,0 +1,47 @@
+#HBSS_extend module: Beta-sheet twist angles calculated over a PDB trajectory:
+#Trajectory file: 1hnn.pdb
+
+#Twist angles are calculated between adjacent strands at res1 and res2
+#Frame    res1  -  res2  Twist (deg)   sheet-type
+   1.0      74     96      18.2        #para
+   1.0      76     98      18.5        #para
+   1.0      77    179      23.6        #para
+   1.0      97     75      14.6        #para
+   1.0      99     77       7.9        #para
+   1.0     100    155      31.9        #para
+   1.0     151     97      53.5        #para
+   1.0     154     99      30.8        #para
+   1.0     178     76      18.7        #para
+   1.0     179    212       6.0        #para
+   1.0     181    214       7.2        #para
+   1.0     205    175      60.5        #para
+   1.0     211    178       8.7        #para
+   1.0     213    180      -0.8        #para
+   1.0     574    596      19.1        #para
+   1.0     575    677      15.9        #para
+   1.0     576    598      16.6        #para
+   1.0     577    679     -52.0        #para
+   1.0     597    575      15.5        #para
+   1.0     599    577      10.7        #para
+   1.0     600    655      31.0        #para
+   1.0     651    597      54.0        #para
+   1.0     654    599      28.2        #para
+   1.0     678    576      20.0        #para
+   1.0     679    712     -65.7        #para
+   1.0     681    714      -8.2        #para
+   1.0     705    675      60.6        #para
+   1.0     711    678     -61.8        #para
+   1.0     713    680     -71.8        #para
+   1.0     216    272      46.0        #anti
+   1.0     273    255      25.2        #anti
+   1.0     274    214      12.4        #anti
+   1.0     275    253      -2.9        #anti
+   1.0     276    212      16.9        #anti
+   1.0     278    210      35.7        #anti
+   1.0     716    772      44.6        #anti
+   1.0     750    777      34.7        #anti
+   1.0     773    755      24.7        #anti
+   1.0     774    714      11.3        #anti
+   1.0     775    753       4.6        #anti
+   1.0     776    712      18.2        #anti
+   1.0     778    710      35.9        #anti

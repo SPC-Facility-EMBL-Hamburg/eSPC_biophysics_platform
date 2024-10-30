@@ -1,6 +1,5 @@
-import pandas as pd 
-import numpy  as np 
-import math
+
+import numpy  as np
 import re
 
 temperature_to_kelvin = lambda T: T + 273.15 if np.max(T) < 270 else T
@@ -49,7 +48,6 @@ def string_to_units(string):
     Input - 'Millidegrees (m°)'      /   Output - millidegrees
     Input - 'Milliabsorbance (mΔA)'  /   Output - milliabsorbance
     Input - 'Δε ...'                /   Output - meanUnitMolarExtinction
-    Input - '... MRE ...'           /   Output - meanUnitMolarEllipticity
 
     '''
 
@@ -192,6 +190,45 @@ def clean_function_text(text):
     cleaned_text = cleaned_text.replace('sqrt(','np.sqrt(')
 
     return cleaned_text
+
+def signal_at_222nm(signal,wavelength):
+
+    '''
+    Extract the signal at 222 nm from the CD spectra
+    '''
+
+    if 222 in wavelength:
+
+        signal_222nm = signal[wavelength == 222,:]
+        return signal_222nm.flatten()
+
+    signal_222nm = []
+
+    signal_temp     = signal[wavelength >= 221,:]
+    wavelength_temp = wavelength[wavelength >= 221]
+
+    signal_temp     = signal_temp[wavelength_temp <= 223,:]
+    wavelength_temp = wavelength_temp[wavelength_temp <= 223]
+
+    # Sort in increasing order
+    # Get the indices that would sort the wavelength vector
+    sorted_indices = np.argsort(wavelength_temp)
+
+    # Use the sorted_indices to rearrange the rows of the matrix and vector
+    signal_temp     = signal_temp[sorted_indices,:]
+    wavelength_temp = wavelength_temp[sorted_indices]
+
+    # Total CD spectra of this experiment
+    n_spectra = signal.shape[1]
+
+    # Iterate over the columns
+    for j in range(n_spectra):
+        # Interpolate
+        y = np.interp(222, wavelength_temp, signal_temp[:, j], left=None, right=None, period=None)
+
+        signal_222nm.append(y)
+
+    return np.array(signal_222nm)
 
 ## check or remove code below!!!
 def check_good_parameters_estimation(params,low_bound,high_bound,params_name):

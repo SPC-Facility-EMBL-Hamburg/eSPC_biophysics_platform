@@ -1,0 +1,87 @@
+#Exercise 1: Basis set selection and its effects on CD predictions for Tumor Necrosis Factor Alpha
+
+#In this example we calculate and compare two CD spectra for our chosen protein using its crystal
+#structure (1tnf.pdb) and two different basis spectrum sets, both based on the same secondary
+#structure (SS) composition determined by the program DSSP.
+
+
+#Step 1: prediction using the DSSP-T basis set 
+#First we perform a normal CD prediction and compare it to the spectrum provided in this directory:
+
+../../scripts/SESCA_main.py @pdb 1tnf.pdb   @ref CD_TNF.dat   @lib DSSP-T  @write CD_comp_DSSP-T.out
+#     SESCA main module     structure file   spectrum file    basis set     output file
+
+#The resulting main output file (CD_comp_DSSP-T.out) shows that the predicted spectrum differs from
+#the reference spectrum by an RMSD of 3.0 kMRE, with an estimated 12.7+/-6.1 % error in the models
+#SS composition.
+
+
+#Step 2: prediction using the DSSP-1 basis set
+#Note that, in step 1 we already calculated the SS-composition of TNF alpha using the SESCA_dssp
+#module (summarized in Dssp_1tnf.out). This SS composition can be provided to SESCA directly using the
+#@BB_file to skip the pre-processing step, as both DSSP-T and DSSP-1 basis sets are compatible with
+#the DSSP structure classification protocol. The second CD prediction therefore can obtained with: 
+
+../../scripts/SESCA_main.py @BB_file Dssp_1tnf.out  @ref CD_TNF.dat   @lib DSSP-1   @write CD_comp_DSSP-1.out
+#     SESCA main module     SS summary file         spectrum file     basis set     output file
+
+#The prediction in this case gives slightly different results with an RMSD of 2.9 kMRE, and a
+#15.1 +/- 7.6 % SS error estimate. To showcase the results, the CD spectra calculated from the two
+#basis sets were loaded into xmgrace (TNF_fit.agr) and transformed into an image file (TNF_fit.png).
+
+
+#More on default basis sets:
+#The predicted spectra in our examples differed because different basis spectrum sets combine the
+#SS information differently into classes, for which the basis spectra were determined. The SESCA
+#package includes several default basis sets contained in the 'libs' subdirectory, listed in and
+#read from the 'libs/Basis_sets.nfo' file. This file contains information in six columns: 1 - the
+#code by which the basis set can be called through SESCA_main (name), 2 - the underlying SS
+#classification protocol (SS type), 3 - file name containing the backbone basis spectra
+#(located in the libs subdir), 4 - file name containing the side chain contributions (or None if
+#the basis set has no side chain parameters), 5 - this column indicates if the basis set has Error
+#estimation parameters (Yes/No), and 6 - Comments for the basis set. Adding, deleting, or
+#commenting out lines in Basis_sets.nfo allows users to quickly introduce or remove default basis
+sets for SESCA.
+
+#Note that the user can also specify basis set parameters manually: backbone and side chain basis
+#set parameter files can be provided using the @BB_lib and @SC_lib flags respectively, whereas the
+#required pre-processor can be specified with the @method flag. For example, one can manually
+#specify to use the DSSP-F basis set the with following command:
+
+../../scripts/SESCA_main.py @BB_file Dssp_1tnf.out  @ref CD_TNF.dat  @BB_lib ../../libs/Set_DSSP-F.dat @write CD_comp_DSSP-F.out
+#     SESCA main module     SS summary file         spectrum file     basis set                          output file
+
+#which yields a third predicted CD spectrum with RMSD of 2.7 kMRE, but no error estimate on the
+#model since error calibration was not performed for this particular basis set. Note that since the
+#SS composition was already determined for the protein, there was no need to specify the SS
+#classification method.
+
+#More on basis set files:
+#Basis sets translate the structural information (mostly SS composition) into CD spectra. Basis set
+#files contain up to four data blocks, of which two (the basis spectra and the assignment block)
+#are mandatory for SESCA. As an example, the user can open the file Map_DSSP-T.dat from the libs
+#subdirectory in a text editor. The first block in the basis set contains general information about
+#the reference set which was used to derive the basis set (more details in exercise 3).
+#The second block, called Assignment or combination matrix, defines how many SS classes are used
+#(number of rows) in the basis sets and determines how SS elements from the pre-processor (columns)
+#are assigned to each. For DSSP-T,  there are three SS classes (Helix, Sheet, and Coil) and eight
+#SS elements as they appear in the SS summary obtained from the SESCA_dssp module. The matrix shows
+#that the fraction of 3-,4-,5-Helix elements are assigned to the Helix class, the Beta-strand
+#residues are assigned to the Sheet class, and all other fractions are added to Coil class,
+#indicated by 1.000 values in the matrix.
+#The third data block contains the basis spectra for each SS class, describing the normalized CD
+#signal intensities at each wavelength by default in 1000 degree*cm^2/dmol (kMRE) units. During the
+#CD calculation, the basis spectra are weighted by the fraction of amino acids assigned to their
+#corresponding class in the structural model, and then summed to determine the theoretical CD
+#spectrum. 
+#The fourth data block of the basis set is an optional error calibration block. This block is derived
+#from calibration curves fitted to synthetic data sets of CD spectra and SS compositions. The calib-
+#ration curves contain the mean and standard deviation of model SS errors (dSSj) observed
+#for given deviations (RMSDj) between the predicted and the measured CD spectrum. A calibration
+#block for any basis set may contain several such curves, and chosen from using the @err flag.
+#The default optimized basis sets of SESCA include four calibration curves. Curves 1 and 2 were
+#derived using SS compositions randomly drawn from uniform SS composition, and curves 3 and 4
+#were computed by synthetic data sets following the join probablity distribution of alpha-helices and 
+#beta-sheets for globular proteins in the protein data bank (PDB) as obtained by the DSSP algorithm.
+#In addition curves 1 and 3 were calculated without re-sclaing the measured CD spectra, and curves 
+#2 and 4 were obtained by re-scaling them during the comparison to the predicted CD spectra.

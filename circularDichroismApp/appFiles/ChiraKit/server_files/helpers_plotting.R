@@ -12,7 +12,7 @@ workingUnits2ProperLabel <- function(choice) {
   }         
 
   if (choice == 'meanUnitMolarEllipticity')  {
-    return("MRE (deg\u2219cm<sup>2</sup>\u2219dmol<sup>-1</sup>\u2219chromophores<sup>-1</sup>)")
+    return("[\u03B8] (deg\u2219cm<sup>2</sup>\u2219dmol<sup>-1</sup>\u2219chromophores<sup>-1</sup>)")
   }   
   
   if (choice == 'absorbance')                 return("Differential absorbance (\u0394A)"     )
