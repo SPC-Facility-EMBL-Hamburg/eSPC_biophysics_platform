@@ -83,15 +83,19 @@ get_legend_from_rhandTable <- function(table) return(hot_to_r(table)$legends)
 get_colors_from_rhandTable <- function(table) return(hot_to_r(table)$color)
 get_sel_from_rhandTable    <- function(table) return(hot_to_r(table)$select)
 
-get_df_mass <- function(refeyn,contrasts) {
+get_df_mass <- function(refeyn,contrasts,all=FALSE) {
 
   dfMass <- data.frame("mass"=refeyn$contrasts)
 
   if (!contrasts) dfMass <- data.frame("mass"=refeyn$masses_kDa)
 
-  dfMass <- dfMass %>%
-    filter(mass >= refeyn$hist_window[1]) %>%
-    filter(mass <= refeyn$hist_window[2])
+  if (!all) {
+
+    dfMass <- dfMass %>%
+      filter(mass >= refeyn$hist_window[1]) %>%
+      filter(mass <= refeyn$hist_window[2])
+
+    }
 
   # Replace mass with contrasts
   if (contrasts) (dfMass$mass <- dfMass$mass*cstFactorForContrast)

@@ -55,18 +55,30 @@ shinyUI(dashboardPage(title = paste0(appName),
           
           box(title = "Legends", width = 4, solidHeader = T, status = "primary",
               fluidRow(
-                conditionalPanel(condition = "output.dataLoaded", 
-                                 column(width = 8,rHandsontableOutput('legendInfo')),
+                conditionalPanel(condition = "output.dataLoaded",
+
+                                 column(width = 8,
+                                        rHandsontableOutput('legendInfo',    width = "100%"),
+                                        rHandsontableOutput('legendInfoHist',width = "100%")),
+                                 
                                  column(width = 4,
                                         selectInput("mol2changeColor", "Set colour",c("X")),
-                                        colourInput("colorForLegend", NULL, value = "#E41A1C")),
-                                 column(8, p(HTML("<b>Show estimated masses</b>"),
+                                        colourInput("colorForLegend", NULL, value = "#E41A1C"),
+                                 p(HTML("<b>Show estimated masses</b>"),
                                              span(shiny::icon("info-circle"), id = "info_uuL-1"),
                                              checkboxInput("show_massesPlot", "In the plot", TRUE),
-                                             checkboxInput("show_massesLegend", "In the legend", TRUE),
+                                             checkboxInput("show_massesLegend", "In the legend", FALSE),
                                              tippy::tippy_this(elementId = "info_uuL-1",
                                                                tooltip = "Display the means of the fitted gaussians
-                                                               .",placement = "right")))
+                                                               .",placement = "right")),
+                                 p(HTML("<b>Show counts percentage</b>"),
+                                   span(shiny::icon("info-circle"), id = "info_uuL-2"),
+                                   checkboxInput("show_percentagePlot", "In the plot", TRUE),
+                                   checkboxInput("show_percentageLegend", "In the legend", FALSE),
+                                   tippy::tippy_this(elementId = "info_uuL-2",
+                                                     tooltip = 
+                                                     "Display the percentage of counts for each peak.",
+                                                     placement = "right")))
                                  
                 )
               )),

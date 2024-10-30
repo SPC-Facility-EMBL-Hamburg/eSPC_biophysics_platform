@@ -35,6 +35,9 @@ colorPalette40 <- c(
   "#C9DDC3", "#D3EBB7", "#E2EB9F", "#F0EC87", "#FFED6F"
 )
 
+histogram_palette <- c('#AEC6CF','#FFB347','#77DD77','#CFCFC4',
+                       '#e02b35','#b42009','#009275','#b66e7d')
+
 
 myrenderer <- "function(instance, td, row, col, prop, value, cellProperties) {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);

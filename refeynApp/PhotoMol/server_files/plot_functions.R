@@ -1,4 +1,3 @@
-histogram_palette <- c('#AEC6CF','#FFB347','#77DD77','#CFCFC4','#e02b35')
 
 
 configFig <- function(fig,plot_width, plot_height, plot_type,plot_title_for_download) {
@@ -44,9 +43,10 @@ add_gaussian_sum_trace <- function(fig,refeynFit,baseline,scaling_factor,colorPa
 
 }
 
-add_labels_to_fig <- function(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked) {
+add_labels_to_fig <- function(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked,mass=TRUE,counts=TRUE) {
 
-  fitted_means <- refeynFitTable[,1]
+  fitted_means       <- refeynFitTable[,1]
+  fitted_counts_perc <- refeynFitTable[,4]
 
   if (contrasts) fitted_means <- fitted_means * cstFactorForContrast
   fitted_amp   <- refeynFitTable[,5] * scaling_factor
@@ -55,11 +55,20 @@ add_labels_to_fig <- function(fig,refeynFitTable,contrasts,scaling_factor,axis_s
 
   yShift <- max(fitted_amp)*0.02
 
-  dfLabel <- data.frame("means"=fitted_means,"amplitudes"=fitted_amp+yShift,"labels"=paste0(" ",round(fitted_means)))
+  labels <- rep("",length(fitted_means))
+
+  if (mass) {
+    labels <- paste0(" ",round(fitted_means))
+    if (!contrasts) labels <- paste0(labels," kDa")
+  }
+
+  if (counts) {
+    labels <- paste0(labels," (",round(fitted_counts_perc)," % counts )")
+  }
+
+  dfLabel <- data.frame("means"=fitted_means,"amplitudes"=fitted_amp+yShift,"labels"=labels)
 
   dfLabel <- dfLabel[sels,]
-
-  if (!contrasts) dfLabel$labels <- paste0(dfLabel$labels," kDa")
 
   fig <- fig %>% add_text(
     data = dfLabel, x = ~means, y = ~amplitudes, text = ~labels,
@@ -85,10 +94,19 @@ add_masses_to_legend <- function(legends,refeynFitTable,contrasts) {
   return(legends)
 }
 
+add_percentages_to_legend <- function(legends,refeynFitTable) {
+
+  fitted_counts_perc <- refeynFitTable[,4]
+
+  legends <- paste0(legends," (",round(fitted_counts_perc)," % counts )")
+
+  return(legends)
+}
 
 add_gaussian_traces <- function(fig,axis_size,refeynFit,refeynFitTable,legends,
                                 colorPalette,sels,baseline,scaling_factor,
-                                addMassesToLegend=TRUE,contrasts=FALSE,add_labels=TRUE,stacked=TRUE) {
+                                addMassesToLegend=TRUE,addPercentageToLegend=TRUE,
+                                contrasts=FALSE,add_labels=TRUE,add_percentages=TRUE,stacked=TRUE) {
 
   if (contrasts) refeynFit$x <- refeynFit$x * cstFactorForContrast
 
@@ -107,8 +125,10 @@ add_gaussian_traces <- function(fig,axis_size,refeynFit,refeynFitTable,legends,
       }
   }
 
-  if (add_labels)        fig     <- add_labels_to_fig(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked)
-  if (addMassesToLegend) legends <- add_masses_to_legend(legends,refeynFitTable,contrasts)
+  if (add_labels || add_percentages)   fig   <- add_labels_to_fig(fig,refeynFitTable,contrasts,scaling_factor,axis_size,sels,stacked,add_labels,add_percentages)
+
+  if (addMassesToLegend) legends     <- add_masses_to_legend(legends,refeynFitTable,contrasts)
+  if (addPercentageToLegend) legends <- add_percentages_to_legend(legends,refeynFitTable)
 
   gaussianInd <- refeynFit[,-ncol(refeynFit)]
   colnames(gaussianInd) <- c("x",legends)
@@ -143,8 +163,9 @@ add_gaussian_traces <- function(fig,axis_size,refeynFit,refeynFitTable,legends,
 
 plotRefeynFit <- function(
   photoMolModels,baseline_shared,plot_width, plot_height, plot_type, axis_size,
-  legendsAll,colorPaletteAll,selsAll,addMassesToLegend=TRUE,contrasts=FALSE,
-  normalize=FALSE,add_labels=TRUE,stacked=FALSE) {
+  legendsAll,colorPaletteAll,selsAll,
+  colorsHist,addMassesToLegend=TRUE,addPercentageToLegend=FALSE,contrasts=FALSE,
+  normalize=FALSE,add_labels=TRUE,add_percentages=TRUE,stacked=FALSE) {
 
   yLabel <- ifelse(normalize,"Norm. counts","Counts")
 
@@ -181,7 +202,7 @@ plotRefeynFit <- function(
 
     bin_info <- get_bin_info(refeyn,contrasts)
 
-    color_hst <- ifelse(stacked,'#AEC6CF',histogram_palette[model_cnt])
+    color_hst <- colorsHist[model_cnt]
 
     if (stacked) {
         figs[[model_cnt]] <- add_mass_histogram(figs[[model_cnt]],dfMass,bin_info,normalize,color_hst)
@@ -210,10 +231,15 @@ plotRefeynFit <- function(
 
     if (stacked) {
 
-      figs[[model_cnt]] <- add_gaussian_traces(figs[[model_cnt]],axis_size,refeynFit,refeyn$fit_table,legends,colorPalette,sels,baseline,scaling_factor,addMassesToLegend,contrasts,add_labels,stacked)
+      figs[[model_cnt]] <- add_gaussian_traces(figs[[model_cnt]],axis_size,refeynFit,refeyn$fit_table,
+                                               legends,colorPalette,sels,baseline,scaling_factor,
+                                               addMassesToLegend,addPercentageToLegend,contrasts,
+                                               add_labels,add_percentages,stacked)
 
     } else {
-      fig <- add_gaussian_traces(fig,axis_size,refeynFit,refeyn$fit_table,legends,colorPalette,sels,baseline,scaling_factor,addMassesToLegend,contrasts,add_labels,stacked)
+      fig <- add_gaussian_traces(fig,axis_size,refeynFit,refeyn$fit_table,legends,colorPalette,sels,baseline,
+                                 scaling_factor,addMassesToLegend,addPercentageToLegend,contrasts,
+                                 add_labels,add_percentages,stacked)
     }
 
     # refeynFit is a matrix with n columns whose 1st column is the x axis,
@@ -291,7 +317,7 @@ plotMass_vs_contrast <- function(mass,contrast,slope,intercept,
   
 }
 
-plotRefeynMassHist <- function(models,plot_width, plot_height, plot_type,axis_size) {
+plotRefeynMassHist <- function(models,histogram_palette,plot_width, plot_height, plot_type,axis_size) {
 
   fig     <- plot_ly()
   model_cnt <- 0
@@ -300,7 +326,7 @@ plotRefeynMassHist <- function(models,plot_width, plot_height, plot_type,axis_si
 
     model_cnt <- model_cnt + 1
 
-    dfMass <- get_df_mass(refeyn,FALSE)
+    dfMass <- get_df_mass(refeyn,FALSE,TRUE)
 
     fig <- fig %>% add_trace(type="histogram",
       x=dfMass$mass, color = I(histogram_palette[model_cnt]),

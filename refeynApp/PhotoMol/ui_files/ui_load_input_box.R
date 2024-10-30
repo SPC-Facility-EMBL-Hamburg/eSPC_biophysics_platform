@@ -1,12 +1,12 @@
 box(title = "Input", width = 3, solidHeader = T, status = "primary", 
     fluidRow(
       
-      column(10, p(HTML("<b>Mass Photometry file(s) (up to five) </b>"),
+      column(10, p(HTML("<b>Mass Photometry file(s) (up to eight) </b>"),
                    span(shiny::icon("info-circle"), id = "info_uu1-1"),
                    fileInput("massPhotometryFile", NULL,accept = c(".h5",".csv"),multiple=TRUE),
                    tippy::tippy_this(elementId = "info_uu1-1",
-                                     tooltip = ".h5 (Hierarchical Data Format) file with a 1D dataset called 'masses_kDa'. You can load
-                                     up to 5 files simultaneously."))),
+                                     tooltip = ".h5 (Hierarchical Data Format) file with a 1D dataset called 'masses_kDa'.
+                                     You can load up to eight files simultaneously."))),
       
       # Little hack to use the withBusyIndicatorUI function (loading spinner)
       column(1, p(HTML("<b><br></b>")),
@@ -105,6 +105,39 @@ box(title = "Input", width = 3, solidHeader = T, status = "primary",
 
                     textInput("starting_values5", label=NULL,value=""),
                     tippy::tippy_this(elementId = "info_uu1-St5",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+conditionalPanel(condition = "output.nFiles > 5",
+
+        column(8, p(HTML("<b>Starting values (file 6)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St6"),
+
+                    textInput("starting_values6", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St6",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+conditionalPanel(condition = "output.nFiles > 6",
+
+        column(8, p(HTML("<b>Starting values (file 7)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St7"),
+
+                    textInput("starting_values7", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St7",
+                                 tooltip = "Input one starting value for each truncated gaussian that you want to fit.
+                                 The starting values should be separated by spaces,
+                                 and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),
+
+conditionalPanel(condition = "output.nFiles > 7",
+
+        column(8, p(HTML("<b>Starting values (file 8)</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uu1-St8"),
+
+                    textInput("starting_values8", label=NULL,value=""),
+                    tippy::tippy_this(elementId = "info_uu1-St8",
                                  tooltip = "Input one starting value for each truncated gaussian that you want to fit.
                                  The starting values should be separated by spaces,
                                  and, in absolute units, higher than the minimum observed mass. Units are kDa.",placement = "right")))),

@@ -5,13 +5,15 @@ output$download_fitting_params_table <- downloadHandler(filename = function() {
     parameter <- c("Bin width","Min. observed mass","Upper limit for the standard deviation",
                    "Tolerance to the initial guesses","Baseline",
                    "Window range","Starting values1","Starting values2",
-                   "Starting values3","Starting values4","Starting values5")
+                   "Starting values3","Starting values4","Starting values5",
+                   "Starting values6","Starting values7","Starting values8")
     
     value    <-  c(
       input$bin_width,input$min_observed_mass,input$upper_limit_std,
       input$position_tolerance,input$baseline,
       paste0(input$window_range[1],"-",input$window_range[2]),
-      input$starting_values1,input$starting_values2,input$starting_values3,input$starting_values4,input$starting_values5)
+      input$starting_values1,input$starting_values2,input$starting_values3,input$starting_values4,
+      input$starting_values5,input$starting_values6,input$starting_values7,input$starting_values8)
     
     df <- data.frame(parameter,value)
     

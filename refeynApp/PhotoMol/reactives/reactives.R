@@ -60,6 +60,7 @@ resetPlotsAndTables <- function() {
   output$counts_plotNormalized <- NULL
   output$fittedParams          <- NULL
   output$legendInfo            <- NULL
+  output$legendInfoHist       <- NULL
   output$countPlot             <- NULL
 
   output$counts_plot_stacked           <- NULL
@@ -77,12 +78,12 @@ observeEvent(input$massPhotometryFile,{
 
   updateCheckboxInput(session,"automaticFit",value = FALSE)
 
-  for (i in 1:5) updateTextInput(session, paste0("starting_values",i), value = '')
+  for (i in 1:8) updateTextInput(session, paste0("starting_values",i), value = '')
 
   reactives$data_loaded <- FALSE
 
-  if (length(input$massPhotometryFile$name) > 5) {
-    shinyalert(title="Please select a maximum of 5 files.", type = "warning")
+  if (length(input$massPhotometryFile$name) > 8) {
+    shinyalert(title="Please select a maximum of 8 files.", type = "warning")
     return(NULL)
   }
 
@@ -105,6 +106,10 @@ observeEvent(input$massPhotometryFile,{
     
   })
   updateCheckboxInput(session,"automaticFit",value = TRUE)
+
+  axisSize <- floor(18 + ((12 - 18) / (8 - 1)) * (reactives$nFiles - 1))
+
+  updateNumericInput(session,'plot_axis_size',value = axisSize)
 
 },priority = 10)
 
@@ -208,20 +213,42 @@ createPlotsAndTables <- function() {
   ) %>% hot_col(col = c(1,2),
                 renderer = myrenderer) %>%
       hot_col(col = c(3),
-              renderer = myrendererBoolean)})
+              renderer = myrendererBoolean) %>% 
+      hot_col(col = 1, width = 150)})
+
+  legendsHist <- names(photoMolModels$models)
+  
+  legendDfHist <- data.frame(
+    legends = legendsHist,
+    color   = histogram_palette[1:length(legendsHist)])
+  
+  color_cellsHist <- data.frame(col=2,row=1:nrow(legendDfHist))
+  
+  output$legendInfoHist <- renderRHandsontable({
+    rhandsontable(legendDfHist,rowHeaders=NULL,colHeaders=NULL,
+                  col_highlight = color_cellsHist$col - 1,
+                  row_highlight = color_cellsHist$row - 1
+  ) %>% 
+      hot_col(col = c(1,2),renderer = myrenderer) %>%
+      hot_col(col = 1, width = 150,readOnly = TRUE)})  
 
   output$counts_plot <- renderPlotly({
 
     req(photoMolModels$allMassesLoaded)
     req(input$legendInfo)
-
+    req(input$legendInfoHist)
+    
     legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
     colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))
     sels    <- isolate(get_sel_from_rhandTable(input$legendInfo))
 
+    colorsHist  <- isolate(get_colors_from_rhandTable(input$legendInfoHist))    
+    
     plot <-   plotRefeynFit(photoMolModels$models,input$baseline,input$plot_width, input$plot_height,
                             input$plot_type, input$plot_axis_size,legends,colors,sels,
-                            input$show_massesLegend,FALSE,FALSE,input$show_massesPlot)
+                            colorsHist,
+                            input$show_massesLegend,input$show_percentageLegend,FALSE,FALSE,
+                            input$show_massesPlot,input$show_percentagePlot)
 
     if (input$runSimulation) plot <- addSimulation2plotRefeynFit(
       plot,input$positionSimulate,input$stdSimulate,input$amplitudeSimulate,input$leftLimitSimulate)
@@ -232,14 +259,19 @@ createPlotsAndTables <- function() {
 
     req(photoMolModels$allMassesLoaded)
     req(input$legendInfo)
-
+    req(input$legendInfoHist)
+    
     legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
     colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))
     sels    <- isolate(get_sel_from_rhandTable(input$legendInfo))
 
+    colorsHist  <- isolate(get_colors_from_rhandTable(input$legendInfoHist))
+    
     plot <-   plotRefeynFit(photoMolModels$models,input$baseline,input$plot_width, input$plot_height,
                             input$plot_type, input$plot_axis_size,legends,colors,sels,
-                            input$show_massesLegend,FALSE,FALSE,input$show_massesPlot,TRUE)
+                            colorsHist,
+                            input$show_massesLegend,input$show_percentageLegend,FALSE,FALSE,
+                            input$show_massesPlot,input$show_percentagePlot,TRUE)
 
     if (input$runSimulation) plot <- addSimulation2plotRefeynFit(
       plot,input$positionSimulate,input$stdSimulate,input$amplitudeSimulate,input$leftLimitSimulate)
@@ -250,14 +282,19 @@ createPlotsAndTables <- function() {
 
     req(photoMolModels$allMassesLoaded)
     req(input$legendInfo)
-
+    req(input$legendInfoHist)
+    
     legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
     colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))
     sels    <- isolate(get_sel_from_rhandTable(input$legendInfo))
 
+    colorsHist  <- isolate(get_colors_from_rhandTable(input$legendInfoHist))
+    
     plot <-   plotRefeynFit(photoMolModels$models,input$baseline,input$plot_width, input$plot_height,
                             input$plot_type, input$plot_axis_size,legends,colors,sels,
-                            input$show_massesLegend,FALSE,TRUE,input$show_massesPlot)
+                            colorsHist,
+                            input$show_massesLegend,input$show_percentageLegend,FALSE,TRUE,
+                            input$show_massesPlot,input$show_percentagePlot)
 
     return(plot)})
 
@@ -265,21 +302,30 @@ createPlotsAndTables <- function() {
 
     req(photoMolModels$allMassesLoaded)
     req(input$legendInfo)
+    req(input$legendInfoHist)
 
     legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
     colors  <- isolate(get_colors_from_rhandTable(input$legendInfo))
     sels    <- isolate(get_sel_from_rhandTable(input$legendInfo))
 
+    colorsHist  <- isolate(get_colors_from_rhandTable(input$legendInfoHist))    
+    
     plot <-   plotRefeynFit(photoMolModels$models,input$baseline,input$plot_width, input$plot_height,
                             input$plot_type, input$plot_axis_size,legends,colors,sels,
-                            input$show_massesLegend,FALSE,TRUE,input$show_massesPlot,TRUE)
+                            colorsHist,
+                            input$show_massesLegend,input$show_percentageLegend,FALSE,TRUE,
+                            input$show_massesPlot,input$show_percentagePlot,TRUE)
 
     return(plot)})
 
   output$binding_plot <- renderPlotly({
+
+  req(input$legendInfoHist)
+  colorsHist  <- isolate(get_colors_from_rhandTable(input$legendInfoHist))
+
   # see server_files/plot_functions.R
   return(plotRefeynMassHist(
-    photoMolModels$models,input$plot_width, input$plot_height,
+    photoMolModels$models,colorsHist,input$plot_width, input$plot_height,
     input$plot_type, input$plot_axis_size))
   })
 
@@ -293,6 +339,9 @@ observeEvent(list(
     input$starting_values3,
     input$starting_values4,
     input$starting_values5,
+    input$starting_values6,
+    input$starting_values7,
+    input$starting_values8,
     input$window_range[1],input$window_range[2],
     input$bin_width,input$upper_limit_std,input$position_tolerance,
     input$baseline,input$min_observed_mass,
@@ -305,7 +354,7 @@ observeEvent(list(
 
   resetPlotsAndTables()
 
-  for (i in 1:5) {
+  for (i in 1:8) {
 
     pks_initial <- input[[paste0("starting_values",i)]]
     pks_initial <- get_guess_positions(pks_initial)
@@ -327,11 +376,18 @@ observeEvent(list(
 
 })
 
-observeEvent(input$legendInfo,{
+observeEvent(list(input$legendInfo,input$legendInfoHist),{
   
   req(reactives$data_loaded)
-  updateSelectInput(session,"mol2changeColor","Set colour",
-                    isolate(get_legend_from_rhandTable(input$legendInfo)),isolate(input$mol2changeColor))
+  
+  legends <- isolate(get_legend_from_rhandTable(input$legendInfo))
+  mol     <- isolate(input$mol2changeColor)
+  
+  legendsH <- isolate(get_legend_from_rhandTable(input$legendInfoHist))
+
+  legends <- c(legends,legendsH)
+  
+  updateSelectInput(session,"mol2changeColor","Set colour",legends,mol)
   
 })
 
@@ -343,20 +399,44 @@ observeEvent(input$colorForLegend,{
     colors  <- get_colors_from_rhandTable(input$legendInfo)
     sels    <- get_sel_from_rhandTable(input$legendInfo)
     
-    idx <- which(legends == input$mol2changeColor)
+    if (input$mol2changeColor %in% legends) {
+      
+      idx <- which(legends == input$mol2changeColor)
+      
+      colors[idx] <- input$colorForLegend
+      
+      legendDf <- data.frame(legends = legends,color=colors,select = as.logical(sels))
+      
+      color_cells <- data.frame(col=2,row=1:length(colors))
+      output$legendInfo <- renderRHandsontable({rhandsontable(legendDf,rowHeaders=NULL,colHeaders=NULL,
+                                                              col_highlight = color_cells$col - 1,
+                                                              row_highlight = color_cells$row - 1
+      ) %>% hot_col(col = c(1,2),
+                    renderer = myrenderer) %>% 
+          hot_col(col = c(3),
+                  renderer = myrendererBoolean) %>% 
+          hot_col(col = 1, width = 150)})
+      
+    } else {
+      
+      legends <- get_legend_from_rhandTable(input$legendInfoHist)
+      colors  <- get_colors_from_rhandTable(input$legendInfoHist)
     
-    colors[idx] <- input$colorForLegend
-    
-    legendDf <- data.frame(legends = legends,color=colors,select = as.logical(sels))
-    
-    color_cells <- data.frame(col=2,row=1:length(colors))
-    output$legendInfo <- renderRHandsontable({rhandsontable(legendDf,rowHeaders=NULL,colHeaders=NULL,
-                                                            col_highlight = color_cells$col - 1,
-                                                            row_highlight = color_cells$row - 1
-    ) %>% hot_col(col = c(1,2),
-                  renderer = myrenderer) %>% 
-        hot_col(col = c(3),
-                renderer = myrendererBoolean)})
+      idx <- which(legends == input$mol2changeColor)
+      
+      colors[idx] <- input$colorForLegend
+      
+      legendDf <- data.frame(legends = legends,color=colors)
+      
+      color_cells <- data.frame(col=2,row=1:length(colors))
+      output$legendInfoHist <- renderRHandsontable({rhandsontable(legendDf,rowHeaders=NULL,colHeaders=NULL,
+                                                              col_highlight = color_cells$col - 1,
+                                                              row_highlight = color_cells$row - 1
+      ) %>% hot_col(col = c(1,2),
+                    renderer = myrenderer) %>% 
+          hot_col(col = 1, width = 150,readOnly=TRUE)})  
+      
+    }
     
   })
   
