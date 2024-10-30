@@ -33,6 +33,8 @@ FROM builder AS build2
 
 COPY --chown=shiny:shiny /circularDichroismApp/appFiles/   /home/shiny/
 
+RUN python3 /home/shiny/ChiraKit/SESCA_v097/setup.py @prefix /home/shiny/ChiraKit/SESCA_v097 @source /home/shiny/ChiraKit/SESCA_v097
+
 USER ROOT
 EXPOSE 3838 
 USER shiny
