@@ -10,7 +10,7 @@ for (script in py_scripts) {source_python(paste0('python_src/', script))}
 
 # List of R script files to source
 r_scripts <- c("helpers.R","helpers_unfolding.R","helpers_plotting.R",
-  "helpers_G-Quadruplex.R","plotFunctions.R","plotFunctionsSpectraComparison.R")
+  "plotFunctions.R","plotFunctionsSpectraComparison.R")
 
 # Source the R helper functions 
 for (script in r_scripts) {source(paste0('server_files/', script))}
@@ -30,10 +30,6 @@ function(input, output, session) {
 
   # To handle the SESCA module
   sescaPyClass <- CdSpectraPredictor()
-
-  # To handle the G-Quadruplex module
-  gQuadRefPyClass     <- CdExperimentGeneral()
-  gQuadSamplePyClass  <- CdExperimentGeneral()
   
   source(paste0(base_dir,"reactives/reactives_values.R"                 ), local = T)
   source(paste0(base_dir,"reactives/reactives.R"                        ), local = T)
@@ -45,7 +41,6 @@ function(input, output, session) {
   source(paste0(base_dir,"reactives/spectra_comparison_reactives.R"     ), local = T)
   source(paste0(base_dir,"reactives/peptide_helix_content_reactives.R"  ), local = T)
   source(paste0(base_dir,"reactives/sesca_reactives.R"                  ), local = T)
-  source(paste0(base_dir,"reactives/gQuadruplex_reactives.R"            ), local = T)
   source(paste0(base_dir,"reactives/download_reactives.R"               ), local = T)
   
 }

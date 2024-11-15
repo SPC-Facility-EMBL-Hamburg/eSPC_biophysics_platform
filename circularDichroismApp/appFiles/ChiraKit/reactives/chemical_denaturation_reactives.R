@@ -10,7 +10,10 @@ fitChemicalExperiment <- function(exp) {
   
   fitSlopeN <- input$fitSlopeNative_chemical
   fitSlopeU <- input$fitSlopeUnfolded_chemical
-  
+
+  # To allow nice plotting of the fittings
+  py_chem_exp$interpolate_chemical_concentration()
+
   if (grepl('two',user_sel_model)) {
     
     selModel <- switch(user_sel_model,
@@ -335,7 +338,12 @@ output$chemicalCurves <- renderPlotly({
     df,
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem)
+    input$plot_type_chem, input$plot_axis_size_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -399,12 +407,17 @@ output$fittedChemicalCurves <- renderPlotly({
   req(reactives$chemical_data_was_fitted)
   
   df    <- generate_chemical_unfolding_df(cdAnalyzer)
-  dfFit <- generate_chemical_unfolding_df(cdAnalyzer,'signal_predicted')
+  dfFit <- generate_chemical_unfolding_df(cdAnalyzer,'signal_predicted_ipl')
   fig   <- plot_unfolding_fitting(
     df,dfFit,
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem)
+    input$plot_type_chem, input$plot_axis_size_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
 })
@@ -427,7 +440,12 @@ output$fractions_chemical <- renderPlotly({
     fractions_df,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    'Denaturant agent concentration (M)')
+    'Denaturant agent concentration (M)',
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -464,7 +482,14 @@ output$chemUnfoldingSpectra <- renderPlotly({
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    plot_mode=input$plot_style_chem)
+    plot_mode=input$plot_style_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    colorBarLength      = input$color_bar_length_chem,
+    colorBarOrientation = input$color_bar_orientation_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -615,7 +640,12 @@ output$chemBasisSpectra <- renderPlotly({
     df,
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem)
+    input$plot_type_chem, input$plot_axis_size_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -632,7 +662,15 @@ output$chemFittedSpectra <- renderPlotly({
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    dfFit)
+    dfFit,
+    plot_mode=input$plot_style_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    colorBarLength      = input$color_bar_length_chem,
+    colorBarOrientation = input$color_bar_orientation_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
 })
@@ -644,7 +682,12 @@ output$chemExplainedVariance <- renderPlotly({
   fig <- plot_explained_variance(
     df,
     input$plot_width_chem, input$plot_height_chem, 
-    input$plot_type_chem, input$plot_axis_size_chem)
+    input$plot_type_chem, input$plot_axis_size_chem,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -660,7 +703,12 @@ output$chemSVDCoefficients <- renderPlotly({
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    reactives$spectra_decomposition_method_chemical)
+    reactives$spectra_decomposition_method_chemical,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -714,7 +762,12 @@ output$chemFittedSVDCoefficients <- renderPlotly({
     reactives$chemicalWorkingUnits,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    reactives$fitted_coefficients_method_chemical)
+    reactives$fitted_coefficients_method_chemical,
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   
@@ -738,7 +791,12 @@ output$fractions_SVDchemical <- renderPlotly({
     fractions_df,
     input$plot_width_chem, input$plot_height_chem, 
     input$plot_type_chem, input$plot_axis_size_chem,
-    'Denaturant agent concentration (M)')
+    'Denaturant agent concentration (M)',
+    xLegend   = input$x_legend_pos_chem,
+    yLegend   = input$y_legend_pos_chem,
+    showTitle = input$show_title_chem,
+    showGridX = input$showGridXchem,
+    showGridY = input$showGridYchem)
   
   return(fig)
   

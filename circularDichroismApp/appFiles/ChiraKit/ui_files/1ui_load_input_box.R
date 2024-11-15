@@ -7,8 +7,8 @@ box(title = "1. Input", width = 3, solidHeader = T, status = "primary",
                   selectInput("inputMode", NULL,
                               c('Custom'  = 'custom',
                                 'Automatic baseline subtraction'      = 'automaticBaselineSub',
-                                'Proccesed data (thermal)'  = 'thermalUnfolding',
-                                'Proccesed data (chemical)' = 'chemicalUnfolding')),
+                                'Processed data (thermal)'  = 'thermalUnfolding',
+                                'Processed data (chemical)' = 'chemicalUnfolding')),
                   tippy::tippy_this(
                     elementId = "info_uu-inputMode",
                     tooltip = "Select custom if you want to process the spectra manually.

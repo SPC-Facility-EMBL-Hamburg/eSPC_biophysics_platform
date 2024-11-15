@@ -251,13 +251,28 @@ def detect_file_type(file):
     file_extensions = {
         ".gen": "GenCDfile",  # If the file has the extension '.gen', it is of type 'GenCDfile'
         ".pcd": "PCCDBFile",  # If the file has the extension '.pcd', it is of type 'PCCDBFile'
-        ".dat": "DatFile",  # If the file has the extension '.dat', it is of type 'DatFile'
     }
 
     # Check if the file matches any of the specified file extensions
     for ext, value in file_extensions.items():
         if file.endswith(ext):
             return value
+
+    if file.endswith(".dat"):
+
+        with open(file, encoding="latin-1") as f:
+
+            ls              = f.read().splitlines()[:10]
+
+            firstCharacterIsSemiColon  = [l[0] == ';' for l in ls]
+
+            if all(firstCharacterIsSemiColon):
+
+                return 'd0xFile'
+
+            else:
+
+                return 'DatFile'
 
     # Check if the file ends with a pattern '.d' followed by one or more digits (using the file_ends_with_pattern function)
     if file_ends_with_pattern(file):
@@ -288,7 +303,6 @@ def detect_file_type(file):
 
     # If none of the previous conditions are met, the file type is 'ChirascanFile'
     return "plain_csv"
-
 
 def read_custom_csv(file):
     with open(file, encoding="latin-1") as f:

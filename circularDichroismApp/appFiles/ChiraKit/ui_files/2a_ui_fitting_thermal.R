@@ -340,6 +340,7 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
   conditionalPanel(
     'input.showPlotExportOptionsMelting',
     fluidRow(
+
       column(3, p(HTML("<b>File type</b>"),
                   selectInput("plot_type_melt", NULL,
                               c("PNG"    = "png",
@@ -370,13 +371,23 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
       column(3, p(HTML("<b>Legend y-axis position</b>"),
                   sliderInput('y_legend_pos',NULL, 1,min = 0, max = 1,step = 0.1))),
     
-      column(3, p(HTML("<b>Show plot title</b>"),
+      column(2, p(HTML("<b>Show plot title</b>"),
                   span(shiny::icon("info-circle"), id = "info_uuShowTitle"),
                   checkboxInput('show_title',NULL, TRUE),
                   tippy::tippy_this(elementId = "info_uuShowTitle",
                                     tooltip = "Only useful in case that we have one dataset.",
                                     placement = "right"))),
-      
+
+      column(2, p(HTML("<b>Show X-grid</b>")),
+        checkboxInput('showGridXmelt',NULL,FALSE)),
+
+      column(2, p(HTML("<b>Show Y-grid</b>")),
+        checkboxInput('showGridYmelt',NULL,FALSE))
+
+      ),
+
+      fluidRow(
+
       conditionalPanel(
       
       "input.analysis_model_thermal != 'fixedWL'",
@@ -385,7 +396,17 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
                   selectInput("plot_style_melt", NULL,
                               c("markers",
                                 "lines"
-                                ))))
+                                )))),
+
+      column(3, p(HTML("<b>Color bar orientation (spectra)</b>"),
+                  selectInput("color_bar_orientation", NULL,
+                              c("horizontal" = "h",
+                                "vertical"  = "v"
+                                )))),
+
+      column(3, p(HTML("<b>Color bar length</b>"),
+                  sliderInput('color_bar_length',NULL, 0.5,min = 0, max = 1,step = 0.1)))
+
     ))
   )
 )

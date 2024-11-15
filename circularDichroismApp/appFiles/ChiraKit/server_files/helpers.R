@@ -171,6 +171,7 @@ generateDTtable <- function(cdAnalyzer) {
     iUnits              <- iUnits[trueExperiments]
     currentN            <- length(exps)
     
+    
     inputUnits  <- sapply(1:currentN, function(i) {
       as.character(selectInput(paste0('inputUnits',i), label=NULL, 
                                choices = getChoices(iUnits[i]), selectize=FALSE))
@@ -187,20 +188,49 @@ generateDTtable <- function(cdAnalyzer) {
 }
 
 # Auxiliary function to render the DT Table on the server
-renderDTtable <- function(df) {
+renderDTtable <- function(df,style_editable=FALSE) {
   
   scrollY <- FALSE
 
   columns2disable <- which(colnames(df) %in% c("File name","Input units")) - 1
   
-  DT::renderDataTable({
-    df},editable = list(target = "cell", disable = list(columns = columns2disable)),
-    escape=FALSE,rownames=FALSE,
-    options = list(info = FALSE, dom="t",autoWidth = TRUE,ordering=FALSE,
-                   scrollX = FALSE,scrollY = scrollY,pageLength = 1000,fillContainer = TRUE,
-                   drawCallback    = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
-    ))
-  
+  if (style_editable) {
+    
+    DT::renderDataTable({
+      df},editable = list(target = "cell", disable = list(columns = columns2disable)),
+      escape=FALSE,rownames=FALSE,selection = "none",
+      options = list(info = FALSE, dom="t",autoWidth = TRUE,ordering=FALSE,
+                     scrollX = FALSE,scrollY = scrollY,pageLength = 1000,fillContainer = TRUE,
+                     drawCallback = JS("
+        function(settings) {
+          // Ensure Shiny bindings are applied
+          Shiny.bindAll(this.api().table().node());
+
+          // Apply styling to editable cells
+          var api = this.api();
+          api.$('td').not('.dt-disable').css({
+            'background-color': '#FFFFFF',
+            'border': '1px solid #dde8f0',
+            'cursor': 'pointer'
+          });
+        }
+      ")
+      ))
+    
+  } else {
+    
+    DT::renderDataTable({
+      df},editable = list(target = "cell", disable = list(columns = columns2disable)),
+      escape=FALSE,rownames=FALSE,selection = "none",
+      options = list(info = FALSE, dom="t",autoWidth = TRUE,ordering=FALSE,
+                     scrollX = FALSE,scrollY = scrollY,pageLength = 1000,fillContainer = TRUE,
+                     drawCallback = JS("
+        function(settings) {
+          // Ensure Shiny bindings are applied
+          Shiny.bindAll(this.api().table().node());
+        }")
+      ))
+  }
 }
 
 ## Add replicate vector to dataframe according to variable and legend columns
@@ -392,9 +422,13 @@ generateDTtableProcessing <- function(cdAnalyzer,
     possibleSpectra1choices <- c()
   }
   
-  # Set Selected in 'Show' Column as the only option for the average or batch average operation
-  if (!grepl('average',operation,ignore.case = TRUE)) {
+  # Set Selected in 'Show' Column as the only option for the average, batch average, Split-pair subtraction, operations
+  if ( !( grepl('average',   operation,ignore.case = TRUE) ||
+          grepl('split-pair',operation,ignore.case = TRUE) ||
+          grepl('consecut',  operation,ignore.case = TRUE) )) {
+
     possibleSpectra1choices <- c(possibleSpectra1choices,internal.IDs)
+
   }
   
   possibleSpectra1  <- as.character(selectInput('inputSpectra1', label=NULL, 
@@ -413,7 +447,8 @@ generateDTtableProcessing <- function(cdAnalyzer,
     possibleSpectra2choices <- c(internal.IDs)
   }
   
-  if (!(operation %in% c('Sum','Subtract','Batch average','Zero','Smooth'))) {
+  if (!(operation %in% c('Sum','Subtract','Batch average','Zero','Smooth',
+  'Consecutive subtraction (1st - 2nd, 3rd - 4th, ...)','Split-pair subtraction  (1st - N/2+1, 2nd - N/2+2, ...)'))) {
     second_spectrum <- c('Not required for this operation')
   } else {
     second_spectrum <- possibleSpectra2choices
@@ -428,6 +463,8 @@ generateDTtableProcessing <- function(cdAnalyzer,
   # Add batch average if we have more than 1 curve
   if (length(internal.IDs) > 2) {
     operationsChoices <- c(operationsChoices,'Batch average')
+    operationsChoices <- c(operationsChoices,'Consecutive subtraction (1st - 2nd, 3rd - 4th, ...)')
+    operationsChoices <- c(operationsChoices,'Split-pair subtraction  (1st - N/2+1, 2nd - N/2+2, ...)')
   } 
   
   operationsChoices <- c(operation,operationsChoices[operationsChoices!=operation])

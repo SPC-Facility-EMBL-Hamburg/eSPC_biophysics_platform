@@ -14,7 +14,18 @@ reticulate::use_python(paste0("/home/",user,"/myenv/bin/python"), required = TRU
 setwd('/home/os/spc_shiny_servers/circularDichroismApp/appFiles/ChiraKit/')
 
 source("server_files/helpers.R")
+source("server_files/helpers_plotting.R")
 
+df <- read.csv('/home/os/Downloads/unfolding_exp_data.csv')
+
+df$temperature[df$temperature < 75] <- 24.2
+
+unique(df$temperature)
+
+source("server_files/plotFunctions.R")
+
+plot_unfolding_exp_spectra(df,'y',plot_mode='markers',xLegend = 0.7,yLegend = 0.8,
+                           axis_size=22,unfolding_fitted_data=df)
 
 source_python("python_src/cdUnitsConverter.py")
 source_python("python_src/helpers.py")

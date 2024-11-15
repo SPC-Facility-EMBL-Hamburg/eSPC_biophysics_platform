@@ -1088,6 +1088,12 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
 
         super().__init__()
 
+    def interpolate_chemical_concentration(self):
+
+        self.chem_concentration_interpolated = np.linspace(np.max((self.minX-0.5,0.01)), self.maxX+0.5,80)
+
+        return None
+
     def load_unfolding_data_monomer(self, file_path):
 
         """
@@ -1189,7 +1195,7 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
         m, d50, blFold, slopeFold, blUnfold, slopeUnfold = params_splt
         MErr, D50Err, blFoldErr, slopeFoldErr, blUnfoldErr, slopeUnfoldErr = errors_splt
 
-        predicted, fit_params, fit_errors = [], [], []
+        predicted_interpolated, predicted, fit_params, fit_errors = [], [], [], []
 
         for i in range(self.n):
             bN, kN, bU, kU = blFold[i], slopeFold[i], blUnfold[i], slopeUnfold[i]
@@ -1198,6 +1204,10 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
             Y = signal_fx(self.chem_concentration, self.temperature, d50, m, bN, kN, bU, kU, self.oligo_conc_lst[i])
 
             predicted.append(Y)
+
+            Y_ipl = signal_fx(self.chem_concentration_interpolated, self.temperature, d50, m, bN, kN, bU, kU, self.oligo_conc_lst[i])
+
+            predicted_interpolated.append(Y_ipl)
 
             fit_params.append([kN, bN, kU, bU, d50, m, str(self.wavelength_useful[i]), self.name])
             fit_errors.append([kNe, bNe, kUe, bUe, D50Err, MErr, str(self.wavelength_useful[i]), self.name])
@@ -1209,7 +1219,9 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
         self.fit_params, self.fit_rel_errors = generate_params_dfs(column_names, fit_params, fit_errors,
                                                                    fit_slope_native, fit_slope_unfolded)
 
-        self.signal_predicted = generate_predicted_matrix(predicted, self.signal_useful)
+        self.signal_predicted     = generate_predicted_matrix(predicted, self.signal_useful)
+
+        self.signal_predicted_ipl = np.array(predicted_interpolated)
 
         if model == 'Monomer':
             self.fractions = fractions_fx(self.temperature, self.chem_concentration, m, d50)
@@ -1360,7 +1372,7 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
         m1, d50v1, m2, d50v2, bl_fold, slope_fold, bl_unfold, slope_unfold, bl_interm = params_splt
         m1_err, d50v1_err, m2_err, d50v2_err, bl_fold_err, slope_fold_err, bl_unfold_err, slope_unfold_err, bl_interm_err = errors_splt
 
-        predicted, fit_params, fit_errors = [], [], []
+        predicted_interpolated, predicted, fit_params, fit_errors = [], [], [], []
 
         # Fill the parameters dataframe
         for i in range(self.n):
@@ -1372,6 +1384,12 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
                           self.oligo_conc_lst[i])
 
             predicted.append(Y)
+
+            Y_ipl = signal_fx(self.chem_concentration_interpolated, self.temperature, d50v1, m1, d50v2, m2, bN, kN, bU, kU, bI,
+                          self.oligo_conc_lst[i])
+
+            predicted_interpolated.append(Y_ipl)
+
             fit_params.append([kN, bN, kU, bU, bI, d50v1, m1, d50v2, m2, str(self.wavelength_useful[i]), self.name])
             fit_errors.append(
                 [kNe, bNe, kUe, bUe, bIe, d50v1_err, m1_err, d50v2_err, m2_err, str(self.wavelength_useful[i]),
@@ -1385,6 +1403,9 @@ class CdExperimentChemicalUnfolding(CdExperimentFittingModel):
                                                                    fit_slope_native, fit_slope_unfolded)
 
         self.signal_predicted = generate_predicted_matrix(predicted, self.signal_useful)
+
+        self.signal_predicted_ipl = np.array(predicted_interpolated)
+
 
         if model == 'Monomer':
             self.fractions = fractions_fx(self.chem_concentration, self.temperature, d50v1, m1, d50v2, m2)

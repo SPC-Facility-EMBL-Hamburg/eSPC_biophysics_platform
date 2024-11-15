@@ -12,11 +12,14 @@ box(title = "4. Plotting", width = 12, solidHeader = T, status = "primary",
       column(4, p(HTML("<b><br>Show plot export options</b>")),
                   checkboxInput('showAdvancedPlottingOptions',NULL,FALSE))
       ),
-      
+
+    conditionalPanel(
+
+        "input.showAdvancedPlottingOptions",
+
     fluidRow( 
     
-      conditionalPanel(
-        "input.showAdvancedPlottingOptions",
+
         
         column(3, p(HTML("<b>File type</b>"),
                     selectInput("plot_type", NULL,
@@ -40,6 +43,14 @@ box(title = "4. Plotting", width = 12, solidHeader = T, status = "primary",
         column(3, p(HTML("<b>Text size</b>"),
                     numericInput('plot_axis_size',NULL, 16,min = 4, max = 40)))
         
-        )
-      
-    ))
+    ),
+
+    fluidRow(
+
+           column(3, p(HTML("<b>Show X-axis grid</b>")),
+                  checkboxInput('showGridX',NULL,FALSE)),
+
+           column(3, p(HTML("<b>Show Y-axis grid</b>")),
+                  checkboxInput('showGridY',NULL,FALSE))
+    )
+))

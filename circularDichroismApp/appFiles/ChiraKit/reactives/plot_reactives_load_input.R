@@ -39,7 +39,9 @@ output$cdSpectra <- renderPlotly({
   fig <- plotCDexperiments(cdAnalyzer, input$workingUnits, 
                            input$plot_width,  input$plot_height,
                            input$plot_type,  input$plot_axis_size, 
-                           legends, colorPalette, sels)
+                           legends, colorPalette, sels,
+                           showGridX=input$showGridX,
+                           showGridY=input$showGridY)
   
   return(fig)
   
@@ -61,7 +63,9 @@ output$htSpectra <- renderPlotly({
   fig <- plotCDexperimentsHT(cdAnalyzer,
                              input$plot_width,  input$plot_height,
                              input$plot_type,  input$plot_axis_size,
-                             legends,colorPalette,sels)
+                             legends,colorPalette,sels,
+                             showGridX=input$showGridX,
+                             showGridY=input$showGridY)
   
   return(fig)
 })
@@ -82,7 +86,9 @@ output$cd_ht_spectra <- renderPlotly({
   fig <- plot_cd_and_voltage(cdAnalyzer, input$workingUnits,
                              input$plot_width,  input$plot_height,
                              input$plot_type,  input$plot_axis_size,
-                             legends, colorPalette, sels)
+                             legends, colorPalette, sels,
+                             showGridX=input$showGridX,
+                             showGridY=input$showGridY)
   
   return(fig)
 })
@@ -104,7 +110,9 @@ output$cdSpectraMiliDeg <- renderPlotly({
   fig <- plotCDexperiments(cdAnalyzer, input$workingUnits, 
                            input$plot_width,  input$plot_height,
                            input$plot_type,  input$plot_axis_size, 
-                           legends, colorPalette, sels,useMilliDeg = TRUE)
+                           legends, colorPalette, sels,useMilliDeg = TRUE,
+                           showGridX=input$showGridX,
+                           showGridY=input$showGridY)
   return(fig)
   
 })

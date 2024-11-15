@@ -192,14 +192,18 @@ generate_chemical_unfolding_df <- function(cdAnalyzer,signal_type='signal_useful
     # Extract relevant data from the Python object
     signals     <- cdAnalyzer$experimentsChemical[[exp]][[signal_type]]
     
-    if (signal_type %in% c('signal_useful','signal_predicted')) {
+    if (signal_type %in% c('signal_useful','signal_predicted','signal_predicted_ipl')) {
       wl          <- cdAnalyzer$experimentsChemical[[exp]]$wavelength_useful
     } else {
       wl          <- cdAnalyzer$experimentsChemical[[exp]]$wavelength
     }
-    
-    chem_conc   <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
-    
+
+    if (signal_type == 'signal_predicted_ipl') {
+      chem_conc   <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration_interpolated
+    } else {
+      chem_conc   <- cdAnalyzer$experimentsChemical[[exp]]$chem_concentration
+    }
+
     # Create a dataframe with wavelength and signal data
     df <- data.frame(wl, signals)
     

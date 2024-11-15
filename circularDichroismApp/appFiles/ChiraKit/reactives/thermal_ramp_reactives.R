@@ -13,7 +13,7 @@ fitThermalExperiment <- function(exp) {
   # Models that require the user to input some value for the parameter Cp
   models_req_cp <- c('twoStateDimer','twoState','twoStateTrimer','twoStateTetramer',
                      'threeStateCp','threeStateDimerMICp','threeStateDimerDICp')
-  
+
   if (user_sel_model %in% models_req_cp) {
     
     Cp             <- suppressWarnings(as.numeric(input$Cp))
@@ -446,9 +446,10 @@ output$meltingCurves <- renderPlotly({
                      input$plot_width_melt, input$plot_height_melt, 
                      input$plot_type_melt, input$plot_axis_size_melt,
                      reactives$spectra_decomposition_method_thermal,
-                     F,input$x_legend_pos,input$y_legend_pos,input$show_title
-                     )  
-  
+                     F,input$x_legend_pos,input$y_legend_pos,input$show_title,
+                     showGridX=input$showGridXmelt,
+                     showGridY=input$showGridYmelt)
+
 })
 
 observeEvent(input$btn_fit_melting_data,{
@@ -528,8 +529,9 @@ output$fittedMeltingCurves <- renderPlotly({
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$fitted_coefficients_method_thermal,
-    F,input$x_legend_pos,input$y_legend_pos,input$show_title
-    )
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
   
@@ -548,7 +550,9 @@ output$fractions_melting <- renderPlotly({
     'Temperature (°C)',
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title)
+    showTitle = input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
   
@@ -585,7 +589,11 @@ output$meltingSpectra <- renderPlotly({
     plot_mode = input$plot_style_melt,
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title)
+    showTitle = input$show_title,
+    colorBarLength      = input$color_bar_length,
+    colorBarOrientation = input$color_bar_orientation,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
 })
@@ -738,7 +746,9 @@ output$basisSpectra <- renderPlotly({
     input$plot_type_melt, input$plot_axis_size_melt,
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title)
+    showTitle = input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
 })
@@ -757,8 +767,11 @@ output$fittedSpectra <- renderPlotly({
     dfFit,
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title
-    )
+    showTitle = input$show_title,
+    colorBarLength      = input$color_bar_length,
+    colorBarOrientation = input$color_bar_orientation,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
 })
@@ -774,7 +787,9 @@ output$explainedVariance <- renderPlotly({
     input$plot_type_melt, input$plot_axis_size_melt,
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title)
+    showTitle = input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
 })
@@ -789,7 +804,9 @@ output$svdCoefficients <- renderPlotly({
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$spectra_decomposition_method_thermal,
-    F,input$x_legend_pos,input$y_legend_pos,input$show_title)
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
 })
@@ -848,7 +865,9 @@ output$fittedSVDCoefficients <- renderPlotly({
     input$plot_width_melt, input$plot_height_melt, 
     input$plot_type_melt, input$plot_axis_size_melt,
     reactives$fitted_coefficients_method_thermal,
-    F,input$x_legend_pos,input$y_legend_pos,input$show_title)
+    F,input$x_legend_pos,input$y_legend_pos,input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
   
@@ -913,7 +932,9 @@ output$fractions_melting_svd <- renderPlotly({
     'Temperature (°C)',
     xLegend   = input$x_legend_pos,
     yLegend   = input$y_legend_pos,
-    showTitle = input$show_title)
+    showTitle = input$show_title,
+    showGridX=input$showGridXmelt,
+    showGridY=input$showGridYmelt)
   
   return(fig)
   

@@ -1,7 +1,9 @@
+ticklenCst <- 8
+
 plotCDexperiments <- function(cdAnalyzer,workingUnits,
                               plot_width,plot_height,plot_type,axis_size,
                               legends,colorPalette,sels,useMilliDeg = FALSE,
-                              fig=NULL) {
+                              fig=NULL,showGridX=FALSE,showGridY=FALSE) {
   
   # Initialize the plot
   if (is.null(fig)) fig <- plot_ly()
@@ -86,10 +88,20 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
   maxWL <- max(sapply(wlsAll, max)) + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks)
   
   y <- list(title = workingUnits2ProperLabel(workingUnits),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = showGridY,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks))
    
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-1)))
@@ -101,7 +113,8 @@ plotCDexperiments <- function(cdAnalyzer,workingUnits,
 }
 
 sesca_plot <- function(sescaPyClass,plot_width,plot_height,plot_type,axis_size,
-    ref_wl=NULL,ref_signal=NULL,ref_name=NULL,average_ensemble=FALSE) {
+    ref_wl=NULL,ref_signal=NULL,ref_name=NULL,average_ensemble=FALSE,
+    showGridX=FALSE,showGridY=FALSE) {
 
   fig <- plot_ly()
 
@@ -170,10 +183,20 @@ sesca_plot <- function(sescaPyClass,plot_width,plot_height,plot_type,axis_size,
   }
 
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size),
-            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
 
   y <- list(title = workingUnits2ProperLabel('meanUnitMolarExtinction'),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = showGridY,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
 
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-1)))
@@ -190,7 +213,8 @@ sesca_plot <- function(sescaPyClass,plot_width,plot_height,plot_type,axis_size,
 plotCDexperimentsHT <- function(cdAnalyzer,
                               plot_width,plot_height,
                               plot_type,axis_size,
-                              legends,colorPalette,sels) {
+                              legends,colorPalette,sels,
+                              showGridX=FALSE,showGridY=FALSE) {
   
   fig          <- plot_ly()
   
@@ -234,10 +258,20 @@ plotCDexperimentsHT <- function(cdAnalyzer,
   maxWL <- max(sapply(wlsAll, max)) + 5
 
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick mark)
   
   y <- list(title = 'High Tension (HT) Voltage',
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = showGridY,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-1)))
@@ -250,7 +284,8 @@ plotCDexperimentsHT <- function(cdAnalyzer,
 # Plot the CD signal and the voltage curves using a double y-axis
 plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
                               plot_width,plot_height,plot_type,axis_size,
-                              legends,colorPalette,sels) {
+                              legends,colorPalette,sels,
+                              showGridX=FALSE,showGridY=FALSE) {
   
   fig         <- plot_ly()
   
@@ -324,10 +359,20 @@ plot_cd_and_voltage <- function(cdAnalyzer,workingUnits,
   maxWL <- max(sapply(wlsAll, max)) + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
   
   y <- list(title = workingUnits2ProperLabel(workingUnits),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = showGridY,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
   
   fig <- fig %>% layout(xaxis = x, yaxis = y,font="Roboto",showlegend=TRUE,
                         legend = list(x = 1.05, y = 1,font = list(size = axis_size-1)),
@@ -353,7 +398,8 @@ plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
                                plot_type='svg', axis_size=12,
                                spectra_decomposition_method='fixedWL',
                                useLogAxis=F,
-                               xLegend=1,yLegend=1,showTitle=T) {
+                               xLegend=1,yLegend=1,showTitle=T,
+                               showGridX=FALSE,showGridY=FALSE) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -361,7 +407,12 @@ plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
   xaxisLabel <- get_x_axis_label(unfolding_exp_data)
   
   xaxis <- list(title = xaxisLabel,titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   yAxisTitle <- workingUnits2ProperLabel(workingUnits)
   svd_or_pca_based <- spectra_decomposition_method %in% c('PCA','SVD')
@@ -371,7 +422,12 @@ plot_unfolding_exp <- function(unfolding_exp_data,workingUnits,
   }
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   plot_list   <- list()
   
@@ -457,7 +513,8 @@ plot_unfolding_fitting <- function(
     plot_width=12, plot_height=8,
     plot_type='svg', axis_size=12,
     fitted_coefficients_method='fixedWL',useLogAxis=F,
-    xLegend=1,yLegend=1,showTitle=T) {
+    xLegend=1,yLegend=1,showTitle=T,
+    showGridX=FALSE,showGridY=FALSE) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -465,7 +522,12 @@ plot_unfolding_fitting <- function(
   xaxisLabel <- get_x_axis_label(unfolding_exp_data)
   
   xaxis <- list(title = xaxisLabel,titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   if (useLogAxis) {
     
@@ -482,7 +544,12 @@ plot_unfolding_fitting <- function(
   }
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   plot_list   <- list()
   
@@ -577,7 +644,8 @@ plot_unfolding_exp_spectra <- function(
     unfolding_fitted_data = NULL,
     plot_mode='markers',
     xLegend=1,yLegend=1,
-    showTitle=T) {
+    showTitle=T, colorBarLength=0.5, colorBarOrientation='h',
+    showGridX=FALSE,showGridY=FALSE) {
   
   # Return null if there is no data
   if (is.null(unfolding_exp_data)) return(NULL)
@@ -588,12 +656,22 @@ plot_unfolding_exp_spectra <- function(
   maxWL <- max(unfolding_exp_data$wavelength) + 5
   
   xaxis <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks)
   
   yAxisTitle <- workingUnits2ProperLabel(workingUnits)
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks)
   
   plot_list   <- list()
   
@@ -606,6 +684,8 @@ plot_unfolding_exp_spectra <- function(
   temperatureBased <- any( grepl('temperature',colnames(unfolding_exp_data),  ignore.case = T) )
   chemBased        <- any( grepl('chem_conc',  colnames(unfolding_exp_data),  ignore.case = T) )
   
+  legend_title <- ifelse(chemBased,"[Denaturant agent] (M)","Temperature (°C)")
+  
   i <- 0
   for (leg in unique(unfolding_exp_data$legend)) {
     
@@ -617,77 +697,128 @@ plot_unfolding_exp_spectra <- function(
     
     if (weHaveFittedData) {
       df_temp_fit <- unfolding_fitted_data[unfolding_exp_data$legend == leg,]
+      df_temp_fit <- add_measurement_factor_column(df_temp_fit) %>% 
+        arrange(wavelength,measurement_factor)
     }
     
     # Assuming df_temp has a 'group' column indicating different groups
-    unique_groups <- unique(df_temp$measurement_factor)
     
-    for (group_value in unique_groups) {
+    df_temp <- df_temp %>% arrange(wavelength,measurement_factor)
+  
+    # Let's plot one line per replicate
+    df_temp <- df_temp %>%
+      group_by(wavelength,measurement_factor) %>%
+      mutate(curve_id = paste0(row_number(),'-',measurement_factor))
+    
+    df_tempColorBar <- df_temp[c(1,nrow(df_temp)),]
+    
+    if (i > 1) { 
+    
+      fig <- plot_ly()
+        
+    } else {
       
-      subset_df <- df_temp[df_temp$measurement_factor == group_value, ]
-      subset_df <- subset_df %>% arrange(wavelength)
-      
-      if (temperatureBased) {
-        current_factor <- round(unique(subset_df$measurement_factor),1)
-      } else {
-        current_factor <- signif(unique(subset_df$measurement_factor),2)
-      }
-      name           <- paste0(current_factor)
+      fig <- plot_ly(df_tempColorBar, 
+                     x = ~wavelength, y = ~value, color = ~measurement_factor,
+                     type = "scatter", mode = "markers", showlegend = FALSE, 
+                     marker=list(size=0.01)) 
 
-      fig <- add_trace(
-        fig,
-        x = subset_df$wavelength,
-        y = subset_df$value,
-        color = I(unique(subset_df$color)),
-        type = "scatter",
-        mode = plot_mode,
-        name = name,
-        showlegend = T
-      )
+    }
+
+    for (id in unique(df_temp$curve_id)) {
+      
+      df_temp2 <- df_temp[df_temp$curve_id == id,]
+      
+      hex_color <- unique(df_temp2$color)
+
+      if (plot_mode == 'markers') {
+        
+        fig <- add_trace(
+          fig,
+          data = df_temp2,
+          x = ~wavelength,
+          y = ~value,
+          color=I(hex_color),
+          type = "scatter",
+          mode='markers',
+          showlegend = FALSE,
+          inherit = FALSE
+        )  
+      
+      } else {
+        
+        fig <- add_trace(
+          fig,
+          data = df_temp2,
+          x = ~wavelength,
+          y = ~value,
+          color=I(hex_color),
+          type = "scatter",
+          line = list(width = 2),
+          marker = list(size = 0.01), 
+          showlegend = FALSE,
+          inherit = FALSE
+        ) 
+        
+      }
       
       if (weHaveFittedData) {
-        subset_df_fit <- df_temp_fit[df_temp$measurement_factor == group_value, ]
-        subset_df_fit <- subset_df_fit %>% arrange(wavelength)
         
-        # Let's plot one line per replicate
-        id_df <- subset_df_fit %>%
-          group_by(wavelength) %>%
-          mutate(duplicate_id = row_number())
+        subset_df_fit <- df_temp_fit[df_temp$curve_id == id,]
         
-        subset_df_fit <- inner_join(subset_df_fit,id_df,)
-        
-        for (id in unique(subset_df_fit$duplicate_id)) {
-          
-          subset_df_fit2 <- subset_df_fit[subset_df_fit$duplicate_id == id,]
-          
-          fig <- add_trace(
-            fig,
-            x = subset_df_fit2$wavelength,
-            y = subset_df_fit2$value,
-            type = "scatter",
-            mode = "lines",
-            line=list(color='black'),
-            showlegend = FALSE
-          )
-          
-        }
+        fig <- add_trace(
+          fig,
+          x = subset_df_fit$wavelength,
+          y = subset_df_fit$value,
+          type = "scatter",
+          line   = list(width = 2,color='black'),
+          marker = list(size = 0.01), 
+          showlegend = FALSE,
+          inherit = FALSE
+        )
       }
     }
     
+    # Set colorbar only for the first plot
+    if (i == 1) {
+      
+      # Assuming 'df_temp' is your data frame
+      max_val <- max(df_temp$measurement_factor)
+      min_val <- min(df_temp$measurement_factor)
+      
+      # Create a sequence of tick values from max to min
+      tickvals <- c(min_val,min_val + (max_val - min_val)/2,max_val)
+
+      if (temperatureBased) {
+        tickvals <- c(ceiling(tickvals[1]),round(tickvals[2]),floor(tickvals[3]))
+      } else {
+        tickvals <- signif(tickvals, 4)
+      }
+
+      # Set layout and position the colorbar
+      fig <- fig %>% colorbar(
+        title = list(text=legend_title,font=list(size=axis_size-1)),
+        x = xLegend,   # Horizontal position 
+        y = yLegend,   # Vertical position 
+        xanchor = "right",  # Anchoring to the right side
+        yanchor = "top",
+        tickvals = tickvals,  # Ticks from max to min, rounded to two decimal places
+        ticktext = tickvals,  # Use the same tick values as labels
+        tickfont = list(size = axis_size-2),  # Font size of the ticks
+        len = colorBarLength,
+        orientation = colorBarOrientation,
+        outlinewidth = 0)
+      
+    }
+    
     fig <- add_layout_to_subplot(fig,xaxis,yaxis,leg,tot_cond,axis_size)
-    
-    legend_title <- ifelse(chemBased,"[Denaturant agent] (M)","Temperature (°C)")
-    
-    fig <- fig %>% layout(legend = list(title = list(text = legend_title,
-                                                     font = list(size = axis_size-1)),
-                                        x = xLegend,y = yLegend))
     
     plot_list[[i]] <- fig
     
   }
   
   plot_name <- ifelse(weHaveFittedData,
-                      paste0('unfolding_fitted_spectra_',Sys.Date()),
+                      paste0('unfolding_reconstructed_spectra_',Sys.Date()),
                       paste0('unfolding_spectra_',Sys.Date()))
   
   titleTxt <- unique(unfolding_exp_data$legend)
@@ -743,18 +874,29 @@ plot_residuals <- function(res_df,
 
 plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12, 
                                plot_height=8, plot_type='svg', axis_size=12,
-                               xLegend=1,yLegend=1,showTitle=T) {
+                               xLegend=1,yLegend=1,showTitle=T,
+                               showGridX=FALSE,showGridY=FALSE) {
   
   minWL <- min(basis_spectra_df$wavelength) - 5
   maxWL <- max(basis_spectra_df$wavelength) + 5
   
   xaxis <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+                tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks)
   
   yAxisTitle <- workingUnits2ProperLabel(workingUnits)
   
   yaxis <- list(title = yAxisTitle,titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks)
   
   plot_list   <- list()
   
@@ -809,15 +951,26 @@ plot_basis_spectra <- function(basis_spectra_df,workingUnits,plot_width=12,
 
 plot_explained_variance <- function(df,plot_width=12,plot_height=8,
                                     plot_type='svg',axis_size=12,
-                                    xLegend=1,yLegend=1,showTitle=T) {
+                                    xLegend=1,yLegend=1,showTitle=T,
+                                    showGridX=FALSE,showGridY=FALSE) {
   
   xaxis <- list(title = 'k',titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks)
   
   yaxis <- list(title = 'Cumulative explained variance (%)',
                 titlefont = list(size = axis_size),
                 tickfont = list(size = axis_size),
-                range = c(0, 102),showgrid = F)
+                range = c(0, 102),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   plot_list   <- list()
   
@@ -868,8 +1021,8 @@ plot_explained_variance <- function(df,plot_width=12,plot_height=8,
 plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
                                         max_wl_ref=240,step_wl_ref=1,
                                         plot_width=12  , plot_height=8,
-                                        plot_type='svg', axis_size=18
-                                        ) {
+                                        plot_type='svg', axis_size=18,
+                                        showGridX=FALSE,showGridY=FALSE) {
   
   # Initialize the plot 
   fig         <- plot_ly()
@@ -912,10 +1065,20 @@ plot_fitted_spectra_sec_str <- function(list_of_signals,list_of_fitted_signals,
   maxWL <- max_wl_ref + 5
   
   x <- list(title = "Wavelength (nm)",titlefont = list(size = axis_size), 
-            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = F)
+            tickfont = list(size = axis_size),range = c(minWL, maxWL),showgrid = showGridX,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
   
   y <- list(title = workingUnits2ProperLabel('meanUnitMolarExtinction'),
-            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = F)
+            titlefont = list(size = axis_size), tickfont = list(size = axis_size),showgrid = showGridY,
+            showline = TRUE,
+            zeroline = FALSE,
+            ticks = "outside",    # Show tick marks outside the axis
+            tickwidth = 2,        # Width of tick marks
+            ticklen = ticklenCst)          # Length of tick marks
   
   fig <- fig %>% layout(showlegend = TRUE,xaxis = x, yaxis = y,font="Roboto",
                         legend = list(font = list(size = axis_size-1)))
@@ -939,7 +1102,8 @@ plot_unfolding_fractions <- function(unfolding_fractions,
                                plot_width=12,plot_height=8,
                                plot_type='svg', axis_size=12,
                                xAxisLabel='Set',
-                               xLegend=1,yLegend=1,showTitle=T) {
+                               xLegend=1,yLegend=1,showTitle=T,
+                               showGridX=FALSE,showGridY=FALSE) {
   
   # Return null if there is no data
   if (is.null(unfolding_fractions)) return(NULL)
@@ -949,11 +1113,21 @@ plot_unfolding_fractions <- function(unfolding_fractions,
   delta <- maxX - minX
     
   xaxis <- list(title = xAxisLabel,titlefont = list(size = axis_size), 
-                tickfont = list(size = axis_size),showgrid = F,
+                tickfont = list(size = axis_size),showgrid = showGridX,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst,         # Length of tick marks
                 range = c(minX-delta*0.1, maxX+delta*0.1))
   
   yaxis <- list(title = 'Fraction',titlefont = list(size = axis_size),
-                tickfont = list(size = axis_size),showgrid = F)
+                tickfont = list(size = axis_size),showgrid = showGridY,
+                showline = TRUE,
+                zeroline = FALSE,
+                ticks = "outside",    # Show tick marks outside the axis
+                tickwidth = 2,        # Width of tick marks
+                ticklen = ticklenCst)          # Length of tick marks
   
   plot_list   <- list()
   

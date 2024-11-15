@@ -68,7 +68,14 @@
 
     <p class="vf-intro__text">6) A <a href="three-aviv-baseline.dat" download>text file (.dat)</a> with header lines containing the metadata. The metadata keys and values should be separated by ':'. The CD data starts two lines after the line containing 'MDCDATA' in it and is arranged in columns. The first column has the wavelength data (in nm), and the subsequent columns have the spectral data. There could be one or more scans separated in blocks. The voltage data is read from the column called 'CD_Dynode'.</p>
 
-    <p class="vf-intro__text">7) <a href="R78906.d01" download>Aarhus synchrotron data file</a> (.dx, where x means any number) with header lines containing the metadata. The metadata keys and values are separated into two columns where the second column starts after the 32th character (or the character ':'). The CD data starts after the first line containing 'Lambda' and 'CD', and is arranged in columns. The first column has the wavelength data (in nm), the second column has the spectral data ('CD/mdeg'), the fifth column the voltage data ('Servo_Volts'), and the eighth column the temperature data ('temperature').</p>
+    <p class="vf-intro__text">7)
+        <a href="R78906.d01" download>Aarhus synchrotron data file</a> (.dx, where x means any number) with header lines containing the metadata.
+        The metadata keys and values are separated into two columns where the second column starts after the 32th character (or the character ':').
+        The CD data starts after the first line containing 'Lambda' and 'CD', and is arranged in columns.
+        The first column has the wavelength data (in nm), the second column has the spectral data ('CD/mdeg'),
+        the fifth column the voltage data ('Servo_Volts'), and the eighth column the temperature data ('temperature').
+        The file extension can also be '.dat'.
+    </p>
 
     <p class="vf-intro__text">8) A csv file containing a line with the words 'ORIGIN'and 'JASCO'. The CD data is arranged in columns and the column names are defined between the lines 'XUNITS' and 'FIRSTX'. This type of file is exported by Jasco&#8482; circular dichroism instruments.
     </p>
@@ -96,10 +103,10 @@
     <p class="vf-intro__text">2) Import multiple files and assign the temperature manually in the 'Thermal unfolding' panel.</p>
 
     <p class="vf-intro__text">3) For processed data of monomers, you can import a <a href="temp_mm.csv" download>csv file</a> by selecting the 
-    'Proccesed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
+    'Processed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
 
     <p class="vf-intro__text">4) For processed data of oligomers, you can import a <a href="arc_temp.csv" download>csv file</a> by selecting the 
-    'Proccesed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="temp_oligo_multiple.csv" download>csv file</a>.</p>
+    'Processed data (thermal)' option. The first column contains the temperature. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="temp_oligo_multiple.csv" download>csv file</a>.</p>
 
     <p class="vf-intro__text">5) Send us your input file and we'll add a parser.</p>
 
@@ -120,10 +127,10 @@
     <p class="vf-intro__text">1) Import multiple files and assign the denaturant concentration manually in the 'Chemical unfolding' panel.</p>
 
     <p class="vf-intro__text">2) For processed data of monomers, you can import a <a href="urea_mm.csv" download>csv file</a> by selecting the 
-    'Proccesed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
+    'Processed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. This way, you can combine data from CD with other experiments (e.g., fluorescence). The temperature should be given in the comment lines.</p>
 
     <p class="vf-intro__text">3) For processed data of oligomers, you can import a <a href="arc_urea.csv" download>csv file</a> by selecting the 
-    'Proccesed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="urea_oligo_multiple.csv" download>csv file</a>.</p>
+    'Processed data (chemical)' option. The first column contains the chemical agent concentration. Subsequent columns contain the signal of each curve. The header of each curve corresponds to the n-mer concentration in micromolar units. The temperature should be given in the comment lines. All curves with exactly the same protein concentration will be fitted as one. To combine different techniques (or wavelengths), explore this <a href="urea_oligo_multiple.csv" download>csv file</a>.</p>
 
     <p class="vf-intro__text">4) Send us your input file and we'll add a parser.</p>
 
@@ -300,14 +307,16 @@ $$
   </p>
 
  <ol class="vf-intro__text">
-   <li class="vf-list__item "> Subtract one spectrum from another (e.g., for baseline correction) </li>
-   <li class="vf-list__item "> Add two spectra together</li>
-   <li class="vf-list__item "> Smooth selected spectra using a Savitzky-Golay filter (window size of 3, 6, 8 or 10 nm). For example, if the wavelength was measured every 1 nm, a window size of 6 nm equals a 7 point filter. If the wavelength was measured every 0.5 nm, a window size of 6 nm equals equals a 14 point filter.</li>
-    <li class="vf-list__item "> Average selected spectra </li>
-    <li class="vf-list__item "> Average selected spectra in batch mode. For example,
-      you can average every five curves (N = 5).</li>
-    <li class="vf-list__item "> Zero selected spectra: subtract the mean signal within a selected wavelength range interval. The width of the interval is given by the User and the maximum wavelength of the zeroing range is defined by the 'Wavelength range' Slider ("1. Input" Box). After this process the slider can be changed to show all data again.</li>
-    
+     <li class="vf-list__item "> Subtract one spectrum from another (e.g., for baseline correction) </li>
+     <li class="vf-list__item "> Add two spectra together</li>
+     <li class="vf-list__item "> Smooth selected spectra using a Savitzky-Golay filter (window size of 3, 6, 8 or 10 nm). For example, if the wavelength was measured every 1 nm, a window size of 6 nm equals a 7 point filter. If the wavelength was measured every 0.5 nm, a window size of 6 nm equals equals a 14 point filter.</li>
+     <li class="vf-list__item "> Average selected spectra </li>
+     <li class="vf-list__item "> Average selected spectra in batch mode. For example, you can average every five curves (N = 5).</li>
+     <li class="vf-list__item "> Zero selected spectra: subtract the mean signal within a selected wavelength range interval. The width of the interval is given by the User and the maximum wavelength of the zeroing range is defined by the 'Wavelength range' Slider ("1. Input" Box). After this process the slider can be changed to show all data again.</li>
+     <li class="vf-list__item "> Consecutive spectra subtraction:  Subtract the second spectrum from the first. Subtract the fourth spectrum from the third. Etc.</li>
+     <li class="vf-list__item "> Split-pair subtraction:  Split the spectra into two halves: the first half and the second half.
+         Subtract each spectrum in the second half from the corresponding spectrum in the first half.</li>
+
  </ol> 
 
   <p class="vf-intro__text"><b>Important details below: </b></p>
@@ -809,7 +818,7 @@ $$
 <p class="vf-intro__text">
     To use this model, you can either a) import many spectra using the 'Custom' Input mode,
     select mean unit molar ellipticity as working units, and create the dataset in the 'Thermal unfolding' panel; or b)
-    import a csv with two columns (temperature and mean unit molar ellipticity at 222 nm) using the 'Proccesed data (thermal)' Input mode.
+    import a csv with two columns (temperature and mean unit molar ellipticity at 222 nm) using the 'Processed data (thermal)' Input mode.
 </p>
 
 <p class="vf-intro__text">

@@ -287,19 +287,53 @@ box(title = "2. Fitting", width = 12, solidHeader = T, status = "primary",
                                       placement = "right"))),                     
         
         column(3, p(HTML("<b>Text size</b>"),
-                    numericInput('plot_axis_size_chem',NULL, 16,min = 4, max = 40)))),
+                    numericInput('plot_axis_size_chem',NULL, 16,min = 4, max = 40)))
+      ),
       
+      fluidRow(
+        
+        column(3, p(HTML("<b>Legend x-axis position</b>"),
+                    sliderInput('x_legend_pos_chem',NULL, 1,min = 0, max = 1,step = 0.1))),
+        
+        column(3, p(HTML("<b>Legend y-axis position</b>"),
+                    sliderInput('y_legend_pos_chem',NULL, 1,min = 0, max = 1,step = 0.1))),
+        
+        column(2, p(HTML("<b>Show plot title</b>"),
+                    span(shiny::icon("info-circle"), id = "info_uuShowTitleChem"),
+                    checkboxInput('show_title_chem',NULL, TRUE),
+                    tippy::tippy_this(elementId = "info_uuShowTitleChem",
+                                      tooltip = "Only useful in case that we have one dataset.",
+                                      placement = "right"))),
+
+        column(2, p(HTML("<b>Show X-grid</b>")),
+            checkboxInput('showGridXchem',NULL,FALSE)),
+
+        column(2, p(HTML("<b>Show Y-grid</b>")),
+            checkboxInput('showGridYchem',NULL,FALSE))
+
+      ),
+        
       conditionalPanel(
-        
-        "input.analysis_model_chemical != 'fixedWL'",
-        
-        fluidRow(
-          
-          column(4, p(HTML("<b>Plot style (melting spectra)</b>"),
+
+      "input.analysis_model_chemical != 'fixedWL'",
+
+      fluidRow(
+
+          column(3, p(HTML("<b>Plot style (spectra)</b>"),
                       selectInput("plot_style_chem", NULL,
                                   c("markers",
                                     "lines"
-                                  ))))
+                                  )))),
+
+      column(3, p(HTML("<b>Color bar orientation (spectra)</b>"),
+                  selectInput("color_bar_orientation_chem", NULL,
+                              c("horizontal" = "h",
+                                "vertical" = 'v'
+                                )))),
+
+      column(3, p(HTML("<b>Color bar length</b>"),
+                  sliderInput('color_bar_length_chem',NULL, 0.5,min = 0, max = 1,step = 0.1)))
+
         ))
     )
 )
