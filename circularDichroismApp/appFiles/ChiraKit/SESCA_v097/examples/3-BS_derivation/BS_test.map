@@ -1,6 +1,0 @@
-#Combination matrix for Structural Properties:
-#Basis/     3-Helix  4-Helix  5-Helix   Bend   Beta-Bridge Beta-strand  Turn   Unclassified 
-# Alpha :    0.000    1.000    1.000    0.000    0.000     0.000        0.000    0.000  
-# Beta  :    0.000    0.000    0.000    0.000    0.000     1.000        0.000    0.000  
-# Turn  :    1.000    0.000    0.000    0.000    0.000     0.000        1.000    0.000  
-# Coil  :    0.000    0.000    0.000    1.000    1.000     0.000        0.000    1.000  

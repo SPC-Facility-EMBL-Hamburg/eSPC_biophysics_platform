@@ -1,4 +1,0 @@
-Here are the main changes done to SESCA from the original version:
-
-- Deleted dssp-2.0.4-win32.exe and dssp-2.0.4-linux-i386
-- Replace out_file = "CD_comp.out" with out_file = "" (line 80 SESCA_main.py)

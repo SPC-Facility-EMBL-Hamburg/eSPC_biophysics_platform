@@ -1,5 +1,0 @@
-nomkl
-numpy
-pandas
-openpyxl
-xlrd
