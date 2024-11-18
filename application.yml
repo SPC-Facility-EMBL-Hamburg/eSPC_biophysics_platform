@@ -1,15 +1,15 @@
 proxy:
   title: SPC apps
   logo-url: http://www.openanalytics.eu/sites/www.openanalytics.eu/themes/oa/logo.png
-  template-path: /opt/shinyproxy/templates/custom
-  favicon-path:  /opt/shinyproxy/templates/custom/favicon.png
+  template-path: /home/os/eSPC_biophysics_platform/templates/custom
+  favicon-path:  /home/os/eSPC_biophysics_platform/custom/favicon.png
   landing-page: /
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   port: 8080
   authentication: none
   hide-navbar: true
-  usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats
+  #usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats # Uncomment to enable tracking of usage statistics
 
 # Docker configuration
   docker:
