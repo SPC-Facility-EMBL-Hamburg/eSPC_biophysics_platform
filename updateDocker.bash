@@ -59,7 +59,7 @@ case $choice in
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for FoldAffinity and MoltenProt..."
-        docker build -t spc_apps_docker_container -f ./dockerFiles/Dockerfile_foldAffinity_moltenProt_multiStageBuild .
+        docker build -t spc_apps_docker_container -f ./dockerFiles/Dockerfile_differentialScanningFluorimetry .
        
         printMessageHowToTestDocker 'MoltenProt' 'spc_apps_docker_container'
 
@@ -70,7 +70,7 @@ case $choice in
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for ThermoAffinity..."
-        docker build -t thermo_affinity -f ./dockerFiles/Dockerfile_thermoAffinity_multiStageBuild .
+        docker build -t thermo_affinity -f ./dockerFiles/Dockerfile_microscaleThermophoresis .
        
         printMessageHowToTestDocker 'ThermoAffinity' 'thermo_affinity'
 
@@ -81,7 +81,7 @@ case $choice in
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for PhotoMol..."
-        docker build -t photo_mol -f ./dockerFiles/Dockerfile_refeynApp_multiStageBuild .
+        docker build -t photo_mol -f ./dockerFiles/Dockerfile_massPhotometry .
        
         printMessageHowToTestDocker 'PhotoMol' 'photo_mol'
 
@@ -92,7 +92,7 @@ case $choice in
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Raynals..."
-        docker build -t raynals -f ./dockerFiles/Dockerfile_dlsApp_multiStageBuild .
+        docker build -t raynals -f ./dockerFiles/Dockerfile_dynamicLightScattering .
        
         printMessageHowToTestDocker 'Raynals' 'raynals'
 
@@ -104,7 +104,7 @@ case $choice in
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Circular dichroism..."
-        docker build -t chirakit -f ./dockerFiles/Dockerfile_cdApp_multiStageBuild .
+        docker build -t chirakit -f ./dockerFiles/Dockerfile_circularDichroism .
        
         printMessageHowToTestDocker 'ChiraKit' 'chirakit'
 

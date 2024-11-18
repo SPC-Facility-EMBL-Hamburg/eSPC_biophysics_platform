@@ -26,14 +26,14 @@ sudo bash updateDocker.bash
 
 Follow the README.md document:
 
-| Tool                  | Path                                    |
-| :---                  |     :---                                |
-| MoltenProt            | foldA_moltenP_apps/README.md            |
-| FoldAffinity          | foldA_moltenP_apps/README.md            |
-| ThermoAffinity        | thermoA_app/README.md                   |
-| PhotoMol              | refeynApp/README.md                     | 
-| Raynals               | dynamicLightScatteringApp/README.md     | 
-| ChiraKit              | circularDichroismApp/README.md          | 
+| Tool                  | Path                                          |
+| :---                  |:----------------------------------------------|
+| MoltenProt            | differentialScanningFluorimetryApps/README.md |
+| FoldAffinity          | differentialScanningFluorimetryApps/README.md |
+| ThermoAffinity        | microscaleThermophoresisApp/README.md         |
+| PhotoMol              | massPhotometryApp/README.md                   | 
+| Raynals               | dynamicLightScatteringApp/README.md           | 
+| ChiraKit              | circularDichroismApp/README.md                | 
 
 ## Installation of the whole eSPC platform 
 
