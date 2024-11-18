@@ -13,10 +13,9 @@ cd eSPC_biophysics_platform
 git submodule update --init --recursive
 ```
 
-## If you want to try the tools but don't plan to edit the code
+## If you want to try the tools but don't plan to edit the code frequently
 
 1) Install docker (https://docs.docker.com/engine/install/)
-
 
 ```
 sudo bash updateDocker.bash
@@ -37,7 +36,7 @@ Follow the README.md document:
 
 ## Installation of the whole eSPC platform 
 
-To install the eSPC platform in the development machine, follow this instructions:
+To install the eSPC platform in the development machine, follow these instructions:
 
 1) Clone or download this repo
 2) Install docker       (tested with Docker version 23.0.1, https://docs.docker.com/engine/install/)
@@ -79,17 +78,16 @@ docker run -t -i docker_container_name /bin/bash
 The following tree represents how the files are organised and their purpose:
 
     README.md                                   # Information about the eSPC platform
-    developer_manual.md                         # Manual to understand how to modify or develop new tools
     fresh_install_guide.md                      # Manual to install from scratch the eSPC platform in a new host
-    updateDocker.bash                           # Script to update the eSPC server in the development/ production machine
+    updateDocker.bash                           # Script to update the eSPC docker images
     application.yml                             # Example configuration file for ShinyProxy
     dockerFiles/                                # Contains the docker files to build the docker images
-    dynamicLightScatteringApp/                  # Contains the files for the Raynals app
-    circularDichroismApp/                       # Contains the files for the circular dichroism app 
-    foldA_moltenP_apps/                         # Contains the files for the FoldAffinity and Moltenprot apps (they share the same docker image)
-    refeynApp/                                  # Contains the files for the PhotoMol app
-    thermoA_app/                                # Contains the files for the ThermoAffinity app
-    templates                                   # Contains the html and css files, user documentation files, and images 
+    dynamicLightScatteringApp/                  # Files for the Raynals app
+    circularDichroismApp/                       # Files for the ChiraKit app 
+    foldA_moltenP_apps/                         # Files for the FoldAffinity and Moltenprot apps (they share the same docker image)
+    refeynApp/                                  # Files for the PhotoMol app
+    thermoA_app/                                # Files for the ThermoAffinity app
+    templates                                   # HTML and CSS files, user documentation files, and images 
        |-- custom                               
        |   |-- app.html                         # Template file used by ShinyProxy to render the user interface of a Shiny web application
        |   |-- assets                           
@@ -97,12 +95,4 @@ The following tree represents how the files are organised and their purpose:
        |   |   |-- css                          
        |   |   |   |-- custom.css               # Used to customize the visual appearance of a Shiny web application
        |   |   |-- img                          # Images of the apps (now presented at spc.embl-hamburg.de)
-       |   |-- index.html                       # HTML code of the webpage the users are going to see when they enter the eSPC platform
-    testing                                     # Contains testing scripts: load of input files and installation of neccesary libraries in docker
-       |-- data                                 # Input data to be tested
-       |-- foldAffinity                         # Tests for FoldAffinity  
-       |-- moltenProt                           # Tests for MoltenProt 
-       |-- photoMol                             # Tests for PhotoMol 
-       |-- raynals                              # Tests for Raynals 
-       |-- thermoAffinity                       # Tests for ThermoAffinity 
-
+       |   |-- index.html                       # Front page of the eSPC platform
