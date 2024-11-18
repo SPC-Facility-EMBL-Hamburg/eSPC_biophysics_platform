@@ -20,17 +20,17 @@ proxy:
   specs:
     - id: moltenprot
       display-name: MoltenProt
-      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/moltenprot')"]
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/MoltenProt')"]
       container-image: spc_apps_docker_container
 
     - id: foldAffinity
       display-name: FoldAffinity
-      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/foldAffinity')"]
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/FoldAffinity')"]
       container-image: spc_apps_docker_container
 
     - id: thermoAffinity
       display-name: ThermoAffinity
-      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/thermoAffinity')"]
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/ThermoAffinity')"]
       container-image: thermo_affinity
 
     - id: photoMol
