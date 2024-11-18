@@ -5,9 +5,18 @@ Last time updated: August 2024
 
 The eSPC webserver is currently hosted through ShinyProxy, with each tool contained in a docker image. To modify an existing app, you need to have proficiency in Python and R. 
 
+0) Clone the Repo and the submodules
+
+```
+git clone https://github.com/SPC-Facility-EMBL-Hamburg/eSPC_biophysics_platform
+cd eSPC_biophysics_platform
+git submodule update --init --recursive
+```
+
 ## If you want to try the tools but don't plan to edit the code
 
 1) Install docker (https://docs.docker.com/engine/install/)
+
 
 ```
 sudo bash updateDocker.bash
