@@ -10,3 +10,6 @@
 [submodule "massPhotometryApp"]
 	path = massPhotometryApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/massPhotometryApp
+[submodule "microscaleThermophoresisApp"]
+	path = microscaleThermophoresisApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/microscaleThermophoresisApp
