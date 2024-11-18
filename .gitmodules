@@ -1,3 +1,6 @@
 [submodule "differentialScanningFluorimetryApps"]
 	path = differentialScanningFluorimetryApps
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/differentialScanningFluorimetryApps
+[submodule "circularDichroismApp"]
+	path = circularDichroismApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/circularDichroismApp
