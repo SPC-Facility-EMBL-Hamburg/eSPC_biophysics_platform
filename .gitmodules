@@ -4,3 +4,6 @@
 [submodule "circularDichroismApp"]
 	path = circularDichroismApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/circularDichroismApp
+[submodule "dynamicLightScatteringApp"]
+	path = dynamicLightScatteringApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/dynamicLightScatteringApp
