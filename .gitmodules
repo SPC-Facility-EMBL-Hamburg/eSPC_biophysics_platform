@@ -7,3 +7,6 @@
 [submodule "dynamicLightScatteringApp"]
 	path = dynamicLightScatteringApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/dynamicLightScatteringApp
+[submodule "massPhotometryApp"]
+	path = massPhotometryApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/massPhotometryApp
