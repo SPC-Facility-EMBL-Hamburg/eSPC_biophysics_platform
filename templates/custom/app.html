@@ -1,59 +1,158 @@
 <!--
+
     ShinyProxy
-    Copyright (C) 2016-2020 Open Analytics
+
+    Copyright (C) 2016-2024 Open Analytics
+
     ===========================================================================
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the Apache License as published by
     The Apache Software Foundation, either version 2 of the License, or
     (at your option) any later version.
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Apache License for more details.
+
     You should have received a copy of the Apache License
     along with this program.  If not, see <http://www.apache.org/licenses/>
+
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head lang="en">
-	<title th:text="${appTitle}"></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" media="screen" th:href="@{${bootstrapCss}}" />
-	<link rel="stylesheet" media="screen" href="/assets/css/custom.css"/>
-	<script th:src="@{${jqueryJs}}"></script>
-	<script th:src="@{${bootstrapJs}}"></script>
-</head>
-<body>
-	<div th:replace="../fragments/navbar :: navbar"></div>
-	
-    <iframe id="shinyframe" th:src="${container}" width="100%" frameBorder="0"></iframe>
-    
+>
+    <head lang="en">
+        <title th:text="${appTitle} + ' - ' + ${appInstanceDisplayName}"></title>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <link rel="icon" th:href="@{${resourcePrefix} + '/favicon/' + ${appName}}">
+        <link media="screen" rel="stylesheet" th:href="@{${resourcePrefix} + ${bootstrapCss}}"/>
+        <link media="screen" rel="stylesheet" href="/assets/css/custom.css"/>
+        <script th:src="@{${resourcePrefix} + ${jqueryJs}}"></script>
+        <script th:src="@{${resourcePrefix} + ${bootstrapJs}}"></script>
+        <script th:src="@{${resourcePrefix} + ${handlebars}}"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.app.js' }"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.api.js' }"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.connections.js'}"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.instances.js' }"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.ui.js' }"></script>
+        <script th:src="@{${resourcePrefix} + '/js/shiny.common.js'}"></script>
+        <script th:src="@{${resourcePrefix} + '/handlebars/precompiled.js'}"></script>
+    </head>
+    <body id="appPage">
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="loading"><div class="loading-txt">Launching <span th:text="${appTitle}"></span>...</div></div>
-    
-	<script type="text/javascript" th:inline="javascript">
-		function setShinyframeHeight() {
-			$('#shinyframe').css('height', ($(window).height())+'px');
-		}
-		window.addEventListener("load", setShinyframeHeight);
-		window.addEventListener("resize",  setShinyframeHeight);
-		
-		$(window).on('load', function() {
-			var source = $("#shinyframe").attr("src");
-			if (source == "") {
-				$(".loading").show();
-				$.post(window.location.pathname + window.location.search, function(response) {
-					$("#shinyframe").attr("src", response.containerPath);
-					$(".loading").fadeOut("slow");
-				}).fail(function(request) {
-					var newDoc = document.open("text/html", "replace");
-					newDoc.write(request.responseText);
-					newDoc.close();
-				});
-			}
-		});
-	</script>
-</body>
+        <div id="iframeinsert"></div>
+        <div class="loading" id="loading">
+            <div class="loading-txt">Launching <span th:text="${appTitle}"></span>...</div>
+            <div class="loading-img"></div>
+        </div>
+        <div class="loading" id="resumingApp">
+            <div class="loading-txt">Resuming this app...</div>
+            <div class="loading-img"></div>
+        </div>
+        <div class="loading" id="stoppingApp">
+            <div class="loading-txt">Stopping this app...</div>
+            <div class="loading-img"></div>
+        </div>
+        <div class="loading" id="pausingApp">
+            <div class="loading-txt">Pausing this app...</div>
+            <div class="loading-img"></div>
+        </div>
+        <div class="loading" id="appStopped">
+            <div class="loading-txt">
+                This app has been stopped, you can now close this tab.<br><br>
+                <span class="refreshButton">
+				<button class="btn btn-default btn-restart-app"
+                        onClick="Shiny.instances.eventHandlers.onRestartInstance()">Restart app</button>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="appPaused">
+            <div class="loading-txt">
+                This app has been paused, you can now close this tab.<br><br>
+                <span class="refreshButton">
+				<button class="btn btn-default btn-restart-app"
+                        onClick="Shiny.instances.eventHandlers.onRestartInstance()">Resume app</button>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="reconnecting">
+            <div class="loading-txt">
+                Reconnecting to <span th:text="${appTitle}"></span>...
+                <div class="loading-img"></div>
+                <span class="retryingDetails">
+				<br>
+				Attempt <span class="reloadAttempts"></span>/<span class="maxReloadAttempts"></span>
+				<br>
+				Retrying <span id="retryInXSeconds">in <span class="retrySeconds"></span></span><span
+                        id="retryNow">now</span>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="reloadFailed">
+            <div class="loading-txt">
+                Failed to reload <span th:text="${appTitle}"></span><br><br>
+                <span class="refreshButton">
+				<button class="btn btn-default" onClick="window.location.reload()">Refresh page</button>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="startFailed">
+            <div class="loading-txt">
+                Failed to start app <span th:text="${appTitle}"></span><br><br>
+                <div id="startFailedMessage"></div>
+                <span class="refreshButton">
+				<button class="btn btn-default" onClick="window.location.reload()">Try again</button>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="appCrashed">
+            <div class="loading-txt">
+                This app has crashed and has been stopped.<br><br>
+                <span class="refreshButton">
+				<button class="btn btn-default btn-restart-app"
+                        onClick="Shiny.instances.eventHandlers.onRestartInstance()">Restart app</button>
+			</span>
+            </div>
+        </div>
+        <div class="loading" id="appTransferred">
+            <div class="loading-txt">
+                This app has been transferred to another user.<br><br>
+            </div>
+        </div>
+        <div class="loading" id="userLoggedOut">
+            <div class="loading-txt">
+                You are now (automatically) logged out, you can now close this tab.<br><br>
+                <span class="refreshButton">
+				<a class="btn btn-default" th:href="@{/}">Login again</a>
+			</span>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/modal :: modal}"></div>
+
+        <script th:inline="javascript" type="text/javascript">
+            $(window).on('load', function () {
+                window.Shiny.common.init([[${contextPath}]], [[${application_name}]], [[${spInstance}]], [[${appMaxInstances}]], [[${myAppsMode}]], [[${pauseSupported}]]);
+                window.Shiny.app.start(
+                    [[${proxy}]],
+                    [[${heartbeatRate}]],
+                    [[${appName}]],
+                    [[${appInstance}]],
+                    [[${parameterAllowedCombinations}]],
+                    [[${parameterDefinitions}]],
+                    [[${parameterIds}]],
+                    [[${appPath}]],
+                    [[${containerSubPath}]],
+                );
+                window.Shiny.ui.loadDefaultParameters([[${parameterDefaults}]]);
+                if ([[${refreshOpenidEnabled}]]) {
+                    window.Shiny.connections.startOpenidRefresh();
+                }
+            });
+        </script>
+    </body>
 </html>
-
