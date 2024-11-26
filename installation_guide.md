@@ -84,9 +84,9 @@ The following tree represents how the files are organised and their purpose:
     dockerFiles/                                # Contains the docker files to build the docker images
     dynamicLightScatteringApp/                  # Files for the Raynals app
     circularDichroismApp/                       # Files for the ChiraKit app 
-    foldA_moltenP_apps/                         # Files for the FoldAffinity and Moltenprot apps (they share the same docker image)
-    refeynApp/                                  # Files for the PhotoMol app
-    thermoA_app/                                # Files for the ThermoAffinity app
+    differentialScanningFluorimetryApps/        # Files for the FoldAffinity and Moltenprot apps (they share the same docker image)
+    massPhotometryApp/                          # Files for the PhotoMol app
+    microscaleThermophoresisApp/                # Files for the ThermoAffinity app
     templates                                   # HTML and CSS files, user documentation files, and images 
        |-- custom                               
        |   |-- app.html                         # Template file used by ShinyProxy to render the user interface of a Shiny web application
