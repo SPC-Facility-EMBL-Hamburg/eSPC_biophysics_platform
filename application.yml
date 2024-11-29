@@ -1,6 +1,5 @@
 proxy:
   title: SPC apps
-  logo-url: http://www.openanalytics.eu/sites/www.openanalytics.eu/themes/oa/logo.png
   template-path: /home/os/eSPC_biophysics_platform/templates/custom
   favicon-path:  /home/os/eSPC_biophysics_platform/custom/favicon.png
   landing-page: /
@@ -9,7 +8,6 @@ proxy:
   port: 8080
   authentication: none
   hide-navbar: true
-  #usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats # Uncomment to enable tracking of usage statistics
 
 # Docker configuration
   docker:
@@ -52,8 +50,3 @@ logging:
   file:
     /tmp/shinyproxy.log
 
-spring:
-  servlet:
-    multipart:
-      max-file-size: 250MB
-      max-request-size: 250MB
