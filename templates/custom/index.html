@@ -9,7 +9,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content=
   "width=device-width, initial-scale=1">
-  <title>SPC Webserver</title>
+  <title>eSPC platform</title>
   <link rel="shortcut icon" href=
   "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href=
@@ -55,6 +55,51 @@
     document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
 //]]></script>
 
+<!-- Add the following JavaScript script to enable the cookie banner -->
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var banners = document.querySelectorAll('[data-vf-js-banner]');
+
+    banners.forEach(function(banner) {
+      var closeButton = banner.querySelector('[data-vf-js-banner-close]');
+      var cookieName = banner.getAttribute('data-vf-js-banner-cookie-name');
+      var cookieVersion = banner.getAttribute('data-vf-js-banner-cookie-version');
+      var cookieDuration = banner.getAttribute('data-vf-js-banner-cookie-duration') || 30; // Default to 30 days if not specified
+
+      // Check if the cookie is already set
+      if (document.cookie.split(';').some((item) => item.trim().startsWith(cookieName + '=' + cookieVersion))) {
+        banner.style.display = 'none';
+      }
+
+      closeButton.addEventListener('click', function() {
+        // Set the cookie
+        document.cookie = cookieName + '=' + cookieVersion + '; path=/; max-age=' + (cookieDuration * 24 * 60 * 60);
+        // Hide the banner
+        banner.style.display = 'none';
+      });
+    });
+  });
+
+</script>
+
+<div data-vf-js-banner-cookie-name="EMBL_ESPC_cookies"
+     data-vf-js-banner-cookie-version="18012025"
+     data-vf-js-banner-cookie-duration="90"
+     class="vf-banner vf-banner--fixed vf-banner--bottom
+     vf-banner--notice" data-vf-js-banner="true"
+     data-vf-js-banner-state="dismissible"
+     data-vf-js-banner-button-text="I agree, dismiss this banner"
+     data-vf-js-banner-id="1">
+    <div class="vf-banner__content | vf-grid" data-vf-js-banner-text="">
+        <p class="vf-text vf-text-body--2">
+            This website uses cookies, and the limited&nbsp;processing of your personal data to function.
+            By using the site you are agreeing to this as outlined in our&nbsp;
+            <a class="vf-banner__link" target="_blank" href="https://www.embl.org/info/privacy-policy/">Privacy Policy</a>.
+        </p>
+        <button class="vf-button vf-button--primary" data-vf-js-banner-close="">I agree, dismiss this banner</button>
+    </div>
+</div>
 
   <!-- embl global header -->
   <link rel="import" href="https://www.embl.org/api/v1/pattern.html?filter-content-type=article&filter-id=574&pattern=node-body&source=contenthub" data-target="self" data-embl-js-content-hub-loader>
