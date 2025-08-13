@@ -7,8 +7,8 @@ COPY /circularDichroismApp/appFiles/Rprofile.site /usr/lib/R/etc/Rprofile.site
 # Additional packages required for Python installation
 ARG PYTHON_PACKAGES="python3 python3-pip python3-venv python3-dev"
 
-ARG R_PACKAGES="reticulate tidyverse shiny factoextra shinydashboard shinycssloaders tippy \
-rhandsontable colourpicker plotly reshape2 DT signal ggdendro quadprog shinyalert"
+ARG R_PACKAGES="reticulate tidyverse shiny shinydashboard shinycssloaders tippy \
+rhandsontable colourpicker plotly reshape2 DT signal ggdendro shinyalert"
 
 ARG BUILD_PACKAGES="pandoc"
 
