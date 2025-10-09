@@ -13,7 +13,7 @@ shinycssloaders shinyalert tippy rhandsontable plotly tinytex egg ggpubr viridis
 broom Cairo"
 
 
-ARG BUILD_PACKAGES="pandoc"
+ARG BUILD_PACKAGES="pandoc wget"
 
 RUN apt-get update && apt-get install --no-install-recommends --yes $BUILD_PACKAGES $PYTHON_PACKAGES && \
     install.r $R_PACKAGES                                                                            && \
@@ -37,4 +37,4 @@ USER ROOT
 EXPOSE 3838 
 USER shiny
                                            
-CMD ["R", "-e", "shiny::runApp('/home/shiny/FoldAffinity')"]
+CMD ["R", "-e", "shiny::runApp('/home/shiny/MoltenProt')"]
