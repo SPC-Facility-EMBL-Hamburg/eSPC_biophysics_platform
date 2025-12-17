@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" class="vf-no-js" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <script>
+  // Detect if JS is on and swap vf-no-js for vf-js on the html element
+  (function(H){H.className=H.className.replace(/\bvf-no-js\b/,'vf-js')})(document.documentElement);
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1">
+  <title>eSPC platform</title>
+  <link rel="shortcut icon" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/favicon-16x16.png">
+  <link rel="manifest" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/site.webmanifest">
+  <link rel="mask-icon" href=
+  "https://assets.emblstatic.net/vf/v2.5.20/assets/embl-favicon/assets/safari-pinned-tab.svg"
+  color="#ffffff">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+  <!-- Content descriptors -->
+  <meta name="embl:who" content="EMBL Hamburg SPC">
+  <!-- the people, groups and teams involved -->
+  <meta name="embl:where" content="EMBL Hamburg">
+  <!-- at which EMBL sites the content applies -->
+  <meta name="embl:what" content="EMBL SPC Webserver for data analysis">
+  <!-- the activities covered -->
+  <meta name="embl:active" content="what">
+  <!-- which of the who/what/where is active -->
+  <!-- Content role -->
+  <meta name="embl:utility" content="content is task and work based">
+  <!-- if content is task and work based or if is meant to inspire -->
+  <meta name="embl:reach" content="content is externally (public)">
+  <!-- if content is externally (public) or internally focused (those that work at EMBL) -->
+  <!-- Page information -->
+  <meta name="embl:maintainer" content="EMBL SPC">
+  <!-- the contact person or group responsible for the page -->
+  <meta name="embl:last-review" content="2025-03-19">
+  <!-- the last time the page was reviewed or updated -->
+  <meta name="embl:review-cycle" content="365">
+  <!-- how long in days before the page should be checked -->
+  <meta name="embl:expiry" content="null">
+  <!-- if there is a fixed point in time when the page is no longer relevant -->
+  <link rel="stylesheet" media="all" href="https://assets.emblstatic.net/vf/v2.5.20/css/styles.css">
+
+     <style>
+
+      .snowflake {
+          position: absolute;
+          top: -80px; /* Ensure snowflakes don't start too high */
+          pointer-events: none;
+          animation: fall linear infinite;
+      }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body class="vf-body vf-stack"><script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='/browser-sync/browser-sync-client.js?v=2.26.14'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+
+<script>
+    // Number of snowflakes
+    const snowflakeCount = 50;
+
+    // Snowflake image URL
+    const snowflakeImage = '/assets/img/snowflake.png'; // Replace with your custom image file name
+
+    // Function to create a snowflake
+    function createSnowflake() {
+        const snowflake = document.createElement('img');
+        snowflake.src = snowflakeImage;
+        snowflake.classList.add('snowflake');
+
+        // Randomize size
+        const size = Math.random() * 30 + 20; // 30px to 80px
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+
+        // Randomize position
+        snowflake.style.left = `${Math.random() * 100}vw`;
+
+        // Randomize animation duration
+        const duration = Math.random() * 5 + 5; // 5 to 10 seconds
+        snowflake.style.animationDuration = `${duration}s`;
+
+        // Randomize delay
+        const delay = Math.random() * 5; // 0 to 5 seconds
+        snowflake.style.animationDelay = `${delay}s`;
+
+        // Append snowflake to body
+        document.body.appendChild(snowflake);
+
+        // Remove snowflake after animation ends
+        setTimeout(() => {
+            snowflake.remove();
+        }, duration * 1000);
+    }
+
+    // Create snowflakes at intervals
+    setInterval(() => {
+        if (document.querySelectorAll('.snowflake').length < snowflakeCount) {
+            createSnowflake();
+        }
+    }, 400);
+</script> 
+
+<!-- Add the following JavaScript script to enable the cookie banner -->
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var banners = document.querySelectorAll('[data-vf-js-banner]');
+
+    banners.forEach(function(banner) {
+      var closeButton = banner.querySelector('[data-vf-js-banner-close]');
+      var cookieName = banner.getAttribute('data-vf-js-banner-cookie-name');
+      var cookieVersion = banner.getAttribute('data-vf-js-banner-cookie-version');
+      var cookieDuration = banner.getAttribute('data-vf-js-banner-cookie-duration') || 30; // Default to 30 days if not specified
+
+      // Check if the cookie is already set
+      if (document.cookie.split(';').some((item) => item.trim().startsWith(cookieName + '=' + cookieVersion))) {
+        banner.style.display = 'none';
+      }
+
+      closeButton.addEventListener('click', function() {
+        // Set the cookie
+        document.cookie = cookieName + '=' + cookieVersion + '; path=/; max-age=' + (cookieDuration * 24 * 60 * 60);
+        // Hide the banner
+        banner.style.display = 'none';
+      });
+    });
+  });
+
+</script>
+
+<div data-vf-js-banner-cookie-name="EMBL_ESPC_cookies"
+     data-vf-js-banner-cookie-version="18012025"
+     data-vf-js-banner-cookie-duration="90"
+     class="vf-banner vf-banner--fixed vf-banner--bottom
+     vf-banner--notice" data-vf-js-banner="true"
+     data-vf-js-banner-state="dismissible"
+     data-vf-js-banner-button-text="I agree, dismiss this banner"
+     data-vf-js-banner-id="1">
+    <div class="vf-banner__content | vf-grid" data-vf-js-banner-text="">
+        <p class="vf-text vf-text-body--2">
+            This website uses cookies, and the limited&nbsp;processing of your personal data to function.
+            By using the site you are agreeing to this as outlined in our&nbsp;
+            <a class="vf-banner__link" target="_blank" href="https://www.embl.org/info/privacy-policy/">Privacy Policy</a>.
+        </p>
+        <button class="vf-button vf-button--primary" data-vf-js-banner-close="">I agree, dismiss this banner</button>
+    </div>
+</div>
+
+  <!-- embl global header -->
+  <link rel="import" href="https://www.embl.org/api/v1/pattern.html?filter-content-type=article&filter-id=574&pattern=node-body&source=contenthub" data-target="self" data-embl-js-content-hub-loader>
+
+  <nav class="vf-breadcrumbs" aria-label="Breadcrumb">
+    <ul class="vf-breadcrumbs__list | vf-list vf-list--inline">
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl.org/services-facilities/" class="vf-breadcrumbs__link">Services</a>
+      </li>
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl-hamburg.de/services/spc/index.html" class="vf-breadcrumbs__link">Sample Preparation and Characterisation</a>
+      </li>
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl-hamburg.de/services/spc/Services-and-resources/index.html" class="vf-breadcrumbs__link">SPC Services</a>
+      </li>
+      <li class="vf-breadcrumbs__item" aria-current="location">
+        eSPC Data Analysis Platform
+      </li>
+    </ul>
+    <span class="vf-breadcrumbs__heading">Related:</span>
+    <ul class="vf-breadcrumbs__list vf-breadcrumbs__list--related | vf-list vf-list--inline">
+      <li class="vf-breadcrumbs__item">
+        <a href="https://www.embl.org/sites/hamburg/" class="vf-breadcrumbs__link">EMBL Hamburg</a>
+      </li>
+    </ul>
+  </nav>
+  <section class="vf-intro">
+    <div>
+      <!-- empty -->
+    </div>
+    <div class="vf-stack">
+
+    <h1 class="vf-intro__heading vf-intro__heading-">eSPC, an Online Data Analysis Platform for Molecular Biophysics </h1>
+
+<!-- Add the following line to add the header with a blue badge with "beta" on it -->
+<!--  <h1 class="vf-intro__heading vf-intro__heading--has-tag">eSPC, an Online Data Analysis Platform for Molecular Biophysics
+  <a href="JavaScript:Void(0);" class="vf-badge vf-badge--primary vf-badge--phases">beta</a>  </h1> -->
+
+      <p class="vf-lede">  The eSPC platform provides easy to use software for the understanding of biophysical experiments.</p>
+      <!-- <p class="vf-intro__text">Extra text.</p> -->
+    </div>
+  </section>
+
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-dsf">Differential Scanning Fluorimetry</h2>
+
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL1.jpg" alt="FoldAffinity" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--400">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+foldAffinity" th:target="_blank">FoldAffinity</a></h3>
+            <p class="vf-card__text">Estimating binding affinities by isothermal analysis.
+                Analyse protein-ligand titration curves, fit fluorescence curves, calculate <i>K</i><sub>D</sub>s.</p>
+          </div>
+        </article>
+
+        <article class="vf-card vf-card--primary vf-card--striped">
+        <img src="/assets/img/EMBL2.jpg" alt="MoltenProt" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--400">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+moltenprot" th:target="_blank">MoltenProt</a></h3>
+            <p class="vf-card__text">Assessing protein stability under different conditions. Calculate <i>T</i><sub>m</sub>,
+                <i>T</i><sub>onset</sub>, <i>DH</i>.</p>
+          </div>
+        </article>
+
+      </section>
+      </div>
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-mst">MicroScale Thermophoresis</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL3.jpg" alt="ThermoAffinity" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+thermoAffinity" th:target="_blank">ThermoAffinity</a></h3>
+            <p class="vf-card__text">Estimating binding affinities by thermophoresis shift or initial fluorescence analysis.</p>
+          </div>
+        </article>
+
+      </section>
+      </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+
+      </section>
+      </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-mp">Mass Photometry</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL4.jpg" alt="PhotoMol" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+photoMol" th:target="_blank">PhotoMol</a></h3>
+            <p class="vf-card__text">Estimating molecular masses in a sample.</p>
+          </div>
+        </article>
+      </section>
+      </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </section>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-dls">Dynamic Light Scattering</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL5.jpg" alt="Raynals" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+raynals" th:target="_blank">Raynals</a></h3>
+            <p class="vf-card__text">Estimating sample homogeneity and hydrodynamic radius.</p>
+          </div>
+        </article>
+
+      </section>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </section>
+    </div>
+
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-cd">Circular Dichroism</h2>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid">
+        <article class="vf-card vf-card--primary vf-card--striped">
+          <img src="/assets/img/EMBL6.jpg" alt="ChiraKit" class="vf-card__image" loading="lazy">
+          <div class="vf-card__content | vf-stack vf-stack--200">
+            <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+chirakit" th:target="_blank">ChiraKit</a></h3>
+            <p class="vf-card__text">Analysing biomolecules conformation.
+            Perform spectra decomposition, estimate unfolding parameters, or calculate secondary structure content</p>
+          </div>
+        </article>
+
+      </section>
+    </div>
+
+    <div class="vf-stack vf-stack--400">
+      <section class="vf-grid" >
+      </section>
+    </div>
+
+  </section>
+
+    <section class="embl-grid">
+        <div class="vf-section-header">
+            <h2 class="vf-section-header__heading" id="section-text-cd">Biolayer interferometry</h2>
+        </div>
+
+        <div class="vf-stack vf-stack--400">
+            <section class="vf-grid">
+                <article class="vf-card vf-card--primary vf-card--striped">
+                    <img src="/assets/img/EMBL7.jpg" alt="KinGenie" class="vf-card__image" loading="lazy">
+                    <div class="vf-card__content | vf-stack vf-stack--200">
+                        <h3 class="vf-card__title"><a class="vf-card__link" th:href="@{/app/}+kingenie" th:target="_blank">KinGenie (Beta version)</a>
+                        </h3>
+                        <p class="vf-card__text">Assessing binding kinetics.
+                            Perform global fitting of association and dissociation curves, estimate binding rates.</p>
+                        </p>
+                    </div>
+                </article>
+
+            </section>
+        </div>
+
+        <div class="vf-stack vf-stack--400">
+            <section class="vf-grid">
+            </section>
+        </div>
+
+    </section>
+
+<br>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="howToCite">How to cite</h2>
+    </div>
+        <div class="vf-content">
+          <h4>FoldAffinity, MoltenProt & ThermoAffinity</h4>
+
+      <p class="vf-intro__text">Burastero, O., Niebling, S., Defelipe, L. A., Günther, C., Struve, A., & Garcia Alai, M. M. (2021).       <a href="https://journals.iucr.org/d/issues/2021/10/00/qt5002/index.html" class="vf-summary__link">eSPC: an online data-analysis platform for molecular biophysics</a>. Acta Crystallographica Section D: Structural Biology, 77(10).</p>
+
+      <h4>FoldAffinity</h4>
+
+      <p class="vf-intro__text">Niebling, S., Burastero, O., Bürgi, J., Günther, C., Defelipe, L. A., Sander, S., ... & García-Alai, M. (2021). <a href="https://www.nature.com/articles/s41598-021-88985-z" class="vf-summary__link"> FoldAffinity: binding affinities from nDSF experiments</a>. Scientific reports, 11(1), 1-17.</p>
+
+      <p class="vf-intro__text">Bai, N., Roder, H., Dickson, A., & Karanicolas, J. (2019).<a href="https://europepmc.org/article/PMC/6389909" class="vf-summary__link"> Isothermal analysis of ThermoFluor data can readily provide quantitative binding affinities</a>. Scientific reports, 9(1), 1-15.</p>
+
+      <h4>MoltenProt</h4>
+
+      <p class="vf-intro__text">Kotov, V., Mlynek, G., Vesper, O., Pletzer, M., Wald, J., Teixeira‐Duarte, C. M., ... & Marlovits, T. C. (2021). <a href="https://europepmc.org/article/MED/33140490" class="vf-summary__link"> In‐depth Interrogation of Protein Thermal Unfolding Data with MoltenProt</a>. Protein Science, 30(1), 201-217.</p>
+
+      <h4>PhotoMol</h4>
+
+      <p class="vf-intro__text">Niebling, S., Veith, K., Vollmer, B., Lizarrondo, J., Burastero, O., Schiller, J., ... & García-Alai, M. (2022). <a href="https://www.frontiersin.org/articles/10.3389/fmolb.2022.882288/full" class="vf-summary__link"> Biophysical Screening Pipeline for Cryo-EM Grid Preparation of Membrane Proteins</a>. Frontiers in Molecular Biosciences, 535.</p>
+
+      <h4>Raynals</h4>
+
+      <p class="vf-intro__text">Burastero, O., Draper-Barr, G., Raynal, B., Chevreuil, M., England, P. & Garcia Alai, M. (2023).
+        <a href="https://journals.iucr.org/d/issues/2023/08/00/vo5014/index.html" class="vf-summary__link"> Raynals, an online tool for the analysis of dynamic light scattering</a>.
+        Acta Crystallographica Section D: Structural Biology, 79(8).</p>
+
+      <h4>ChiraKit</h4>
+
+      <p class="vf-intro__text">Burastero, O., Jones, N., Defelipe, L. A., Zavrtanik, U., Hadži, S., Hoffmann, S. V., & Garcia-Alai, M. M. (2025).
+        <a href="https://doi.org/10.1093/nar/gkaf350" class="vf-summary__link"> ChiraKit, an online tool for the analysis of circular dichroism spectroscopy data</a>.
+        Nucleic Acids Research, gkaf350</p>
+
+    </div>
+
+  </section>
+
+<br>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-documentation">Documentation</h2>
+
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/FoldAffinityUserDocumentation.pdf" class="vf-summary__link">
+                FoldAffinity</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/MoltenProtUserDocumentation-v1.1.pdf" class="vf-summary__link">
+                MoltenProt</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/ThermoAffinityUserDocumentation.pdf" class="vf-summary__link">
+                ThermoAffinity</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/PhotoMolUserDocumentation.pdf" class="vf-summary__link">
+                PhotoMol</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/RaynalsUserDocumentation.pdf" class="vf-summary__link">
+                Raynals</a>
+            </h3>
+
+          </article>
+
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="/assets/apps_user_documentation/ChiraKitUserDocumentation.pdf" class="vf-summary__link">
+                ChiraKit</a>
+            </h3>
+
+          </article>
+
+      </section>
+    </div>
+  </section>
+
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-code">Code</h2>
+
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+          <article class="vf-summary vf-summary--publication">
+            <h3 class="vf-summary__title">
+              <a href="https://github.com/SPC-Facility-EMBL-Hamburg/eSPC_biophysics_platform" class="vf-summary__link">
+                Github</a>
+            </h3>
+
+          </article>
+
+      </section>
+    </div>
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text">Our supporters</h2>
+
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+
+        <div class="vf-grid vf-grid__col-3">
+          <!-- Column 1: Institutional Collaborators -->
+          <div class="vf-grid__col">
+            <h4 class="vf-text-heading--4">Core funding</h4>
+            <ul class="vf-list vf-list--unordered">
+              <li>European Molecular Biology Laboratory (EMBL)</li>
+              <li>ARISE programme (European Union’s Horizon 2020 research and innovation programme, Marie Skłodowska-Curie grant agreement No 945405)</li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Founding Funders -->
+          <div class="vf-grid__col">
+            <h4 class="vf-text-heading--4">Grant funding</h4>
+            <ul class="vf-list vf-list--unordered">
+              <li>Molecular-scale biophysics research infrastructure (MOSBRI) (European Union’s Horizon 2020 research and innovation programme grant agreement No 101004806)</li>
+            </ul>
+              <ul class="vf-list vf-list--unordered">
+                  <li>Instruct-ERIC Technology Development 2024 (APPID 3335)
+                  </li>
+              </ul>
+          </div>
+
+          <!-- Column 3: Workshop Sponsors -->
+          <div class="vf-grid__col">
+            <h4 class="vf-text-heading--4">Institutional collaborators</h4>
+            <ul class="vf-list vf-list--unordered">
+              <li>
+                <a href="https://research.pasteur.fr/fr/team/biophysics/" target="_blank">
+                  Plateforme de Biophysique Moléculaire, Institut Pasteur, Paris, France
+                </a>
+              </li>
+
+              <li>
+                <a href="https://www.isa.au.dk/" target="_blank">
+                  ISA, Department of Physics and Astronomy, Aarhus University, Denmark
+                </a>
+              </li>
+
+              <li>
+                <a href="https://fkkt.uni-lj.si/en/departments-and-chairs/department-of-chemistry-and-biochemistry/chair-of-physical-chemistry" target="_blank">
+                  Department of Physical Chemistry, Faculty of Chemistry and Chemical Technology, University of Ljubljana, Ljubljana, Slovenia
+                </a>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="vf-grid vf-grid__col-1">
+
+          <!-- Column 4: Workshop Sponsors -->
+          <div class="vf-grid__col">
+            <h4 class="vf-text-heading--4">Workshops & tutorials</h4>
+            <ul class="vf-list vf-list--unordered">
+
+            <li style="margin-bottom: 12px;">Tutorial session (March-April 2025) as part of the MOSBRI course
+                <a href="https://www.mosbri.eu/training/advanced-level-schools/als2/" target="_blank">"ALS2: Biophysical methods for the real-time characterization of biomolecular interactions (Kinetics 2025)"</a>.
+                Organised by: Institut Pasteur, Paris, France.
+                Contact:
+                <a href="https://research.pasteur.fr/en/team/biophysics/"
+                   target="_blank">Patrick England</a>
+            </li>
+
+              <li style="margin-bottom: 12px;">Tutorial session (November 2024) as part of the meeting
+                <a href="https://www.mosbri.eu/events/meetings/dfmb2024/programme-dfmb2024/" target="_blank">"Towards data FAIRness in molecular biophysics"</a>.
+                Organised by: Institute of Biotechnology of the Czech Academy of Sciences, Vestec, Czech Republic. Contact: Emil Dandanell Agerschou &
+                <a href="https://www.ibt.cas.cz/en/research/laboratory-of-structure-and-function-of-biomolecules/" target="_blank">Jan Dohnálek</a>
+              </li>
+
+              <li style="margin-bottom: 12px;">Biophysics workshop (November 2022). Organised by: Aahrus University, Aahrus, Denmark. Contact:
+                <a href="https://www.au.dk/en/magnus@mbg.au.dk" target="_blank">Magnus Kjærgaard</a>
+              </li>
+
+              <li style="margin-bottom: 12px;">Tutorial sessions (September 2022 and September 2024) as part of the EMBO Course
+                "Membrane Protein Expression, Purification, and Characterization" (
+                <a href="https://meetings.embo.org/event/22-mpepc2" target="_blank">mPEPC2</a>
+                and
+                <a href="https://www.embl.org/about/info/course-and-conference-office/events/pep24-01/" target="_blank">mPEPC3</a>).
+                Organised by: EMBL Hamburg, Germany. Contact: Angelica Struve &
+                <a href="https://www.embl.org/people/person/maria-garcia/" target="_blank">Maria M. Garcia-Alai</a>
+              </li>
+
+              <li style="margin-bottom: 12px;">Tutorial sessions (September 2022) as part of the MOSBRI Course
+                <a href="https://www.mosbri.eu/training/end-user-short-courses/esc3/" target="_blank">"ESC3: Quality control for Integral Membrane Proteins"</a>.
+                Organised by: EMBL Hamburg, Germany. Contact: Angelica Struve &
+                <a href="https://www.embl.org/people/person/maria-garcia/" target="_blank">Maria M. Garcia-Alai</a>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </section>
+
+  <section class="embl-grid">
+    <div class="vf-section-header">
+      <h2 class="vf-section-header__heading" id="section-text-databases">Useful databases</h2>
+
+    </div>
+    <div class="vf-stack vf-stack--800">
+      <section class="vf-grid">
+
+        <div class="vf-grid vf-grid__col-4">
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://mbdb-data.org/" target="_blank" class="vf-summary__link">
+                Molecular Biophysics Database (MBDB)</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://pcddb.cryst.bbk.ac.uk/info/" target="_blank" class="vf-summary__link">
+                Protein Circular Dichroism Data Bank (PCDDB)</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://genesilico.pl/nacddb/" target="_blank" class="vf-summary__link">
+                Nucleic Acid Circular Dichroism Database (NACDDB)</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://plbd.org/db/" target="_blank" class="vf-summary__link">
+                Protein-ligand binding database of thermodynamic and kinetic intrinsic parameters
+                (PLDB)</a>
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="vf-grid vf-grid__col-4">
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://www.bindingdb.org/rwd/bind/index.jsp"  target="_blank" class="vf-summary__link">
+                  BindingDB</a>
+            </p>
+
+          </div>
+
+           <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://web.iitm.ac.in/bioinfo2/prothermdb/index.html"  target="_blank" class="vf-summary__link">
+                 Thermodynamic database for proteins and mutants (ProThermDB)</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://www.sasbdb.org/"  target="_blank" class="vf-summary__link">
+                 Small-Angle Scattering Biological Data Bank (SASBDB)</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://www.rcsb.org/"  target="_blank" class="vf-summary__link">
+                Protein Data Bank (PDB)</a>
+            </p>
+
+          </div>
+
+        </div>
+
+                <div class="vf-grid vf-grid__col-4">
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://www.alphafold.ebi.ac.uk/"  target="_blank" class="vf-summary__link">
+                AlphaFold Protein Structure Database</a>
+            </p>
+
+          </div>
+
+          <div class="vf-grid__col">
+
+		<p class="vf-intro__text">
+              <a href="https://bmrb.io/"  target="_blank" class="vf-summary__link">
+                  Biological Magnetic Resonance Bank (BMRB) </a>
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+  </section>
+
+<section class="embl-grid">
+    <div class="vf-section-header"><a class="vf-section-header__heading vf-section-header__heading--is-link" href="https://www.embl-hamburg.de/services/spc/index.html" id="abot">About <svg aria-hidden="true" class="vf-section-header__icon | vf-icon vf-icon-arrow--inline-end" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0 010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0 00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z" fill="" fill-rule="nonzero"></path>
+    </svg></a>
+      <p class="vf-section-header__text">eSPC, a tool for analysing protein biophysics</p>
+    </div>
+    <div class="">
+      <article class="vf-summary">
+        <h4 class="vf-text vf-text-heading--5">Related organisations</h4>
+        <p class="vf-summary__text">
+          <a class="vf-link" href="https://www.cssb-hamburg.de">CSSB</a>,
+          <a class="vf-link" href="https://www.desy.de/index_eng.html">DESY</a>,
+          <a class="vf-link" href="https://www.xfel.eu">European XFEL</a>
+        </p>
+      </article>
+
+      <article class="vf-summary">
+         <h4 class="vf-text vf-text-heading--5">Social Media</h4>
+        <p class="vf-summary__text">
+          <a class="vf-link" href="https://bsky.app/profile/spcembl.bsky.social">SPC Bsky</a>
+        </p>
+      </article>
+
+      <article class="vf-summary">
+        <h4 class="vf-text vf-text-heading--5">Contact</h4>
+        <p class="vf-summary__text">
+          EMBL (c/o DESY), Notkestrasse 85, Build. 25a, 22607 Hamburg, Germany
+          <br/>
+          Tel: +49 40 89 902-110 or 111
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- embl global footer -->
+  <link rel="import" href="https://www.embl.org/api/v1/pattern.html?filter-content-type=article&filter-id=569&pattern=node-body&source=contenthub" data-target="self" data-embl-js-content-hub-loader>
+
+  <!-- IE11 polyfill JS -->
+  <script nomodule crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default"></script>
+  <script src="https://assets.emblstatic.net/vf/v2.4.5/scripts/scripts.js"></script>
+</body>
+</html>
