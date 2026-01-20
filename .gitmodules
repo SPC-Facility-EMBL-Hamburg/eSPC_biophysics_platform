@@ -16,3 +16,6 @@
 [submodule "thermochemicalDenaturationApp"]
 	path = thermochemicalDenaturationApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/thermochemicalDenaturationApp
+[submodule "bindingKineticsApp"]
+	path = bindingKineticsApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/bindingKineticsApp

@@ -21,8 +21,7 @@ COPY /kineticsApp/appFiles/requirements.txt   requirements.txt
 USER shiny
 
 RUN python3 -m venv /home/shiny/myenv && \
-    /home/shiny/myenv/bin/pip install --prefer-binary --no-cache-dir -r requirements.txt && \
-    /home/shiny/myenv/bin/pip install pykingenie
+    /home/shiny/myenv/bin/pip install --prefer-binary --no-cache-dir -r requirements.txt
 
 
 FROM builder AS build2
