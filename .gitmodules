@@ -13,3 +13,6 @@
 [submodule "microscaleThermophoresisApp"]
 	path = microscaleThermophoresisApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/microscaleThermophoresisApp
+[submodule "thermochemicalDenaturationApp"]
+	path = thermochemicalDenaturationApp
+	url = https://github.com/SPC-Facility-EMBL-Hamburg/thermochemicalDenaturationApp
