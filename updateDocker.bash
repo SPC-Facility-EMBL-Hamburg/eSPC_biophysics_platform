@@ -13,8 +13,10 @@ echo "2. ThermoAffinity"
 echo "3. PhotoMol"
 echo "4. Raynals"
 echo "5. ChiraKit"
+echo "6. KinGenie"
+echo "7. Chemelt"
 
-read -p "Enter your choice [1-5]: " choice
+read -p "Enter your choice [1-7]: " choice
 
 askIfTestsWereDone () {
 
@@ -109,6 +111,34 @@ case $choice in
         printMessageHowToTestDocker 'ChiraKit' 'chirakit'
 
         ;;
+    *)
+        echo "Invalid choice. Please select a valid option [1-5]."
+        ;;
+
+    6)
+
+        #askIfTestsWereDone 'testRaynals.py'
+        #askIfInfoWasUpdated
+
+        echo -e "\nBuilding Image for Kinetics..."
+        docker build -t kingenie -f ./dockerFiles/Dockerfile_kinetics .
+
+        printMessageHowToTestDocker 'KinGenie' 'kingenie'
+
+        ;;
+
+    7)
+
+        #askIfTestsWereDone 'testRaynals.py'
+        #askIfInfoWasUpdated
+
+        echo -e "\nBuilding Image for Chemelt..."
+        docker build -t chemelt -f ./dockerFiles/Dockerfile_thermoChemical .
+
+        printMessageHowToTestDocker 'Chemelt' 'chemelt'
+
+        ;;
+
     *)
         echo "Invalid choice. Please select a valid option [1-5]."
         ;;
