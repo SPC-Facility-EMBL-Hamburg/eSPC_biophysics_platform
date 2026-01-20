@@ -111,9 +111,6 @@ case $choice in
         printMessageHowToTestDocker 'ChiraKit' 'chirakit'
 
         ;;
-    *)
-        echo "Invalid choice. Please select a valid option [1-5]."
-        ;;
 
     6)
 
@@ -140,7 +137,7 @@ case $choice in
         ;;
 
     *)
-        echo "Invalid choice. Please select a valid option [1-5]."
+        echo "Invalid choice. Please select a valid option [1-7]."
         ;;
 
 esac
