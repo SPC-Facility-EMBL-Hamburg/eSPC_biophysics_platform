@@ -2,7 +2,7 @@ FROM rocker/r2u:24.04 AS builder
 
 LABEL maintainer="oburastero@gmail.com"
 
-COPY /kineticsApp/appFiles/Rprofile.site /usr/lib/R/etc/Rprofile.site
+COPY /bindingKineticsApp/appFiles/Rprofile.site /usr/lib/R/etc/Rprofile.site
 
 # Additional packages required for Python installation
 ARG PYTHON_PACKAGES="python3 python3-pip python3-venv python3-dev"
@@ -26,7 +26,7 @@ RUN python3 -m venv /home/shiny/myenv && \
 
 FROM builder AS build2
 
-COPY --chown=shiny:shiny /kineticsApp/appFiles/  /home/shiny/
+COPY --chown=shiny:shiny /bindingKineticsApp/appFiles/  /home/shiny/
 
 USER ROOT
 EXPOSE 3838
