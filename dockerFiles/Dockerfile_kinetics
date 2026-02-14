@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install --no-install-recommends --yes $PYTHON_PACK
     apt-get autoclean                                                                && \
     useradd -ms /bin/bash  shiny
 
-COPY /kineticsApp/appFiles/requirements.txt   requirements.txt
+COPY /bindingKineticsApp/appFiles/requirements.txt   requirements.txt
 
 # Switch to the shiny user
 USER shiny
