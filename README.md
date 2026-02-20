@@ -1,19 +1,21 @@
 # The eSPC platform 
 
-Last time updated: January 2026
+Last time updated: February 2026
 
 ## Introduction
 
 The eSPC platform (spc.embl-hamburg.de) is a collection of programs designed to analyze biophysical data using different techniques. The table below shows the tools available along with their purpose:
 
-| Tool 					| Purpose 											| Technique |
-| :---         			|     :---:      									|          ---: |
-| MoltenProt   			| Protein stability     							| Differential scanning fluorimetry    |
-| FoldAffinity     		| Binding affinity       							| Differential scanning fluorimetry      |
-| ThermoAffinity     	| Binding affinity      						 	| Microscale thermophoresis / fluorescence quenching      |
-| PhotoMol     			| Sample size, oligomerization and homogeneity		| Mass photometry      |
-| Raynals     			| Sample size and homogeneity       				| Single-angle dynamic light scattering      |
-| ChiraKit     			| Protein stability, secondary structure, binding   | Circular dichroism      |
+| Tool 					           |               Purpose 											               |                                          Technique |
+|:---------------------|:-----------------------------------------------:|---------------------------------------------------:|
+| MoltenProt   			     |          Protein stability     							          |                  Differential scanning fluorimetry |
+| FoldAffinity     		  |         Binding affinity       							          |                  Differential scanning fluorimetry |
+| ThermoAffinity     	 |         Binding affinity      						 	          | Microscale thermophoresis / fluorescence quenching |
+| PhotoMol     			     | Sample size, oligomerization and homogeneity		  |                                    Mass photometry |
+| Raynals     			      |     Sample size and homogeneity       				      |              Single-angle dynamic light scattering |
+| ChiraKit     			     | Protein stability, secondary structure, binding |                                 Circular dichroism |
+| KinGenie     			     |                Binding kinetics                 | Biolayer interferometry, surface plasmon resonance |
+
 
 ## Installation
 
@@ -31,6 +33,8 @@ If you have any questions or feedback regarding the eSPC platform, or you want t
 oburastero@gmail.com, stephan.niebling@embl-hamburg.de, m.garcia@embl-hamburg.de, spc@embl-hamburg.de
 
 ## Main references
+
+Burastero, Osvaldo, et al. "ChiraKit: an online tool for the analysis of circular dichroism spectroscopy data." Nucleic Acids Research 53.W1 (2025): W158-W168.
 
 Burastero, Osvaldo, et al. "Raynals, an online tool for the analysis of dynamic light scattering." Acta Crystallographica Section D: Structural Biology 79.8 (2023).
 
