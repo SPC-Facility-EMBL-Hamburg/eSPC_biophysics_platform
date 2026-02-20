@@ -31,7 +31,7 @@ Project leader: Maria Marta Garcia Alai <br>
 
 If you have any questions or feedback regarding the eSPC platform, or you want to provide your own version of the eSPC platform on a different host, please feel free to contact us via email:
 
-oburastero@gmail.com, stephan.niebling@embl-hamburg.de, m.garcia@embl-hamburg.de, spc@embl-hamburg.de
+oburastero@gmail.com, m.garcia@embl-hamburg.de, spc@embl-hamburg.de
 
 ## Main references
 
