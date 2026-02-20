@@ -23,9 +23,9 @@ To install all or some of the eSPC platform tools, please refer to the 'installa
 
 ## Team
 
-Developers:     Osvaldo Burastero,  Florian Vögele
-Previous developers:  Stephan Niebling, Clemente Borges and Andrea D'Amato
-Project Leader: Maria Marta Garcia Alai
+Developers:     Osvaldo Burastero,  Florian Vögele <br>
+Previous developers:  Stephan Niebling, Clemente Borges and Andrea D'Amato <br>
+Project leader: Maria Marta Garcia Alai <br>
 
 ## Contact
 
