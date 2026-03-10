@@ -32,4 +32,4 @@ USER ROOT
 EXPOSE 3838
 USER shiny
 
-CMD ["R", "-e", "shiny::runApp('/home/shiny/Chemelt')"]
+CMD ["R", "-e", "shiny::runApp('/home/shiny/CheMelt')"]
