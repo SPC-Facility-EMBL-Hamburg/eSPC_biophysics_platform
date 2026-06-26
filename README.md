@@ -45,3 +45,9 @@ Burastero, Osvaldo, et al. "eSPC: an online data-analysis platform for molecular
 
 Niebling, Stephan, et al. "FoldAffinity: binding affinities from nDSF experiments." Scientific Reports 11.1 (2021): 9572.
 
+## Funding
+
+This project has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement No 945405.
+
+The authors acknowledge the support and the use of resources of Instruct-ERIC through the TechDev pilot scheme APPID 3335.
+
