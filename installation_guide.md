@@ -41,7 +41,7 @@ To install the eSPC platform in the development machine, follow these instructio
 1) Clone or download this repo
 2) Install docker       (tested with Docker version 27.1.1, https://docs.docker.com/engine/install/)
 3) Install java         (tested with openjdk 22.0.2)
-4) Install shinyproxy   (tested with shinyproxy3.1.1, https://www.shinyproxy.io/downloads/)
+4) Install shinyproxy   (tested with shinyproxy3.2.4, https://www.shinyproxy.io/downloads/)
 5) Create the file '/etc/systemd/system/docker.service.d/override.conf' and fill it with the following text:
 
     [Service]  
