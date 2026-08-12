@@ -15,8 +15,9 @@ echo "4. Raynals"
 echo "5. ChiraKit"
 echo "6. KinGenie"
 echo "7. Chemelt"
+echo "8. FTIR"
 
-read -p "Enter your choice [1-7]: " choice
+read -p "Enter your choice [1-8]: " choice
 
 askIfTestsWereDone () {
 
@@ -136,8 +137,20 @@ case $choice in
 
         ;;
 
+    7)
+
+        #askIfTestsWereDone 'testRaynals.py'
+        #askIfInfoWasUpdated
+
+        echo -e "\nBuilding Image for FTIR..."
+        docker build -t chemelt -f ./dockerFiles/Dockerfile_ftir .
+
+        printMessageHowToTestDocker 'FTIR' 'ftir'
+
+        ;;
+
     *)
-        echo "Invalid choice. Please select a valid option [1-7]."
+        echo "Invalid choice. Please select a valid option [1-8]."
         ;;
 
 esac
