@@ -137,13 +137,13 @@ case $choice in
 
         ;;
 
-    7)
+    8)
 
         #askIfTestsWereDone 'testRaynals.py'
         #askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for FTIR..."
-        docker build -t chemelt -f ./dockerFiles/Dockerfile_ftir .
+        docker build -t ftir -f ./dockerFiles/Dockerfile_ftir .
 
         printMessageHowToTestDocker 'FTIR' 'ftir'
 

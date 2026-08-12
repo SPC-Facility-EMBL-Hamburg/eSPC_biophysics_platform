@@ -7,8 +7,8 @@ COPY /ftirApp/Rprofile.site /usr/lib/R/etc/Rprofile.site
 # Additional packages required for Python installation
 ARG PYTHON_PACKAGES="python3 python3-pip python3-venv python3-dev"
 
-ARG R_PACKAGES="reticulate shiny shinyjs shinydashboard shinyalert \
-tippy rhandsontable plotly htmlwidgets htmltools zip openxlsx"
+ARG R_PACKAGES="reticulate shiny shinyjs shinydashboard shinycssloaders shinyalert \
+tippy rhandsontable plotly reshape2 colourpicker htmlwidgets htmltools zip openxlsx"
 
 RUN apt-get update && apt-get install --no-install-recommends --yes $PYTHON_PACKAGES && \
     install.r $R_PACKAGES                                                            && \
@@ -31,4 +31,4 @@ USER ROOT
 EXPOSE 3838
 USER shiny
 
-CMD ["R", "-e", "shiny::runApp('/home/shiny/ftirApp/shiny')"]
+CMD ["R", "-e", "shiny::runApp('/home/shiny/shiny_ui_files')"]
