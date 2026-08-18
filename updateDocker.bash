@@ -18,14 +18,6 @@ echo "7. Chemelt"
 
 read -p "Enter your choice [1-7]: " choice
 
-askIfTestsWereDone () {
-
-    echo ''
-    read -p "Did you run the test $1 from the testing folder (y/n)?" CONT
-
-    if [ "$CONT" != "y" ]; then echo 'update aborted' && exit ; fi
-
-}
 
 askIfInfoWasUpdated () {
 
@@ -57,8 +49,7 @@ case $choice in
 
     1)
         
-        #askIfTestsWereDone 'testFoldAffinity.py and testMoltenProt.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for FoldAffinity and MoltenProt..."
         docker build -t spc_apps_docker_container -f ./dockerFiles/Dockerfile_differentialScanningFluorimetry .
@@ -68,8 +59,7 @@ case $choice in
         ;;
     2)
 
-        #askIfTestsWereDone 'testThermoAffinity.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for ThermoAffinity..."
         docker build -t thermo_affinity -f ./dockerFiles/Dockerfile_microscaleThermophoresis .
@@ -79,8 +69,7 @@ case $choice in
         ;;
     3)
 
-        #askIfTestsWereDone 'testPhotoMol.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for PhotoMol..."
         docker build -t photo_mol -f ./dockerFiles/Dockerfile_massPhotometry .
@@ -90,8 +79,7 @@ case $choice in
         ;;
     4)
 
-        #askIfTestsWereDone 'testRaynals.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Raynals..."
         docker build -t raynals -f ./dockerFiles/Dockerfile_dynamicLightScattering .
@@ -102,8 +90,7 @@ case $choice in
 
     5)
 
-        #askIfTestsWereDone 'testRaynals.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Circular dichroism..."
         docker build -t chirakit -f ./dockerFiles/Dockerfile_circularDichroism .
@@ -114,8 +101,7 @@ case $choice in
 
     6)
 
-        #askIfTestsWereDone 'testRaynals.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Kinetics..."
         docker build -t kingenie -f ./dockerFiles/Dockerfile_kinetics .
@@ -126,12 +112,14 @@ case $choice in
 
     7)
 
-        #askIfTestsWereDone 'testRaynals.py'
-        #askIfInfoWasUpdated
+        askIfInfoWasUpdated
 
         echo -e "\nBuilding Image for Chemelt..."
         docker build -t chemelt -f ./dockerFiles/Dockerfile_thermoChemical .
         docker tag chemelt oburastero/chemelt:1.0
+
+        # another alternative is to do:
+        # $ sudo docker pull oburastero/chemelt:1.0
 
         printMessageHowToTestDocker 'Chemelt' 'chemelt'
 
