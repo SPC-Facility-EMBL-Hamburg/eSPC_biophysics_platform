@@ -131,6 +131,7 @@ case $choice in
 
         echo -e "\nBuilding Image for Chemelt..."
         docker build -t chemelt -f ./dockerFiles/Dockerfile_thermoChemical .
+        docker tag chemelt oburastero/chemelt:1.0
 
         printMessageHowToTestDocker 'Chemelt' 'chemelt'
 
