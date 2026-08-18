@@ -15,6 +15,7 @@ The eSPC platform (spc.embl-hamburg.de) is a collection of programs designed to 
 | Raynals     			      |     Sample size and homogeneity       				      |              Single-angle dynamic light scattering |
 | ChiraKit     			     | Protein stability, secondary structure, binding |                                 Circular dichroism |
 | KinGenie     			     |                Binding kinetics                 | Biolayer interferometry, surface plasmon resonance |
+| CheMelt     			     |                Protein stability under chemical and thermal denaturation                 | Differential scanning fluorimetry, circular dichroism |
 
 
 ## Installation
