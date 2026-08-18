@@ -21,11 +21,14 @@ The eSPC platform (spc.embl-hamburg.de) is a collection of programs designed to 
 
 To install all or some of the eSPC platform tools, please refer to the 'installation_guide.md' document.
 
-## Team
+## Core team
 
-Developers:     Osvaldo Burastero,  Claudio Schuster <br>
-Previous developers:  Florian Vögele, Stephan Niebling, Clemente Borges and Andrea D'Amato <br>
-Project leader: Maria Marta Garcia Alai <br>
+- **Maintainer and developer of new applications:** Claudio Schuster
+- **Maintainer of Infrastructure, VM creation and application serving**: Swaminathan Krishnamoorthi
+- **Previous developer:** Osvaldo Burastero (CheMelt, ChiraKit, Raynals, ThermoAffinity, FoldAffinity, MoltenProt, PhotoMol, KinGenie)
+- **Previous Infrastructure, VM creation and application serving:** Clemente Borges and Andrea D'Amato
+- **Previous developers/contributors:** Florian Vögele (CheMelt) and Stephan Niebling (FoldAffinity, PhotoMol and KinGenie)
+- **Project leader:** Maria Marta Garcia Alai
 
 ## Contact
 
