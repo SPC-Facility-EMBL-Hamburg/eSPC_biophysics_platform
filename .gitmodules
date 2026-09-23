@@ -19,3 +19,6 @@
 [submodule "bindingKineticsApp"]
 	path = bindingKineticsApp
 	url = https://github.com/SPC-Facility-EMBL-Hamburg/bindingKineticsApp
+[submodule "ftirApp"]
+	path = ftirApp
+	url = https://github.com/CDSchuster/FTIRpy
