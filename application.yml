@@ -56,6 +56,11 @@ proxy:
       container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/CheMelt')"]
       container-image: oburastero/chemelt:1.0
 
+    - id: ftirpy
+      display-name: FTIRpy
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/shiny_ui_files')"]
+      container-image: ftir
+
 logging:
   file:
     /tmp/shinyproxy.log
