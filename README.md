@@ -1,6 +1,6 @@
 # The eSPC platform 
 
-Last time updated: July 2026
+Last time updated: August 2026
 
 ## Introduction
 
@@ -15,17 +15,21 @@ The eSPC platform (spc.embl-hamburg.de) is a collection of programs designed to 
 | Raynals     			      |     Sample size and homogeneity       				      |              Single-angle dynamic light scattering |
 | ChiraKit     			     | Protein stability, secondary structure, binding |                                 Circular dichroism |
 | KinGenie     			     |                Binding kinetics                 | Biolayer interferometry, surface plasmon resonance |
+| CheMelt     			     |                Protein stability under chemical and thermal denaturation                 | Differential scanning fluorimetry, circular dichroism |
 
 
 ## Installation
 
 To install all or some of the eSPC platform tools, please refer to the 'installation_guide.md' document.
 
-## Team
+## Core team
 
-Developers:     Osvaldo Burastero,  Claudio Schuster <br>
-Previous developers:  Florian Vögele, Stephan Niebling, Clemente Borges and Andrea D'Amato <br>
-Project leader: Maria Marta Garcia Alai <br>
+- **Maintainer and developer of new applications:** Claudio Schuster
+- **Maintainer of Infrastructure, VM creation and application serving**: Swaminathan Krishnamoorthi
+- **Previous developer:** Osvaldo Burastero (CheMelt, ChiraKit, Raynals, ThermoAffinity, FoldAffinity, MoltenProt, PhotoMol, KinGenie)
+- **Previous Infrastructure, VM creation and application serving:** Clemente Borges and Andrea D'Amato
+- **Previous developers/contributors:** Florian Vögele (CheMelt) and Stephan Niebling (FoldAffinity, PhotoMol and KinGenie)
+- **Project leader:** Maria Marta Garcia Alai
 
 ## Contact
 

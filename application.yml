@@ -46,6 +46,16 @@ proxy:
       container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/ChiraKit')"]
       container-image: chirakit
 
+    - id: kingenie
+      display-name: KinGenie
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/KinGenie')"]
+      container-image: kingenie
+
+    - id: chemelt
+      display-name: CheMelt
+      container-cmd: ["R", "-e", "shiny::runApp('/home/shiny/CheMelt')"]
+      container-image: oburastero/chemelt:1.0
+
 logging:
   file:
     /tmp/shinyproxy.log
